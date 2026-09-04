@@ -1,15 +1,13 @@
 ﻿using DoceCantinho.Desktop.DTOs;
 using DoceCantinho.Desktop.Forms;
+using DoceCantinho.Desktop.Helpers;
 using DoceCantinho.Desktop.Services;
 using DoceCantinho.Desktop.Themes;
-using DoceCantinho.Desktop.Helpers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,232 +15,540 @@ namespace DoceCantinho.Desktop.UserControls
 {
     public partial class DoceUserControl : UserControl
     {
+        // ============================================================
+        // SERVIÇOS
+        // ============================================================
 
-        /// =====================================
-        /// SERVIÇOS (Inicializados no load) 
-        /// =====================================
+        private DoceApiService? _doceService;
+        private CategoriasApiService? _categoriasService;
 
-        private DoceApiService _doceService = null;
-        private CategoriasApiService _categoriasService = null;
+        // ============================================================
+        // DADOS
+        // ============================================================
 
-        /// =====================================
-        /// Dados 
-        /// =====================================
         private List<DoceResponseDto> _todosDoces = new();
         private List<CategoriaResponseDto> _categorias = new();
 
-        /// =====================================
-        /// CONSTRUTOR
-        /// =====================================
+        // ============================================================
+        // CONSTRUTOR
+        // ============================================================
 
         public DoceUserControl()
         {
             InitializeComponent();
+
+            Load += DoceUserControl_Load;
         }
 
-        private async void DoceUserControl_Load(object sender, EventArgs e)
+        // ============================================================
+        // LOAD
+        // ============================================================
+
+        private async void DoceUserControl_Load(object? sender, EventArgs e)
         {
-            //Guard: não executa em tempo de Design
-            if (DesignMode) return;
-
-            //Inicializa serviços
-            _doceService = new DoceApiService();
-            _categoriasService = new CategoriasApiService();
-
-            DoceTheme.AplicarEstiloGrid(gridBanco);
-
-            //Configurar permissões
-            ConfigurarPermissões();
-
-            //Reservado para carregarDados
-
-            await CarregarDadosAsync();
-
-        }
-
-        private void ConfigurarPermissões()
-        {
-            bool isAdmin = SessionManager.Instance.IsAdmin;
-            btnNovo.Visible = isAdmin;
-            btnEditar.Visible = isAdmin;
-            btnExcluir.Visible = isAdmin;
-        }
-
-        private async Task CarregarDadosAsync()
-        {
-            gridBanco.Rows.Clear();
+            if (DesignMode)
+                return;
 
             try
             {
-                var tarefaDoces = _doceService.GetAllAsync();
-                var tarefaCategorias = _categoriasService.GetAllAsync();
-                await Task.WhenAll(tarefaDoces, tarefaCategorias);
+                _doceService = new DoceApiService();
+                _categoriasService = new CategoriasApiService();
 
-                _todosDoces = tarefaDoces.Result;
-                _categorias = tarefaCategorias.Result;
+                ConfigurarGrid();
+                ConfigurarPermissoes();
 
-                PopularGrid(_todosDoces);
+                await CarregarDadosAsync();
             }
             catch (Exception ex)
             {
-
-                MessageBox.Show($"Erro ao carregar doces: {ex.Message}",
+                MessageBox.Show(
+                    $"Erro ao iniciar a tela de doces:\n\n{ex.Message}",
                     "Erro",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-
+                    MessageBoxIcon.Error);
             }
         }
+
+        // ============================================================
+        // CONFIGURAR GRID
+        // ============================================================
+
+        private void ConfigurarGrid()
+        {
+            gridBanco.AutoGenerateColumns = false;
+
+            gridBanco.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            gridBanco.MultiSelect = false;
+
+            gridBanco.ReadOnly = true;
+
+            gridBanco.AllowUserToAddRows = false;
+            gridBanco.AllowUserToDeleteRows = false;
+
+            gridBanco.RowTemplate.Height = 65;
+
+            try
+            {
+                DoceTheme.AplicarEstiloGrid(gridBanco);
+            }
+            catch
+            {
+                // Caso o tema tenha alguma configuração incompatível,
+                // o grid continua funcionando normalmente.
+            }
+        }
+
+        // ============================================================
+        // PERMISSÕES
+        // ============================================================
+
+        private void ConfigurarPermissoes()
+        {
+            bool isAdmin = false;
+
+            try
+            {
+                isAdmin = SessionManager.Instance.IsAdmin;
+            }
+            catch
+            {
+                isAdmin = true;
+            }
+
+            btnNovo.Visible = isAdmin;
+
+            colEditar.Visible = isAdmin;
+            colExcluir.Visible = isAdmin;
+        }
+
+        // ============================================================
+        // CARREGAR DADOS DA API
+        // ============================================================
+
+        private async Task CarregarDadosAsync()
+        {
+            if (_doceService == null || _categoriasService == null)
+                return;
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                var tarefaDoces = _doceService.GetAllAsync();
+                var tarefaCategorias = _categoriasService.GetAllAsync();
+
+                await Task.WhenAll(tarefaDoces, tarefaCategorias);
+
+                _todosDoces = tarefaDoces.Result ?? new List<DoceResponseDto>();
+                _categorias = tarefaCategorias.Result ?? new List<CategoriaResponseDto>();
+
+                PopularGrid(_todosDoces);
+
+                lblQuantidade.Text =
+                    $"{_todosDoces.Count} produto{(_todosDoces.Count == 1 ? "" : "s")} cadastrado{(_todosDoces.Count == 1 ? "" : "s")}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Não foi possível carregar os doces da API.\n\n{ex.Message}",
+                    "Erro ao carregar dados",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
+        }
+
+        // ============================================================
+        // POPULAR GRID
+        // ============================================================
+
         private void PopularGrid(List<DoceResponseDto> doces)
         {
             gridBanco.Rows.Clear();
 
             foreach (var doce in doces)
             {
-                gridBanco.Rows.Add(
-                    doce.Id,
-                    doce.Title,
-                    doce.CategoryName,
-                    doce.IsFeatured,
-                    doce.CreatedAt.ToString("dd/MM/yyyy HH:mm"));
+                string status = ObterStatus(doce);
 
+                int indice = gridBanco.Rows.Add(
+                    null,
+                    doce.Id,
+                    doce.Title ?? string.Empty,
+                    doce.CategoryName ?? string.Empty,
+                    doce.Preco.ToString("C2"),
+                    doce.QuantidadeEstoque,
+                    status,
+                    "Editar",
+                    "Excluir"
+                );
+
+                // Carregar imagem sem travar a tela
+                _ = CarregarImagemAsync(
+                    indice,
+                    doce.CoverImageUrl
+                );
+            }
+
+            lblResultados.Text =
+                $"{doces.Count} resultado{(doces.Count == 1 ? "" : "s")}";
+        }
+
+        // ============================================================
+        // DEFINIR STATUS
+        // ============================================================
+
+        private string ObterStatus(DoceResponseDto doce)
+        {
+            if (!doce.IsAtivo)
+                return "Inativo";
+
+            if (doce.IsFeatured)
+                return "Destaque";
+
+            if (doce.QuantidadeEstoque <= 0)
+                return "Sem estoque";
+
+            return "Ativo";
+        }
+
+        // ============================================================
+        // CARREGAR IMAGEM
+        // ============================================================
+
+        private async Task CarregarImagemAsync(
+            int indiceLinha,
+            string? imageUrl)
+        {
+            if (string.IsNullOrWhiteSpace(imageUrl))
+                return;
+
+            try
+            {
+                using HttpClient client = new HttpClient();
+
+                byte[] bytes =
+                    await client.GetByteArrayAsync(imageUrl);
+
+                using var stream =
+                    new System.IO.MemoryStream(bytes);
+
+                using var imagemOriginal =
+                    Image.FromStream(stream);
+
+                Image imagem =
+                    new Bitmap(imagemOriginal);
+
+                if (indiceLinha >= 0 &&
+                    indiceLinha < gridBanco.Rows.Count)
+                {
+                    gridBanco.Invoke(new Action(() =>
+                    {
+                        if (indiceLinha < gridBanco.Rows.Count)
+                        {
+                            gridBanco.Rows[indiceLinha]
+                                .Cells["colImagem"]
+                                .Value = imagem;
+                        }
+                    }));
+                }
+            }
+            catch
+            {
+                // Se uma imagem falhar, apenas deixa a célula vazia.
             }
         }
 
-        private void btnPesquisar_Click(object sender, EventArgs e) => FiltrarDoces();
+        // ============================================================
+        // PESQUISAR
+        // ============================================================
 
+        private void btnPesquisar_Click(object sender, EventArgs e)
+        {
+            FiltrarDoces();
+        }
+
+        private void txtPesquisa_TextChanged(object sender, EventArgs e)
+        {
+            FiltrarDoces();
+        }
 
         private void FiltrarDoces()
         {
-            var termo = txtPesquisa.Text.Trim().ToLower();
-            if (string.IsNullOrEmpty(termo))
+            string termo =
+                txtPesquisa.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(termo))
             {
                 PopularGrid(_todosDoces);
                 return;
             }
 
             var filtrados = _todosDoces
-                .Where(d => d.Title.Contains(termo, StringComparison.OrdinalIgnoreCase)
-                || d.CategoryName.Contains(termo, StringComparison.OrdinalIgnoreCase))
+                .Where(d =>
+                    (!string.IsNullOrEmpty(d.Title) &&
+                     d.Title.Contains(
+                         termo,
+                         StringComparison.OrdinalIgnoreCase))
+
+                    ||
+
+                    (!string.IsNullOrEmpty(d.CategoryName) &&
+                     d.CategoryName.Contains(
+                         termo,
+                         StringComparison.OrdinalIgnoreCase))
+                )
                 .ToList();
 
             PopularGrid(filtrados);
-
         }
 
-        private void txtPesquisa_TextChanged(object sender, EventArgs e) => FiltrarDoces();
-
+        // ============================================================
+        // OBTER DOCE SELECIONADO
+        // ============================================================
 
         private DoceResponseDto? ObterDoceSelecionado()
         {
-            if (gridBanco.SelectedRows.Count == 0) return null;
-            var row = gridBanco.SelectedRows[0];
-            var id = Convert.ToInt32(row.Cells["colId"].Value);
-            return _todosDoces.FirstOrDefault(d => d.Id == id);
+            if (gridBanco.SelectedRows.Count == 0)
+                return null;
+
+            var linha = gridBanco.SelectedRows[0];
+
+            if (linha.Cells["colId"].Value == null)
+                return null;
+
+            int id = Convert.ToInt32(
+                linha.Cells["colId"].Value
+            );
+
+            return _todosDoces
+                .FirstOrDefault(d => d.Id == id);
         }
+
+        // ============================================================
+        // NOVO DOCE
+        // ============================================================
 
         private async void btnNovo_Click(object sender, EventArgs e)
         {
-            using var form = new DoceFormDialog(_categorias, null);
-            if (form.ShowDialog() == DialogResult.OK && form.DoceDto != null)
+            if (_doceService == null)
+                return;
+
+            using var form =
+                new DoceFormDialog(_categorias, null);
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (form.DoceDto == null)
+                return;
+
+            try
             {
-                var (success, _, error) = await _doceService.CreateAsync(form.DoceDto);
+                var (success, _, error) =
+                    await _doceService.CreateAsync(form.DoceDto);
+
                 if (success)
                 {
-                    MessageBox.Show("✅ Doce criado com sucesso!",
+                    MessageBox.Show(
+                        "Doce criado com sucesso!",
                         "Sucesso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
+
                     await CarregarDadosAsync();
                 }
                 else
                 {
-                    MessageBox.Show($"❌ {error}",
+                    MessageBox.Show(
+                        error ?? "Não foi possível criar o doce.",
+                        "Erro",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
                     "Erro",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-
-                }
             }
         }
 
-        private async void btnEditar_Click(object sender, EventArgs e)
+        // ============================================================
+        // EDITAR
+        // ============================================================
+
+        private async Task EditarDoceAsync()
         {
+            if (_doceService == null)
+                return;
+
             var doce = ObterDoceSelecionado();
+
             if (doce == null)
             {
-                MessageBox.Show($"Selecione um doce para editar.",
+                MessageBox.Show(
+                    "Selecione um doce para editar.",
                     "Aviso",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    MessageBoxIcon.Warning);
+
                 return;
             }
 
-            using var form = new DoceFormDialog(_categorias, doce);
-            if (form.ShowDialog() == DialogResult.OK && form.UpdateDto != null)
+            using var form =
+                new DoceFormDialog(_categorias, doce);
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (form.UpdateDto == null)
+                return;
+
+            try
             {
-                var (success, _, error) = await _doceService.UpdateAsync(doce.Id, form.UpdateDto);
+                var (success, _, error) =
+                    await _doceService.UpdateAsync(
+                        doce.Id,
+                        form.UpdateDto
+                    );
+
                 if (success)
                 {
-                    MessageBox.Show("✅ Doce atualizado com sucesso!",
+                    MessageBox.Show(
+                        "Doce atualizado com sucesso!",
                         "Sucesso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
+
                     await CarregarDadosAsync();
                 }
                 else
                 {
-                    MessageBox.Show($"❌ {error}",
+                    MessageBox.Show(
+                        error ?? "Não foi possível atualizar o doce.",
+                        "Erro",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
                     "Erro",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-
-                }
             }
         }
 
-        private async void btnExcluir_Click(object sender, EventArgs e)
+        // ============================================================
+        // EXCLUIR
+        // ============================================================
+
+        private async Task ExcluirDoceAsync()
         {
+            if (_doceService == null)
+                return;
+
             var doce = ObterDoceSelecionado();
+
             if (doce == null)
             {
-                MessageBox.Show("Selecione um doce para excluir.", "Aviso",
-                   MessageBoxButtons.OK,
-                   MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Selecione um doce para excluir.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
                 return;
             }
 
-
-            var conf = MessageBox.Show($"Deseja excluir o doce \"{doce.Title}\"?",
-                "Confirmar Exclusão",
+            var resposta = MessageBox.Show(
+                $"Deseja realmente excluir o doce:\n\n{doce.Title}?",
+                "Confirmar exclusão",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
-            if (conf != DialogResult.Yes) return;
+            if (resposta != DialogResult.Yes)
+                return;
 
-            var (sucess, error) = await _doceService.DeleteAsync(doce.Id);
-            if (sucess)
+            try
+            {
+                var (success, error) =
+                    await _doceService.DeleteAsync(doce.Id);
+
+                if (success)
+                {
+                    MessageBox.Show(
+                        "Doce excluído com sucesso!",
+                        "Sucesso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    await CarregarDadosAsync();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        error ?? "Não foi possível excluir o doce.",
+                        "Erro",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(
-                   "Doce Excluído com sucesso!",
-                   "Sucesso",
-                  MessageBoxButtons.OK,
-                  MessageBoxIcon.Information);
-                await CarregarDadosAsync();
+                    ex.Message,
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
-            else
-            {
-                MessageBox.Show(
-                   $"{error}", "Erro",
-                  MessageBoxButtons.OK,
-                  MessageBoxIcon.Error);
-            }
-
         }
 
-        private async void btnAtualizar_Click(object sender, EventArgs e) => await CarregarDadosAsync();
+        // ============================================================
+        // CLIQUE NO GRID
+        // ============================================================
 
+        private async void gridBanco_CellContentClick(
+            object sender,
+            DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
 
+            gridBanco.ClearSelection();
 
+            gridBanco.Rows[e.RowIndex].Selected = true;
+
+            string nomeColuna =
+                gridBanco.Columns[e.ColumnIndex].Name;
+
+            if (nomeColuna == "colEditar")
+            {
+                await EditarDoceAsync();
+            }
+            else if (nomeColuna == "colExcluir")
+            {
+                await ExcluirDoceAsync();
+            }
+        }
+
+        // ============================================================
+        // ATUALIZAR
+        // ============================================================
+
+        private async void btnAtualizar_Click(
+            object sender,
+            EventArgs e)
+        {
+            await CarregarDadosAsync();
+        }
     }
 }

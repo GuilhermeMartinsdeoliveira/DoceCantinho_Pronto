@@ -370,7 +370,7 @@ namespace DoceCantinho.Desktop.Forms
             // guna2DragControl1
             // 
             guna2DragControl1.DockIndicatorTransparencyValue = 0.6D;
-            guna2DragControl1.TargetControl = guna2Panel1;
+            guna2DragControl1.TargetControl = pnlLogoIcon;
             guna2DragControl1.UseTransparentDrag = true;
             // 
             // guna2ShadowForm1

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoceCantinho.Infrastructure.Migrations
 {
     [DbContext(typeof(DoceCantinhoDbContext))]
-    [Migration("20260903165006_doce1")]
+    [Migration("20260904172132_doce1")]
     partial class doce1
     {
         /// <inheritdoc />

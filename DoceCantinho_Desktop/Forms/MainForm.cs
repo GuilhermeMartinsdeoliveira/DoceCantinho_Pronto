@@ -5,153 +5,331 @@ using DoceCantinho.Desktop.UserControls;
 using DoceCantinho.Desktop1.UserControls;
 using Guna.UI2.WinForms;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DoceCantinho.Desktop.Forms
 {
     public partial class MainForm : Form
     {
-
+        // ==========================================
+        // CONTROLE ATUAL DA ÁREA PRINCIPAL
+        // ==========================================
         private UserControl? _controleAtual;
 
-        /// <summary>
-        /// Botão da sidebar atualmente ativo.
-        /// </summary>
+        // ==========================================
+        // BOTÃO ATIVO DA SIDEBAR
+        // ==========================================
         private Guna2Button? _botaoAtivo;
 
-        /// <summary>
-        /// Serviço de autenticação para logout.
-        /// </summary>
-        private AuthApiService _authService = null;
+        // ==========================================
+        // SERVIÇO DE AUTENTICAÇÃO
+        // ==========================================
+        private AuthApiService? _authService;
 
         public MainForm()
         {
             InitializeComponent();
         }
 
+        // ==========================================
+        // LOAD
+        // ==========================================
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //Guard: não executa em tempo de design
-            if (DesignMode) return;
+            if (DesignMode)
+                return;
 
-            //Instancia o serviço
             _authService = new AuthApiService();
 
-            // Atualiza o título com a versão
-            this.Text = $"Doce Cantinho Desktop - {AppConfig.Version}";
+            // Título da aplicação
+            Text = $"Doce Cantinho Desktop - {AppConfig.Version}";
 
-            //Preenche dados dinâmicos de sessão no header
-            lblUsuario.Text = $"👷‍ {SessionManager.Instance.GetDisplayName()}";
-            lblPerfil.Text = SessionManager.Instance.IsAdmin ? "🔑 Administrador" : "👀 Usuário Comum";
-            lblPerfil.ForeColor = SessionManager.Instance.IsAdmin
-                ? DoceTheme.LaranjaPrimario
-                : DoceTheme.AzulVariante;
-            lblSessao.Text = $"🟢 {SessionManager.Instance.GetEmail()}";
+            // ==========================================
+            // DADOS DO USUÁRIO
+            // ==========================================
 
-            // Configura permissões baseadas no perfil do usuário
+            lblUsuario.Text =
+                $"👤 {SessionManager.Instance.GetDisplayName()}";
+
+            lblPerfil.Text =
+                SessionManager.Instance.IsAdmin
+                    ? "🔑 Administrador"
+                    : "👀 Usuário Comum";
+
+            lblPerfil.ForeColor =
+                SessionManager.Instance.IsAdmin
+                    ? DoceTheme.LaranjaPrimario
+                    : DoceTheme.AzulVariante;
+
+            lblSessao.Text =
+                $"✉ {SessionManager.Instance.GetEmail()}";
+
+            // ==========================================
+            // PERMISSÕES
+            // ==========================================
+
             ConfigurarPermissoes();
 
-            //Abre o DashBoard como tela inicial
+            // ==========================================
+            // GARANTIR EVENTOS DOS BOTÕES
+            // ==========================================
+
+            ConfigurarEventos();
+
+            // ==========================================
+            // ABRIR DASHBOARD
+            // ==========================================
+
             NavegarParaDashboard();
         }
 
+        // ==========================================
+        // CONFIGURAR PERMISSÕES
+        // ==========================================
         private void ConfigurarPermissoes()
         {
-            var isAdmin = SessionManager.Instance.IsAdmin;
+            bool isAdmin = SessionManager.Instance.IsAdmin;
 
             btnCategoria.Visible = isAdmin;
             btnUsuario.Visible = isAdmin;
+
+            // Pedidos podem ficar disponíveis para todos
+            btnPedidos.Visible = true;
+            btnDoce.Visible = true;
+            btnDashboard.Visible = true;
         }
 
+        // ==========================================
+        // GARANTIR QUE OS CLICKS FUNCIONEM
+        // ==========================================
+        private void ConfigurarEventos()
+        {
+            // Remove eventos duplicados antes
+            btnDashboard.Click -= btnDashboard_Click;
+            btnDoce.Click -= btnDoce_Click;
+            btnCategoria.Click -= btnCategoria_Click;
+            btnPedidos.Click -= btnPedidos_Click;
+            btnUsuario.Click -= btnUsuario_Click;
+
+            // Adiciona os eventos
+            btnDashboard.Click += btnDashboard_Click;
+            btnDoce.Click += btnDoce_Click;
+            btnCategoria.Click += btnCategoria_Click;
+            btnPedidos.Click += btnPedidos_Click;
+            btnUsuario.Click += btnUsuario_Click;
+
+            // Logout
+            lblSair.Click -= lblSair_Click;
+            lblSair.Click += lblSair_Click;
+        }
+
+        // ==========================================
+        // DASHBOARD
+        // ==========================================
         private void NavegarParaDashboard()
         {
-            Navegar(new DashboardUserControl(), btnDashboard);
+            Navegar(
+                new DashboardUserControl(),
+                btnDashboard
+            );
         }
 
-        private void Navegar(UserControl control, Guna2Button? botao = null)
+        // ==========================================
+        // MÉTODO PRINCIPAL DE NAVEGAÇÃO
+        // ==========================================
+        private void Navegar(
+            UserControl novoControle,
+            Guna2Button? botao = null)
         {
-            //Remove o UserControl anterior
-            if (_controleAtual != null)
+            try
             {
-                pnlPanel.Controls.Remove(_controleAtual);
-                _controleAtual.Dispose();
-                _controleAtual = null;
+                pnlPanel.SuspendLayout();
+
+                // ==========================================
+                // REMOVER CONTROLE ANTERIOR
+                // ==========================================
+
+                if (_controleAtual != null)
+                {
+                    pnlPanel.Controls.Remove(_controleAtual);
+
+                    _controleAtual.Dispose();
+
+                    _controleAtual = null;
+                }
+
+                // ==========================================
+                // CONFIGURAR NOVO CONTROLE
+                // ==========================================
+
+                novoControle.Dock = DockStyle.Fill;
+
+                novoControle.Visible = true;
+
+                pnlPanel.Controls.Add(novoControle);
+
+                // Garante que fique na frente
+                novoControle.BringToFront();
+
+                _controleAtual = novoControle;
+
+                // ==========================================
+                // ATUALIZAR BOTÃO ATIVO
+                // ==========================================
+
+                AtualizarBotaoAtivo(botao);
             }
-
-            //Adiona o novo UserControl(Tela interna)
-            control.Dock = DockStyle.Fill;
-            pnlPanel.Controls.Add(control);
-            _controleAtual = control;
-
-            AtualizarBotaoAtivo(botao);
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Erro ao abrir a tela:\n\n{ex.Message}",
+                    "Erro de Navegação",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+            finally
+            {
+                pnlPanel.ResumeLayout();
+            }
         }
 
-        // AtualizarBotaoAtivo: lógica corrigida para trocar corretamente o botão ativo
+        // ==========================================
+        // ESTILO DO BOTÃO ATIVO
+        // ==========================================
         private void AtualizarBotaoAtivo(Guna2Button? botao)
         {
-            // Reseta estilo do botão previamente ativo (se houver)
+            // ==========================================
+            // RESETAR BOTÃO ANTERIOR
+            // ==========================================
+
             if (_botaoAtivo != null)
             {
                 _botaoAtivo.FillColor = Color.Transparent;
+
                 _botaoAtivo.ForeColor = Color.White;
-                _botaoAtivo.CustomBorderColor = Color.Transparent;
+
+                _botaoAtivo.CustomBorderColor =
+                    Color.Transparent;
             }
 
-            // Define novo botão ativo
+            // ==========================================
+            // DEFINIR NOVO BOTÃO
+            // ==========================================
+
             _botaoAtivo = botao;
 
             if (_botaoAtivo != null)
             {
-                _botaoAtivo.FillColor = Color.FromArgb(212, 112, 74);
-                _botaoAtivo.ForeColor = Color.White;
-                _botaoAtivo.CustomBorderColor = Color.FromArgb(212, 112, 74);
+                _botaoAtivo.FillColor =
+                    Color.FromArgb(212, 112, 74);
+
+                _botaoAtivo.ForeColor =
+                    Color.White;
+
+                _botaoAtivo.CustomBorderColor =
+                    Color.FromArgb(212, 112, 74);
             }
         }
 
-        private void btnDoce_Click(object sender, EventArgs e) => Navegar(new DoceUserControl(), btnDoce);
+        // ==========================================
+        // BOTÃO DASHBOARD
+        // ==========================================
+        private void btnDashboard_Click(
+            object sender,
+            EventArgs e)
+        {
+            NavegarParaDashboard();
+        }
 
-        private void btnCategoria_Click(object sender, EventArgs e) => Navegar(new CategoriasUserControl(), btnCategoria);
+        // ==========================================
+        // BOTÃO DOCES
+        // ==========================================
+        private void btnDoce_Click(
+            object sender,
+            EventArgs e)
+        {
+            Navegar(
+                new DoceUserControl(),
+                btnDoce
+            );
+        }
 
-        // Antes este botão não tinha nenhum evento associado no Designer,
-        // então clicar em "Dashboard" na sidebar não fazia nada.
-        private void btnDashboard_Click(object sender, EventArgs e) => NavegarParaDashboard();
+        // ==========================================
+        // BOTÃO CATEGORIAS
+        // ==========================================
+        private void btnCategoria_Click(
+            object sender,
+            EventArgs e)
+        {
+            Navegar(
+                new CategoriasUserControl(),
+                btnCategoria
+            );
+        }
 
-        private async void lblSair_Click(object sender, EventArgs e)
+        // ==========================================
+        // BOTÃO PEDIDOS
+        // ==========================================
+        private void btnPedidos_Click(
+            object sender,
+            EventArgs e)
+        {
+            Navegar(
+                new PedidosUserControl(),
+                btnPedidos
+            );
+        }
+
+        // ==========================================
+        // BOTÃO USUÁRIOS
+        // ==========================================
+        private void btnUsuario_Click(
+            object sender,
+            EventArgs e)
+        {
+            Navegar(
+                new UsuarioUserControl(),
+                btnUsuario
+            );
+        }
+
+        // ==========================================
+        // LOGOUT
+        // ==========================================
+        private async void lblSair_Click(
+            object sender,
+            EventArgs e)
         {
             var resposta = MessageBox.Show(
                 "Deseja realmente sair do sistema?",
                 "Confirmar Logout",
                 MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+                MessageBoxIcon.Question
+            );
 
-            if (resposta != DialogResult.Yes) return;
+            if (resposta != DialogResult.Yes)
+                return;
 
             try
             {
-                await _authService.LogoutAsync();
+                if (_authService != null)
+                {
+                    await _authService.LogoutAsync();
+                }
             }
             catch
             {
-                // Mesmo se a API falhar, limpa a sessão local
+                // Mesmo se a API falhar,
+                // a sessão local será encerrada.
             }
             finally
             {
                 SessionManager.Instance.Clear();
-                this.Close();
+
+                Close();
             }
         }
-
-        private void btnUsuario_Click(object sender, EventArgs e) => Navegar(new UsuarioUserControl(), btnUsuario);
-
-        private void btnPedidos_Click(object sender, EventArgs e) => Navegar(new PedidosUserControl(), btnPedidos);
-
-
     }
 }

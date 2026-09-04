@@ -4,10 +4,7 @@ using DoceCantinho.Desktop.Themes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,32 +12,65 @@ namespace DoceCantinho.Desktop1.UserControls
 {
     public partial class DashboardUserControl : UserControl
     {
+        private DoceApiService _doceService;
+        private CategoriasApiService _categoriasService;
 
-        private DoceApiService _doceService = null;
-        private CategoriasApiService _categoriasService = null;
         public DashboardUserControl()
         {
             InitializeComponent();
+
+            // Evento de carregamento
+            this.Load += DashboardUserControl_Load;
         }
 
-        private void DashboardUserControl_Load(object sender, EventArgs e)
+        // ============================================================
+        // CARREGAMENTO DO DASHBOARD
+        // ============================================================
+
+        private async void DashboardUserControl_Load(object sender, EventArgs e)
         {
-            //Guard: não execua em tempo design
-            if (DesignMode) return;
+            // Não executa no Designer do Visual Studio
+            if (DesignMode || LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                return;
 
-            //inicializa serviços
-            _doceService = new DoceApiService();
-            _categoriasService = new CategoriasApiService();
+            try
+            {
+                // Inicializa os serviços
+                _doceService = new DoceApiService();
+                _categoriasService = new CategoriasApiService();
 
-            //Preenche dados dinâmicos da sessão 
-            lblTitulo.Text = $"Olá, {SessionManager.Instance.GetDisplayName()!}";
-            lblSubTitulo.Text = $"Bem-Vindo ao DoceCantinho - {DateTime.Now:dddd, dd 'de' MMM 'de' yyyy}";
+                // Dados do usuário logado
+                string nomeUsuario = SessionManager.Instance.GetDisplayName();
 
-            //Aplica estilo no DataGridView(Tabela)
-            DoceTheme.AplicarEstiloGrid(gridUltimosDoces);
+                if (string.IsNullOrWhiteSpace(nomeUsuario))
+                    nomeUsuario = "Usuário";
 
-            CarregarDadosAsync();
+                lblTitulo.Text = $"Olá, {nomeUsuario}!";
+
+                // Data atual
+                lblSubTitulo.Text =
+                    $"Bem-vindo ao DoceCantinho - {DateTime.Now:dddd, dd 'de' MMMM 'de' yyyy}";
+
+                // Aplica o tema da tabela
+                DoceTheme.AplicarEstiloGrid(gridUltimosDoces);
+
+                // Carrega os dados
+                await CarregarDadosAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Não foi possível iniciar o dashboard.\n\nErro: {ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
+
+        // ============================================================
+        // CARREGAR DADOS
+        // ============================================================
 
         private async Task CarregarDadosAsync()
         {
@@ -48,40 +78,199 @@ namespace DoceCantinho.Desktop1.UserControls
 
             try
             {
-                var tarefaGames = _doceService.GetAllAsync();
-                var tarefaCategorias = _categoriasService.GetAllAsync();
-                await Task.WhenAll(tarefaGames, tarefaCategorias);
+                // Busca os dados
+                var resultadoDoces = await _doceService.GetAllAsync();
+                var resultadoCategorias = await _categoriasService.GetAllAsync();
 
-                var doces = tarefaGames.Result;
-                var categorias = tarefaCategorias.Result;
+                // ====================================================
+                // CORREÇÃO DO PROBLEMA COM DYNAMIC
+                // ====================================================
 
-                //Atualiza os dados do card
-                //AtualizarNumeroCard(cardGames, games.Count.ToString());
-                //AtualizarNumeroCard(cardCategorias, categorias.Count.ToString());
+                // Converte explicitamente para listas.
+                // Isso evita os erros CS1977 nas expressões LINQ.
+                var doces = ((IEnumerable<dynamic>)resultadoDoces).ToList();
+                var categorias = ((IEnumerable<dynamic>)resultadoCategorias).ToList();
 
+                // ====================================================
+                // CARDS DO DASHBOARD
+                // ====================================================
+
+                // Total de doces
                 cardDoceslblNumero.Text = doces.Count.ToString();
-                cardCategoriaslblNumero.Text = categorias.Count.ToString();
-                CardDestaquesValor.Text = doces.Count(x => x.IsFeatured).ToString();
 
-                //Popula o DataGridView(tabela) com os ultimos 10 doces 
-                gridUltimosDoces.Rows.Clear();
-                foreach (var doce in doces.OrderByDescending(x => x.CreatedAt).Take(10))
+                // Total de categorias
+                cardCategoriaslblNumero.Text = categorias.Count.ToString();
+
+                // Total de doces em destaque
+                int totalDestaques = 0;
+
+                foreach (var doce in doces)
                 {
+                    try
+                    {
+                        if (doce.IsFeatured == true)
+                            totalDestaques++;
+                    }
+                    catch
+                    {
+                        // Caso o objeto não possua IsFeatured
+                    }
+                }
+
+                CardDestaquesValor.Text = totalDestaques.ToString();
+
+                // ====================================================
+                // TABELA DE ÚLTIMOS DOCES
+                // ====================================================
+
+                gridUltimosDoces.Rows.Clear();
+
+                // Cria uma lista para ordenar sem gerar erro de
+                // expressão lambda em operação dinâmica.
+                var listaOrdenada = new List<dynamic>();
+
+                foreach (var doce in doces)
+                {
+                    listaOrdenada.Add(doce);
+                }
+
+                // Ordena pela data de criação
+                listaOrdenada.Sort((a, b) =>
+                {
+                    try
+                    {
+                        DateTime dataA = Convert.ToDateTime(a.CreatedAt);
+                        DateTime dataB = Convert.ToDateTime(b.CreatedAt);
+
+                        return dataB.CompareTo(dataA);
+                    }
+                    catch
+                    {
+                        return 0;
+                    }
+                });
+
+                // Apenas os 10 últimos
+                int quantidade = Math.Min(10, listaOrdenada.Count);
+
+                for (int i = 0; i < quantidade; i++)
+                {
+                    var doce = listaOrdenada[i];
+
+                    string id = "";
+                    string titulo = "";
+                    string categoria = "";
+                    string preco = "R$ 0,00";
+                    string destaque = "Normal";
+                    string dataCriacao = "";
+
+                    // =================================================
+                    // ID
+                    // =================================================
+
+                    try
+                    {
+                        id = Convert.ToString(doce.Id);
+                    }
+                    catch
+                    {
+                        id = "";
+                    }
+
+                    // =================================================
+                    // TÍTULO
+                    // =================================================
+
+                    try
+                    {
+                        titulo = Convert.ToString(doce.Title);
+                    }
+                    catch
+                    {
+                        titulo = "Sem título";
+                    }
+
+                    // =================================================
+                    // CATEGORIA
+                    // =================================================
+
+                    try
+                    {
+                        categoria = Convert.ToString(doce.CategoryName);
+
+                        if (string.IsNullOrWhiteSpace(categoria))
+                            categoria = "Sem categoria";
+                    }
+                    catch
+                    {
+                        categoria = "Sem categoria";
+                    }
+
+                    // =================================================
+                    // PREÇO
+                    // =================================================
+
+                    try
+                    {
+                        decimal valor = Convert.ToDecimal(doce.Preco);
+                        preco = valor.ToString("C2");
+                    }
+                    catch
+                    {
+                        preco = "R$ 0,00";
+                    }
+
+                    // =================================================
+                    // DESTAQUE
+                    // =================================================
+
+                    try
+                    {
+                        destaque = doce.IsFeatured == true
+                            ? "Destaque"
+                            : "Normal";
+                    }
+                    catch
+                    {
+                        destaque = "Normal";
+                    }
+
+                    // =================================================
+                    // DATA
+                    // =================================================
+
+                    try
+                    {
+                        DateTime data = Convert.ToDateTime(doce.CreatedAt);
+                        dataCriacao = data.ToString("dd/MM/yyyy HH:mm");
+                    }
+                    catch
+                    {
+                        dataCriacao = "";
+                    }
+
+                    // =================================================
+                    // ADICIONA NA GRID
+                    // =================================================
+
                     gridUltimosDoces.Rows.Add(
-                        doce.Id,
-                        doce.Title,
-                        doce.CategoryName,
-                        doce.ReleaseYear,
-                        doce.IsFeatured,
-                        doce.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                        id,
+                        titulo,
+                        categoria,
+                        preco,
+                        destaque,
+                        dataCriacao
                     );
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar dados: {ex.Message}", "Erro",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    $"Erro ao carregar os dados do dashboard.\n\n{ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
             }
             finally
             {
@@ -89,15 +278,46 @@ namespace DoceCantinho.Desktop1.UserControls
             }
         }
 
+        // ============================================================
+        // ESTADO DE CARREGAMENTO
+        // ============================================================
+
         private void SetCarregando(bool carregando)
         {
-            lblCarregando.Visible = carregando;
-            cardDoces.Visible = !carregando;
-            cardCategorias.Visible = !carregando;
-            lblUltimosDoces.Visible = !carregando;
-            gridUltimosDoces.Visible = !carregando;
+            // Texto de carregamento
+            if (lblCarregando != null)
+                lblCarregando.Visible = carregando;
+
+            // Card de doces
+            if (cardDoces != null)
+                cardDoces.Visible = !carregando;
+
+            // Card de categorias
+            if (cardCategorias != null)
+                cardCategorias.Visible = !carregando;
+
+            // Título da tabela
+            if (lblUltimosDoces != null)
+                lblUltimosDoces.Visible = !carregando;
+
+            // Grid
+            if (gridUltimosDoces != null)
+                gridUltimosDoces.Visible = !carregando;
         }
 
+        // ============================================================
+        // ATUALIZAR DASHBOARD MANUALMENTE
+        // ============================================================
 
+        public async Task AtualizarDashboardAsync()
+        {
+            if (_doceService == null)
+                _doceService = new DoceApiService();
+
+            if (_categoriasService == null)
+                _categoriasService = new CategoriasApiService();
+
+            await CarregarDadosAsync();
+        }
     }
 }
