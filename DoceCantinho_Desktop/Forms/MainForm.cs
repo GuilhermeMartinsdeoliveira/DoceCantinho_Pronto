@@ -1,3 +1,4 @@
+using DoceCantinho.Desktop.Forms;
 using DoceCantinho.Desktop.Helpers;
 using DoceCantinho.Desktop.Services;
 using DoceCantinho.Desktop.Themes;
@@ -152,6 +153,18 @@ namespace DoceCantinho.Desktop.Forms
 
         private void btnPedidos_Click(object sender, EventArgs e) => Navegar(new PedidosUserControl(), btnPedidos);
 
+        private void AbrirPerfil()
+        {
+            using (PerfilForm perfilForm = new PerfilForm())
+            {
+                perfilForm.ShowDialog(this);
+            }
+        }
 
+        private void pnlUsuario_Click(object sender, EventArgs e)
+        {
+            AbrirPerfil();
+
+        }
     }
 }

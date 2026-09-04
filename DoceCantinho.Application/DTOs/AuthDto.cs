@@ -26,4 +26,6 @@ namespace DoceCantinho.Application.DTOs
         public IList<string> Roles { get; set; } = new List<string>();
     }
 
+
+
 }

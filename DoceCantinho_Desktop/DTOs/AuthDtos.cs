@@ -62,4 +62,6 @@ namespace DoceCantinho.Desktop.DTOs
         /// </summary>
         public bool IsAdmin => Roles.Contains("Admin");
     }
+
+
 }

@@ -96,21 +96,46 @@ namespace DoceCantinho.Desktop.Services
             return await _http.GetAsync<UserResponseDto>("/api/auth/me");
         }
 
-        /// <summary>
-        /// Registra um novo usuário via POST /api/auth/register.
-        /// </summary>
-        public async Task<(bool Success, string ErrorMessage)> RegisterAsync(
-            string email, string password, string confirmPassword)
-        {
-            var dto = new RegisterRequestDto
-            {
-                Email = email,
-                Password = password,
-                ConfirmPassword = confirmPassword
-            };
+        ///// <summary>
+        ///// Registra um novo usuário via POST /api/auth/register.
+        ///// </summary>
+        //public async Task<(bool Success, string ErrorMessage)> RegisterAsync(
+        //    string email, string password, string confirmPassword)
+        //{
+        //    var dto = new RegisterRequestDto
+        //    {
+        //        Email = email,
+        //        Password = password,
+        //        ConfirmPassword = confirmPassword
+        //    };
 
-            var (success, _, error) = await _http.PostAsync<object>("/api/auth/register", dto);
-            return (success, error);
-        }
+        //    var (success, _, error) = await _http.PostAsync<object>("/api/auth/register", dto);
+        //    return (success, error);
+        //}
+
+        //public async Task<(bool Success, UserResponseDto? User, string ErrorMessage)>
+        //    UpdateProfileAsync(
+        //        string email,
+        //        string currentPassword,
+        //        string? newPassword,
+        //        string? confirmPassword)
+        //{
+        //    var dto = new UpdateProfileRequestDto
+        //    {
+        //        Email = email,
+        //        CurrentPassword = currentPassword,
+        //        NewPassword = string.IsNullOrWhiteSpace(newPassword)
+        //            ? null
+        //            : newPassword,
+        //        ConfirmPassword = string.IsNullOrWhiteSpace(confirmPassword)
+        //            ? null
+        //            : confirmPassword
+        //    };
+
+        //    return await _http.PutAsync<UserResponseDto>(
+        //        "/api/auth/profile",
+        //        dto);
+        //}
+
     }
 }

@@ -131,6 +131,8 @@ namespace DoceCantinho.Desktop.Forms
             pnlUsuario.ShadowDecoration.CustomizableEdges = customizableEdges2;
             pnlUsuario.Size = new Size(197, 78);
             pnlUsuario.TabIndex = 9;
+            pnlUsuario.Click += pnlUsuario_Click;
+
             // 
             // lblSessao
             // 
@@ -143,6 +145,7 @@ namespace DoceCantinho.Desktop.Forms
             lblSessao.Size = new Size(125, 13);
             lblSessao.TabIndex = 3;
             lblSessao.Text = "● conectado";
+
             // 
             // lblPerfil
             // 
