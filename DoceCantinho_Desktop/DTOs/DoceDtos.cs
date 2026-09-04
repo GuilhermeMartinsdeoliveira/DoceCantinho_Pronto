@@ -1,67 +1,101 @@
-﻿// =============================================================================
-// SenacDoces.Desktop - DTOs/DoceDtos.cs
-// =============================================================================
-//  CONCEITO: DTOs de Doces do Desktop
-//
-// Estes DTOs espelham os contratos da API de Doces:
-//   GET    /api/doces         retorna lista de DoceResponseDto
-//   GET    /api/doces/{id}    retorna DoceResponseDto
-//   POST   /api/doces         recebe CreateDoceDto
-//   PUT    /api/doces/{id}    recebe UpdateDoceDto
-//   DELETE /api/doces/{id}    sem corpo
-//
-// IMPORTANTE: As propriedades devem ter os MESMOS NOMES que os campos JSON
-// retornados pela API (System.Text.Json é case-insensitive por padrão).
-// =============================================================================
+﻿using System;
 
 namespace DoceCantinho.Desktop.DTOs
 {
-    /// <summary>
-    /// DTO para representar um Doce retornado pela API.
-    /// Usado para leitura (listagem, visualização).
-    /// </summary>
+    // ============================================================
+    // DTO DE RESPOSTA DA API
+    // ============================================================
 
     public class DoceResponseDto
     {
         public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public int ReleaseYear { get; set; }
-        public string CoverImageUrl { get; set; } = string.Empty;
+
+        public string Title { get; set; } = "";
+
+        public string Description { get; set; } = "";
+
+        // manter tipo double para compatibilidade com outras DTOs do projeto
+        public double Preco { get; set; }
+
+        public string CategoryName { get; set; } = "";
+
+        // id da categoria (necessário para forms e binding)
         public int CategoryId { get; set; }
 
-        /// <summary>Nome da categoria (já resolvido pela API via JOIN)</summary>
-        public string CategoryName { get; set; } = string.Empty;
-
         public bool IsFeatured { get; set; }
+
+        public bool IsAtivo { get; set; }
+
+        public int QuantidadeEstoque { get; set; }
+
         public DateTime CreatedAt { get; set; }
+
+        // usar o mesmo nome usado nas outras camadas (CoverImageUrl)
+        public string CoverImageUrl { get; set; } = "";
     }
 
-    /// <summary>
-    /// DTO para criação de um novo Doce.
-    /// Enviado no corpo do POST /api/doces.
-    /// </summary>
+
+    // ============================================================
+    // DTO PARA CRIAR DOCE
+    // ============================================================
+
     public class CreateDoceDto
     {
         public string Title { get; set; } = string.Empty;
+
         public string Description { get; set; } = string.Empty;
-        public int ReleaseYear { get; set; }
+
+        // remover ReleaseYear (não aplicável) e manter CoverImageUrl consistente
         public string CoverImageUrl { get; set; } = string.Empty;
+
+        // PREÇO
+        public double Preco { get; set; }
+
+        // RECOMENDADO (adicionado para parity com Application.DTOs)
+        public bool IsRecomendado { get; set; }
+
+        // ESTOQUE
+        public int QuantidadeEstoque { get; set; }
+
+        // STATUS
+        public bool IsAtivo { get; set; } = true;
+
+        // CATEGORIA
         public int CategoryId { get; set; }
+
+        // DESTAQUE
         public bool IsFeatured { get; set; }
     }
 
-    /// <summary>
-    /// DTO para atualização de um Doce existente.
-    /// Enviado no corpo do PUT /api/doces/{id}.
-    /// </summary>
+
+    // ============================================================
+    // DTO PARA ATUALIZAR DOCE
+    // ============================================================
+
     public class UpdateDoceDto
     {
         public string Title { get; set; } = string.Empty;
+
         public string Description { get; set; } = string.Empty;
-        public int ReleaseYear { get; set; }
+
         public string CoverImageUrl { get; set; } = string.Empty;
+
+        // PREÇO
+        public double Preco { get; set; }
+
+        // RECOMENDADO
+        public bool IsRecomendado { get; set; }
+
+        // ESTOQUE
+        public int QuantidadeEstoque { get; set; }
+
+        // STATUS
+        public bool IsAtivo { get; set; } = true;
+
+        // CATEGORIA
         public int CategoryId { get; set; }
+
+        // DESTAQUE
         public bool IsFeatured { get; set; }
     }
 }
