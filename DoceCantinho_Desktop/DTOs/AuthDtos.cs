@@ -63,5 +63,16 @@ namespace DoceCantinho.Desktop.DTOs
         public bool IsAdmin => Roles.Contains("Admin");
     }
 
+    public class UpdateProfileRequestDto
+    {
+        public string Email { get; set; } = string.Empty;
+
+        public string? CurrentPassword { get; set; }
+
+        public string? NewPassword { get; set; }
+
+        public string? ConfirmPassword { get; set; }
+    }
+
 
 }
