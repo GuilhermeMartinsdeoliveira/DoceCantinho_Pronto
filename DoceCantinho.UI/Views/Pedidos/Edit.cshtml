@@ -1,0 +1,261 @@
+@using DoceCantinho.Application.DTOs
+@model UpdatePedidoDto
+
+@{
+    ViewData["Title"] = "Editar Pedido";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1>@ViewData["Title"]</h1>
+            <p class="text-muted mb-4">Atualize os dados do pedido abaixo</p>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Erros ao atualizar pedido:</strong>
+                    <ul class="mb-0 mt-2">
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            @foreach (var error in modelState.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form method="post" action="@Url.Action("Edit", "Pedidos", new { id = ViewBag.Id })">
+                @Html.AntiForgeryToken()
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Informações do Pedido</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="NomeCliente" class="form-label">Nome do Cliente *</label>
+                                <input type="text" class="form-control" id="NomeCliente" name="NomeCliente" 
+                                       value="@Model.NomeCliente" required>
+                                <span class="text-danger">@Html.ValidationMessage("NomeCliente")</span>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Telefone" class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" id="Telefone" name="Telefone" 
+                                       value="@Model.Telefone" placeholder="(11) 99999-9999">
+                                <span class="text-danger">@Html.ValidationMessage("Telefone")</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Endereco" class="form-label">Endereço</label>
+                            <textarea class="form-control" id="Endereco" name="Endereco" rows="3"
+                                      placeholder="Rua, Número, Complemento, CEP">@Model.Endereco</textarea>
+                            <span class="text-danger">@Html.ValidationMessage("Endereco")</span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="PaymentMethod" class="form-label">Forma de Pagamento *</label>
+                                <select class="form-select" id="PaymentMethod" name="PaymentMethod" required>
+                                        <option value="">-- Selecione --</option>
+                                        <option value="Cartão de Crédito" selected="@(Model.PaymentMethod == "Cartão de Crédito")">Cartão de Crédito</option>
+                                        <option value="Cartão de Débito" selected="@(Model.PaymentMethod == "Cartão de Débito")">Cartão de Débito</option>
+                                        <option value="PIX" selected="@(Model.PaymentMethod == "PIX")">PIX</option>
+                                        <option value="Dinheiro" selected="@(Model.PaymentMethod == "Dinheiro")">Dinheiro</option>
+                                    </select>
+                                <span class="text-danger">@Html.ValidationMessage("PaymentMethod")</span>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="Total" class="form-label">Total *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" id="Total" name="Total" 
+                                           value="@Model.Total" step="0.01" min="0" required>
+                                </div>
+                                <span class="text-danger">@Html.ValidationMessage("Total")</span>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="Status" class="form-label">Status *</label>
+                                <select class="form-select" id="Status" name="Status" required>
+                                    <option value="Pendente" selected="@(Model.Status == "Pendente")">Pendente</option>
+                                    <option value="Pago" selected="@(Model.Status == "Pago")">Pago</option>
+                                    <option value="Em Preparo" selected="@(Model.Status == "Em Preparo")">Em Preparo</option>
+                                    <option value="Saiu para Entrega" selected="@(Model.Status == "Saiu para Entrega")">Saiu para Entrega</option>
+                                    <option value="Entregue" selected="@(Model.Status == "Entregue")">Entregue</option>
+                                    <option value="Cancelado" selected="@(Model.Status == "Cancelado")">Cancelado</option>
+                                </select>
+                                <span class="text-danger">@Html.ValidationMessage("Status")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Itens do Pedido</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small">Atualize os itens incluídos neste pedido</p>
+
+                        <div id="items-container">
+                            @if (Model.Items != null && Model.Items.Count > 0)
+                            {
+                                @for (int i = 0; i < Model.Items.Count; i++)
+                                {
+                                    <div class="item-row mb-3 p-3 border rounded" data-item-index="@i">
+                                        <div class="row mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Produto/Nome *</label>
+                                                <input type="text" class="form-control" name="Items[@i].Nome" 
+                                                       value="@Model.Items[i].Nome" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">DoceId</label>
+                                                <input type="number" class="form-control" name="Items[@i].DoceId" 
+                                                       value="@Model.Items[i].DoceId" min="0">
+                                            </div>
+                                            <div class="col-md-3 text-end">
+                                                <label class="form-label">&nbsp;</label>
+                                                <button type="button" class="btn btn-sm btn-danger w-100 remove-item">
+                                                    <i class="bi bi-trash"></i> Remover
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="form-label">Preço *</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">R$</span>
+                                                    <input type="number" class="form-control" name="Items[@i].Preco" 
+                                                           value="@Model.Items[i].Preco" step="0.01" min="0" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Quantidade *</label>
+                                                <input type="number" class="form-control" name="Items[@i].Quantidade" 
+                                                       value="@Model.Items[i].Quantidade" min="1" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Subtotal</label>
+                                                <p class="form-control-plaintext fw-bold text-success">
+                                                    R$ <span class="subtotal">@(Model.Items[i].Preco * Model.Items[i].Quantidade).ToString("F2")</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <button type="button" class="btn btn-outline-primary" id="add-item-btn">
+                            <i class="bi bi-plus-circle"></i> Adicionar Item
+                        </button>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Atualizar Pedido
+                    </button>
+                    <a href="@Url.Action("Index", "Pedidos")" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let itemCount = @(Model.Items?.Count ?? 0);
+
+    function updateSubtotal(row) {
+        const preco = parseFloat(row.querySelector('input[name*=".Preco"]').value) || 0;
+        const quantidade = parseInt(row.querySelector('input[name*=".Quantidade"]').value) || 0;
+        const subtotal = (preco * quantidade).toFixed(2);
+        row.querySelector('.subtotal').textContent = subtotal;
+    }
+
+    function attachItemListeners(row) {
+        row.querySelectorAll('input[name*=".Preco"], input[name*=".Quantidade"]').forEach(input => {
+            input.addEventListener('change', () => updateSubtotal(row));
+        });
+
+        row.querySelector('.remove-item').addEventListener('click', function() {
+            row.remove();
+        });
+    }
+
+    document.querySelectorAll('.item-row').forEach(row => {
+        attachItemListeners(row);
+    });
+
+    document.getElementById('add-item-btn').addEventListener('click', function() {
+        const container = document.getElementById('items-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'item-row mb-3 p-3 border rounded';
+        newRow.dataset.itemIndex = itemCount;
+        newRow.innerHTML = `
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label">Produto/Nome *</label>
+                    <input type="text" class="form-control" name="Items[${itemCount}].Nome" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">DoceId</label>
+                    <input type="number" class="form-control" name="Items[${itemCount}].DoceId" min="0">
+                </div>
+                <div class="col-md-3 text-end">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="button" class="btn btn-sm btn-danger w-100 remove-item">
+                        <i class="bi bi-trash"></i> Remover
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Preço *</label>
+                    <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" name="Items[${itemCount}].Preco" step="0.01" min="0" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Quantidade *</label>
+                    <input type="number" class="form-control" name="Items[${itemCount}].Quantidade" min="1" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Subtotal</label>
+                    <p class="form-control-plaintext fw-bold text-success">
+                        R$ <span class="subtotal">0.00</span>
+                    </p>
+                </div>
+            </div>
+        `;
+        container.appendChild(newRow);
+        attachItemListeners(newRow);
+        itemCount++;
+    });
+});
+</script>
+
+<style>
+    h1 {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .card-header {
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .item-row {
+        background-color: #f8f9fa;
+    }
+</style>

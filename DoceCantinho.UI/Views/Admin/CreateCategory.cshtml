@@ -1,0 +1,31 @@
+﻿@using DoceCantinho.Domain.Entities
+
+<link href="~/css/site.css" rel="stylesheet" />
+
+
+@model Category
+
+<div class="container mt-4">
+
+    <h2>Nova Categoria</h2>
+
+    <form asp-action="CreateCategory">
+
+        <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Salvar
+        </button>
+
+        <a asp-action="Categories" class="btn btn-secondary">
+            Voltar
+        </a>
+
+    </form>
+
+</div>
+
+<script src="~/js/site.js"></script>

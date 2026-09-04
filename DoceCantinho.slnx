@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="DoceCantinho.API/DoceCantinho.API.csproj" />
+  <Project Path="DoceCantinho.Application/DoceCantinho.Application.csproj" />
+  <Project Path="DoceCantinho.Infrastructure/DoceCantinho.Infrastructure.csproj" />
+  <Project Path="DoceCantinho.UI/DoceCantinho.UI.csproj" />
+  <Project Path="DoceCantinho/DoceCantinho.Domain.csproj" />
+  <Project Path="DoceCantinho_Desktop/DoceCantinho.Desktop1.csproj" />
+</Solution>
