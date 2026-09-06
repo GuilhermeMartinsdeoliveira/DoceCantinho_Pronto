@@ -277,25 +277,49 @@ namespace DoceCantinho.Desktop.Helpers
             }
         }
 
-        public async Task<(bool Success, string ErrorMessage)> DeleteAsync(string endpoint)
+        // =====================================================================
+        // DELETE
+        // =====================================================================
+
+        /// <summary>
+        /// Realiza uma requisição DELETE.
+        /// Retorna sucesso/erro sem exigir conteúdo no corpo da resposta.
+        /// </summary>
+        public async Task<(bool Success, string ErrorMessage)> DeleteAsync(
+            string endpoint)
         {
             try
             {
                 var response = await _client.DeleteAsync(endpoint);
-                var body = await response.Content.ReadAsStringAsync();
+
+                var responseBody =
+                    await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
+                {
                     return (true, string.Empty);
+                }
 
-                var error = $"HTTP {(int)response.StatusCode} {response.ReasonPhrase}: {TryExtractErrorMessage(body)}";
-                System.Diagnostics.Debug.WriteLine($"[DELETE] {endpoint} -> {error}");
+                var error =
+                    $"HTTP {(int)response.StatusCode} " +
+                    $"{response.ReasonPhrase}: " +
+                    $"{TryExtractErrorMessage(responseBody)}";
+
+                System.Diagnostics.Debug.WriteLine(
+                    $"[DELETE] {endpoint} -> {error}");
+
                 return (false, error);
             }
             catch (Exception ex)
             {
-                return (false, CategorizeConnectionError(ex, endpoint));
+                var friendly =
+                    CategorizeConnectionError(ex, endpoint);
+
+                return (false, friendly);
             }
         }
+
+
         /// <summary>
         /// Realiza um POST sem corpo e retorna apenas sucesso/erro.
         /// Útil para logout e ações simples.

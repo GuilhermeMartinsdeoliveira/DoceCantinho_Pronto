@@ -333,9 +333,7 @@ namespace DoceCantinho.Desktop.Forms
             }
         }
 
-        private void btnUsuario_Click(object sender, EventArgs e) => Navegar(new UsuarioUserControl(), btnUsuario);
 
-        private void btnPedidos_Click(object sender, EventArgs e) => Navegar(new PedidosUserControl(), btnPedidos);
 
         private void AbrirPerfil()
         {

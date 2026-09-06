@@ -376,15 +376,27 @@ namespace DoceCantinho.Desktop1.UserControls
         // NOVO PEDIDO
         // ============================================================
 
-        private void BtnNovoPedido_Click(
-            object? sender,
-            EventArgs e)
+       private void BtnNovoPedido_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show(
-                "Tela de cadastro de novo pedido.",
-                "Novo Pedido",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            try
+            {
+                using var form = new DoceCantinho.Desktop1.Forms.PedidoForm();
+
+                var resultado = form.ShowDialog(FindForm());
+
+                if (resultado == DialogResult.OK)
+                {
+                    _ = CarregarDadosAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Não foi possível abrir a tela de novo pedido.\n\n{ex.Message}",
+                    "Doce Cantinho",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         // ============================================================

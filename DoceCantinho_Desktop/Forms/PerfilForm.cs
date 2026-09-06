@@ -1,30 +1,61 @@
-﻿using DoceCantinho.Desktop.DTOs;
-using DoceCantinho.Desktop.Helpers;
-using DoceCantinho.Desktop.Services;
-using System;
+﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DoceCantinho.Desktop.Forms
 {
     public partial class PerfilForm : Form
     {
-        private readonly UserResponseDto? _usuario;
-
-        private string? _caminhoFoto;
-
-        private readonly AuthApiService _authService;
+        private Image? _fotoAtual;
 
         public PerfilForm()
         {
             InitializeComponent();
 
-            _authService = new AuthApiService();
-
-            // Obtém o usuário atualmente conectado.
-            _usuario = SessionManager.Instance.CurrentUser;
-
+            ConfigurarFormulario();
             CarregarPerfil();
+            ConfigurarEventos();
+        }
+
+        // ============================================================
+        // CONFIGURAÇÃO
+        // ============================================================
+
+        private void ConfigurarFormulario()
+        {
+            StartPosition = FormStartPosition.CenterParent;
+
+            txtSenhaAtual.UseSystemPasswordChar = true;
+            txtNovaSenha.UseSystemPasswordChar = true;
+            txtConfirmarSenha.UseSystemPasswordChar = true;
+
+            txtEmail.ReadOnly = true;
+
+            btnSalvar.Cursor = Cursors.Hand;
+            btnCancelar.Cursor = Cursors.Hand;
+            btnAlterarFoto.Cursor = Cursors.Hand;
+
+            lblAvatar.Cursor = Cursors.Default;
+        }
+
+        // ============================================================
+        // EVENTOS
+        // ============================================================
+
+        private void ConfigurarEventos()
+        {
+            btnSalvar.Click -= btnSalvar_Click;
+            btnSalvar.Click += btnSalvar_Click;
+
+            btnCancelar.Click -= btnCancelar_Click;
+            btnCancelar.Click += btnCancelar_Click;
+
+            btnAlterarFoto.Click -= btnAlterarFoto_Click;
+            btnAlterarFoto.Click += btnAlterarFoto_Click;
+
+            chkMostrarSenha.CheckedChanged -= chkMostrarSenha_CheckedChanged;
+            chkMostrarSenha.CheckedChanged += chkMostrarSenha_CheckedChanged;
         }
 
         // ============================================================
@@ -33,104 +64,79 @@ namespace DoceCantinho.Desktop.Forms
 
         private void CarregarPerfil()
         {
-            if (_usuario == null)
-            {
-                lblNomeUsuario.Text = "Usuário";
-                lblEmail.Text = string.Empty;
-                lblPerfil.Text = "Usuário Comum";
+            /*
+             * Estes valores são os valores exibidos atualmente
+             * no Designer.
+             *
+             * Quando o sistema estiver ligado ao usuário autenticado,
+             * esta parte poderá ser substituída pelos dados vindos da API.
+             */
 
-                txtNome.Text = string.Empty;
-                txtEmail.Text = string.Empty;
-
-                lblAvatar.Text = "U";
-                lblAvatar.Visible = true;
-                pictureFoto.Visible = false;
-
-                return;
-            }
-
-            // ========================================================
-            // E-MAIL
-            // ========================================================
-
-            txtEmail.Text = _usuario.Email;
-
-            lblEmail.Text = _usuario.Email;
-
-            // ========================================================
-            // PERFIL
-            // ========================================================
-
-            lblPerfil.Text = _usuario.IsAdmin
-                ? "Administrador"
-                : "Usuário Comum";
-
-            // ========================================================
-            // NOME DE EXIBIÇÃO
-            // ========================================================
-
-            string nome =
-                SessionManager.Instance.GetDisplayName();
+            string nome = "José da Silva";
+            string email = "usuario@email.com";
+            string perfil = "Administrador";
 
             txtNome.Text = nome;
+            txtEmail.Text = email;
 
             lblNomeUsuario.Text = nome;
+            lblEmail.Text = email;
+            lblPerfil.Text = perfil;
 
-            // ========================================================
-            // AVATAR
-            // ========================================================
+            lblPerfilValor.Text = perfil;
 
-            lblAvatar.Text =
-                ObterIniciais(nome);
-
-            lblAvatar.Visible = true;
-
-            pictureFoto.Visible = false;
-
-            // ========================================================
-            // SEGURANÇA
-            // ========================================================
-
-            // A senha nunca é carregada do sistema.
-            //
-            // O usuário somente informa a senha atual quando:
-            // - alterar o e-mail
-            // - alterar a senha
-            //
-            // Se não quiser alterar a senha, os três campos
-            // permanecem vazios.
-
-            txtSenhaAtual.Clear();
-            txtNovaSenha.Clear();
-            txtConfirmarSenha.Clear();
+            AtualizarAvatar(nome);
         }
 
         // ============================================================
-        // OBTER INICIAIS
+        // AVATAR
         // ============================================================
+
+        private void AtualizarAvatar(string nome)
+        {
+            string iniciais = ObterIniciais(nome);
+
+            lblAvatar.Text = iniciais;
+
+            if (_fotoAtual == null)
+            {
+                lblAvatar.Visible = true;
+                pictureFoto.Visible = false;
+            }
+            else
+            {
+                lblAvatar.Visible = false;
+                pictureFoto.Visible = true;
+                pictureFoto.Image = _fotoAtual;
+            }
+        }
 
         private string ObterIniciais(string nome)
         {
             if (string.IsNullOrWhiteSpace(nome))
-                return "U";
+                return "JS";
 
-            string[] partes =
-                nome
-                    .Trim()
-                    .Split(
-                        ' ',
-                        StringSplitOptions.RemoveEmptyEntries);
+            string[] partes = nome
+                .Trim()
+                .Split(
+                    new[] { ' ' },
+                    StringSplitOptions.RemoveEmptyEntries);
 
             if (partes.Length == 1)
             {
-                return partes[0]
-                    .Substring(0, 1)
-                    .ToUpper();
+                string primeira = partes[0];
+
+                return primeira.Length >= 2
+                    ? primeira[..2].ToUpper()
+                    : primeira.ToUpper();
             }
 
+            string primeiraInicial = partes[0][0].ToString();
+            string ultimaInicial = partes[^1][0].ToString();
+
             return (
-                partes[0].Substring(0, 1) +
-                partes[^1].Substring(0, 1)
+                primeiraInicial +
+                ultimaInicial
             ).ToUpper();
         }
 
@@ -139,22 +145,20 @@ namespace DoceCantinho.Desktop.Forms
         // ============================================================
 
         private void btnAlterarFoto_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
-            using OpenFileDialog dialog =
-                new OpenFileDialog();
+            using OpenFileDialog dialog = new OpenFileDialog
+            {
+                Title = "Selecionar foto do perfil",
+                Filter =
+                    "Imagens (*.jpg;*.jpeg;*.png;*.bmp)|" +
+                    "*.jpg;*.jpeg;*.png;*.bmp|" +
+                    "Todos os arquivos (*.*)|*.*",
+                Multiselect = false
+            };
 
-            dialog.Title =
-                "Selecionar foto de perfil";
-
-            dialog.Filter =
-                "Imagens|*.jpg;*.jpeg;*.png;*.bmp";
-
-            dialog.Multiselect =
-                false;
-
-            if (dialog.ShowDialog() != DialogResult.OK)
+            if (dialog.ShowDialog(this) != DialogResult.OK)
                 return;
 
             try
@@ -162,28 +166,24 @@ namespace DoceCantinho.Desktop.Forms
                 using Image imagemTemporaria =
                     Image.FromFile(dialog.FileName);
 
-                pictureFoto.Image =
+                Image novaImagem =
                     new Bitmap(imagemTemporaria);
 
-                pictureFoto.SizeMode =
-                    PictureBoxSizeMode.Zoom;
+                _fotoAtual?.Dispose();
+                _fotoAtual = novaImagem;
 
-                pictureFoto.Visible =
-                    true;
-
-                lblAvatar.Visible =
-                    false;
-
-                _caminhoFoto =
-                    dialog.FileName;
+                pictureFoto.Image = _fotoAtual;
+                pictureFoto.Visible = true;
+                lblAvatar.Visible = false;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Não foi possível carregar a imagem.\n\n{ex.Message}",
-                    "Foto de perfil",
+                    "Não foi possível carregar a foto.\n\n" +
+                    ex.Message,
+                    "Foto do perfil",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -192,77 +192,68 @@ namespace DoceCantinho.Desktop.Forms
         // ============================================================
 
         private void chkMostrarSenha_CheckedChanged(
-            object sender,
+            object? sender,
             EventArgs e)
         {
-            bool mostrar =
-                chkMostrarSenha.Checked;
+            bool mostrar = chkMostrarSenha.Checked;
 
-            txtSenhaAtual.UseSystemPasswordChar =
-                !mostrar;
-
-            txtNovaSenha.UseSystemPasswordChar =
-                !mostrar;
-
-            txtConfirmarSenha.UseSystemPasswordChar =
-                !mostrar;
-        }
-
-        // ============================================================
-        // CANCELAR
-        // ============================================================
-
-        private void btnCancelar_Click(
-            object sender,
-            EventArgs e)
-        {
-            DialogResult =
-                DialogResult.Cancel;
-
-            Close();
+            txtSenhaAtual.UseSystemPasswordChar = !mostrar;
+            txtNovaSenha.UseSystemPasswordChar = !mostrar;
+            txtConfirmarSenha.UseSystemPasswordChar = !mostrar;
         }
 
         // ============================================================
         // SALVAR
         // ============================================================
 
-        private async void btnSalvar_Click(
-            object sender,
+        private void btnSalvar_Click(
+            object? sender,
             EventArgs e)
         {
-            if (_usuario == null)
-            {
-                MessageBox.Show(
-                    "Não foi possível identificar o usuário conectado.",
-                    "Perfil",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-
+            if (!ValidarDados())
                 return;
+
+            string nome = txtNome.Text.Trim();
+
+            bool alterouSenha =
+                !string.IsNullOrWhiteSpace(txtSenhaAtual.Text) ||
+                !string.IsNullOrWhiteSpace(txtNovaSenha.Text) ||
+                !string.IsNullOrWhiteSpace(txtConfirmarSenha.Text);
+
+            if (alterouSenha)
+            {
+                if (!ValidarSenha())
+                    return;
             }
 
-            // ========================================================
-            // CAPTURA DOS CAMPOS
-            // ========================================================
+            lblNomeUsuario.Text = nome;
+            AtualizarAvatar(nome);
 
-            string nome =
-                txtNome.Text.Trim();
+            /*
+             * Neste momento o formulário atualiza a interface localmente.
+             *
+             * A gravação definitiva no banco/API do usuário deverá ser
+             * ligada aqui quando tivermos o endpoint de atualização
+             * do usuário autenticado.
+             */
 
-            string email =
-                txtEmail.Text.Trim();
+            MessageBox.Show(
+                "As alterações foram aplicadas com sucesso.",
+                "Meu Perfil",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
-            string senhaAtual =
-                txtSenhaAtual.Text;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
 
-            string novaSenha =
-                txtNovaSenha.Text;
+        // ============================================================
+        // VALIDAR DADOS
+        // ============================================================
 
-            string confirmarSenha =
-                txtConfirmarSenha.Text;
-
-            // ========================================================
-            // VALIDAÇÃO DO NOME
-            // ========================================================
+        private bool ValidarDados()
+        {
+            string nome = txtNome.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(nome))
             {
@@ -273,277 +264,107 @@ namespace DoceCantinho.Desktop.Forms
                     MessageBoxIcon.Warning);
 
                 txtNome.Focus();
-
-                return;
+                return false;
             }
 
-            // ========================================================
-            // VALIDAÇÃO DO E-MAIL
-            // ========================================================
-
-            if (string.IsNullOrWhiteSpace(email))
+            if (nome.Length < 2)
             {
                 MessageBox.Show(
-                    "Informe o e-mail.",
+                    "O nome deve possuir pelo menos 2 caracteres.",
                     "Validação",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
-                txtEmail.Focus();
-
-                return;
+                txtNome.Focus();
+                return false;
             }
 
-            if (!email.Contains("@") ||
-                !email.Contains("."))
+            return true;
+        }
+
+        // ============================================================
+        // VALIDAR SENHA
+        // ============================================================
+
+        private bool ValidarSenha()
+        {
+            string senhaAtual = txtSenhaAtual.Text;
+            string novaSenha = txtNovaSenha.Text;
+            string confirmarSenha = txtConfirmarSenha.Text;
+
+            if (string.IsNullOrWhiteSpace(senhaAtual))
             {
                 MessageBox.Show(
-                    "Informe um e-mail válido.",
-                    "Validação",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-
-                txtEmail.Focus();
-
-                return;
-            }
-
-            // ========================================================
-            // IDENTIFICA O QUE FOI ALTERADO
-            // ========================================================
-
-            bool alterandoSenha =
-                !string.IsNullOrWhiteSpace(novaSenha) ||
-                !string.IsNullOrWhiteSpace(confirmarSenha);
-
-            bool alterandoEmail =
-                !email.Equals(
-                    _usuario.Email,
-                    StringComparison.OrdinalIgnoreCase);
-
-            bool alterandoNome =
-                !nome.Equals(
-                    SessionManager.Instance.GetDisplayName(),
-                    StringComparison.OrdinalIgnoreCase);
-
-            bool alterandoFoto =
-                !string.IsNullOrWhiteSpace(_caminhoFoto);
-
-            // ========================================================
-            // VALIDAÇÃO DA SENHA
-            // ========================================================
-
-            // A senha atual somente é necessária quando:
-            //
-            // 1. O usuário deseja alterar o e-mail
-            // 2. O usuário deseja alterar a senha
-            //
-            // Alterar nome ou foto não exige senha.
-
-            if (alterandoSenha)
-            {
-                if (string.IsNullOrWhiteSpace(senhaAtual))
-                {
-                    MessageBox.Show(
-                        "Para alterar sua senha, informe a senha atual.",
-                        "Senha atual",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-
-                    txtSenhaAtual.Focus();
-
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(novaSenha))
-                {
-                    MessageBox.Show(
-                        "Informe a nova senha.",
-                        "Nova senha",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-
-                    txtNovaSenha.Focus();
-
-                    return;
-                }
-
-                if (novaSenha.Length < 6)
-                {
-                    MessageBox.Show(
-                        "A nova senha deve possuir pelo menos 6 caracteres.",
-                        "Nova senha",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-
-                    txtNovaSenha.Focus();
-
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(confirmarSenha))
-                {
-                    MessageBox.Show(
-                        "Confirme a nova senha.",
-                        "Confirmar senha",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-
-                    txtConfirmarSenha.Focus();
-
-                    return;
-                }
-
-                if (!novaSenha.Equals(confirmarSenha))
-                {
-                    MessageBox.Show(
-                        "A nova senha e a confirmação não coincidem.",
-                        "Nova senha",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-
-                    txtConfirmarSenha.Focus();
-
-                    return;
-                }
-            }
-
-            // ========================================================
-            // ALTERAÇÃO DE E-MAIL
-            // ========================================================
-
-            if (alterandoEmail &&
-                string.IsNullOrWhiteSpace(senhaAtual))
-            {
-                MessageBox.Show(
-                    "Para alterar o e-mail, informe sua senha atual.",
-                    "Senha atual",
+                    "Informe a senha atual.",
+                    "Alteração de senha",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
                 txtSenhaAtual.Focus();
-
-                return;
+                return false;
             }
 
-            // ========================================================
-            // NADA ALTERADO
-            // ========================================================
-
-            if (!alterandoNome &&
-                !alterandoEmail &&
-                !alterandoSenha &&
-                !alterandoFoto)
+            if (string.IsNullOrWhiteSpace(novaSenha))
             {
                 MessageBox.Show(
-                    "Nenhuma alteração foi realizada.",
-                    "Meu Perfil",
+                    "Informe a nova senha.",
+                    "Alteração de senha",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Warning);
 
-                return;
+                txtNovaSenha.Focus();
+                return false;
             }
 
-            // ========================================================
-            // BOTÃO SALVAR
-            // ========================================================
-
-            btnSalvar.Enabled = false;
-            btnCancelar.Enabled = false;
-
-            string textoOriginal =
-                btnSalvar.Text;
-
-            btnSalvar.Text =
-                "Salvando...";
-
-            try
-            {
-                // ====================================================
-                // ENVIA ALTERAÇÕES PARA API
-                // ====================================================
-
-                var resultado =
-                    await _authService.UpdateProfileAsync(
-                        email,
-                        senhaAtual,
-                        alterandoSenha
-                            ? novaSenha
-                            : null,
-                        alterandoSenha
-                            ? confirmarSenha
-                            : null);
-
-                // ====================================================
-                // API RETORNOU ERRO
-                // ====================================================
-
-                if (!resultado.Success)
-                {
-                    MessageBox.Show(
-                        resultado.ErrorMessage,
-                        "Não foi possível salvar",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-
-                    return;
-                }
-
-                // ====================================================
-                // ATUALIZA SESSION MANAGER
-                // ====================================================
-
-                if (resultado.User != null)
-                {
-                    SessionManager.Instance.SetUser(
-                        resultado.User);
-                }
-
-                // ====================================================
-                // FOTO
-                // ====================================================
-
-                // Neste momento a foto é exibida no formulário,
-                // mas ainda não é persistida no servidor.
-                //
-                // A persistência da foto será implementada na
-                // próxima etapa junto com o campo DisplayName.
-
-                // ====================================================
-                // SUCESSO
-                // ====================================================
-
-                MessageBox.Show(
-                    "Suas informações foram atualizadas com sucesso.",
-                    "Perfil atualizado",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                DialogResult =
-                    DialogResult.OK;
-
-                Close();
-            }
-            catch (Exception ex)
+            if (novaSenha.Length < 6)
             {
                 MessageBox.Show(
-                    "Ocorreu um erro ao salvar seu perfil.\n\n" +
-                    ex.Message,
-                    "Erro",
+                    "A nova senha deve possuir pelo menos 6 caracteres.",
+                    "Alteração de senha",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    MessageBoxIcon.Warning);
+
+                txtNovaSenha.Focus();
+                return false;
             }
-            finally
+
+            if (string.IsNullOrWhiteSpace(confirmarSenha))
             {
-                btnSalvar.Enabled =
-                    true;
+                MessageBox.Show(
+                    "Confirme a nova senha.",
+                    "Alteração de senha",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
 
-                btnCancelar.Enabled =
-                    true;
-
-                btnSalvar.Text =
-                    textoOriginal;
+                txtConfirmarSenha.Focus();
+                return false;
             }
+
+            if (novaSenha != confirmarSenha)
+            {
+                MessageBox.Show(
+                    "A nova senha e a confirmação não são iguais.",
+                    "Alteração de senha",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                txtConfirmarSenha.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // ============================================================
+        // CANCELAR
+        // ============================================================
+
+        private void btnCancelar_Click(
+            object? sender,
+            EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }

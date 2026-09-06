@@ -38,30 +38,59 @@ namespace DoceCantinho.API.Controllers
         // OrdersController.cs deste projeto)
         // =====================================================================
 
-        public class UsuarioResponseDto
-        {
-            public string Id { get; set; } = string.Empty;
-            public string Email { get; set; } = string.Empty;
-            public string UserName { get; set; } = string.Empty;
-            public List<string> Roles { get; set; } = new();
-        }
+  public class UsuarioResponseDto
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Nome { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public List<string> Roles { get; set; } = new();
+        public string Telefone { get; set; } = string.Empty;
+        public string Logradouro { get; set; } = string.Empty;
+        public string Numero { get; set; } = string.Empty;
+        public string? Complemento { get; set; }
+        public string Bairro { get; set; } = string.Empty;
+        public string Cidade { get; set; } = string.Empty;
+        public string Estado { get; set; } = string.Empty;
+        public string Cep { get; set; } = string.Empty;
+    }
 
-        public class CreateUsuarioDto
-        {
-            public string Email { get; set; } = string.Empty;
-            public string Password { get; set; } = string.Empty;
-            public string ConfirmPassword { get; set; } = string.Empty;
-            public string Role { get; set; } = "Usuário";
-        }
+    public class CreateUsuarioDto
+    {
+        public string Nome { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
 
-        public class UpdateUsuarioDto
-        {
-            public string Email { get; set; } = string.Empty;
-            public string? Password { get; set; }
-            public string? ConfirmPassword { get; set; }
-            public string Role { get; set; } = string.Empty;
-        }
+        public string Telefone { get; set; } = string.Empty;
 
+        public string Logradouro { get; set; } = string.Empty;
+        public string Numero { get; set; } = string.Empty;
+        public string? Complemento { get; set; }
+        public string Bairro { get; set; } = string.Empty;
+        public string Cidade { get; set; } = string.Empty;
+        public string Estado { get; set; } = string.Empty;
+        public string Cep { get; set; } = string.Empty;
+
+        public string Role { get; set; } = "Usuário";
+    }
+
+    public class UpdateUsuarioDto
+    {
+        public string Nome { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string? Password { get; set; }
+        public string? ConfirmPassword { get; set; }
+        public string Telefone  { get; set; } = string.Empty;
+        public string Logradouro { get; set; } = string.Empty;
+        public string Numero { get; set; } = string.Empty;
+        public string? Complemento { get; set; }
+        public string Bairro { get; set; } = string.Empty;
+        public string Cidade { get; set; } = string.Empty;
+        public string Estado { get; set; } = string.Empty;
+        public string Cep { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+    }
         // =====================================================================
         // GET /api/usuarios
         // =====================================================================
@@ -78,9 +107,30 @@ namespace DoceCantinho.API.Controllers
                     lista.Add(new UsuarioResponseDto
                     {
                         Id = user.Id,
+
+                        Nome = user.Nome,
+
                         Email = user.Email ?? string.Empty,
+
                         UserName = user.UserName ?? string.Empty,
-                        Roles = roles.ToList()
+
+                        Roles = roles.ToList(),
+
+                        Telefone = user.PhoneNumber ?? string.Empty,
+
+                        Logradouro = user.Logradouro,
+
+                        Numero = user.Numero,
+
+                        Complemento = user.Complemento,
+
+                        Bairro = user.Bairro,
+
+                        Cidade = user.Cidade,
+
+                        Estado = user.Estado,
+
+                        Cep = user.Cep
                     });
                 }
 
@@ -123,13 +173,21 @@ namespace DoceCantinho.API.Controllers
                 return NotFound(new { message = $"Usuário com ID {id} não encontrado" });
 
             var roles = await _userManager.GetRolesAsync(user);
-
             return Ok(new UsuarioResponseDto
             {
                 Id = user.Id,
+                Nome = user.Nome,
                 Email = user.Email ?? string.Empty,
                 UserName = user.UserName ?? string.Empty,
-                Roles = roles.ToList()
+                Roles = roles.ToList(),
+                Telefone = user.PhoneNumber ?? string.Empty,
+                Logradouro = user.Logradouro,
+                Numero = user.Numero,
+                Complemento = user.Complemento,
+                Bairro = user.Bairro,
+                Cidade = user.Cidade,
+                Estado = user.Estado,
+                Cep = user.Cep
             });
         }
 
@@ -152,10 +210,19 @@ namespace DoceCantinho.API.Controllers
 
             var user = new ApplicationUser
             {
-                UserName = dto.Email,
-                Email = dto.Email,
-                EmailConfirmed = true,
-                Cpf = string.Empty
+                Nome = dto.Nome.Trim(),
+                UserName = dto.Email.Trim(),
+                Email = dto.Email.Trim(),
+                PhoneNumber = dto.Telefone.Trim(),
+                Logradouro = dto.Logradouro.Trim(),
+                Numero = dto.Numero.Trim(),
+                Complemento = string.IsNullOrWhiteSpace(dto.Complemento)
+                    ? null
+                    : dto.Complemento.Trim(),
+                Bairro = dto.Bairro.Trim(),
+                Cidade = dto.Cidade.Trim(),
+                Estado = dto.Estado.Trim().ToUpper(),
+                Cep = dto.Cep.Trim()
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -175,7 +242,17 @@ namespace DoceCantinho.API.Controllers
                 Id = user.Id,
                 Email = user.Email!,
                 UserName = user.UserName!,
-                Roles = roles.ToList()
+                Roles = roles.ToList(),
+
+                Telefone = user.PhoneNumber ?? string.Empty,
+
+                Logradouro = user.Logradouro ?? string.Empty,
+                Numero = user.Numero ?? string.Empty,
+                Complemento = user.Complemento,
+                Bairro = user.Bairro ?? string.Empty,
+                Cidade = user.Cidade ?? string.Empty,
+                Estado = user.Estado ?? string.Empty,
+                Cep = user.Cep ?? string.Empty
             };
 
             return CreatedAtAction(nameof(GetById), new { id = user.Id }, response);
@@ -186,75 +263,112 @@ namespace DoceCantinho.API.Controllers
         // =====================================================================
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(string id, [FromBody] UpdateUsuarioDto dto)
+        public async Task<IActionResult> Update(
+            string id,
+            [FromBody] UpdateUsuarioDto dto)
         {
             var user = await _userManager.FindByIdAsync(id);
+
             if (user == null)
-                return NotFound(new { message = $"Usuário com ID {id} não encontrado" });
+                return NotFound(new
+                {
+                    message = $"Usuário com ID {id} não encontrado"
+                });
 
             try
             {
+                // E-mail
                 if (!string.IsNullOrWhiteSpace(dto.Email) &&
-                    !string.Equals(dto.Email, user.Email, StringComparison.OrdinalIgnoreCase))
+                    !string.Equals(
+                        user.Email,
+                        dto.Email,
+                        StringComparison.OrdinalIgnoreCase))
                 {
-                    var outroUsuario = await _userManager.FindByEmailAsync(dto.Email);
-                    if (outroUsuario != null && outroUsuario.Id != user.Id)
-                        return BadRequest(new { message = "Já existe um usuário com este e-mail." });
-
                     user.Email = dto.Email;
                     user.UserName = dto.Email;
-                    user.NormalizedEmail = _userManager.NormalizeEmail(dto.Email);
-                    user.NormalizedUserName = _userManager.NormalizeName(dto.Email);
                 }
 
-                // Senha em branco = mantém a senha atual (contrato combinado com o Desktop)
+                // Dados pessoais
+                user.Nome = dto.Nome;
+                user.PhoneNumber = dto.Telefone;
+
+                // Endereço
+                user.Logradouro = dto.Logradouro;
+                user.Numero = dto.Numero;
+                user.Complemento = dto.Complemento;
+                user.Bairro = dto.Bairro;
+                user.Cidade = dto.Cidade;
+                user.Estado = dto.Estado;
+                user.Cep = dto.Cep;
+
+                // Senha
                 if (!string.IsNullOrWhiteSpace(dto.Password))
                 {
                     if (dto.Password != dto.ConfirmPassword)
-                        return BadRequest(new { message = "As senhas não coincidem." });
-
-                    var removeResult = await _userManager.RemovePasswordAsync(user);
-                    if (!removeResult.Succeeded && removeResult.Errors.Any())
                     {
-                        var errors = removeResult.Errors.Select(e => e.Description);
-                        return BadRequest(new { message = "Erro ao atualizar senha.", errors });
+                        return BadRequest(new
+                        {
+                            message = "As senhas não coincidem."
+                        });
                     }
 
-                    var addPasswordResult = await _userManager.AddPasswordAsync(user, dto.Password);
-                    if (!addPasswordResult.Succeeded)
+                    var token =
+                        await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    var passwordResult =
+                        await _userManager.ResetPasswordAsync(
+                            user,
+                            token,
+                            dto.Password);
+
+                    if (!passwordResult.Succeeded)
                     {
-                        var errors = addPasswordResult.Errors.Select(e => e.Description);
-                        return BadRequest(new { message = "Erro ao atualizar senha.", errors });
+                        return BadRequest(new
+                        {
+                            message = string.Join(
+                                "; ",
+                                passwordResult.Errors.Select(e => e.Description))
+                        });
                     }
                 }
 
                 var updateResult = await _userManager.UpdateAsync(user);
+
                 if (!updateResult.Succeeded)
                 {
-                    var errors = updateResult.Errors.Select(e => e.Description);
-                    return BadRequest(new { message = "Erro ao atualizar usuário.", errors });
+                    return BadRequest(new
+                    {
+                        message = string.Join(
+                            "; ",
+                            updateResult.Errors.Select(e => e.Description))
+                    });
                 }
 
+                // Perfil
                 if (!string.IsNullOrWhiteSpace(dto.Role))
                 {
-                    var currentRoles = await _userManager.GetRolesAsync(user);
-                    if (!currentRoles.Contains(dto.Role))
-                    {
-                        await GarantirRoleExisteAsync(dto.Role);
+                    await GarantirRoleExisteAsync(dto.Role);
 
-                        if (currentRoles.Any())
-                            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                    var roles = await _userManager.GetRolesAsync(user);
 
-                        await _userManager.AddToRoleAsync(user, dto.Role);
-                    }
+                    if (roles.Count > 0)
+                        await _userManager.RemoveFromRolesAsync(user, roles);
+
+                    await _userManager.AddToRoleAsync(user, dto.Role);
                 }
 
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro ao atualizar usuário {id}: {ex.Message}");
-                return StatusCode(500, "Erro ao atualizar usuário");
+                _logger.LogError(
+                    ex,
+                    "Erro ao atualizar usuário {Id}",
+                    id);
+
+                return StatusCode(
+                    500,
+                    new { message = "Erro interno do servidor." });
             }
         }
 
