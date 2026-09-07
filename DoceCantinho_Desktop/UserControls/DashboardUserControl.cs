@@ -1,276 +1,190 @@
-﻿using DoceCantinho.Desktop.Helpers;
+﻿using DoceCantinho.Desktop.DTOs;
+using DoceCantinho.Desktop.Helpers;
 using DoceCantinho.Desktop.Services;
 using DoceCantinho.Desktop.Themes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Guna.UI2.WinForms;
 
 namespace DoceCantinho.Desktop1.UserControls
 {
     public partial class DashboardUserControl : UserControl
     {
-        private DoceApiService _doceService;
-        private CategoriasApiService _categoriasService;
+        // ============================================================
+        // SERVIÇOS
+        // ============================================================
+        private readonly DoceApiService _doceService;
+        private readonly CategoriasApiService _categoriasService;
+        private readonly PedidosApiService _pedidosService;
 
+        // ============================================================
+        // DADOS
+        // ============================================================
+        private List<DoceResponseDto> _doces = new();
+        private List<CategoriaResponseDto> _categorias = new();
+        private List<PedidoResponseDto> _pedidos = new();
+
+        // ============================================================
+        // VENDAS DOS 7 DIAS
+        // ============================================================
+        private readonly decimal[] _vendasPorDia =
+            new decimal[7];
+
+        // ============================================================
+        // CONSTRUTOR
+        // ============================================================
         public DashboardUserControl()
         {
             InitializeComponent();
 
-            // Evento de carregamento
-            this.Load += DashboardUserControl_Load;
+            _doceService =
+                new DoceApiService();
+
+            _categoriasService =
+                new CategoriasApiService();
+
+            _pedidosService =
+                new PedidosApiService();
+
+            // ========================================================
+            // O GRÁFICO AGORA É DESENHADO PELO CÓDIGO
+            // ========================================================
+            OcultarBarrasDoDesigner();
+
+            pnlChart.Paint -=
+                PnlChart_Paint;
+
+            pnlChart.Paint +=
+                PnlChart_Paint;
+
+            Resize -=
+                DashboardUserControl_Resize;
+
+            Resize +=
+                DashboardUserControl_Resize;
+
+            Load -=
+                DashboardUserControl_Load;
+
+            Load +=
+                DashboardUserControl_Load;
         }
 
         // ============================================================
-        // CARREGAMENTO DO DASHBOARD
+        // LOAD
         // ============================================================
-
-        private async void DashboardUserControl_Load(object sender, EventArgs e)
+        private async void DashboardUserControl_Load(
+            object? sender,
+            EventArgs e)
         {
-            // Não executa no Designer do Visual Studio
-            if (DesignMode || LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            if (DesignMode ||
+                LicenseManager.UsageMode ==
+                LicenseUsageMode.Designtime)
+            {
                 return;
-
-            try
-            {
-                // Inicializa os serviços
-                _doceService = new DoceApiService();
-                _categoriasService = new CategoriasApiService();
-
-                // Dados do usuário logado
-                string nomeUsuario = SessionManager.Instance.GetDisplayName();
-
-                if (string.IsNullOrWhiteSpace(nomeUsuario))
-                    nomeUsuario = "Usuário";
-
-                lblTitulo.Text = $"Olá, {nomeUsuario}!";
-
-                // Data atual
-                lblSubTitulo.Text =
-                    $"Bem-vindo ao DoceCantinho - {DateTime.Now:dddd, dd 'de' MMMM 'de' yyyy}";
-
-                // Aplica o tema da tabela
-                DoceTheme.AplicarEstiloGrid(gridUltimosDoces);
-
-                // Carrega os dados
-                await CarregarDadosAsync();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    $"Não foi possível iniciar o dashboard.\n\nErro: {ex.Message}",
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-            }
+
+            // ========================================================
+            // USUÁRIO
+            // ========================================================
+            string nome =
+                SessionManager.Instance
+                    .GetDisplayName();
+
+            if (string.IsNullOrWhiteSpace(nome))
+                nome = "Usuário";
+
+            lblTitulo.Text =
+                $"Olá, {nome}!";
+
+            lblSubTitulo.Text =
+                $"Bem-vindo ao DoceCantinho - {ObterDataAtualFormatada()}";
+
+            await CarregarDadosAsync();
+        }
+
+        // ============================================================
+        // DATA
+        // ============================================================
+        private string ObterDataAtualFormatada()
+        {
+            CultureInfo cultura =
+                CultureInfo.GetCultureInfo(
+                    "pt-BR");
+
+            string data =
+                DateTime.Now
+                    .ToString(
+                        "dddd, dd 'de' MMMM 'de' yyyy",
+                        cultura);
+
+            if (string.IsNullOrEmpty(data))
+                return data;
+
+            return char.ToUpper(data[0]) +
+                   data.Substring(1);
         }
 
         // ============================================================
         // CARREGAR DADOS
         // ============================================================
-
         private async Task CarregarDadosAsync()
         {
-            SetCarregando(true);
-
             try
             {
-                // Busca os dados
-                var resultadoDoces = await _doceService.GetAllAsync();
-                var resultadoCategorias = await _categoriasService.GetAllAsync();
+                SetCarregando(true);
+
+                var tarefaDoces =
+                    _doceService.GetAllAsync();
+
+                var tarefaCategorias =
+                    _categoriasService.GetAllAsync();
+
+                var tarefaPedidos =
+                    _pedidosService.GetAllAsync();
+
+                await Task.WhenAll(
+                    tarefaDoces,
+                    tarefaCategorias,
+                    tarefaPedidos);
+
+                _doces =
+                    tarefaDoces.Result ??
+                    new List<DoceResponseDto>();
+
+                _categorias =
+                    tarefaCategorias.Result ??
+                    new List<CategoriaResponseDto>();
+
+                _pedidos =
+                    tarefaPedidos.Result ??
+                    new List<PedidoResponseDto>();
 
                 // ====================================================
-                // CORREÇÃO DO PROBLEMA COM DYNAMIC
+                // ATUALIZAR COMPONENTES
                 // ====================================================
+                AtualizarCards();
 
-                // Converte explicitamente para listas.
-                // Isso evita os erros CS1977 nas expressões LINQ.
-                var doces = ((IEnumerable<dynamic>)resultadoDoces).ToList();
-                var categorias = ((IEnumerable<dynamic>)resultadoCategorias).ToList();
+                AtualizarGrafico();
 
-                // ====================================================
-                // CARDS DO DASHBOARD
-                // ====================================================
+                AtualizarCategorias();
 
-                // Total de doces
-                cardDoceslblNumero.Text = doces.Count.ToString();
-
-                // Total de categorias
-                cardCategoriaslblNumero.Text = categorias.Count.ToString();
-
-                // Total de doces em destaque
-                int totalDestaques = 0;
-
-                foreach (var doce in doces)
-                {
-                    try
-                    {
-                        if (doce.IsFeatured == true)
-                            totalDestaques++;
-                    }
-                    catch
-                    {
-                        // Caso o objeto não possua IsFeatured
-                    }
-                }
-
-                CardDestaquesValor.Text = totalDestaques.ToString();
-
-                // ====================================================
-                // TABELA DE ÚLTIMOS DOCES
-                // ====================================================
-
-                gridUltimosDoces.Rows.Clear();
-
-                // Cria uma lista para ordenar sem gerar erro de
-                // expressão lambda em operação dinâmica.
-                var listaOrdenada = new List<dynamic>();
-
-                foreach (var doce in doces)
-                {
-                    listaOrdenada.Add(doce);
-                }
-
-                // Ordena pela data de criação
-                listaOrdenada.Sort((a, b) =>
-                {
-                    try
-                    {
-                        DateTime dataA = Convert.ToDateTime(a.CreatedAt);
-                        DateTime dataB = Convert.ToDateTime(b.CreatedAt);
-
-                        return dataB.CompareTo(dataA);
-                    }
-                    catch
-                    {
-                        return 0;
-                    }
-                });
-
-                // Apenas os 10 últimos
-                int quantidade = Math.Min(10, listaOrdenada.Count);
-
-                for (int i = 0; i < quantidade; i++)
-                {
-                    var doce = listaOrdenada[i];
-
-                    string id = "";
-                    string titulo = "";
-                    string categoria = "";
-                    string preco = "R$ 0,00";
-                    string destaque = "Normal";
-                    string dataCriacao = "";
-
-                    // =================================================
-                    // ID
-                    // =================================================
-
-                    try
-                    {
-                        id = Convert.ToString(doce.Id);
-                    }
-                    catch
-                    {
-                        id = "";
-                    }
-
-                    // =================================================
-                    // TÍTULO
-                    // =================================================
-
-                    try
-                    {
-                        titulo = Convert.ToString(doce.Title);
-                    }
-                    catch
-                    {
-                        titulo = "Sem título";
-                    }
-
-                    // =================================================
-                    // CATEGORIA
-                    // =================================================
-
-                    try
-                    {
-                        categoria = Convert.ToString(doce.CategoryName);
-
-                        if (string.IsNullOrWhiteSpace(categoria))
-                            categoria = "Sem categoria";
-                    }
-                    catch
-                    {
-                        categoria = "Sem categoria";
-                    }
-
-                    // =================================================
-                    // PREÇO
-                    // =================================================
-
-                    try
-                    {
-                        decimal valor = Convert.ToDecimal(doce.Preco);
-                        preco = valor.ToString("C2");
-                    }
-                    catch
-                    {
-                        preco = "R$ 0,00";
-                    }
-
-                    // =================================================
-                    // DESTAQUE
-                    // =================================================
-
-                    try
-                    {
-                        destaque = doce.IsFeatured == true
-                            ? "Destaque"
-                            : "Normal";
-                    }
-                    catch
-                    {
-                        destaque = "Normal";
-                    }
-
-                    // =================================================
-                    // DATA
-                    // =================================================
-
-                    try
-                    {
-                        DateTime data = Convert.ToDateTime(doce.CreatedAt);
-                        dataCriacao = data.ToString("dd/MM/yyyy HH:mm");
-                    }
-                    catch
-                    {
-                        dataCriacao = "";
-                    }
-
-                    // =================================================
-                    // ADICIONA NA GRID
-                    // =================================================
-
-                    gridUltimosDoces.Rows.Add(
-                        id,
-                        titulo,
-                        categoria,
-                        preco,
-                        destaque,
-                        dataCriacao
-                    );
-                }
+                AtualizarUltimosDoces();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Erro ao carregar os dados do dashboard.\n\n{ex.Message}",
-                    "Erro",
+                    $"Não foi possível carregar o dashboard.\n\n{ex.Message}",
+                    "Dashboard",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                    MessageBoxIcon.Warning);
             }
             finally
             {
@@ -279,45 +193,748 @@ namespace DoceCantinho.Desktop1.UserControls
         }
 
         // ============================================================
-        // ESTADO DE CARREGAMENTO
+        // CARDS
         // ============================================================
-
-        private void SetCarregando(bool carregando)
+        private void AtualizarCards()
         {
-            // Texto de carregamento
-            if (lblCarregando != null)
-                lblCarregando.Visible = carregando;
+            // ========================================================
+            // DOCES
+            // ========================================================
+            int quantidadeDoces =
+                _doces.Count;
 
-            // Card de doces
-            if (cardDoces != null)
-                cardDoces.Visible = !carregando;
+            cardDoceslblNumero.Text =
+                quantidadeDoces.ToString();
 
-            // Card de categorias
-            if (cardCategorias != null)
-                cardCategorias.Visible = !carregando;
+            // ========================================================
+            // CATEGORIAS
+            // ========================================================
+            int quantidadeCategorias =
+                _categorias.Count;
 
-            // Título da tabela
-            if (lblUltimosDoces != null)
-                lblUltimosDoces.Visible = !carregando;
+            cardCategoriaslblNumero.Text =
+                quantidadeCategorias.ToString();
 
-            // Grid
-            if (gridUltimosDoces != null)
-                gridUltimosDoces.Visible = !carregando;
+            // ========================================================
+            // DESTAQUES
+            // ========================================================
+            int quantidadeDestaques =
+                _doces.Count(
+                    d => d.IsFeatured);
+
+            CardDestaquesValor.Text =
+                quantidadeDestaques.ToString();
+
+            // ========================================================
+            // PEDIDOS HOJE
+            // ========================================================
+            DateTime hoje =
+                DateTime.Now.Date;
+
+            var pedidosHoje =
+                _pedidos
+                    .Where(
+                        p =>
+                            p.CreatedAt
+                                .ToLocalTime()
+                                .Date == hoje)
+                    .ToList();
+
+            lblCardPedidosNumero.Text =
+                pedidosHoje.Count
+                    .ToString("00");
+
+            int aguardandoPreparo =
+                pedidosHoje.Count(
+                    p =>
+                    {
+                        string status =
+                            NormalizarStatus(
+                                p.Status);
+
+                        return status ==
+                                   "pendente" ||
+                               status ==
+                                   "preparo";
+                    });
+
+            lblCardPedidosDescricao.Text =
+                aguardandoPreparo == 1
+                    ? "1 aguardando preparo"
+                    : $"{aguardandoPreparo} aguardando preparo";
+
+            // ========================================================
+            // RECEITA DA SEMANA
+            // ========================================================
+            decimal receita =
+                CalcularReceitaSemana();
+
+            lblVendasValor.Text =
+                receita.ToString(
+                    "C2",
+                    CultureInfo.GetCultureInfo(
+                        "pt-BR"));
         }
 
         // ============================================================
-        // ATUALIZAR DASHBOARD MANUALMENTE
+        // RECEITA DOS ÚLTIMOS 7 DIAS
         // ============================================================
+        private decimal CalcularReceitaSemana()
+        {
+            DateTime hoje =
+                DateTime.Now.Date;
 
+            DateTime inicio =
+                hoje.AddDays(-6);
+
+            return _pedidos
+                .Where(
+                    p =>
+                    {
+                        string status =
+                            NormalizarStatus(
+                                p.Status);
+
+                        if (status ==
+                            "cancelado")
+                        {
+                            return false;
+                        }
+
+                        DateTime data =
+                            p.CreatedAt
+                                .ToLocalTime()
+                                .Date;
+
+                        return data >= inicio &&
+                               data <= hoje;
+                    })
+                .Sum(
+                    p => p.Total);
+        }
+
+        // ============================================================
+        // GRÁFICO
+        // ============================================================
+        private void AtualizarGrafico()
+        {
+            Array.Clear(
+                _vendasPorDia,
+                0,
+                _vendasPorDia.Length);
+
+            DateTime hoje =
+                DateTime.Now.Date;
+
+            DateTime inicio =
+                hoje.AddDays(-6);
+
+            // ========================================================
+            // SOMAR PEDIDOS
+            // ========================================================
+            foreach (var pedido in _pedidos)
+            {
+                string status =
+                    NormalizarStatus(
+                        pedido.Status);
+
+                if (status ==
+                    "cancelado")
+                {
+                    continue;
+                }
+
+                DateTime data =
+                    pedido.CreatedAt
+                        .ToLocalTime()
+                        .Date;
+
+                if (data < inicio ||
+                    data > hoje)
+                {
+                    continue;
+                }
+
+                int indice =
+                    (int)(
+                        data - inicio
+                    ).TotalDays;
+
+                if (indice >= 0 &&
+                    indice < 7)
+                {
+                    _vendasPorDia[indice] +=
+                        pedido.Total;
+                }
+            }
+
+            // ========================================================
+            // DIAS
+            // ========================================================
+            Label[] dias =
+            {
+                lblSeg,
+                lblTer,
+                lblQua,
+                lblQui,
+                lblSex,
+                lblSab,
+                lblDom
+            };
+
+            for (int i = 0; i < dias.Length; i++)
+            {
+                DateTime data =
+                    inicio.AddDays(i);
+
+                dias[i].Text =
+                    ObterAbreviacaoDia(
+                        data.DayOfWeek);
+            }
+
+            // ========================================================
+            // ESCALA
+            // ========================================================
+            AtualizarEscalaGrafico();
+
+            // ========================================================
+            // REDESENHAR
+            // ========================================================
+            pnlChart.Invalidate();
+        }
+
+        // ============================================================
+        // ABREVIAÇÃO DO DIA
+        // ============================================================
+        private string ObterAbreviacaoDia(
+            DayOfWeek dia)
+        {
+            return dia switch
+            {
+                DayOfWeek.Monday =>
+                    "Seg",
+
+                DayOfWeek.Tuesday =>
+                    "Ter",
+
+                DayOfWeek.Wednesday =>
+                    "Qua",
+
+                DayOfWeek.Thursday =>
+                    "Qui",
+
+                DayOfWeek.Friday =>
+                    "Sex",
+
+                DayOfWeek.Saturday =>
+                    "Sáb",
+
+                DayOfWeek.Sunday =>
+                    "Dom",
+
+                _ =>
+                    ""
+            };
+        }
+
+        // ============================================================
+        // ESCALA
+        // ============================================================
+        private void AtualizarEscalaGrafico()
+        {
+            decimal maior =
+                _vendasPorDia.Length == 0
+                    ? 0
+                    : _vendasPorDia.Max();
+
+            decimal passo;
+
+            if (maior <= 0)
+            {
+                passo = 1000;
+            }
+            else
+            {
+                decimal teto =
+                    Math.Ceiling(
+                        maior / 1000m
+                    ) * 1000m;
+
+                if (teto < 1000m)
+                    teto = 1000m;
+
+                passo =
+                    teto / 4m;
+            }
+
+            lblChart0.Text =
+                "R$ 0";
+
+            lblChart1.Text =
+                FormatarEscala(
+                    passo);
+
+            lblChart2.Text =
+                FormatarEscala(
+                    passo * 2);
+
+            lblChart3.Text =
+                FormatarEscala(
+                    passo * 3);
+
+            lblChart4.Text =
+                FormatarEscala(
+                    passo * 4);
+        }
+
+        private string FormatarEscala(
+            decimal valor)
+        {
+            if (valor >= 1000m)
+            {
+                decimal milhares =
+                    valor / 1000m;
+
+                if (milhares % 1 ==
+                    0)
+                {
+                    return $"R$ {milhares:0}k";
+                }
+
+                return $"R$ {milhares:0.#}k";
+            }
+
+            return $"R$ {valor:0}";
+        }
+
+        // ============================================================
+        // DESENHAR GRÁFICO
+        // ============================================================
+        private void PnlChart_Paint(
+            object? sender,
+            PaintEventArgs e)
+        {
+            Graphics g =
+                e.Graphics;
+
+            g.SmoothingMode =
+                SmoothingMode.AntiAlias;
+
+            g.InterpolationMode =
+                InterpolationMode.HighQualityBicubic;
+
+            g.PixelOffsetMode =
+                PixelOffsetMode.HighQuality;
+
+            g.CompositingQuality =
+                CompositingQuality.HighQuality;
+
+            // ========================================================
+            // DIMENSÕES
+            // ========================================================
+            int margemEsquerda =
+                45;
+
+            int margemDireita =
+                10;
+
+            int topo =
+                8;
+
+            int baseGrafico =
+                126;
+
+            int largura =
+                pnlChart.ClientSize.Width -
+                margemEsquerda -
+                margemDireita;
+
+            int altura =
+                baseGrafico -
+                topo;
+
+            if (largura <= 0 ||
+                altura <= 0)
+            {
+                return;
+            }
+
+            // ========================================================
+            // MAIOR VALOR
+            // ========================================================
+            decimal maior =
+                _vendasPorDia.Max();
+
+            decimal maximo;
+
+            if (maior <= 0)
+            {
+                maximo = 1000m;
+            }
+            else
+            {
+                maximo =
+                    Math.Ceiling(
+                        maior / 1000m
+                    ) * 1000m;
+
+                if (maximo < 1000m)
+                    maximo = 1000m;
+            }
+
+            // ========================================================
+            // LINHAS DO GRÁFICO
+            // ========================================================
+            using var penLinha =
+                new Pen(
+                    Color.FromArgb(
+                        237,
+                        230,
+                        226),
+                    1f);
+
+            for (int i = 0; i <= 4; i++)
+            {
+                float y =
+                    topo +
+                    altura -
+                    (
+                        altura *
+                        i /
+                        4f
+                    );
+
+                g.DrawLine(
+                    penLinha,
+                    margemEsquerda,
+                    y,
+                    pnlChart.ClientSize.Width -
+                        margemDireita,
+                    y);
+            }
+
+            // ========================================================
+            // BARRAS
+            // ========================================================
+            float espaco =
+                largura /
+                7f;
+
+            int larguraBarra =
+                Math.Max(
+                    10,
+                    Math.Min(
+                        24,
+                        (int)(
+                            espaco *
+                            0.20f)));
+
+            using var brushNormal =
+                new SolidBrush(
+                    Color.FromArgb(
+                        221,
+                        153,
+                        125));
+
+            using var brushHoje =
+                new SolidBrush(
+                    Color.FromArgb(
+                        201,
+                        130,
+                        107));
+
+            for (int i = 0; i < 7; i++)
+            {
+                decimal valor =
+                    _vendasPorDia[i];
+
+                float proporcao =
+                    maximo <= 0
+                        ? 0
+                        : (float)(
+                            valor /
+                            maximo);
+
+                proporcao =
+                    Math.Max(
+                        0,
+                        Math.Min(
+                            1,
+                            proporcao));
+
+                float alturaBarra =
+                    proporcao *
+                    altura;
+
+                if (valor > 0 &&
+                    alturaBarra < 3)
+                {
+                    alturaBarra = 3;
+                }
+
+                float centro =
+                    margemEsquerda +
+                    espaco *
+                    i +
+                    espaco / 2f;
+
+                float x =
+                    centro -
+                    larguraBarra / 2f;
+
+                float y =
+                    baseGrafico -
+                    alturaBarra;
+
+                RectangleF retangulo =
+                    new RectangleF(
+                        x,
+                        y,
+                        larguraBarra,
+                        alturaBarra);
+
+                g.FillRectangle(
+                    i == 6
+                        ? brushHoje
+                        : brushNormal,
+                    retangulo);
+            }
+        }
+
+        // ============================================================
+        // CATEGORIAS
+        // ============================================================
+        private void AtualizarCategorias()
+        {
+            var lista =
+                _categorias
+                    .OrderByDescending(
+                        c => c.DoceCount)
+                    .ThenBy(
+                        c => c.Name)
+                    .Take(4)
+                    .ToList();
+
+            Label[] nomes =
+            {
+                lblCat1,
+                lblCat2,
+                lblCat3,
+                lblCat4
+            };
+
+            Label[] quantidades =
+            {
+                lblCat1Qtd,
+                lblCat2Qtd,
+                lblCat3Qtd,
+                lblCat4Qtd
+            };
+
+            Guna2ProgressBar[] barras =
+            {
+                progressCat1,
+                progressCat2,
+                progressCat3,
+                progressCat4
+            };
+
+            int maior =
+                lista.Count > 0
+                    ? lista.Max(
+                        c => c.DoceCount)
+                    : 0;
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (i >= lista.Count)
+                {
+                    nomes[i].Visible =
+                        false;
+
+                    quantidades[i].Visible =
+                        false;
+
+                    barras[i].Visible =
+                        false;
+
+                    continue;
+                }
+
+                var categoria =
+                    lista[i];
+
+                nomes[i].Visible =
+                    true;
+
+                quantidades[i].Visible =
+                    true;
+
+                barras[i].Visible =
+                    true;
+
+                nomes[i].Text =
+                    string.IsNullOrWhiteSpace(
+                        categoria.Name)
+                        ? "Sem categoria"
+                        : categoria.Name;
+
+                quantidades[i].Text =
+                    categoria.DoceCount.ToString();
+
+                int percentual =
+                    0;
+
+                if (maior > 0)
+                {
+                    percentual =
+                        (int)Math.Round(
+                            categoria.DoceCount /
+                            (double)maior *
+                            100);
+                }
+
+                percentual =
+                    Math.Max(
+                        0,
+                        Math.Min(
+                            100,
+                            percentual));
+
+                barras[i].Value =
+                    percentual;
+            }
+        }
+
+        // ============================================================
+        // ÚLTIMOS DOCES
+        // ============================================================
+        private void AtualizarUltimosDoces()
+        {
+            gridUltimosDoces.Rows.Clear();
+
+            var lista =
+                _doces
+                    .OrderByDescending(
+                        d => d.CreatedAt)
+                    .Take(10)
+                    .ToList();
+
+            foreach (var doce in lista)
+            {
+                gridUltimosDoces.Rows.Add(
+                    doce.Id,
+
+                    string.IsNullOrWhiteSpace(
+                        doce.Title)
+                        ? "Sem título"
+                        : doce.Title,
+
+                    string.IsNullOrWhiteSpace(
+                        doce.CategoryName)
+                        ? "Sem categoria"
+                        : doce.CategoryName,
+
+                    doce.Preco.ToString(
+                        "C2",
+                        CultureInfo.GetCultureInfo(
+                            "pt-BR")),
+
+                    doce.IsFeatured
+                        ? "Destaque"
+                        : "Normal",
+
+                    doce.CreatedAt
+                        .ToLocalTime()
+                        .ToString(
+                            "dd/MM/yyyy HH:mm"));
+            }
+        }
+
+        // ============================================================
+        // OCULTAR BARRAS ESTÁTICAS
+        // ============================================================
+        private void OcultarBarrasDoDesigner()
+        {
+            barra1.Visible = false;
+            barra2.Visible = false;
+            barra3.Visible = false;
+            barra4.Visible = false;
+            barra5.Visible = false;
+            barra6.Visible = false;
+        }
+
+        // ============================================================
+        // CARREGANDO
+        // ============================================================
+        private void SetCarregando(
+            bool carregando)
+        {
+            lblCarregando.Visible =
+                carregando;
+
+            if (carregando)
+                return;
+
+            pnldash.Visible = true;
+            pnlHeader.Visible = true;
+
+            cardDoces.Visible = true;
+            cardCategorias.Visible = true;
+            pnlCardDestaques.Visible = true;
+            cardPedidos.Visible = true;
+
+            pnlVendas.Visible = true;
+            pnlCategorias.Visible = true;
+
+            lblUltimosDoces.Visible = true;
+            lblUltimosSubtitulo.Visible = true;
+            gridUltimosDoces.Visible = true;
+            btnVerTodos.Visible = true;
+        }
+
+        // ============================================================
+        // ATUALIZAÇÃO EXTERNA
+        // ============================================================
         public async Task AtualizarDashboardAsync()
         {
-            if (_doceService == null)
-                _doceService = new DoceApiService();
-
-            if (_categoriasService == null)
-                _categoriasService = new CategoriasApiService();
-
             await CarregarDadosAsync();
+        }
+
+        // ============================================================
+        // RESIZE
+        // ============================================================
+        private void DashboardUserControl_Resize(
+            object? sender,
+            EventArgs e)
+        {
+            if (pnlChart != null)
+            {
+                pnlChart.Invalidate();
+            }
+        }
+
+        // ============================================================
+        // NORMALIZAR STATUS
+        // ============================================================
+        private string NormalizarStatus(
+            string? status)
+        {
+            return (status ??
+                    string.Empty)
+                .Trim()
+                .ToLowerInvariant()
+                .Replace("á", "a")
+                .Replace("à", "a")
+                .Replace("ã", "a")
+                .Replace("â", "a")
+                .Replace("é", "e")
+                .Replace("ê", "e")
+                .Replace("í", "i")
+                .Replace("ó", "o")
+                .Replace("ô", "o")
+                .Replace("õ", "o")
+                .Replace("ú", "u");
         }
     }
 }

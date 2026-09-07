@@ -44,15 +44,20 @@ namespace DoceCantinho.Desktop.UserControls
         // LOAD
         // ============================================================
 
-        private async void DoceUserControl_Load(object? sender, EventArgs e)
+        private async void DoceUserControl_Load(
+            object? sender,
+            EventArgs e)
         {
             if (DesignMode)
                 return;
 
             try
             {
-                _doceService = new DoceApiService();
-                _categoriasService = new CategoriasApiService();
+                _doceService =
+                    new DoceApiService();
+
+                _categoriasService =
+                    new CategoriasApiService();
 
                 ConfigurarGrid();
                 ConfigurarPermissoes();
@@ -61,11 +66,9 @@ namespace DoceCantinho.Desktop.UserControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $"Erro ao iniciar a tela de doces:\n\n{ex.Message}",
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarAvisoDoce(
+                    $"Erro ao iniciar a tela de doces: {ex.Message}",
+                    TipoAvisoDoce.Erro);
             }
         }
 
@@ -77,7 +80,9 @@ namespace DoceCantinho.Desktop.UserControls
         {
             gridBanco.AutoGenerateColumns = false;
 
-            gridBanco.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            gridBanco.SelectionMode =
+                DataGridViewSelectionMode.FullRowSelect;
+
             gridBanco.MultiSelect = false;
 
             gridBanco.ReadOnly = true;
@@ -89,12 +94,14 @@ namespace DoceCantinho.Desktop.UserControls
 
             try
             {
-                DoceTheme.AplicarEstiloGrid(gridBanco);
+                DoceTheme.AplicarEstiloGrid(
+                    gridBanco);
             }
             catch
             {
-                // Caso o tema tenha alguma configuração incompatível,
-                // o grid continua funcionando normalmente.
+                // Mantém o grid funcionando
+                // mesmo se houver alguma incompatibilidade
+                // no tema.
             }
         }
 
@@ -108,7 +115,8 @@ namespace DoceCantinho.Desktop.UserControls
 
             try
             {
-                isAdmin = SessionManager.Instance.IsAdmin;
+                isAdmin =
+                    SessionManager.Instance.IsAdmin;
             }
             catch
             {
@@ -127,37 +135,54 @@ namespace DoceCantinho.Desktop.UserControls
 
         private async Task CarregarDadosAsync()
         {
-            if (_doceService == null || _categoriasService == null)
+            if (_doceService == null ||
+                _categoriasService == null)
+            {
                 return;
+            }
 
             try
             {
-                Cursor = Cursors.WaitCursor;
+                Cursor =
+                    Cursors.WaitCursor;
 
-                var tarefaDoces = _doceService.GetAllAsync();
-                var tarefaCategorias = _categoriasService.GetAllAsync();
+                var tarefaDoces =
+                    _doceService.GetAllAsync();
 
-                await Task.WhenAll(tarefaDoces, tarefaCategorias);
+                var tarefaCategorias =
+                    _categoriasService.GetAllAsync();
 
-                _todosDoces = tarefaDoces.Result ?? new List<DoceResponseDto>();
-                _categorias = tarefaCategorias.Result ?? new List<CategoriaResponseDto>();
+                await Task.WhenAll(
+                    tarefaDoces,
+                    tarefaCategorias);
 
-                PopularGrid(_todosDoces);
+                _todosDoces =
+                    tarefaDoces.Result ??
+                    new List<DoceResponseDto>();
+
+                _categorias =
+                    tarefaCategorias.Result ??
+                    new List<CategoriaResponseDto>();
+
+                PopularGrid(
+                    _todosDoces);
 
                 lblQuantidade.Text =
-                    $"{_todosDoces.Count} produto{(_todosDoces.Count == 1 ? "" : "s")} cadastrado{(_todosDoces.Count == 1 ? "" : "s")}";
+                    $"{_todosDoces.Count} produto" +
+                    $"{(_todosDoces.Count == 1 ? "" : "s")} " +
+                    $"cadastrado" +
+                    $"{(_todosDoces.Count == 1 ? "" : "s")}";
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $"Não foi possível carregar os doces da API.\n\n{ex.Message}",
-                    "Erro ao carregar dados",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarAvisoDoce(
+                    $"Não foi possível carregar os doces da API: {ex.Message}",
+                    TipoAvisoDoce.Erro);
             }
             finally
             {
-                Cursor = Cursors.Default;
+                Cursor =
+                    Cursors.Default;
             }
         }
 
@@ -165,42 +190,44 @@ namespace DoceCantinho.Desktop.UserControls
         // POPULAR GRID
         // ============================================================
 
-        private void PopularGrid(List<DoceResponseDto> doces)
+        private void PopularGrid(
+            List<DoceResponseDto> doces)
         {
             gridBanco.Rows.Clear();
 
             foreach (var doce in doces)
             {
-                string status = ObterStatus(doce);
+                string status =
+                    ObterStatus(doce);
 
-                int indice = gridBanco.Rows.Add(
-                    null,
-                    doce.Id,
-                    doce.Title ?? string.Empty,
-                    doce.CategoryName ?? string.Empty,
-                    doce.Preco.ToString("C2"),
-                    doce.QuantidadeEstoque,
-                    status,
-                    "Editar",
-                    "Excluir"
-                );
+                int indice =
+                    gridBanco.Rows.Add(
+                        null,
+                        doce.Id,
+                        doce.Title ?? string.Empty,
+                        doce.CategoryName ?? string.Empty,
+                        doce.Preco.ToString("C2"),
+                        doce.QuantidadeEstoque,
+                        status,
+                        "Editar",
+                        "Excluir");
 
-                // Carregar imagem sem travar a tela
                 _ = CarregarImagemAsync(
                     indice,
-                    doce.CoverImageUrl
-                );
+                    doce.CoverImageUrl);
             }
 
             lblResultados.Text =
-                $"{doces.Count} resultado{(doces.Count == 1 ? "" : "s")}";
+                $"{doces.Count} resultado" +
+                $"{(doces.Count == 1 ? "" : "s")}";
         }
 
         // ============================================================
         // DEFINIR STATUS
         // ============================================================
 
-        private string ObterStatus(DoceResponseDto doce)
+        private string ObterStatus(
+            DoceResponseDto doce)
         {
             if (!doce.IsAtivo)
                 return "Inativo";
@@ -227,10 +254,12 @@ namespace DoceCantinho.Desktop.UserControls
 
             try
             {
-                using HttpClient client = new HttpClient();
+                using HttpClient client =
+                    new HttpClient();
 
                 byte[] bytes =
-                    await client.GetByteArrayAsync(imageUrl);
+                    await client.GetByteArrayAsync(
+                        imageUrl);
 
                 using var stream =
                     new System.IO.MemoryStream(bytes);
@@ -244,20 +273,23 @@ namespace DoceCantinho.Desktop.UserControls
                 if (indiceLinha >= 0 &&
                     indiceLinha < gridBanco.Rows.Count)
                 {
-                    gridBanco.Invoke(new Action(() =>
-                    {
-                        if (indiceLinha < gridBanco.Rows.Count)
+                    gridBanco.Invoke(
+                        new Action(() =>
                         {
-                            gridBanco.Rows[indiceLinha]
-                                .Cells["colImagem"]
-                                .Value = imagem;
-                        }
-                    }));
+                            if (indiceLinha <
+                                gridBanco.Rows.Count)
+                            {
+                                gridBanco.Rows[indiceLinha]
+                                    .Cells["colImagem"]
+                                    .Value = imagem;
+                            }
+                        }));
                 }
             }
             catch
             {
-                // Se uma imagem falhar, apenas deixa a célula vazia.
+                // A imagem permanece vazia
+                // se houver falha no carregamento.
             }
         }
 
@@ -265,12 +297,16 @@ namespace DoceCantinho.Desktop.UserControls
         // PESQUISAR
         // ============================================================
 
-        private void btnPesquisar_Click(object sender, EventArgs e)
+        private void btnPesquisar_Click(
+            object sender,
+            EventArgs e)
         {
             FiltrarDoces();
         }
 
-        private void txtPesquisa_TextChanged(object sender, EventArgs e)
+        private void txtPesquisa_TextChanged(
+            object sender,
+            EventArgs e)
         {
             FiltrarDoces();
         }
@@ -282,65 +318,79 @@ namespace DoceCantinho.Desktop.UserControls
 
             if (string.IsNullOrWhiteSpace(termo))
             {
-                PopularGrid(_todosDoces);
+                PopularGrid(
+                    _todosDoces);
+
                 return;
             }
 
-            var filtrados = _todosDoces
-                .Where(d =>
-                    (!string.IsNullOrEmpty(d.Title) &&
-                     d.Title.Contains(
-                         termo,
-                         StringComparison.OrdinalIgnoreCase))
+            var filtrados =
+                _todosDoces
+                    .Where(d =>
+                        (!string.IsNullOrEmpty(d.Title) &&
+                         d.Title.Contains(
+                             termo,
+                             StringComparison
+                                 .OrdinalIgnoreCase))
+                        ||
+                        (!string.IsNullOrEmpty(
+                             d.CategoryName) &&
+                         d.CategoryName.Contains(
+                             termo,
+                             StringComparison
+                                 .OrdinalIgnoreCase)))
+                    .ToList();
 
-                    ||
-
-                    (!string.IsNullOrEmpty(d.CategoryName) &&
-                     d.CategoryName.Contains(
-                         termo,
-                         StringComparison.OrdinalIgnoreCase))
-                )
-                .ToList();
-
-            PopularGrid(filtrados);
+            PopularGrid(
+                filtrados);
         }
 
         // ============================================================
         // OBTER DOCE SELECIONADO
         // ============================================================
 
-        private DoceResponseDto? ObterDoceSelecionado()
+        private DoceResponseDto?
+            ObterDoceSelecionado()
         {
             if (gridBanco.SelectedRows.Count == 0)
                 return null;
 
-            var linha = gridBanco.SelectedRows[0];
+            var linha =
+                gridBanco.SelectedRows[0];
 
             if (linha.Cells["colId"].Value == null)
                 return null;
 
-            int id = Convert.ToInt32(
-                linha.Cells["colId"].Value
-            );
+            int id =
+                Convert.ToInt32(
+                    linha.Cells["colId"].Value);
 
             return _todosDoces
-                .FirstOrDefault(d => d.Id == id);
+                .FirstOrDefault(
+                    d => d.Id == id);
         }
 
         // ============================================================
         // NOVO DOCE
         // ============================================================
 
-        private async void btnNovo_Click(object sender, EventArgs e)
+        private async void btnNovo_Click(
+            object sender,
+            EventArgs e)
         {
             if (_doceService == null)
                 return;
 
             using var form =
-                new DoceFormDialog(_categorias, null);
+                new DoceFormDialog(
+                    _categorias,
+                    null);
 
-            if (form.ShowDialog() != DialogResult.OK)
+            if (form.ShowDialog() !=
+                DialogResult.OK)
+            {
                 return;
+            }
 
             if (form.DoceDto == null)
                 return;
@@ -348,34 +398,30 @@ namespace DoceCantinho.Desktop.UserControls
             try
             {
                 var (success, _, error) =
-                    await _doceService.CreateAsync(form.DoceDto);
+                    await _doceService.CreateAsync(
+                        form.DoceDto);
 
                 if (success)
                 {
-                    MessageBox.Show(
-                        "Doce criado com sucesso!",
-                        "Sucesso",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-
                     await CarregarDadosAsync();
+
+                    MostrarAvisoDoce(
+                        "Doce criado com sucesso!",
+                        TipoAvisoDoce.Sucesso);
                 }
                 else
                 {
-                    MessageBox.Show(
-                        error ?? "Não foi possível criar o doce.",
-                        "Erro",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MostrarAvisoDoce(
+                        error ??
+                        "Não foi possível criar o doce.",
+                        TipoAvisoDoce.Erro);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    ex.Message,
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarAvisoDoce(
+                    $"Erro ao criar doce: {ex.Message}",
+                    TipoAvisoDoce.Erro);
             }
         }
 
@@ -388,24 +434,28 @@ namespace DoceCantinho.Desktop.UserControls
             if (_doceService == null)
                 return;
 
-            var doce = ObterDoceSelecionado();
+            var doce =
+                ObterDoceSelecionado();
 
             if (doce == null)
             {
-                MessageBox.Show(
+                MostrarAvisoDoce(
                     "Selecione um doce para editar.",
-                    "Aviso",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                    TipoAvisoDoce.Aviso);
 
                 return;
             }
 
             using var form =
-                new DoceFormDialog(_categorias, doce);
+                new DoceFormDialog(
+                    _categorias,
+                    doce);
 
-            if (form.ShowDialog() != DialogResult.OK)
+            if (form.ShowDialog() !=
+                DialogResult.OK)
+            {
                 return;
+            }
 
             if (form.UpdateDto == null)
                 return;
@@ -415,35 +465,29 @@ namespace DoceCantinho.Desktop.UserControls
                 var (success, _, error) =
                     await _doceService.UpdateAsync(
                         doce.Id,
-                        form.UpdateDto
-                    );
+                        form.UpdateDto);
 
                 if (success)
                 {
-                    MessageBox.Show(
-                        "Doce atualizado com sucesso!",
-                        "Sucesso",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-
                     await CarregarDadosAsync();
+
+                    MostrarAvisoDoce(
+                        "Doce atualizado com sucesso!",
+                        TipoAvisoDoce.Sucesso);
                 }
                 else
                 {
-                    MessageBox.Show(
-                        error ?? "Não foi possível atualizar o doce.",
-                        "Erro",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MostrarAvisoDoce(
+                        error ??
+                        "Não foi possível atualizar o doce.",
+                        TipoAvisoDoce.Erro);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    ex.Message,
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarAvisoDoce(
+                    $"Erro ao atualizar doce: {ex.Message}",
+                    TipoAvisoDoce.Erro);
             }
         }
 
@@ -456,59 +500,340 @@ namespace DoceCantinho.Desktop.UserControls
             if (_doceService == null)
                 return;
 
-            var doce = ObterDoceSelecionado();
+            var doce =
+                ObterDoceSelecionado();
 
             if (doce == null)
             {
-                MessageBox.Show(
+                MostrarAvisoDoce(
                     "Selecione um doce para excluir.",
-                    "Aviso",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                    TipoAvisoDoce.Aviso);
 
                 return;
             }
 
-            var resposta = MessageBox.Show(
-                $"Deseja realmente excluir o doce:\n\n{doce.Title}?",
-                "Confirmar exclusão",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+            // ========================================================
+            // CONFIRMAÇÃO PERSONALIZADA
+            // ========================================================
 
-            if (resposta != DialogResult.Yes)
-                return;
+            using (var confirmar =
+                new DoceCantinho.Desktop.Forms
+                    .ConfirmarExclusaoForm(
+                        "doce",
+                        doce.Title))
+            {
+                var resultado =
+                    confirmar.ShowDialog(
+                        FindForm());
+
+                if (resultado !=
+                    DialogResult.OK)
+                {
+                    return;
+                }
+            }
+
+            // ========================================================
+            // EXCLUSÃO
+            // ========================================================
 
             try
             {
                 var (success, error) =
-                    await _doceService.DeleteAsync(doce.Id);
+                    await _doceService.DeleteAsync(
+                        doce.Id);
 
                 if (success)
                 {
-                    MessageBox.Show(
-                        "Doce excluído com sucesso!",
-                        "Sucesso",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-
                     await CarregarDadosAsync();
+
+                    MostrarAvisoDoce(
+                        "Doce excluído com sucesso!",
+                        TipoAvisoDoce.Sucesso);
                 }
                 else
                 {
-                    MessageBox.Show(
-                        error ?? "Não foi possível excluir o doce.",
-                        "Erro",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MostrarAvisoDoce(
+                        error ??
+                        "Não foi possível excluir o doce.",
+                        TipoAvisoDoce.Erro);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    ex.Message,
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarAvisoDoce(
+                    $"Erro ao excluir doce: {ex.Message}",
+                    TipoAvisoDoce.Erro);
+            }
+        }
+
+        // ============================================================
+        // AVISOS PERSONALIZADOS
+        // ============================================================
+
+        private enum TipoAvisoDoce
+        {
+            Sucesso,
+            Aviso,
+            Erro
+        }
+
+        private void MostrarAvisoDoce(
+            string mensagem,
+            TipoAvisoDoce tipo)
+        {
+            try
+            {
+                foreach (
+                    Control controle
+                    in Controls
+                        .OfType<Panel>()
+                        .ToList())
+                {
+                    if (controle.Name ==
+                        "pnlAvisoDoce")
+                    {
+                        Controls.Remove(controle);
+                        controle.Dispose();
+                    }
+                }
+
+                var pnlAviso =
+                    new Guna.UI2.WinForms
+                        .Guna2Panel
+                    {
+                        Name =
+                            "pnlAvisoDoce",
+
+                        Size =
+                            new Size(
+                                420,
+                                62),
+
+                        BorderRadius = 12,
+
+                        Anchor =
+                            AnchorStyles.Top |
+                            AnchorStyles.Right,
+
+                        FillColor =
+                            Color.White,
+
+                        ShadowDecoration =
+                        {
+                            Enabled = true,
+                            Depth = 8,
+                            BorderRadius = 12
+                        }
+                    };
+
+                pnlAviso.Location =
+                    new Point(
+                        Math.Max(
+                            10,
+                            Width -
+                            pnlAviso.Width -
+                            20),
+                        20);
+
+                Color corPrincipal;
+                string titulo;
+
+                switch (tipo)
+                {
+                    case TipoAvisoDoce.Sucesso:
+
+                        corPrincipal =
+                            Color.FromArgb(
+                                46,
+                                160,
+                                67);
+
+                        titulo =
+                            "Sucesso";
+
+                        break;
+
+                    case TipoAvisoDoce.Aviso:
+
+                        corPrincipal =
+                            Color.FromArgb(
+                                230,
+                                155,
+                                45);
+
+                        titulo =
+                            "Atenção";
+
+                        break;
+
+                    default:
+
+                        corPrincipal =
+                            Color.FromArgb(
+                                200,
+                                70,
+                                70);
+
+                        titulo =
+                            "Erro";
+
+                        break;
+                }
+
+                var lblTituloAviso =
+                    new Label
+                    {
+                        AutoSize = false,
+
+                        Location =
+                            new Point(
+                                18,
+                                10),
+
+                        Size =
+                            new Size(
+                                120,
+                                20),
+
+                        Text = titulo,
+
+                        Font =
+                            new Font(
+                                "Segoe UI",
+                                10F,
+                                FontStyle.Bold),
+
+                        ForeColor =
+                            corPrincipal
+                    };
+
+                var lblMensagemAviso =
+                    new Label
+                    {
+                        AutoSize = false,
+
+                        Location =
+                            new Point(
+                                18,
+                                30),
+
+                        Size =
+                            new Size(
+                                350,
+                                24),
+
+                        Text = mensagem,
+
+                        Font =
+                            new Font(
+                                "Segoe UI",
+                                9F),
+
+                        ForeColor =
+                            Color.FromArgb(
+                                70,
+                                70,
+                                70),
+
+                        AutoEllipsis = true
+                    };
+
+                var btnFechar =
+                    new Guna.UI2.WinForms
+                        .Guna2Button
+                    {
+                        Size =
+                            new Size(
+                                28,
+                                28),
+
+                        Location =
+                            new Point(
+                                380,
+                                8),
+
+                        Text = "×",
+
+                        Font =
+                            new Font(
+                                "Segoe UI",
+                                14F),
+
+                        ForeColor =
+                            Color.FromArgb(
+                                100,
+                                100,
+                                100),
+
+                        FillColor =
+                            Color.Transparent,
+
+                        BorderRadius = 8
+                    };
+
+                btnFechar.HoverState.FillColor =
+                    Color.FromArgb(
+                        245,
+                        245,
+                        245);
+
+                btnFechar.HoverState.ForeColor =
+                    Color.Black;
+
+                btnFechar.Click +=
+                    (_, __) =>
+                    {
+                        if (!pnlAviso.IsDisposed)
+                        {
+                            Controls.Remove(
+                                pnlAviso);
+
+                            pnlAviso.Dispose();
+                        }
+                    };
+
+                pnlAviso.Controls.Add(
+                    lblTituloAviso);
+
+                pnlAviso.Controls.Add(
+                    lblMensagemAviso);
+
+                pnlAviso.Controls.Add(
+                    btnFechar);
+
+                Controls.Add(
+                    pnlAviso);
+
+                pnlAviso.BringToFront();
+
+                var timer =
+                    new System.Windows.Forms.Timer
+                    {
+                        Interval = 3500
+                    };
+
+                timer.Tick +=
+                    (_, __) =>
+                    {
+                        timer.Stop();
+                        timer.Dispose();
+
+                        if (!pnlAviso.IsDisposed)
+                        {
+                            Controls.Remove(
+                                pnlAviso);
+
+                            pnlAviso.Dispose();
+                        }
+                    };
+
+                timer.Start();
+            }
+            catch
+            {
+                // Não interrompe a operação
+                // se o aviso visual falhar.
             }
         }
 
@@ -525,10 +850,13 @@ namespace DoceCantinho.Desktop.UserControls
 
             gridBanco.ClearSelection();
 
-            gridBanco.Rows[e.RowIndex].Selected = true;
+            gridBanco.Rows[e.RowIndex]
+                .Selected = true;
 
             string nomeColuna =
-                gridBanco.Columns[e.ColumnIndex].Name;
+                gridBanco
+                    .Columns[e.ColumnIndex]
+                    .Name;
 
             if (nomeColuna == "colEditar")
             {

@@ -11,6 +11,27 @@ namespace DoceCantinho.API.Controllers
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
+
+        public class UpdateProfileDto
+        {
+            public string Nome { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+
+            public string Telefone { get; set; } = string.Empty;
+
+            public string Logradouro { get; set; } = string.Empty;
+            public string Numero { get; set; } = string.Empty;
+            public string? Complemento { get; set; }
+            public string Bairro { get; set; } = string.Empty;
+            public string Cidade { get; set; } = string.Empty;
+            public string Estado { get; set; } = string.Empty;
+            public string Cep { get; set; } = string.Empty;
+            public string? FotoPerfil { get; set; }
+            public string? CurrentPassword { get; set; }
+            public string? NewPassword { get; set; }
+            public string? ConfirmPassword { get; set; }
+        }
+
         //UserManager e SignManager são serviços do Identity
         //UserManager: gerencia operações com usuários (criar, buscar...)
         //SignManager: gerencia operações de autenticação (login, logout...)
@@ -102,8 +123,19 @@ namespace DoceCantinho.API.Controllers
             return Ok(new UserDto
             {
                 Id = user.Id,
-                Email = user.Email!,
-                Roles = roles
+                Nome = user.Nome,
+                Email = user.Email ?? string.Empty,
+                UserName = user.UserName ?? string.Empty,
+                FotoPerfil = user.FotoPerfil,
+                Roles = roles,
+                Telefone = user.PhoneNumber ?? string.Empty,
+                Logradouro = user.Logradouro ?? string.Empty,
+                Numero = user.Numero ?? string.Empty,
+                Complemento = user.Complemento,
+                Bairro = user.Bairro ?? string.Empty,
+                Cidade = user.Cidade ?? string.Empty,
+                Estado = user.Estado ?? string.Empty,
+                Cep = user.Cep ?? string.Empty
             });
         }
 
@@ -131,21 +163,264 @@ namespace DoceCantinho.API.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             if (user == null)
-                return Unauthorized(new { message = "Usuário não autenticado." });
+            {
+                return Unauthorized(new
+                {
+                    message = "Usuário não autenticado."
+                });
+            }
 
             var roles = await _userManager.GetRolesAsync(user);
 
             return Ok(new UserDto
             {
                 Id = user.Id,
-                Email = user.Email,
-                Roles = roles
+                Nome = user.Nome,
+                Email = user.Email ?? string.Empty,
+                UserName = user.UserName ?? string.Empty,
+                FotoPerfil = user.FotoPerfil,
+                Roles = roles,
+                Telefone = user.PhoneNumber ?? string.Empty,
+                Logradouro = user.Logradouro ?? string.Empty,
+                Numero = user.Numero ?? string.Empty,
+                Complemento = user.Complemento,
+                Bairro = user.Bairro ?? string.Empty,
+                Cidade = user.Cidade ?? string.Empty,
+                Estado = user.Estado ?? string.Empty,
+                Cep = user.Cep ?? string.Empty
             });
-
-
         }
 
-  
+        // =====================================================================
+        // PUT /api/auth/profile
+        // Atualiza o próprio perfil do usuário autenticado
+        // =====================================================================
+        [HttpPut("profile")]
+        [Authorize]
+        public async Task<ActionResult<UserDto>> UpdateProfile(
+            [FromBody] UpdateProfileDto dto)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Unauthorized(new
+                {
+                    message = "Usuário não autenticado."
+                });
+
+            // ---------------------------------------------------------
+            // VALIDAÇÃO DO NOME
+            // ---------------------------------------------------------
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+            {
+                return BadRequest(new
+                {
+                    message = "O nome é obrigatório."
+                });
+            }
+
+            if (dto.Nome.Trim().Length < 2)
+            {
+                return BadRequest(new
+                {
+                    message = "O nome deve possuir pelo menos 2 caracteres."
+                });
+            }
+
+            // ---------------------------------------------------------
+            // E-MAIL
+            // ---------------------------------------------------------
+            if (string.IsNullOrWhiteSpace(dto.Email))
+            {
+                return BadRequest(new
+                {
+                    message = "O e-mail é obrigatório."
+                });
+            }
+
+            var email = dto.Email.Trim();
+
+            if (!string.Equals(
+                user.Email,
+                email,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                var outroUsuario =
+                    await _userManager.FindByEmailAsync(email);
+
+                if (outroUsuario != null &&
+                    outroUsuario.Id != user.Id)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Este e-mail já está sendo utilizado por outro usuário."
+                    });
+                }
+
+                var emailResult =
+                    await _userManager.SetEmailAsync(user, email);
+
+                if (!emailResult.Succeeded)
+                {
+                    return BadRequest(new
+                    {
+                        message = string.Join(
+                            "; ",
+                            emailResult.Errors.Select(e => e.Description))
+                    });
+                }
+
+                var usernameResult =
+                    await _userManager.SetUserNameAsync(user, email);
+
+                if (!usernameResult.Succeeded)
+                {
+                    return BadRequest(new
+                    {
+                        message = string.Join(
+                            "; ",
+                            usernameResult.Errors.Select(e => e.Description))
+                    });
+                }
+            }
+
+            // ---------------------------------------------------------
+            // DADOS PESSOAIS
+            // ---------------------------------------------------------
+            user.Nome = dto.Nome.Trim();
+            user.PhoneNumber = dto.Telefone?.Trim() ?? string.Empty;
+
+            // ---------------------------------------------------------
+            // ENDEREÇO
+            // ---------------------------------------------------------
+            user.Logradouro = dto.Logradouro?.Trim() ?? string.Empty;
+            user.Numero = dto.Numero?.Trim() ?? string.Empty;
+
+            user.Complemento =
+                string.IsNullOrWhiteSpace(dto.Complemento)
+                    ? null
+                    : dto.Complemento.Trim();
+
+            user.Bairro = dto.Bairro?.Trim() ?? string.Empty;
+            user.Cidade = dto.Cidade?.Trim() ?? string.Empty;
+            user.Estado = dto.Estado?.Trim().ToUpper() ?? string.Empty;
+            user.Cep = dto.Cep?.Trim() ?? string.Empty;
+            user.FotoPerfil = string.IsNullOrWhiteSpace(dto.FotoPerfil)
+            ? user.FotoPerfil
+            : dto.FotoPerfil;
+
+            // ---------------------------------------------------------
+            // ALTERAÇÃO DE SENHA
+            // ---------------------------------------------------------
+            bool desejaAlterarSenha =
+                !string.IsNullOrWhiteSpace(dto.CurrentPassword) ||
+                !string.IsNullOrWhiteSpace(dto.NewPassword) ||
+                !string.IsNullOrWhiteSpace(dto.ConfirmPassword);
+
+            if (desejaAlterarSenha)
+            {
+                if (string.IsNullOrWhiteSpace(dto.CurrentPassword))
+                {
+                    return BadRequest(new
+                    {
+                        message = "Informe sua senha atual."
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(dto.NewPassword))
+                {
+                    return BadRequest(new
+                    {
+                        message = "Informe a nova senha."
+                    });
+                }
+
+                if (dto.NewPassword != dto.ConfirmPassword)
+                {
+                    return BadRequest(new
+                    {
+                        message = "A nova senha e a confirmação não coincidem."
+                    });
+                }
+
+                if (dto.NewPassword.Length < 6)
+                {
+                    return BadRequest(new
+                    {
+                        message = "A nova senha deve possuir pelo menos 6 caracteres."
+                    });
+                }
+
+                var senhaCorreta =
+                    await _userManager.CheckPasswordAsync(
+                        user,
+                        dto.CurrentPassword);
+
+                if (!senhaCorreta)
+                {
+                    return BadRequest(new
+                    {
+                        message = "A senha atual está incorreta."
+                    });
+                }
+
+                var passwordResult =
+                    await _userManager.ChangePasswordAsync(
+                        user,
+                        dto.CurrentPassword,
+                        dto.NewPassword);
+
+                if (!passwordResult.Succeeded)
+                {
+                    return BadRequest(new
+                    {
+                        message = string.Join(
+                            "; ",
+                            passwordResult.Errors.Select(e => e.Description))
+                    });
+                }
+            }
+
+            // ---------------------------------------------------------
+            // SALVA OS DADOS DO USUÁRIO
+            // ---------------------------------------------------------
+            var updateResult =
+                await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+            {
+                return BadRequest(new
+                {
+                    message = string.Join(
+                        "; ",
+                        updateResult.Errors.Select(e => e.Description))
+                });
+            }
+
+            // ---------------------------------------------------------
+            // RETORNA USUÁRIO ATUALIZADO
+            // ---------------------------------------------------------
+            var roles =
+                await _userManager.GetRolesAsync(user);
+
+                return Ok(new UserDto
+                {
+                    Id = user.Id,
+                    Nome = user.Nome,
+                    Email = user.Email ?? string.Empty,
+                    UserName = user.UserName ?? string.Empty,
+                    FotoPerfil = user.FotoPerfil,
+                    Roles = roles,
+                    Telefone = user.PhoneNumber ?? string.Empty,
+                    Logradouro = user.Logradouro ?? string.Empty,
+                    Numero = user.Numero ?? string.Empty,
+                    Complemento = user.Complemento,
+                    Bairro = user.Bairro ?? string.Empty,
+                    Cidade = user.Cidade ?? string.Empty,
+                    Estado = user.Estado ?? string.Empty,
+                    Cep = user.Cep ?? string.Empty
+                });
+        }
 
 
 

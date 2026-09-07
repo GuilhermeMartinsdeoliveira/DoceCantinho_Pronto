@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DoceCantinho.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AdicionarNomeUsuario : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,7 @@ namespace DoceCantinho.Infrastructure.Migrations
                     Cidade = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
                     Cep = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
+                    FotoPerfil = table.Column<string>(type: "nvarchar(max)", maxLength: 2000000, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

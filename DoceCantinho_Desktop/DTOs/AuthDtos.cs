@@ -1,35 +1,23 @@
 ﻿// =============================================================================
-// SenacDoces.Desktop - DTOs/AuthDtos.cs
+// DoceCantinho.Desktop - DTOs/AuthDtos.cs
 // =============================================================================
-//  CONCEITO: DTO (Data Transfer Object) do lado Desktop
-//
-// Estes DTOs são CÓPIAS locais dos DTOs da API.
-// Por que fazer isso?
-//    O Desktop não precisa referenciar o projeto SenacDoces.Application
-//    Segue o princípio de desacoplamento entre camadas
-//    Cada camada define seus próprios contratos de dados
-//
-// Os campos devem ESPELHAR exatamente o que a API retorna em JSON.
-// =============================================================================
+
+using System;
+using System.Collections.Generic;
 
 namespace DoceCantinho.Desktop.DTOs
 {
     /// <summary>
     /// DTO para envio das credenciais de login para a API.
-    /// Mapeia o JSON enviado no corpo do POST /api/auth/login
     /// </summary>
     public class LoginRequestDto
     {
-        /// <summary>E-mail do usuário</summary>
         public string Email { get; set; } = string.Empty;
-
-        /// <summary>Senha do usuário</summary>
         public string Password { get; set; } = string.Empty;
     }
 
     /// <summary>
     /// DTO para registro de novo usuário.
-    /// Mapeia o JSON enviado no POST /api/auth/register
     /// </summary>
     public class RegisterRequestDto
     {
@@ -39,33 +27,75 @@ namespace DoceCantinho.Desktop.DTOs
     }
 
     /// <summary>
-    /// DTO que representa o usuário autenticado retornado pela API.
-    /// Mapeia o JSON retornado no POST /api/auth/login e GET /api/auth/me
+    /// DTO do usuário autenticado retornado pela API.
+    /// Deve espelhar o UserDto da API.
     /// </summary>
     public class UserResponseDto
     {
-        /// <summary>ID único do usuário no Identity</summary>
         public string Id { get; set; } = string.Empty;
 
-        /// <summary>E-mail do usuário</summary>
+        public string Nome { get; set; } = string.Empty;
+
         public string Email { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Lista de roles (perfis) do usuário.
-        /// Exemplos: "Admin", "User"
-        /// </summary>
+        public string UserName { get; set; } = string.Empty;
+
         public List<string> Roles { get; set; } = new();
 
-        /// <summary>
-        /// Verifica se o usuário possui o perfil de Administrador.
-        /// Usado para controle de acesso na interface.
-        /// </summary>
-        public bool IsAdmin => Roles.Contains("Admin");
+        public string Telefone { get; set; } = string.Empty;
+
+        public string Logradouro { get; set; } = string.Empty;
+
+        public string Numero { get; set; } = string.Empty;
+
+        public string? Complemento { get; set; }
+
+        public string Bairro { get; set; } = string.Empty;
+
+        public string Cidade { get; set; } = string.Empty;
+
+        public string Estado { get; set; } = string.Empty;
+        public string? FotoPerfil { get; set; }
+
+        public string Cep { get; set; } = string.Empty;
+
+        public bool IsAdmin =>
+            Roles.Contains("Admin", StringComparer.OrdinalIgnoreCase);
+
+        public string PerfilPrincipal =>
+            IsAdmin
+                ? "Administrador"
+                : Roles.Count > 0
+                    ? string.Join(", ", Roles)
+                    : "Usuário Comum";
     }
 
+    /// <summary>
+    /// DTO enviado para atualização do perfil do usuário autenticado.
+    /// Corresponde ao UpdateProfileDto da AuthController da API.
+    /// </summary>
     public class UpdateProfileRequestDto
     {
+        public string Nome { get; set; } = string.Empty;
+
         public string Email { get; set; } = string.Empty;
+
+        public string Telefone { get; set; } = string.Empty;
+
+        public string Logradouro { get; set; } = string.Empty;
+
+        public string Numero { get; set; } = string.Empty;
+
+        public string? Complemento { get; set; }
+
+        public string Bairro { get; set; } = string.Empty;
+
+        public string Cidade { get; set; } = string.Empty;
+
+        public string Estado { get; set; } = string.Empty;
+
+        public string Cep { get; set; } = string.Empty;
+        public string? FotoPerfil { get; set; }
 
         public string? CurrentPassword { get; set; }
 
@@ -73,6 +103,4 @@ namespace DoceCantinho.Desktop.DTOs
 
         public string? ConfirmPassword { get; set; }
     }
-
-
 }

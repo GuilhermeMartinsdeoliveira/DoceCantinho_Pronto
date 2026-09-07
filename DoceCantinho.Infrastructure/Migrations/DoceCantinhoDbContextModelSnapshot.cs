@@ -244,6 +244,10 @@ namespace DoceCantinho.Infrastructure.Migrations
                         .HasMaxLength(2)
                         .HasColumnType("nvarchar(2)");
 
+                    b.Property<string>("FotoPerfil")
+                        .HasMaxLength(2000000)
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 

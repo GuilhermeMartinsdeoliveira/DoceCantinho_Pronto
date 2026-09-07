@@ -1,4 +1,5 @@
 ﻿using DoceCantinho.Desktop.DTOs;
+using DoceCantinho.Desktop.Forms;
 using DoceCantinho.Desktop.Services;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,23 @@ namespace DoceCantinho.Desktop1.UserControls
 {
     public partial class CategoriasUserControl : UserControl
     {
+        // ============================================================
+        // SERVIÇOS
+        // ============================================================
+
         private CategoriasApiService? _categoriasService;
+
+        // ============================================================
+        // DADOS
+        // ============================================================
 
         private List<CategoriaResponseDto> _categorias = new();
 
         private int? _editandoId = null;
+
+        // ============================================================
+        // CONSTRUTOR
+        // ============================================================
 
         public CategoriasUserControl()
         {
@@ -27,15 +40,25 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
 
         private async void CategoriasUserControl_Load(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             if (DesignMode)
                 return;
 
-            _categoriasService = new CategoriasApiService();
+            try
+            {
+                _categoriasService =
+                    new CategoriasApiService();
 
-            await CarregarDadosAsync();
+                await CarregarDadosAsync();
+            }
+            catch (Exception ex)
+            {
+                MostrarAvisoCategoria(
+                    $"Erro ao iniciar a tela de categorias: {ex.Message}",
+                    TipoAvisoCategoria.Erro);
+            }
         }
 
         // ============================================================
@@ -49,18 +72,25 @@ namespace DoceCantinho.Desktop1.UserControls
 
             try
             {
+                Cursor =
+                    Cursors.WaitCursor;
+
                 _categorias =
-                    await _categoriasService.GetAllAsync();
+                    await _categoriasService
+                        .GetAllAsync();
 
                 AtualizarTela();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $"Erro ao carregar categorias:\n\n{ex.Message}",
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MostrarAvisoCategoria(
+                    $"Erro ao carregar categorias: {ex.Message}",
+                    TipoAvisoCategoria.Erro);
+            }
+            finally
+            {
+                Cursor =
+                    Cursors.Default;
             }
         }
 
@@ -77,40 +107,28 @@ namespace DoceCantinho.Desktop1.UserControls
 
             pnlCards.Controls.Clear();
 
-            // ========================================================
-            // TOTAL
-            // ========================================================
-
             int totalCategorias =
                 _categorias.Count;
 
             int totalProdutos =
-                _categorias.Sum(c => c.DoceCount);
+                _categorias.Sum(
+                    c => c.DoceCount);
 
             lblSubtitulo.Text =
-                $"{totalCategorias} categorias • {totalProdutos} produtos no total";
-
-            // ========================================================
-            // RESUMO
-            // ========================================================
+                $"{totalCategorias} categorias • " +
+                $"{totalProdutos} produtos no total";
 
             AtualizarResumo();
-
-            // ========================================================
-            // CARDS DAS CATEGORIAS
-            // ========================================================
 
             foreach (var categoria in _categorias)
             {
                 Panel card =
-                    CriarCardCategoria(categoria);
+                    CriarCardCategoria(
+                        categoria);
 
-                pnlCards.Controls.Add(card);
+                pnlCards.Controls.Add(
+                    card);
             }
-
-            // ========================================================
-            // CARD NOVA CATEGORIA
-            // ========================================================
 
             pnlCards.Controls.Add(
                 CriarCardNovaCategoria());
@@ -133,18 +151,10 @@ namespace DoceCantinho.Desktop1.UserControls
                 lblResumoGourmet
             };
 
-            // ========================================================
-            // LIMPAR TODOS
-            // ========================================================
-
             foreach (Label label in labels)
             {
                 label.Text = "";
             }
-
-            // ========================================================
-            // NENHUMA CATEGORIA
-            // ========================================================
 
             if (_categorias.Count == 0)
             {
@@ -154,19 +164,12 @@ namespace DoceCantinho.Desktop1.UserControls
                 return;
             }
 
-            // ========================================================
-            // ORDENAR PELA QUANTIDADE DE PRODUTOS
-            // ========================================================
-
             var categoriasOrdenadas =
                 _categorias
-                    .OrderByDescending(c => c.DoceCount)
+                    .OrderByDescending(
+                        c => c.DoceCount)
                     .Take(5)
                     .ToList();
-
-            // ========================================================
-            // PREENCHER RESUMO
-            // ========================================================
 
             for (
                 int i = 0;
@@ -178,7 +181,8 @@ namespace DoceCantinho.Desktop1.UserControls
                     categoriasOrdenadas[i];
 
                 labels[i].Text =
-                    $"•  {categoria.Name}: {categoria.DoceCount}";
+                    $"•  {categoria.Name}: " +
+                    $"{categoria.DoceCount}";
             }
         }
 
@@ -189,10 +193,10 @@ namespace DoceCantinho.Desktop1.UserControls
         private Panel CriarCardCategoria(
             CategoriaResponseDto categoria)
         {
-            Panel card = new Panel();
+            Panel card =
+                new Panel();
 
             card.Width = 270;
-
             card.Height = 180;
 
             card.BackColor =
@@ -208,22 +212,14 @@ namespace DoceCantinho.Desktop1.UserControls
                     16,
                     14);
 
-            // ========================================================
-            // COR DA CATEGORIA
-            // ========================================================
-
             Color cor =
                 ObterCorCategoria(
                     categoria.Name);
 
-            // ========================================================
-            // ÍCONE
-            // ========================================================
+            Label icone =
+                new Label();
 
-            Label icone = new Label();
-
-            icone.Text =
-                "✦";
+            icone.Text = "✦";
 
             icone.Font =
                 new Font(
@@ -253,11 +249,8 @@ namespace DoceCantinho.Desktop1.UserControls
                     40,
                     40);
 
-            // ========================================================
-            // QUANTIDADE NO TOPO
-            // ========================================================
-
-            Label quantidade = new Label();
+            Label quantidade =
+                new Label();
 
             int quantidadeProdutos =
                 categoria.DoceCount;
@@ -294,11 +287,8 @@ namespace DoceCantinho.Desktop1.UserControls
                     77,
                     25);
 
-            // ========================================================
-            // NOME
-            // ========================================================
-
-            Label nome = new Label();
+            Label nome =
+                new Label();
 
             nome.Text =
                 categoria.Name;
@@ -323,11 +313,8 @@ namespace DoceCantinho.Desktop1.UserControls
             nome.AutoSize =
                 true;
 
-            // ========================================================
-            // DESCRIÇÃO
-            // ========================================================
-
-            Label descricao = new Label();
+            Label descricao =
+                new Label();
 
             descricao.Text =
                 ObterDescricaoCategoria(
@@ -351,10 +338,6 @@ namespace DoceCantinho.Desktop1.UserControls
 
             descricao.AutoSize =
                 true;
-
-            // ========================================================
-            // PRODUTOS CADASTRADOS
-            // ========================================================
 
             Label produtosCadastrados =
                 new Label();
@@ -380,10 +363,6 @@ namespace DoceCantinho.Desktop1.UserControls
 
             produtosCadastrados.AutoSize =
                 true;
-
-            // ========================================================
-            // QUANTIDADE REAL DE PRODUTOS
-            // ========================================================
 
             Label quantidadeProdutosLabel =
                 new Label();
@@ -415,11 +394,8 @@ namespace DoceCantinho.Desktop1.UserControls
                     105,
                     18);
 
-            // ========================================================
-            // LINHA DECORATIVA
-            // ========================================================
-
-            Panel linha = new Panel();
+            Panel linha =
+                new Panel();
 
             linha.BackColor =
                 Color.FromArgb(
@@ -436,10 +412,6 @@ namespace DoceCantinho.Desktop1.UserControls
                 new Size(
                     240,
                     1);
-
-            // ========================================================
-            // BOTÃO EDITAR
-            // ========================================================
 
             Button btnEditar =
                 CriarBotaoCard(
@@ -462,10 +434,6 @@ namespace DoceCantinho.Desktop1.UserControls
                         categoria);
                 };
 
-            // ========================================================
-            // BOTÃO EXCLUIR
-            // ========================================================
-
             Button btnExcluirCard =
                 CriarBotaoCard(
                     "Excluir");
@@ -487,36 +455,15 @@ namespace DoceCantinho.Desktop1.UserControls
                         categoria);
                 };
 
-            // ========================================================
-            // ADICIONAR CONTROLES
-            // ========================================================
-
-            card.Controls.Add(
-                icone);
-
-            card.Controls.Add(
-                quantidade);
-
-            card.Controls.Add(
-                nome);
-
-            card.Controls.Add(
-                descricao);
-
-            card.Controls.Add(
-                produtosCadastrados);
-
-            card.Controls.Add(
-                quantidadeProdutosLabel);
-
-            card.Controls.Add(
-                linha);
-
-            card.Controls.Add(
-                btnEditar);
-
-            card.Controls.Add(
-                btnExcluirCard);
+            card.Controls.Add(icone);
+            card.Controls.Add(quantidade);
+            card.Controls.Add(nome);
+            card.Controls.Add(descricao);
+            card.Controls.Add(produtosCadastrados);
+            card.Controls.Add(quantidadeProdutosLabel);
+            card.Controls.Add(linha);
+            card.Controls.Add(btnEditar);
+            card.Controls.Add(btnExcluirCard);
 
             return card;
         }
@@ -527,10 +474,10 @@ namespace DoceCantinho.Desktop1.UserControls
 
         private Panel CriarCardNovaCategoria()
         {
-            Panel card = new Panel();
+            Panel card =
+                new Panel();
 
             card.Width = 270;
-
             card.Height = 180;
 
             card.BackColor =
@@ -552,14 +499,10 @@ namespace DoceCantinho.Desktop1.UserControls
             card.Cursor =
                 Cursors.Hand;
 
-            // ========================================================
-            // ÍCONE
-            // ========================================================
+            Label icone =
+                new Label();
 
-            Label icone = new Label();
-
-            icone.Text =
-                "+";
+            icone.Text = "+";
 
             icone.Font =
                 new Font(
@@ -585,11 +528,8 @@ namespace DoceCantinho.Desktop1.UserControls
             icone.TextAlign =
                 ContentAlignment.MiddleCenter;
 
-            // ========================================================
-            // TÍTULO
-            // ========================================================
-
-            Label titulo = new Label();
+            Label titulo =
+                new Label();
 
             titulo.Text =
                 "Nova Categoria";
@@ -619,11 +559,8 @@ namespace DoceCantinho.Desktop1.UserControls
             titulo.TextAlign =
                 ContentAlignment.MiddleCenter;
 
-            // ========================================================
-            // DESCRIÇÃO
-            // ========================================================
-
-            Label descricao = new Label();
+            Label descricao =
+                new Label();
 
             descricao.Text =
                 "Clique para adicionar";
@@ -652,10 +589,6 @@ namespace DoceCantinho.Desktop1.UserControls
             descricao.TextAlign =
                 ContentAlignment.MiddleCenter;
 
-            // ========================================================
-            // EVENTOS
-            // ========================================================
-
             card.Click +=
                 (sender, e) =>
                 {
@@ -680,18 +613,9 @@ namespace DoceCantinho.Desktop1.UserControls
                     MostrarFormulario(null);
                 };
 
-            // ========================================================
-            // ADICIONAR
-            // ========================================================
-
-            card.Controls.Add(
-                icone);
-
-            card.Controls.Add(
-                titulo);
-
-            card.Controls.Add(
-                descricao);
+            card.Controls.Add(icone);
+            card.Controls.Add(titulo);
+            card.Controls.Add(descricao);
 
             return card;
         }
@@ -703,7 +627,8 @@ namespace DoceCantinho.Desktop1.UserControls
         private Button CriarBotaoCard(
             string texto)
         {
-            Button botao = new Button();
+            Button botao =
+                new Button();
 
             botao.Text =
                 texto;
@@ -751,25 +676,15 @@ namespace DoceCantinho.Desktop1.UserControls
                 categoria?.Name ??
                 string.Empty;
 
-            if (categoria == null)
-            {
-                lblFormTitulo.Text =
-                    "Nova Categoria";
-            }
-            else
-            {
-                lblFormTitulo.Text =
-                    "Editar Categoria";
-            }
+            lblFormTitulo.Text =
+                categoria == null
+                    ? "Nova Categoria"
+                    : "Editar Categoria";
 
             pnlForm.Visible =
                 true;
 
             pnlForm.BringToFront();
-
-            // ========================================================
-            // CENTRALIZAR
-            // ========================================================
 
             pnlForm.Left =
                 (pnlPrincipal.ClientSize.Width -
@@ -813,17 +728,11 @@ namespace DoceCantinho.Desktop1.UserControls
             string nome =
                 txtNome.Text.Trim();
 
-            // ========================================================
-            // VALIDAÇÃO
-            // ========================================================
-
             if (string.IsNullOrWhiteSpace(nome))
             {
-                MessageBox.Show(
+                MostrarAvisoCategoria(
                     "Informe o nome da categoria.",
-                    "Validação",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                    TipoAvisoCategoria.Aviso);
 
                 txtNome.Focus();
 
@@ -850,23 +759,20 @@ namespace DoceCantinho.Desktop1.UserControls
 
                     if (resultado.Success)
                     {
-                        MessageBox.Show(
-                            "Categoria criada com sucesso!",
-                            "Sucesso",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-
                         OcultarFormulario();
 
                         await CarregarDadosAsync();
+
+                        MostrarAvisoCategoria(
+                            "Categoria criada com sucesso!",
+                            TipoAvisoCategoria.Sucesso);
                     }
                     else
                     {
-                        MessageBox.Show(
-                            resultado.ErrorMessage,
-                            "Erro",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                        MostrarAvisoCategoria(
+                            resultado.ErrorMessage ??
+                            "Não foi possível criar a categoria.",
+                            TipoAvisoCategoria.Erro);
                     }
 
                     return;
@@ -890,32 +796,27 @@ namespace DoceCantinho.Desktop1.UserControls
 
                 if (updateResultado.Success)
                 {
-                    MessageBox.Show(
-                        "Categoria atualizada com sucesso!",
-                        "Sucesso",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-
                     OcultarFormulario();
 
                     await CarregarDadosAsync();
+
+                    MostrarAvisoCategoria(
+                        "Categoria atualizada com sucesso!",
+                        TipoAvisoCategoria.Sucesso);
                 }
                 else
                 {
-                    MessageBox.Show(
-                        updateResultado.ErrorMessage,
-                        "Erro",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MostrarAvisoCategoria(
+                        updateResultado.ErrorMessage ??
+                        "Não foi possível atualizar a categoria.",
+                        TipoAvisoCategoria.Erro);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $"Erro ao salvar categoria:\n\n{ex.Message}",
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarAvisoCategoria(
+                    $"Erro ao salvar categoria: {ex.Message}",
+                    TipoAvisoCategoria.Erro);
             }
         }
 
@@ -946,30 +847,39 @@ namespace DoceCantinho.Desktop1.UserControls
 
             if (categoria.DoceCount > 0)
             {
-                MessageBox.Show(
+                MostrarAvisoCategoria(
                     $"A categoria \"{categoria.Name}\" possui " +
-                    $"{categoria.DoceCount} doce(s) vinculado(s).\n\n" +
+                    $"{categoria.DoceCount} doce(s) vinculado(s). " +
                     "Remova os doces antes de excluir a categoria.",
-                    "Não é possível excluir",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                    TipoAvisoCategoria.Aviso);
 
                 return;
             }
 
             // ========================================================
-            // CONFIRMAÇÃO
+            // CONFIRMAÇÃO PERSONALIZADA
             // ========================================================
 
-            DialogResult confirmacao =
-                MessageBox.Show(
-                    $"Deseja excluir a categoria \"{categoria.Name}\"?",
-                    "Confirmar exclusão",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning);
+            using (var confirmar =
+                new DoceCantinho.Desktop.Forms
+                    .ConfirmarExclusaoForm(
+                        "categoria",
+                        categoria.Name))
+            {
+                var resultado =
+                    confirmar.ShowDialog(
+                        FindForm());
 
-            if (confirmacao != DialogResult.Yes)
-                return;
+                if (resultado !=
+                    DialogResult.OK)
+                {
+                    return;
+                }
+            }
+
+            // ========================================================
+            // EXCLUSÃO
+            // ========================================================
 
             try
             {
@@ -980,30 +890,25 @@ namespace DoceCantinho.Desktop1.UserControls
 
                 if (resultado.Success)
                 {
-                    MessageBox.Show(
-                        "Categoria excluída com sucesso!",
-                        "Sucesso",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-
                     await CarregarDadosAsync();
+
+                    MostrarAvisoCategoria(
+                        "Categoria excluída com sucesso!",
+                        TipoAvisoCategoria.Sucesso);
                 }
                 else
                 {
-                    MessageBox.Show(
-                        resultado.ErrorMessage,
-                        "Erro",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MostrarAvisoCategoria(
+                        resultado.ErrorMessage ??
+                        "Não foi possível excluir a categoria.",
+                        TipoAvisoCategoria.Erro);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $"Erro ao excluir categoria:\n\n{ex.Message}",
-                    "Erro",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarAvisoCategoria(
+                    $"Erro ao excluir categoria: {ex.Message}",
+                    TipoAvisoCategoria.Erro);
             }
         }
 
@@ -1015,7 +920,290 @@ namespace DoceCantinho.Desktop1.UserControls
             object sender,
             EventArgs e)
         {
-            MostrarFormulario(null);
+            MostrarFormulario(
+                null);
+        }
+
+        // ============================================================
+        // TIPO DE AVISO
+        // ============================================================
+
+        private enum TipoAvisoCategoria
+        {
+            Sucesso,
+            Aviso,
+            Erro
+        }
+
+        // ============================================================
+        // AVISO PERSONALIZADO
+        // ============================================================
+
+        private void MostrarAvisoCategoria(
+            string mensagem,
+            TipoAvisoCategoria tipo)
+        {
+            try
+            {
+                foreach (
+                    Control controle
+                    in Controls
+                        .OfType<Panel>()
+                        .ToList())
+                {
+                    if (controle.Name ==
+                        "pnlAvisoCategoria")
+                    {
+                        Controls.Remove(
+                            controle);
+
+                        controle.Dispose();
+                    }
+                }
+
+                var pnlAviso =
+                    new Guna.UI2.WinForms
+                        .Guna2Panel
+                    {
+                        Name =
+                            "pnlAvisoCategoria",
+
+                        Size =
+                            new Size(
+                                420,
+                                62),
+
+                        BorderRadius = 12,
+
+                        Anchor =
+                            AnchorStyles.Top |
+                            AnchorStyles.Right,
+
+                        FillColor =
+                            Color.White,
+
+                        ShadowDecoration =
+                        {
+                            Enabled = true,
+                            Depth = 8,
+                            BorderRadius = 12
+                        }
+                    };
+
+                pnlAviso.Location =
+                    new Point(
+                        Math.Max(
+                            10,
+                            Width -
+                            pnlAviso.Width -
+                            20),
+                        20);
+
+                Color corPrincipal;
+                string titulo;
+
+                switch (tipo)
+                {
+                    case TipoAvisoCategoria.Sucesso:
+
+                        corPrincipal =
+                            Color.FromArgb(
+                                46,
+                                160,
+                                67);
+
+                        titulo =
+                            "Sucesso";
+
+                        break;
+
+                    case TipoAvisoCategoria.Aviso:
+
+                        corPrincipal =
+                            Color.FromArgb(
+                                230,
+                                155,
+                                45);
+
+                        titulo =
+                            "Atenção";
+
+                        break;
+
+                    default:
+
+                        corPrincipal =
+                            Color.FromArgb(
+                                200,
+                                70,
+                                70);
+
+                        titulo =
+                            "Erro";
+
+                        break;
+                }
+
+                var lblTituloAviso =
+                    new Label
+                    {
+                        AutoSize = false,
+
+                        Location =
+                            new Point(
+                                18,
+                                10),
+
+                        Size =
+                            new Size(
+                                120,
+                                20),
+
+                        Text =
+                            titulo,
+
+                        Font =
+                            new Font(
+                                "Segoe UI",
+                                10F,
+                                FontStyle.Bold),
+
+                        ForeColor =
+                            corPrincipal
+                    };
+
+                var lblMensagemAviso =
+                    new Label
+                    {
+                        AutoSize = false,
+
+                        Location =
+                            new Point(
+                                18,
+                                30),
+
+                        Size =
+                            new Size(
+                                350,
+                                24),
+
+                        Text =
+                            mensagem,
+
+                        Font =
+                            new Font(
+                                "Segoe UI",
+                                9F),
+
+                        ForeColor =
+                            Color.FromArgb(
+                                70,
+                                70,
+                                70),
+
+                        AutoEllipsis =
+                            true
+                    };
+
+                var btnFechar =
+                    new Guna.UI2.WinForms
+                        .Guna2Button
+                    {
+                        Size =
+                            new Size(
+                                28,
+                                28),
+
+                        Location =
+                            new Point(
+                                380,
+                                8),
+
+                        Text =
+                            "×",
+
+                        Font =
+                            new Font(
+                                "Segoe UI",
+                                14F),
+
+                        ForeColor =
+                            Color.FromArgb(
+                                100,
+                                100,
+                                100),
+
+                        FillColor =
+                            Color.Transparent,
+
+                        BorderRadius =
+                            8
+                    };
+
+                btnFechar.HoverState.FillColor =
+                    Color.FromArgb(
+                        245,
+                        245,
+                        245);
+
+                btnFechar.HoverState.ForeColor =
+                    Color.Black;
+
+                btnFechar.Click +=
+                    (_, __) =>
+                    {
+                        if (!pnlAviso.IsDisposed)
+                        {
+                            Controls.Remove(
+                                pnlAviso);
+
+                            pnlAviso.Dispose();
+                        }
+                    };
+
+                pnlAviso.Controls.Add(
+                    lblTituloAviso);
+
+                pnlAviso.Controls.Add(
+                    lblMensagemAviso);
+
+                pnlAviso.Controls.Add(
+                    btnFechar);
+
+                Controls.Add(
+                    pnlAviso);
+
+                pnlAviso.BringToFront();
+
+                var timer =
+                    new System.Windows.Forms.Timer
+                    {
+                        Interval = 3500
+                    };
+
+                timer.Tick +=
+                    (_, __) =>
+                    {
+                        timer.Stop();
+
+                        timer.Dispose();
+
+                        if (!pnlAviso.IsDisposed)
+                        {
+                            Controls.Remove(
+                                pnlAviso);
+
+                            pnlAviso.Dispose();
+                        }
+                    };
+
+                timer.Start();
+            }
+            catch
+            {
+                // Não interrompe a operação
+                // se o aviso visual falhar.
+            }
         }
 
         // ============================================================
@@ -1057,43 +1245,55 @@ namespace DoceCantinho.Desktop1.UserControls
             string nome)
         {
             if (string.IsNullOrWhiteSpace(nome))
+            {
                 return Color.FromArgb(
                     198,
                     124,
                     99);
+            }
 
             string nomeLower =
                 nome.ToLowerInvariant();
 
             if (nomeLower.Contains("bolo"))
+            {
                 return Color.FromArgb(
                     211,
                     126,
                     105);
+            }
 
             if (nomeLower.Contains("brigadeiro"))
+            {
                 return Color.FromArgb(
                     232,
                     163,
                     35);
+            }
 
             if (nomeLower.Contains("brownie"))
+            {
                 return Color.FromArgb(
                     139,
                     121,
                     112);
+            }
 
             if (nomeLower.Contains("cupcake"))
+            {
                 return Color.FromArgb(
                     235,
                     158,
                     145);
+            }
 
             if (nomeLower.Contains("gourmet"))
+            {
                 return Color.FromArgb(
                     65,
                     180,
                     125);
+            }
 
             return Color.FromArgb(
                 198,

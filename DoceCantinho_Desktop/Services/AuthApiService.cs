@@ -12,14 +12,8 @@ namespace DoceCantinho.Desktop.Services
             _http = HttpClientHelper.Instance;
         }
 
-        // ============================================================
-        // LOGIN
-        // ============================================================
-
         public async Task<(bool Success, UserResponseDto? User, string ErrorMessage)>
-            LoginAsync(
-                string email,
-                string password)
+            LoginAsync(string email, string password)
         {
             var loginDto = new LoginRequestDto
             {
@@ -35,25 +29,16 @@ namespace DoceCantinho.Desktop.Services
             return (success, data, error);
         }
 
-        // ============================================================
-        // LOGOUT
-        // ============================================================
-
         public async Task<(bool Success, string ErrorMessage)>
             LogoutAsync()
         {
             var result =
-                await _http.PostEmptyAsync(
-                    "/api/auth/logout");
+                await _http.PostEmptyAsync("/api/auth/logout");
 
             _http.ClearCookies();
 
             return result;
         }
-
-        // ============================================================
-        // USUÁRIO ATUAL
-        // ============================================================
 
         public async Task<UserResponseDto?>
             GetCurrentUserAsync()
@@ -62,44 +47,23 @@ namespace DoceCantinho.Desktop.Services
                 "/api/auth/me");
         }
 
-        // ============================================================
-        // ATUALIZAR PERFIL
-        // ============================================================
-
         public async Task<
             (bool Success,
              UserResponseDto? User,
              string ErrorMessage)>
             UpdateProfileAsync(
-                string email,
-                string currentPassword,
-                string? newPassword,
-                string? confirmPassword)
+                UpdateProfileRequestDto dto)
         {
-            var dto =
-                new UpdateProfileRequestDto
-                {
-                    Email = email,
+            var result =
+                await _http.PutAsync<UserResponseDto>(
+                    "/api/auth/profile",
+                    dto);
 
-                    CurrentPassword =
-                        string.IsNullOrWhiteSpace(currentPassword)
-                            ? null
-                            : currentPassword,
-
-                    NewPassword =
-                        string.IsNullOrWhiteSpace(newPassword)
-                            ? null
-                            : newPassword,
-
-                    ConfirmPassword =
-                        string.IsNullOrWhiteSpace(confirmPassword)
-                            ? null
-                            : confirmPassword
-                };
-
-            return await _http.PutAsync<UserResponseDto>(
-                "/api/auth/profile",
-                dto);
+            return (
+                result.Success,
+                result.Data,
+                result.ErrorMessage
+            );
         }
     }
 }

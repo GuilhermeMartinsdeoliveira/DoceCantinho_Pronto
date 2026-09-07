@@ -33,5 +33,8 @@ namespace DoceCantinho.Infrastructure.Identity
 
         [StringLength(9)]
         public string Cep { get; set; } = string.Empty;
+
+        [StringLength(2_000_000)]
+        public string? FotoPerfil { get; set; }
     }
 }
