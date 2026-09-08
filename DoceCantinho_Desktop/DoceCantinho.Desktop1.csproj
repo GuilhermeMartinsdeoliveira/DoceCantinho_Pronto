@@ -11,9 +11,7 @@
   <ItemGroup>
     <Compile Remove="Form1.cs" />
     <Compile Remove="Form1.Designer.cs" />
-  </ItemGroup>
 
-  <ItemGroup>
     <EmbeddedResource Remove="Form1.resx" />
     <EmbeddedResource Remove="UserControls\DoceUserControl1.resx" />
   </ItemGroup>
@@ -26,6 +24,7 @@
     <Compile Update="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
+
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -37,6 +36,21 @@
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Associação explícita dos recursos dos Forms -->
+  <ItemGroup>
+    <Compile Update="Forms\PedidoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+
+    <Compile Update="Forms\PedidoForm.Designer.cs">
+      <DependentUpon>PedidoForm.cs</DependentUpon>
+    </Compile>
+
+    <EmbeddedResource Update="Forms\PedidoForm.resx">
+      <DependentUpon>PedidoForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
 

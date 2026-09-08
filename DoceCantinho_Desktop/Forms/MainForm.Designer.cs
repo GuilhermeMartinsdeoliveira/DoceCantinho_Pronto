@@ -131,6 +131,8 @@ namespace DoceCantinho.Desktop.Forms
             pnlUsuario.ShadowDecoration.CustomizableEdges = customizableEdges2;
             pnlUsuario.Size = new Size(197, 78);
             pnlUsuario.TabIndex = 9;
+            pnlUsuario.Click += pnlUsuario_Click;
+
             // 
             // lblSessao
             // 
@@ -143,6 +145,7 @@ namespace DoceCantinho.Desktop.Forms
             lblSessao.Size = new Size(125, 13);
             lblSessao.TabIndex = 3;
             lblSessao.Text = "● conectado";
+
             // 
             // lblPerfil
             // 
@@ -370,7 +373,7 @@ namespace DoceCantinho.Desktop.Forms
             // guna2DragControl1
             // 
             guna2DragControl1.DockIndicatorTransparencyValue = 0.6D;
-            guna2DragControl1.TargetControl = guna2Panel1;
+            guna2DragControl1.TargetControl = pnlLogoIcon;
             guna2DragControl1.UseTransparentDrag = true;
             // 
             // guna2ShadowForm1

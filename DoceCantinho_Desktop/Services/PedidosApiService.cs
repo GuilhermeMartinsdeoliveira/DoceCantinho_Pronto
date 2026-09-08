@@ -14,11 +14,18 @@ namespace DoceCantinho.Desktop.Services
             _http = HttpClientHelper.Instance;
         }
 
+        // ============================================================
+        // LISTAR PEDIDOS
+        // ============================================================
+
         public async Task<List<PedidoResponseDto>> GetAllAsync()
         {
             try
             {
-                var pedidos = await _http.GetAsync<List<PedidoResponseDto>>("/api/orders");
+                var pedidos =
+                    await _http.GetAsync<List<PedidoResponseDto>>(
+                        "/api/orders");
+
                 return pedidos ?? new List<PedidoResponseDto>();
             }
             catch
@@ -27,11 +34,16 @@ namespace DoceCantinho.Desktop.Services
             }
         }
 
+        // ============================================================
+        // BUSCAR PEDIDO POR ID
+        // ============================================================
+
         public async Task<PedidoDetalheDto?> GetByIdAsync(int id)
         {
             try
             {
-                return await _http.GetAsync<PedidoDetalheDto>($"/api/orders/{id}");
+                return await _http.GetAsync<PedidoDetalheDto>(
+                    $"/api/orders/{id}");
             }
             catch
             {
@@ -39,11 +51,60 @@ namespace DoceCantinho.Desktop.Services
             }
         }
 
-        public async Task<(bool Success, string ErrorMessage)> UpdateBatchStatusAsync(List<int> ids, string status)
+        // ============================================================
+        // ATUALIZAR PEDIDO
+        // ============================================================
+
+        public async Task<(bool Success, string ErrorMessage)> UpdateAsync(
+            int id,
+            AtualizarPedidoDto dto)
         {
-            var dto = new BatchStatusDto { Ids = ids, Status = status };
-            return await _http.PutAsync<object>("/api/orders/batch-status", dto)
-                .ContinueWith(t => (t.Result.Success, t.Result.ErrorMessage));
+            var result =
+                await _http.PutAsync<object>(
+                    $"/api/orders/{id}",
+                    dto);
+
+            return (
+                result.Success,
+                result.ErrorMessage
+            );
+        }
+
+        // ============================================================
+        // EXCLUIR PEDIDO
+        // ============================================================
+
+        public async Task<(bool Success, string ErrorMessage)> DeleteAsync(
+            int id)
+        {
+            return await _http.DeleteAsync(
+                $"/api/orders/{id}");
+        }
+
+        // ============================================================
+        // ATUALIZAR STATUS EM LOTE
+        // ============================================================
+
+        public async Task<(bool Success, string ErrorMessage)>
+            UpdateBatchStatusAsync(
+                List<int> ids,
+                string status)
+        {
+            var dto = new BatchStatusDto
+            {
+                Ids = ids,
+                Status = status
+            };
+
+            var result =
+                await _http.PutAsync<object>(
+                    "/api/orders/batch-status",
+                    dto);
+
+            return (
+                result.Success,
+                result.ErrorMessage
+            );
         }
     }
 }

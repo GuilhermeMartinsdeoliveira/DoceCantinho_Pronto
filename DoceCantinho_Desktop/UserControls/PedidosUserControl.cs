@@ -1,20 +1,59 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using DoceCantinho.Desktop.DTOs;
 using DoceCantinho.Desktop.Services;
-using DoceCantinho.Desktop.Themes;
+using DoceCantinho.Desktop1.Forms;
+using DoceCantinho.Desktop.Helpers;
 
 namespace DoceCantinho.Desktop1.UserControls
 {
     public partial class PedidosUserControl : UserControl
     {
+        // ============================================================
+        // SERVIÇO
+        // ============================================================
+
         private PedidosApiService? _pedidosService;
 
-    private List<PedidoResponseDto> _pedidos = new();
+        // ============================================================
+        // DADOS
+        // ============================================================
+
+        private List<PedidoResponseDto> _pedidos = new();
+
+        // ============================================================
+        // AVISO VISUAL
+        // ============================================================
+
+        private Panel? _painelAviso;
+        private Label? _lblAviso;
+        private System.Windows.Forms.Timer? _timerAviso;
+
+        // ============================================================
+        // PERMISSÕES
+        // ============================================================
+
+        private void ConfigurarPermissoes()
+        {
+            bool isAdmin =
+                SessionManager.Instance.IsAdmin;
+
+            // Usuário comum pode consultar pedidos,
+            // mas não pode criar, editar ou excluir.
+            btnNovo.Visible = isAdmin;
+
+            // Esconde a coluna de ações inteira para usuário comum.
+            colAcoes.Visible = isAdmin;
+        }
+
+        // ============================================================
+        // CONSTRUTOR
+        // ============================================================
 
         public PedidosUserControl()
         {
@@ -23,6 +62,7 @@ namespace DoceCantinho.Desktop1.UserControls
             if (!DesignMode)
             {
                 ConfigurarTabela();
+                ConfigurarPermissoes();
             }
         }
 
@@ -34,35 +74,60 @@ namespace DoceCantinho.Desktop1.UserControls
         {
             dgvPedidos.AutoGenerateColumns = false;
 
-            // Nº PEDIDO
+            // --------------------------------------------------------
+            // COLUNAS
+            // --------------------------------------------------------
+
             colNumero.DataPropertyName = "Id";
 
-            // CLIENTE
-            colCliente.DataPropertyName = "NomeCliente";
+            colCliente.DataPropertyName =
+                "NomeCliente";
 
-            // DATA
-            colData.DataPropertyName = "CreatedAt";
-            colData.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+            colData.DataPropertyName =
+                "CreatedAt";
 
-            // PRODUTOS
-            // O DTO possui ItemsCount e não Produtos
-            colProdutos.DataPropertyName = "ItemsCount";
+            colData.DefaultCellStyle.Format =
+                "dd/MM/yyyy HH\\:mm";
 
-            // VALOR
-            colValor.DataPropertyName = "Total";
-            colValor.DefaultCellStyle.Format = "C2";
+            colProdutos.DataPropertyName =
+                "Produtos";
 
-            // PAGAMENTO
-            colPagamento.DataPropertyName = "PaymentMethod";
+            colValor.DataPropertyName =
+                "Total";
 
-            // STATUS
-            colStatus.DataPropertyName = "Status";
+            colValor.DefaultCellStyle.Format =
+                "C2";
 
-            // AÇÕES
+            colPagamento.DataPropertyName =
+                "PaymentMethod";
+
+            colStatus.DataPropertyName =
+                "Status";
+
             colAcoes.DataPropertyName = "";
 
+            // --------------------------------------------------------
+            // COLUNA AÇÕES
+            // --------------------------------------------------------
+
+            colAcoes.AutoSizeMode =
+                DataGridViewAutoSizeColumnMode.None;
+
+            colAcoes.Width = 160;
+
+            colAcoes.HeaderText =
+                "AÇÕES";
+
+            colAcoes.ReadOnly = true;
+
+            // --------------------------------------------------------
+            // CONFIGURAÇÃO GERAL
+            // --------------------------------------------------------
+
             dgvPedidos.AllowUserToAddRows = false;
+
             dgvPedidos.AllowUserToDeleteRows = false;
+
             dgvPedidos.AllowUserToResizeRows = false;
 
             dgvPedidos.ReadOnly = true;
@@ -74,13 +139,604 @@ namespace DoceCantinho.Desktop1.UserControls
 
             dgvPedidos.RowHeadersVisible = false;
 
+            // ==========================================
+            // COR NORMAL DA SELEÇÃO
+            // ==========================================
+
+            dgvPedidos.DefaultCellStyle.SelectionBackColor =
+                Color.White;
+
+            dgvPedidos.DefaultCellStyle.SelectionForeColor =
+                Color.FromArgb(
+                    55,
+                    39,
+                    34);
+
+            dgvPedidos.AutoGenerateColumns = false;
+
+            dgvPedidos.RowsDefaultCellStyle.BackColor =
+                Color.White;
+
+            dgvPedidos.AlternatingRowsDefaultCellStyle.BackColor =
+                Color.FromArgb(
+                    250,
+                    248,
+                    246);
+
+            // ==========================================
+            // EVENTOS DA COLUNA DE AÇÕES
+            // ==========================================
+
+            dgvPedidos.CellPainting -=
+                DgvPedidos_CellPainting;
+
+            dgvPedidos.CellPainting +=
+                DgvPedidos_CellPainting;
+
+            dgvPedidos.CellMouseClick -=
+                DgvPedidos_CellMouseClick;
+
+            dgvPedidos.CellMouseClick +=
+                DgvPedidos_CellMouseClick;
+        }
+
+        // ============================================================
+        // DESENHAR BOTÕES EDITAR / EXCLUIR
+        // ============================================================
+
+        private void DgvPedidos_CellPainting(
+            object? sender,
+            DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            if (e.ColumnIndex !=
+                colAcoes.Index)
+            {
+                return;
+            }
+
+            e.PaintBackground(
+                e.CellBounds,
+                true);
+
+            Rectangle area =
+                e.CellBounds;
+
+            int margem = 5;
+            int espacamento = 5;
+
+            int larguraBotao =
+                (area.Width -
+                 (margem * 2) -
+                 espacamento) / 2;
+
+            int alturaBotao = 28;
+
+            int posY =
+                area.Y +
+                ((area.Height -
+                  alturaBotao) / 2);
+
+            // --------------------------------------------------------
+            // EDITAR
+            // --------------------------------------------------------
+
+            Rectangle rectEditar =
+                new Rectangle(
+                    area.X + margem,
+                    posY,
+                    larguraBotao,
+                    alturaBotao);
+
+            // --------------------------------------------------------
+            // EXCLUIR
+            // --------------------------------------------------------
+
+            Rectangle rectExcluir =
+                new Rectangle(
+                    rectEditar.Right +
+                    espacamento,
+                    posY,
+                    larguraBotao,
+                    alturaBotao);
+
+            // --------------------------------------------------------
+            // FUNDO EDITAR
+            // --------------------------------------------------------
+
+            using (var brushEditar =
+                   new SolidBrush(
+                       Color.FromArgb(
+                           236,
+                           219,
+                           210)))
+            using (var penEditar =
+                   new Pen(
+                       Color.FromArgb(
+                           208,
+                           126,
+                           91)))
+            {
+                e.Graphics.FillRectangle(
+                    brushEditar,
+                    rectEditar);
+
+                e.Graphics.DrawRectangle(
+                    penEditar,
+                    rectEditar);
+            }
+
+            // --------------------------------------------------------
+            // FUNDO EXCLUIR
+            // --------------------------------------------------------
+
+            using (var brushExcluir =
+                   new SolidBrush(
+                       Color.FromArgb(
+                           245,
+                           225,
+                           220)))
+            using (var penExcluir =
+                   new Pen(
+                       Color.FromArgb(
+                           190,
+                           90,
+                           75)))
+            {
+                e.Graphics.FillRectangle(
+                    brushExcluir,
+                    rectExcluir);
+
+                e.Graphics.DrawRectangle(
+                    penExcluir,
+                    rectExcluir);
+            }
+
+            // --------------------------------------------------------
+            // TEXTO EDITAR
+            // --------------------------------------------------------
+
+            using (var fonte =
+                   new Font(
+                       "Segoe UI",
+                       8.5f,
+                       FontStyle.Bold))
+            using (var brush =
+                   new SolidBrush(
+                       Color.FromArgb(
+                           145,
+                           78,
+                           53)))
+            {
+                e.Graphics.DrawString(
+                    "Editar",
+                    fonte,
+                    brush,
+                    rectEditar,
+                    new StringFormat
+                    {
+                        Alignment =
+                            StringAlignment.Center,
+
+                        LineAlignment =
+                            StringAlignment.Center
+                    });
+            }
+
+            // --------------------------------------------------------
+            // TEXTO EXCLUIR
+            // --------------------------------------------------------
+
+            using (var fonte =
+                   new Font(
+                       "Segoe UI",
+                       8.5f,
+                       FontStyle.Bold))
+            using (var brush =
+                   new SolidBrush(
+                       Color.FromArgb(
+                           165,
+                           70,
+                           60)))
+            {
+                e.Graphics.DrawString(
+                    "Excluir",
+                    fonte,
+                    brush,
+                    rectExcluir,
+                    new StringFormat
+                    {
+                        Alignment =
+                            StringAlignment.Center,
+
+                        LineAlignment =
+                            StringAlignment.Center
+                    });
+            }
+
+            e.Handled = true;
+        }
+
+        // ============================================================
+        // CLIQUE NOS BOTÕES
+        // ============================================================
+
+        private async void DgvPedidos_CellMouseClick(
+            object? sender,
+            DataGridViewCellMouseEventArgs e)
+        {
+            if (!SessionManager.Instance.IsAdmin)
+                return;
+
+            if (e.RowIndex < 0)
+                return;
+
+            if (e.ColumnIndex !=
+                colAcoes.Index)
+            {
+                return;
+            }
+
+            if (e.Button != MouseButtons.Left)
+                return;
+
+            if (e.RowIndex >=
+                dgvPedidos.Rows.Count)
+            {
+                return;
+            }
+
+            // --------------------------------------------------------
+            // OBTÉM PEDIDO
+            // --------------------------------------------------------
+
+            if (dgvPedidos.Rows[e.RowIndex]
+                    .DataBoundItem
+                is not PedidoResponseDto pedido)
+            {
+                return;
+            }
+
+            Rectangle cellBounds =
+                dgvPedidos.GetCellDisplayRectangle(
+                    e.ColumnIndex,
+                    e.RowIndex,
+                    false);
+
+            int metade =
+                cellBounds.Width / 2;
+
+            // --------------------------------------------------------
+            // EDITAR
+            // --------------------------------------------------------
+
+            if (e.X < metade)
+            {
+                EditarPedido(
+                    pedido.Id);
+            }
+            else
+            {
+                // ----------------------------------------------------
+                // EXCLUIR
+                // ----------------------------------------------------
+
+                await ExcluirPedidoAsync(
+                    pedido);
+            }
+        }
+
+        // ============================================================
+        // EDITAR PEDIDO
+        // ============================================================
+
+        private void EditarPedido(
+            int pedidoId)
+        {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAviso(
+                    "Seu perfil não possui permissão para editar pedidos.",
+                    true);
+
+                return;
+            }
+
             try
             {
-                DoceTheme.AplicarEstiloGrid(dgvPedidos);
+                using var form =
+                    new PedidoForm(
+                        pedidoId);
+
+                var resultado =
+                    form.ShowDialog(
+                        FindForm());
+
+                if (resultado ==
+                    DialogResult.OK)
+                {
+                    _ = CarregarDadosAsync();
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                // O Designer já possui o estilo visual.
+                MostrarAviso(
+                    $"Não foi possível abrir o pedido para edição: {ex.Message}",
+                    true);
+            }
+        }
+
+        // ============================================================
+        // EXCLUIR PEDIDO
+        // ============================================================
+
+        private async Task ExcluirPedidoAsync(
+            PedidoResponseDto pedido)
+        {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAviso(
+                    "Seu perfil não possui permissão para excluir pedidos.",
+                    true);
+
+                return;
+            }
+            // ========================================================
+            // CONFIRMAÇÃO PERSONALIZADA
+            // ========================================================
+
+            using (var confirmacao =
+                new DoceCantinho.Desktop.Forms
+                    .ConfirmarExclusaoForm(
+                        "pedido",
+                        $"#{pedido.Id}"))
+            {
+                var resultadoConfirmacao =
+                    confirmacao.ShowDialog(
+                        FindForm());
+
+                if (resultadoConfirmacao !=
+                    DialogResult.OK)
+                {
+                    return;
+                }
+            }
+
+            // ========================================================
+            // EXCLUIR
+            // ========================================================
+
+            try
+            {
+                if (_pedidosService == null)
+                {
+                    _pedidosService =
+                        new PedidosApiService();
+                }
+
+                var resultado =
+                    await _pedidosService
+                        .DeleteAsync(
+                            pedido.Id);
+
+                // ====================================================
+                // SUCESSO
+                // ====================================================
+
+                if (resultado.Success)
+                {
+                    _pedidos =
+                        _pedidos
+                            .Where(p =>
+                                p.Id != pedido.Id)
+                            .ToList();
+
+                    AtualizarTabela(
+                        _pedidos);
+
+                    AtualizarContadores();
+
+                    if (!string.IsNullOrWhiteSpace(
+                        txtBuscar.Text))
+                    {
+                        AplicarFiltro();
+                    }
+
+                    MostrarAviso(
+                        $"Pedido #{pedido.Id} excluído com sucesso.",
+                        false);
+                }
+                else
+                {
+                    MostrarAviso(
+                        string.IsNullOrWhiteSpace(
+                            resultado.ErrorMessage)
+                            ? "Não foi possível excluir o pedido."
+                            : resultado.ErrorMessage,
+                        true);
+                }
+            }
+            catch (Exception ex)
+            {
+                MostrarAviso(
+                    $"Ocorreu um erro ao excluir o pedido: {ex.Message}",
+                    true);
+            }
+        }
+
+        // ============================================================
+        // AVISO VISUAL
+        // ============================================================
+
+        private void MostrarAviso(
+            string mensagem,
+            bool erro)
+        {
+            // --------------------------------------------------------
+            // REMOVE TIMER ANTERIOR
+            // --------------------------------------------------------
+
+            if (_timerAviso != null)
+            {
+                _timerAviso.Stop();
+
+                _timerAviso.Dispose();
+
+                _timerAviso = null;
+            }
+
+            // --------------------------------------------------------
+            // CRIA PAINEL
+            // --------------------------------------------------------
+
+            if (_painelAviso == null ||
+                _painelAviso.IsDisposed)
+            {
+                _painelAviso =
+                    new Panel
+                    {
+                        Name =
+                            "painelAvisoPedido",
+
+                        Size =
+                            new Size(
+                                360,
+                                48),
+
+                        Anchor =
+                            AnchorStyles.Top |
+                            AnchorStyles.Right,
+
+                        Padding =
+                            new Padding(
+                                14,
+                                0,
+                                14,
+                                0)
+                    };
+
+                _lblAviso =
+                    new Label
+                    {
+                        Dock =
+                            DockStyle.Fill,
+
+                        TextAlign =
+                            ContentAlignment.MiddleLeft,
+
+                        Font =
+                            new Font(
+                                "Segoe UI Semibold",
+                                9F,
+                                FontStyle.Bold),
+
+                        AutoEllipsis =
+                            true
+                    };
+
+                _painelAviso.Controls.Add(
+                    _lblAviso);
+
+                Controls.Add(
+                    _painelAviso);
+
+                _painelAviso.BringToFront();
+            }
+
+            // --------------------------------------------------------
+            // POSICIONAR
+            // --------------------------------------------------------
+
+            _painelAviso.Location =
+                new Point(
+                    Math.Max(
+                        10,
+                        Width -
+                        _painelAviso.Width -
+                        20),
+                    20);
+
+            // --------------------------------------------------------
+            // TEXTO
+            // --------------------------------------------------------
+
+            if (_lblAviso != null)
+            {
+                _lblAviso.Text =
+                    (erro ? "⚠ " : "✓ ") +
+                    mensagem;
+
+                _lblAviso.ForeColor =
+                    erro
+                        ? Color.FromArgb(
+                            150,
+                            65,
+                            60)
+                        : Color.FromArgb(
+                            55,
+                            120,
+                            82);
+            }
+
+            // --------------------------------------------------------
+            // COR
+            // --------------------------------------------------------
+
+            _painelAviso.BackColor =
+                erro
+                    ? Color.FromArgb(
+                        250,
+                        232,
+                        228)
+                    : Color.FromArgb(
+                        231,
+                        246,
+                        236);
+
+            _painelAviso.Visible =
+                true;
+
+            _painelAviso.BringToFront();
+
+            // --------------------------------------------------------
+            // FECHAR AUTOMATICAMENTE
+            // --------------------------------------------------------
+
+            _timerAviso =
+                new System.Windows.Forms.Timer
+                {
+                    Interval = 3500
+                };
+
+            _timerAviso.Tick +=
+                TimerAviso_Tick;
+
+            _timerAviso.Start();
+        }
+
+        // ============================================================
+        // TIMER DO AVISO
+        // ============================================================
+
+        private void TimerAviso_Tick(
+            object? sender,
+            EventArgs e)
+        {
+            if (_timerAviso != null)
+            {
+                _timerAviso.Stop();
+
+                _timerAviso.Dispose();
+
+                _timerAviso = null;
+            }
+
+            if (_painelAviso != null)
+            {
+                _painelAviso.Visible =
+                    false;
             }
         }
 
@@ -88,29 +744,20 @@ namespace DoceCantinho.Desktop1.UserControls
         // LOAD
         // ============================================================
 
-        protected override async void OnLoad(EventArgs e)
+        protected override void OnLoad(
+            EventArgs e)
         {
             base.OnLoad(e);
 
             if (DesignMode)
                 return;
 
-            try
-            {
-                _pedidosService = new PedidosApiService();
+            _pedidosService =
+                new PedidosApiService();
 
-                ConfigurarEventos();
+            ConfigurarEventos();
 
-                await CarregarDadosAsync();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    $"Erro ao inicializar a tela de pedidos:\n\n{ex.Message}",
-                    "Doce Cantinho",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-            }
+            _ = CarregarDadosAsync();
         }
 
         // ============================================================
@@ -119,59 +766,109 @@ namespace DoceCantinho.Desktop1.UserControls
 
         private void ConfigurarEventos()
         {
-            txtBuscar.TextChanged -= TxtBuscar_TextChanged;
-            txtBuscar.TextChanged += TxtBuscar_TextChanged;
+            // --------------------------------------------------------
+            // BUSCA
+            // --------------------------------------------------------
 
-            btnTodos.Click -= BtnTodos_Click;
-            btnTodos.Click += BtnTodos_Click;
+            txtBuscar.TextChanged -=
+                TxtBuscar_TextChanged;
 
-            btnPendente.Click -= BtnPendente_Click;
-            btnPendente.Click += BtnPendente_Click;
+            txtBuscar.TextChanged +=
+                TxtBuscar_TextChanged;
 
-            btnPreparo.Click -= BtnPreparo_Click;
-            btnPreparo.Click += BtnPreparo_Click;
+            // --------------------------------------------------------
+            // FILTROS
+            // --------------------------------------------------------
 
-            btnPronto.Click -= BtnPronto_Click;
-            btnPronto.Click += BtnPronto_Click;
+            btnTodos.Click -=
+                BtnTodos_Click;
 
-            btnEntregue.Click -= BtnEntregue_Click;
-            btnEntregue.Click += BtnEntregue_Click;
+            btnTodos.Click +=
+                BtnTodos_Click;
 
-            btnCancelado.Click -= BtnCancelado_Click;
-            btnCancelado.Click += BtnCancelado_Click;
+            btnPendente.Click -=
+                BtnPendente_Click;
 
-            btnNovoPedido.Click -= BtnNovoPedido_Click;
-            btnNovoPedido.Click += BtnNovoPedido_Click;
+            btnPendente.Click +=
+                BtnPendente_Click;
 
-            dgvPedidos.CellDoubleClick -= DgvPedidos_CellDoubleClick;
-            dgvPedidos.CellDoubleClick += DgvPedidos_CellDoubleClick;
+            btnPreparo.Click -=
+                BtnPreparo_Click;
+
+            btnPreparo.Click +=
+                BtnPreparo_Click;
+
+            btnPronto.Click -=
+                BtnPronto_Click;
+
+            btnPronto.Click +=
+                BtnPronto_Click;
+
+            btnEntregue.Click -=
+                BtnEntregue_Click;
+
+            btnEntregue.Click +=
+                BtnEntregue_Click;
+
+            btnCancelado.Click -=
+                BtnCancelado_Click;
+
+            btnCancelado.Click +=
+                BtnCancelado_Click;
+
+            // --------------------------------------------------------
+            // NOVO PEDIDO
+            // --------------------------------------------------------
+
+            btnNovo.Click -=
+                BtnNovo_Click;
+
+            btnNovo.Click +=
+                BtnNovo_Click;
+
+            // --------------------------------------------------------
+            // DUPLO CLIQUE
+            // --------------------------------------------------------
+
+            dgvPedidos.CellDoubleClick -=
+                DgvPedidos_CellDoubleClick;
+
+            dgvPedidos.CellDoubleClick +=
+                DgvPedidos_CellDoubleClick;
         }
 
         // ============================================================
-        // CARREGAR PEDIDOS
+        // CARREGAR DADOS
         // ============================================================
 
         private async Task CarregarDadosAsync()
         {
-            if (_pedidosService == null)
-                return;
-
             try
             {
-                _pedidos =
-                    await _pedidosService.GetAllAsync();
+                if (_pedidosService == null)
+                {
+                    _pedidosService =
+                        new PedidosApiService();
+                }
 
-                AtualizarTabela(_pedidos);
+                var pedidos =
+                    await _pedidosService
+                        .GetAllAsync();
+
+                _pedidos =
+                    pedidos ??
+                    new List<PedidoResponseDto>();
+
+                AtualizarTabela(
+                    _pedidos);
 
                 AtualizarContadores();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $"Não foi possível carregar os pedidos.\n\n{ex.Message}",
-                    "Doce Cantinho",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MostrarAviso(
+                    $"Não foi possível carregar os pedidos: {ex.Message}",
+                    true);
             }
         }
 
@@ -182,16 +879,20 @@ namespace DoceCantinho.Desktop1.UserControls
         private void AtualizarTabela(
             IEnumerable<PedidoResponseDto> pedidos)
         {
-            var lista = pedidos.ToList();
+            var lista =
+                new BindingList<PedidoResponseDto>(
+                    pedidos.ToList());
 
             dgvPedidos.DataSource = null;
 
             dgvPedidos.DataSource =
-                new BindingList<PedidoResponseDto>(lista);
+                lista;
 
-            lblResultados.Text =
-                $"{lista.Count} resultado" +
-                (lista.Count == 1 ? "" : "s");
+            if (colAcoes.Index >= 0)
+            {
+                dgvPedidos.InvalidateColumn(
+                    colAcoes.Index);
+            }
         }
 
         // ============================================================
@@ -202,193 +903,223 @@ namespace DoceCantinho.Desktop1.UserControls
         {
             int total = _pedidos.Count;
 
-            int pendentes =
-                _pedidos.Count(p =>
-                    NormalizarStatus(p.Status) == "pendente");
+            int pendente =
+                _pedidos.Count(
+                    p =>
+                        NormalizarStatus(
+                            p.Status) ==
+                        "pendente");
 
             int preparo =
-                _pedidos.Count(p =>
-                    NormalizarStatus(p.Status) == "preparo");
+                _pedidos.Count(
+                    p =>
+                        NormalizarStatus(
+                            p.Status) ==
+                        "preparo");
 
-            int prontos =
-                _pedidos.Count(p =>
-                    NormalizarStatus(p.Status) == "pronto");
+            int pronto =
+                _pedidos.Count(
+                    p =>
+                        NormalizarStatus(
+                            p.Status) ==
+                        "pronto");
 
-            int entregues =
-                _pedidos.Count(p =>
-                    NormalizarStatus(p.Status) == "entregue");
+            int entregue =
+                _pedidos.Count(
+                    p =>
+                        NormalizarStatus(
+                            p.Status) ==
+                        "entregue");
 
-            int cancelados =
-                _pedidos.Count(p =>
-                    NormalizarStatus(p.Status) == "cancelado");
+            int cancelado =
+                _pedidos.Count(
+                    p =>
+                        NormalizarStatus(
+                            p.Status) ==
+                        "cancelado");
 
             btnTodos.Text =
                 $"Todos  {total}";
 
             btnPendente.Text =
-                $"Pendente  {pendentes}";
+                $"Pendente  {pendente}";
 
             btnPreparo.Text =
                 $"Em preparo  {preparo}";
 
             btnPronto.Text =
-                $"Pronto  {prontos}";
+                $"Pronto  {pronto}";
 
             btnEntregue.Text =
-                $"Entregue  {entregues}";
+                $"Entregue  {entregue}";
 
             btnCancelado.Text =
-                $"Cancelado  {cancelados}";
-
-            lblTotalPedidosValor.Text =
-                total.ToString();
-
-            lblSubTitulo.Text =
-                total == 1
-                    ? "1 pedido registrado"
-                    : $"{total} pedidos registrados";
+                $"Cancelado  {cancelado}";
         }
 
         // ============================================================
         // NORMALIZAR STATUS
         // ============================================================
 
-        private string NormalizarStatus(string? status)
+        private string NormalizarStatus(
+            string? status)
         {
-            if (string.IsNullOrWhiteSpace(status))
-                return "";
-
-            string valor =
-                status
-                    .Trim()
-                    .ToLowerInvariant();
-
-            if (valor.Contains("pend"))
-                return "pendente";
-
-            if (valor.Contains("preparo"))
-                return "preparo";
-
-            if (valor.Contains("pronto"))
-                return "pronto";
-
-            if (valor.Contains("entreg"))
-                return "entregue";
-
-            if (valor.Contains("cancel"))
-                return "cancelado";
-
-            return valor;
+            return (status ??
+                    string.Empty)
+                .Trim()
+                .ToLowerInvariant()
+                .Replace("í", "i")
+                .Replace("ó", "o")
+                .Replace("ã", "a");
         }
 
         // ============================================================
-        // PESQUISA
+        // BUSCA
         // ============================================================
 
         private void TxtBuscar_TextChanged(
             object? sender,
             EventArgs e)
         {
+            AplicarFiltro();
+        }
+
+        private void AplicarFiltro()
+        {
             string texto =
-                txtBuscar.Text.Trim();
+                txtBuscar.Text
+                    .Trim()
+                    .ToLowerInvariant();
 
             if (string.IsNullOrWhiteSpace(texto))
             {
-                AtualizarTabela(_pedidos);
+                AtualizarTabela(
+                    _pedidos);
+
                 return;
             }
 
-            var resultado =
+            var filtrados =
                 _pedidos
-                    .Where(p =>
-                        (p.NomeCliente ?? "")
-                            .Contains(
-                                texto,
-                                StringComparison.OrdinalIgnoreCase)
-                        ||
-                        p.Id.ToString()
-                            .Contains(
-                                texto,
-                                StringComparison.OrdinalIgnoreCase))
+                    .Where(
+                        p =>
+                            (
+                                p.NomeCliente ??
+                                string.Empty
+                            )
+                            .ToLowerInvariant()
+                            .Contains(texto)
+                            ||
+                            p.Id
+                                .ToString()
+                                .Contains(texto))
                     .ToList();
 
-            AtualizarTabela(resultado);
+            AtualizarTabela(
+                filtrados);
         }
 
         // ============================================================
-        // FILTROS
+        // FILTROS DE STATUS
         // ============================================================
+
+        private void FiltrarStatus(
+            string status)
+        {
+            var filtrados =
+                _pedidos
+                    .Where(
+                        p =>
+                            NormalizarStatus(
+                                p.Status) ==
+                            status)
+                    .ToList();
+
+            AtualizarTabela(
+                filtrados);
+        }
 
         private void BtnTodos_Click(
             object? sender,
             EventArgs e)
         {
-            AtualizarTabela(_pedidos);
+            AtualizarTabela(
+                _pedidos);
         }
 
         private void BtnPendente_Click(
             object? sender,
             EventArgs e)
         {
-            FiltrarStatus("pendente");
+            FiltrarStatus(
+                "pendente");
         }
 
         private void BtnPreparo_Click(
             object? sender,
             EventArgs e)
         {
-            FiltrarStatus("preparo");
+            FiltrarStatus(
+                "preparo");
         }
 
         private void BtnPronto_Click(
             object? sender,
             EventArgs e)
         {
-            FiltrarStatus("pronto");
+            FiltrarStatus(
+                "pronto");
         }
 
         private void BtnEntregue_Click(
             object? sender,
             EventArgs e)
         {
-            FiltrarStatus("entregue");
+            FiltrarStatus(
+                "entregue");
         }
 
         private void BtnCancelado_Click(
             object? sender,
             EventArgs e)
         {
-            FiltrarStatus("cancelado");
-        }
-
-        private void FiltrarStatus(string status)
-        {
-            var resultado =
-                _pedidos
-                    .Where(p =>
-                        NormalizarStatus(p.Status) == status)
-                    .ToList();
-
-            AtualizarTabela(resultado);
+            FiltrarStatus(
+                "cancelado");
         }
 
         // ============================================================
         // NOVO PEDIDO
         // ============================================================
 
-        private void BtnNovoPedido_Click(
+        private void BtnNovo_Click(
             object? sender,
             EventArgs e)
         {
-            MessageBox.Show(
-                "O cadastro de um novo pedido ainda não está disponível nesta tela.",
-                "Novo Pedido",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAviso(
+                    "Seu perfil não possui permissão para criar pedidos.",
+                    true);
+
+                return;
+            }
+
+            using var form =
+                new PedidoForm();
+
+            var resultado =
+                form.ShowDialog(
+                    FindForm());
+
+            if (resultado ==
+                DialogResult.OK)
+            {
+                _ = CarregarDadosAsync();
+            }
         }
 
         // ============================================================
-        // DETALHES DO PEDIDO
+        // DUPLO CLIQUE
         // ============================================================
 
         private async void DgvPedidos_CellDoubleClick(
@@ -398,47 +1129,68 @@ namespace DoceCantinho.Desktop1.UserControls
             if (e.RowIndex < 0)
                 return;
 
-            if (_pedidosService == null)
+            if (e.RowIndex >=
+                dgvPedidos.Rows.Count)
+            {
                 return;
+            }
+
+            if (dgvPedidos.Rows[e.RowIndex]
+                    .DataBoundItem
+                is not PedidoResponseDto pedido)
+            {
+                return;
+            }
 
             try
             {
-                var pedido =
-                    dgvPedidos.Rows[e.RowIndex]
-                        .DataBoundItem as PedidoResponseDto;
-
-                if (pedido == null)
-                    return;
+                if (_pedidosService == null)
+                {
+                    _pedidosService =
+                        new PedidosApiService();
+                }
 
                 Cursor = Cursors.WaitCursor;
 
                 var detalhes =
                     await _pedidosService
-                        .GetByIdAsync(pedido.Id);
+                        .GetByIdAsync(
+                            pedido.Id);
 
                 if (detalhes == null)
                 {
-                    MessageBox.Show(
+                    MostrarAviso(
                         "Não foi possível carregar os detalhes do pedido.",
-                        "Doce Cantinho",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                        true);
 
                     return;
                 }
 
-                using var form =
-                    new DoceCantinho.Desktop1.Forms.PedidoForm(detalhes);
+                string produtos =
+                    detalhes.Items.Count == 0
+                        ? "Nenhum produto"
+                        : string.Join(
+                            Environment.NewLine,
+                            detalhes.Items.Select(
+                                i =>
+                                    $"• {i.Nome} x{i.Quantidade} - {i.Subtotal:C2}"));
 
-                form.ShowDialog(this);
+                MessageBox.Show(
+                    $"Pedido #{detalhes.Id}\n\n" +
+                    $"Cliente: {detalhes.NomeCliente}\n" +
+                    $"Telefone: {detalhes.Telefone}\n\n" +
+                    $"Produtos:\n{produtos}\n\n" +
+                    $"Total: {detalhes.Total:C2}\n" +
+                    $"Status: {detalhes.Status}",
+                    "Detalhes do pedido",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $"Erro ao abrir os detalhes do pedido:\n\n{ex.Message}",
-                    "Doce Cantinho",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MostrarAviso(
+                    $"Erro ao carregar detalhes: {ex.Message}",
+                    true);
             }
             finally
             {
