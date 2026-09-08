@@ -464,8 +464,7 @@ namespace DoceCantinho.Desktop.Forms
                 SessionManager.Instance.IsAdmin;
 
             btnCategoria.Visible =
-                isAdmin;
-
+                true;
             btnUsuario.Visible =
                 isAdmin;
 

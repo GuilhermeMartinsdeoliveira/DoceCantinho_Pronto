@@ -1,5 +1,7 @@
 ﻿using DoceCantinho.Desktop.DTOs;
 using DoceCantinho.Desktop.Forms;
+using DoceCantinho.Desktop.Helpers;
+using DoceCantinho.Desktop.Services;
 using DoceCantinho.Desktop.Services;
 using System;
 using System.Collections.Generic;
@@ -33,6 +35,26 @@ namespace DoceCantinho.Desktop1.UserControls
         public CategoriasUserControl()
         {
             InitializeComponent();
+
+            ConfigurarPermissoes();
+        }
+
+        // ============================================================
+        // PERMISSÕES
+        // ============================================================
+
+        private void ConfigurarPermissoes()
+        {
+            bool isAdmin =
+                SessionManager.Instance.IsAdmin;
+
+            // Usuário comum pode VISUALIZAR categorias,
+            // mas não pode realizar operações de CRUD.
+            btnNovoCat.Visible = isAdmin;
+
+            // O formulário de criação/edição nunca fica disponível
+            // para usuário comum.
+            pnlForm.Visible = false;
         }
 
         // ============================================================
@@ -130,8 +152,11 @@ namespace DoceCantinho.Desktop1.UserControls
                     card);
             }
 
-            pnlCards.Controls.Add(
-                CriarCardNovaCategoria());
+            if (SessionManager.Instance.IsAdmin)
+            {
+                pnlCards.Controls.Add(
+                    CriarCardNovaCategoria());
+            }
 
             pnlCards.ResumeLayout();
         }
@@ -413,48 +438,6 @@ namespace DoceCantinho.Desktop1.UserControls
                     240,
                     1);
 
-            Button btnEditar =
-                CriarBotaoCard(
-                    "Editar");
-
-            btnEditar.Location =
-                new Point(
-                    15,
-                    143);
-
-            btnEditar.Size =
-                new Size(
-                    120,
-                    25);
-
-            btnEditar.Click +=
-                (sender, e) =>
-                {
-                    MostrarFormulario(
-                        categoria);
-                };
-
-            Button btnExcluirCard =
-                CriarBotaoCard(
-                    "Excluir");
-
-            btnExcluirCard.Location =
-                new Point(
-                    135,
-                    143);
-
-            btnExcluirCard.Size =
-                new Size(
-                    120,
-                    25);
-
-            btnExcluirCard.Click +=
-                async (sender, e) =>
-                {
-                    await ExcluirCategoriaAsync(
-                        categoria);
-                };
-
             card.Controls.Add(icone);
             card.Controls.Add(quantidade);
             card.Controls.Add(nome);
@@ -462,11 +445,58 @@ namespace DoceCantinho.Desktop1.UserControls
             card.Controls.Add(produtosCadastrados);
             card.Controls.Add(quantidadeProdutosLabel);
             card.Controls.Add(linha);
-            card.Controls.Add(btnEditar);
-            card.Controls.Add(btnExcluirCard);
+
+            if (SessionManager.Instance.IsAdmin)
+            {
+                Button btnEditar =
+                    CriarBotaoCard(
+                        "Editar");
+
+                btnEditar.Location =
+                    new Point(
+                        15,
+                        143);
+
+                btnEditar.Size =
+                    new Size(
+                        120,
+                        25);
+
+                btnEditar.Click +=
+                    (sender, e) =>
+                    {
+                        MostrarFormulario(
+                            categoria);
+                    };
+
+                Button btnExcluirCard =
+                    CriarBotaoCard(
+                        "Excluir");
+
+                btnExcluirCard.Location =
+                    new Point(
+                        135,
+                        143);
+
+                btnExcluirCard.Size =
+                    new Size(
+                        120,
+                        25);
+
+                btnExcluirCard.Click +=
+                    async (sender, e) =>
+                    {
+                        await ExcluirCategoriaAsync(
+                            categoria);
+                    };
+
+                card.Controls.Add(btnEditar);
+                card.Controls.Add(btnExcluirCard);
+            }
 
             return card;
         }
+
 
         // ============================================================
         // CARD NOVA CATEGORIA
@@ -669,34 +699,16 @@ namespace DoceCantinho.Desktop1.UserControls
         private void MostrarFormulario(
             CategoriaResponseDto? categoria)
         {
-            _editandoId =
-                categoria?.Id;
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAvisoCategoria(
+                    "Seu perfil não possui permissão para alterar categorias.",
+                    TipoAvisoCategoria.Aviso);
 
-            txtNome.Text =
-                categoria?.Name ??
-                string.Empty;
+                return;
+            }
 
-            lblFormTitulo.Text =
-                categoria == null
-                    ? "Nova Categoria"
-                    : "Editar Categoria";
-
-            pnlForm.Visible =
-                true;
-
-            pnlForm.BringToFront();
-
-            pnlForm.Left =
-                (pnlPrincipal.ClientSize.Width -
-                 pnlForm.Width) / 2;
-
-            pnlForm.Top =
-                (pnlPrincipal.ClientSize.Height -
-                 pnlForm.Height) / 2;
-
-            txtNome.Focus();
-
-            txtNome.SelectAll();
+            _editandoId = categoria?.Id;
         }
 
         // ============================================================
@@ -722,6 +734,15 @@ namespace DoceCantinho.Desktop1.UserControls
             object sender,
             EventArgs e)
         {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAvisoCategoria(
+                    "Seu perfil não possui permissão para alterar categorias.",
+                    TipoAvisoCategoria.Aviso);
+
+                return;
+            }
+
             if (_categoriasService == null)
                 return;
 
@@ -838,6 +859,15 @@ namespace DoceCantinho.Desktop1.UserControls
         private async Task ExcluirCategoriaAsync(
             CategoriaResponseDto categoria)
         {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAvisoCategoria(
+                    "Seu perfil não possui permissão para excluir categorias.",
+                    TipoAvisoCategoria.Aviso);
+
+                return;
+            }
+
             if (_categoriasService == null)
                 return;
 

@@ -1,5 +1,6 @@
 ﻿using DoceCantinho.Desktop.Helpers;
 using DoceCantinho.Desktop.Services;
+using Guna.UI2.WinForms;
 using System.Net.Http;
 
 namespace DoceCantinho.Desktop.Forms
@@ -8,16 +9,139 @@ namespace DoceCantinho.Desktop.Forms
     {
         private AuthApiService _authService = null!;
 
+        // ============================================================
+        // BOTÃO X
+        // ============================================================
+
+        private Guna2Button? _btnFechar;
+
         public LoginForm()
         {
             InitializeComponent();
+
+            // Formulário sem borda
+            FormBorderStyle = FormBorderStyle.None;
+
+            // Criar botão X
+            CriarBotaoFechar();
+        }
+
+        // ============================================================
+        // CRIAR BOTÃO X
+        // ============================================================
+
+        private void CriarBotaoFechar()
+        {
+            if (_btnFechar != null)
+                return;
+
+            _btnFechar = new Guna2Button();
+
+            _btnFechar.Name = "btnFecharLogin";
+            _btnFechar.Text = "×";
+
+            _btnFechar.Size =
+                new Size(38, 34);
+
+            _btnFechar.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Right;
+
+            _btnFechar.Location =
+                new Point(
+                    pnlDireito.ClientSize.Width - 48,
+                    10);
+
+            _btnFechar.BorderRadius = 8;
+
+            _btnFechar.FillColor =
+                Color.Transparent;
+
+            _btnFechar.ForeColor =
+                Color.FromArgb(
+                    100,
+                    90,
+                    90);
+
+            _btnFechar.Font =
+                new Font(
+                    "Segoe UI",
+                    18F,
+                    FontStyle.Regular);
+
+            _btnFechar.HoverState.FillColor =
+                Color.FromArgb(
+                    225,
+                    205,
+                    198);
+
+            _btnFechar.HoverState.ForeColor =
+                Color.FromArgb(
+                    150,
+                    60,
+                    55);
+
+            _btnFechar.PressedColor =
+                Color.FromArgb(
+                    210,
+                    185,
+                    178);
+
+            _btnFechar.Cursor =
+                Cursors.Hand;
+
+            _btnFechar.TabStop = false;
+
+            _btnFechar.Click +=
+                BtnFechar_Click;
+
+            pnlDireito.Controls.Add(
+                _btnFechar);
+
+            _btnFechar.BringToFront();
+
+            // Reposicionar caso a janela seja redimensionada
+            pnlDireito.Resize +=
+                PnlDireito_Resize;
+        }
+
+        // ============================================================
+        // POSICIONAR X
+        // ============================================================
+
+        private void PnlDireito_Resize(
+            object? sender,
+            EventArgs e)
+        {
+            if (_btnFechar == null)
+                return;
+
+            _btnFechar.Location =
+                new Point(
+                    pnlDireito.ClientSize.Width -
+                    _btnFechar.Width -
+                    10,
+                    10);
+        }
+
+        // ============================================================
+        // CLIQUE NO X
+        // ============================================================
+
+        private void BtnFechar_Click(
+            object? sender,
+            EventArgs e)
+        {
+            Application.Exit();
         }
 
         // ============================================================
         // LOGIN
         // ============================================================
 
-        private async void btnEntrar_Click(object sender, EventArgs e)
+        private async void btnEntrar_Click(
+            object sender,
+            EventArgs e)
         {
             ExibirErro(string.Empty);
 
@@ -25,13 +149,19 @@ namespace DoceCantinho.Desktop.Forms
             // VALIDAÇÃO DO E-MAIL
             // --------------------------------------------------------
 
-            string email = txtEmail.Text.Trim();
-            string senha = txtSenha.Text;
+            string email =
+                txtEmail.Text.Trim();
+
+            string senha =
+                txtSenha.Text;
 
             if (string.IsNullOrWhiteSpace(email))
             {
-                ExibirErro("Informe seu e-mail.");
+                ExibirErro(
+                    "Informe seu e-mail.");
+
                 txtEmail.Focus();
+
                 return;
             }
 
@@ -41,8 +171,11 @@ namespace DoceCantinho.Desktop.Forms
 
             if (string.IsNullOrWhiteSpace(senha))
             {
-                ExibirErro("Informe sua senha.");
+                ExibirErro(
+                    "Informe sua senha.");
+
                 txtSenha.Focus();
+
                 return;
             }
 
@@ -54,7 +187,11 @@ namespace DoceCantinho.Desktop.Forms
 
             try
             {
-                var (success, user, errorMessage) =
+                var (
+                    success,
+                    user,
+                    errorMessage
+                ) =
                     await _authService.LoginAsync(
                         email,
                         senha);
@@ -65,11 +202,13 @@ namespace DoceCantinho.Desktop.Forms
 
                 if (success && user != null)
                 {
-                    SessionManager.Instance.SetUser(user);
+                    SessionManager.Instance
+                        .SetUser(user);
 
                     Hide();
 
-                    using var doceForm = new MainForm();
+                    using var doceForm =
+                        new MainForm();
 
                     doceForm.ShowDialog();
 
@@ -83,7 +222,8 @@ namespace DoceCantinho.Desktop.Forms
                 // ----------------------------------------------------
 
                 ExibirErro(
-                    string.IsNullOrWhiteSpace(errorMessage)
+                    string.IsNullOrWhiteSpace(
+                        errorMessage)
                         ? "E-mail ou senha inválidos."
                         : errorMessage);
             }
@@ -106,7 +246,8 @@ namespace DoceCantinho.Desktop.Forms
                     "Ocorreu um erro inesperado.");
 
                 MessageBox.Show(
-                    $"Ocorreu um erro inesperado.\n\n{ex.Message}",
+                    $"Ocorreu um erro inesperado.\n\n" +
+                    $"{ex.Message}",
                     "Erro",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -121,16 +262,21 @@ namespace DoceCantinho.Desktop.Forms
         // EXIBIR ERRO
         // ============================================================
 
-        private void ExibirErro(string mensagem)
+        private void ExibirErro(
+            string mensagem)
         {
             if (string.IsNullOrWhiteSpace(mensagem))
             {
                 lblErro.Visible = false;
-                lblErro.Text = string.Empty;
+                lblErro.Text =
+                    string.Empty;
+
                 return;
             }
 
-            lblErro.Text = $"⚠  {mensagem}";
+            lblErro.Text =
+                $"⚠  {mensagem}";
+
             lblErro.Visible = true;
         }
 
@@ -138,7 +284,9 @@ namespace DoceCantinho.Desktop.Forms
         // CANCELAR / SAIR
         // ============================================================
 
-        private void btnCancelar_Click(object sender, EventArgs e)
+        private void btnCancelar_Click(
+            object sender,
+            EventArgs e)
         {
             Application.Exit();
         }
@@ -147,12 +295,15 @@ namespace DoceCantinho.Desktop.Forms
         // LOAD
         // ============================================================
 
-        private void LoginForm_Load(object sender, EventArgs e)
+        private void LoginForm_Load(
+            object sender,
+            EventArgs e)
         {
             if (DesignMode)
                 return;
 
-            _authService = new AuthApiService();
+            _authService =
+                new AuthApiService();
 
             // --------------------------------------------------------
             // INFORMAÇÕES
@@ -167,8 +318,6 @@ namespace DoceCantinho.Desktop.Forms
             // --------------------------------------------------------
             // USUÁRIO DE TESTE
             // --------------------------------------------------------
-            // Se não quiser deixar os dados preenchidos,
-            // basta apagar estas duas linhas.
 
             txtEmail.Text =
                 "admin@docecantinho.com";
@@ -176,10 +325,14 @@ namespace DoceCantinho.Desktop.Forms
             txtSenha.Text =
                 "Admin@123";
 
-            txtSenha.UseSystemPasswordChar = true;
+            txtSenha.UseSystemPasswordChar =
+                true;
 
-            lblAutenticando.Visible = false;
-            lblErro.Visible = false;
+            lblAutenticando.Visible =
+                false;
+
+            lblErro.Visible =
+                false;
 
             // --------------------------------------------------------
             // FOCO
@@ -188,6 +341,7 @@ namespace DoceCantinho.Desktop.Forms
             BeginInvoke(new Action(() =>
             {
                 txtEmail.Focus();
+
                 txtEmail.SelectAll();
             }));
         }
@@ -250,28 +404,64 @@ namespace DoceCantinho.Desktop.Forms
         // ESTADO DE CARREGAMENTO
         // ============================================================
 
-        private void SetCarregando(bool carregando)
+        private void SetCarregando(
+            bool carregando)
         {
-            btnEntrar.Enabled = !carregando;
+            btnEntrar.Enabled =
+                !carregando;
 
-            btnCancelar.Enabled = !carregando;
+            btnCancelar.Enabled =
+                !carregando;
 
-            txtEmail.Enabled = !carregando;
+            txtEmail.Enabled =
+                !carregando;
 
-            txtSenha.Enabled = !carregando;
+            txtSenha.Enabled =
+                !carregando;
 
-            lblAutenticando.Visible = carregando;
+            // O X continua funcionando mesmo
+            // enquanto o login estiver carregando.
+            if (_btnFechar != null)
+            {
+                _btnFechar.Enabled = true;
+            }
+
+            lblAutenticando.Visible =
+                carregando;
 
             if (carregando)
             {
-                btnEntrar.Text = "Entrando...";
+                btnEntrar.Text =
+                    "Entrando...";
 
-                ExibirErro(string.Empty);
+                ExibirErro(
+                    string.Empty);
             }
             else
             {
-                btnEntrar.Text = "Entrar";
+                btnEntrar.Text =
+                    "Entrar";
             }
+        }
+
+        // ============================================================
+        // FECHAMENTO
+        // ============================================================
+
+        protected override void OnFormClosed(
+            FormClosedEventArgs e)
+        {
+            if (_btnFechar != null)
+            {
+                _btnFechar.Click -=
+                    BtnFechar_Click;
+
+                _btnFechar.Dispose();
+
+                _btnFechar = null;
+            }
+
+            base.OnFormClosed(e);
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using DoceCantinho.Desktop.DTOs;
 using DoceCantinho.Desktop.Services;
 using DoceCantinho.Desktop1.Forms;
+using DoceCantinho.Desktop.Helpers;
 
 namespace DoceCantinho.Desktop1.UserControls
 {
@@ -35,6 +36,23 @@ namespace DoceCantinho.Desktop1.UserControls
         private System.Windows.Forms.Timer? _timerAviso;
 
         // ============================================================
+        // PERMISSÕES
+        // ============================================================
+
+        private void ConfigurarPermissoes()
+        {
+            bool isAdmin =
+                SessionManager.Instance.IsAdmin;
+
+            // Usuário comum pode consultar pedidos,
+            // mas não pode criar, editar ou excluir.
+            btnNovo.Visible = isAdmin;
+
+            // Esconde a coluna de ações inteira para usuário comum.
+            colAcoes.Visible = isAdmin;
+        }
+
+        // ============================================================
         // CONSTRUTOR
         // ============================================================
 
@@ -45,6 +63,7 @@ namespace DoceCantinho.Desktop1.UserControls
             if (!DesignMode)
             {
                 ConfigurarTabela();
+                ConfigurarPermissoes();
             }
         }
 
@@ -121,7 +140,33 @@ namespace DoceCantinho.Desktop1.UserControls
 
             dgvPedidos.RowHeadersVisible = false;
 
+            // ==========================================
+            // COR NORMAL DA SELEÇÃO
+            // ==========================================
+
+            dgvPedidos.DefaultCellStyle.SelectionBackColor =
+                Color.White;
+
+            dgvPedidos.DefaultCellStyle.SelectionForeColor =
+                Color.FromArgb(
+                    55,
+                    39,
+                    34);
+
             dgvPedidos.AutoGenerateColumns = false;
+
+            dgvPedidos.RowsDefaultCellStyle.BackColor =
+                Color.White;
+
+            dgvPedidos.AlternatingRowsDefaultCellStyle.BackColor =
+                Color.FromArgb(
+                    250,
+                    248,
+                    246);
+
+            // ==========================================
+            // EVENTOS DA COLUNA DE AÇÕES
+            // ==========================================
 
             dgvPedidos.CellPainting -=
                 DgvPedidos_CellPainting;
@@ -323,6 +368,9 @@ namespace DoceCantinho.Desktop1.UserControls
             object? sender,
             DataGridViewCellMouseEventArgs e)
         {
+            if (!SessionManager.Instance.IsAdmin)
+                return;
+
             if (e.RowIndex < 0)
                 return;
 
@@ -388,6 +436,15 @@ namespace DoceCantinho.Desktop1.UserControls
         private void EditarPedido(
             int pedidoId)
         {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAviso(
+                    "Seu perfil não possui permissão para editar pedidos.",
+                    true);
+
+                return;
+            }
+
             try
             {
                 using var form =
@@ -419,6 +476,14 @@ namespace DoceCantinho.Desktop1.UserControls
         private async Task ExcluirPedidoAsync(
             PedidoResponseDto pedido)
         {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAviso(
+                    "Seu perfil não possui permissão para excluir pedidos.",
+                    true);
+
+                return;
+            }
             // ========================================================
             // CONFIRMAÇÃO PERSONALIZADA
             // ========================================================
@@ -1030,6 +1095,15 @@ namespace DoceCantinho.Desktop1.UserControls
             object? sender,
             EventArgs e)
         {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAviso(
+                    "Seu perfil não possui permissão para criar pedidos.",
+                    true);
+
+                return;
+            }
+
             using var form =
                 new PedidoForm();
 

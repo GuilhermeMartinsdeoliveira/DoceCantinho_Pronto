@@ -677,6 +677,7 @@ namespace DoceCantinho.Desktop.Forms
                     {
                         Nome =
                             txtNome.Text.Trim(),
+                        Email = txtEmail.Text.Trim(),
 
                         Telefone =
                             usuario.Telefone ?? string.Empty,

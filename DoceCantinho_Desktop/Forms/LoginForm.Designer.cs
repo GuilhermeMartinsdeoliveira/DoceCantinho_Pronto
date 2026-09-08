@@ -107,7 +107,7 @@
             lblMensagemEsquerda.ForeColor = Color.White;
             lblMensagemEsquerda.Location = new Point(35, 145);
             lblMensagemEsquerda.Name = "lblMensagemEsquerda";
-            lblMensagemEsquerda.Size = new Size(315, 105);
+            lblMensagemEsquerda.Size = new Size(315, 163);
             lblMensagemEsquerda.TabIndex = 1;
             lblMensagemEsquerda.Text = "Faça login\r\nno seu cantinho\r\ndoce.";
             // 
@@ -115,8 +115,8 @@
             // 
             lblDescricaoEsquerda.BackColor = Color.Transparent;
             lblDescricaoEsquerda.Font = new Font("Segoe UI", 10F);
-            lblDescricaoEsquerda.ForeColor = Color.FromArgb(225, 225, 255);
-            lblDescricaoEsquerda.Location = new Point(38, 265);
+            lblDescricaoEsquerda.ForeColor = Color.White;
+            lblDescricaoEsquerda.Location = new Point(45, 308);
             lblDescricaoEsquerda.Name = "lblDescricaoEsquerda";
             lblDescricaoEsquerda.Size = new Size(305, 60);
             lblDescricaoEsquerda.TabIndex = 2;
@@ -127,7 +127,7 @@
             lblDecoracao1.AutoSize = true;
             lblDecoracao1.BackColor = Color.Transparent;
             lblDecoracao1.Font = new Font("Segoe UI", 8F);
-            lblDecoracao1.ForeColor = Color.FromArgb(190, 200, 255);
+            lblDecoracao1.ForeColor = Color.White;
             lblDecoracao1.Location = new Point(38, 500);
             lblDecoracao1.Name = "lblDecoracao1";
             lblDecoracao1.Size = new Size(64, 13);
@@ -139,7 +139,7 @@
             lblDecoracao2.AutoSize = true;
             lblDecoracao2.BackColor = Color.Transparent;
             lblDecoracao2.Font = new Font("Segoe UI", 8F);
-            lblDecoracao2.ForeColor = Color.FromArgb(190, 200, 255);
+            lblDecoracao2.ForeColor = Color.White;
             lblDecoracao2.Location = new Point(150, 500);
             lblDecoracao2.Name = "lblDecoracao2";
             lblDecoracao2.Size = new Size(54, 13);
@@ -151,7 +151,7 @@
             lblDecoracao3.AutoSize = true;
             lblDecoracao3.BackColor = Color.Transparent;
             lblDecoracao3.Font = new Font("Segoe UI", 8F);
-            lblDecoracao3.ForeColor = Color.FromArgb(190, 200, 255);
+            lblDecoracao3.ForeColor = Color.White;
             lblDecoracao3.Location = new Point(265, 500);
             lblDecoracao3.Name = "lblDecoracao3";
             lblDecoracao3.Size = new Size(48, 13);

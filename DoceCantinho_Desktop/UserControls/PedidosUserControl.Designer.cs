@@ -25,718 +25,332 @@
 
         private void InitializeComponent()
         {
-            this.pnlPrincipal = new System.Windows.Forms.Panel();
-            this.lblTotalPedidos = new System.Windows.Forms.Label();
-            this.dgvPedidos = new System.Windows.Forms.DataGridView();
-
-            this.colNumero = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colData = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProdutos = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colValor = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPagamento = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colAcoes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-
-            this.pnlFiltros = new System.Windows.Forms.Panel();
-            this.btnCancelado = new System.Windows.Forms.Button();
-            this.btnEntregue = new System.Windows.Forms.Button();
-            this.btnPronto = new System.Windows.Forms.Button();
-            this.btnPreparo = new System.Windows.Forms.Button();
-            this.btnPendente = new System.Windows.Forms.Button();
-            this.btnTodos = new System.Windows.Forms.Button();
-
-            this.txtBuscar = new System.Windows.Forms.TextBox();
-            this.lblBuscarIcone = new System.Windows.Forms.Label();
-
-            this.btnNovo = new System.Windows.Forms.Button();
-
-            this.lblTitulo = new System.Windows.Forms.Label();
-            this.lblSubtitulo = new System.Windows.Forms.Label();
-
-            this.pnlPrincipal.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPedidos)).BeginInit();
-            this.pnlFiltros.SuspendLayout();
-            this.SuspendLayout();
-
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            pnlPrincipal = new Panel();
+            lblTotalPedidos = new Label();
+            dgvPedidos = new DataGridView();
+            colNumero = new DataGridViewTextBoxColumn();
+            colCliente = new DataGridViewTextBoxColumn();
+            colData = new DataGridViewTextBoxColumn();
+            colProdutos = new DataGridViewTextBoxColumn();
+            colValor = new DataGridViewTextBoxColumn();
+            colPagamento = new DataGridViewTextBoxColumn();
+            colStatus = new DataGridViewTextBoxColumn();
+            colAcoes = new DataGridViewTextBoxColumn();
+            pnlFiltros = new Panel();
+            btnCancelado = new Button();
+            btnEntregue = new Button();
+            btnPronto = new Button();
+            btnPreparo = new Button();
+            btnPendente = new Button();
+            btnTodos = new Button();
+            txtBuscar = new TextBox();
+            lblBuscarIcone = new Label();
+            btnNovo = new Button();
+            lblTitulo = new Label();
+            lblSubtitulo = new Label();
+            pnlPrincipal.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvPedidos).BeginInit();
+            pnlFiltros.SuspendLayout();
+            SuspendLayout();
             // 
             // pnlPrincipal
             // 
-            this.pnlPrincipal.BackColor = System.Drawing.Color.FromArgb(247, 244, 241);
-            this.pnlPrincipal.Controls.Add(this.lblTotalPedidos);
-            this.pnlPrincipal.Controls.Add(this.dgvPedidos);
-            this.pnlPrincipal.Controls.Add(this.pnlFiltros);
-            this.pnlPrincipal.Controls.Add(this.btnNovo);
-            this.pnlPrincipal.Controls.Add(this.lblTitulo);
-            this.pnlPrincipal.Controls.Add(this.lblSubtitulo);
-            this.pnlPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlPrincipal.Location = new System.Drawing.Point(0, 0);
-            this.pnlPrincipal.Name = "pnlPrincipal";
-            this.pnlPrincipal.Size = new System.Drawing.Size(1180, 700);
-            this.pnlPrincipal.TabIndex = 0;
-
-            // 
-            // lblTitulo
-            // 
-            this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Font = new System.Drawing.Font(
-                "Segoe UI",
-                25F,
-                System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point);
-
-            this.lblTitulo.ForeColor =
-                System.Drawing.Color.FromArgb(55, 39, 34);
-
-            this.lblTitulo.Location =
-                new System.Drawing.Point(34, 24);
-
-            this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size =
-                new System.Drawing.Size(130, 46);
-
-            this.lblTitulo.TabIndex = 0;
-            this.lblTitulo.Text = "Pedidos";
-
-            // 
-            // lblSubtitulo
-            // 
-            this.lblSubtitulo.AutoSize = true;
-
-            this.lblSubtitulo.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    10F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.lblSubtitulo.ForeColor =
-                System.Drawing.Color.FromArgb(145, 117, 105);
-
-            this.lblSubtitulo.Location =
-                new System.Drawing.Point(38, 68);
-
-            this.lblSubtitulo.Name =
-                "lblSubtitulo";
-
-            this.lblSubtitulo.Size =
-                new System.Drawing.Size(130, 19);
-
-            this.lblSubtitulo.TabIndex = 1;
-
-            this.lblSubtitulo.Text =
-                "Pedidos registrados";
-
-            // 
-            // btnNovo
-            // 
-            this.btnNovo.Anchor =
-                ((System.Windows.Forms.AnchorStyles)
-                ((System.Windows.Forms.AnchorStyles.Top |
-                  System.Windows.Forms.AnchorStyles.Right)));
-
-            this.btnNovo.BackColor =
-                System.Drawing.Color.FromArgb(211, 119, 82);
-
-            this.btnNovo.FlatAppearance.BorderSize = 0;
-
-            this.btnNovo.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnNovo.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    10F,
-                    System.Drawing.FontStyle.Bold,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.btnNovo.ForeColor =
-                System.Drawing.Color.White;
-
-            this.btnNovo.Location =
-                new System.Drawing.Point(1060, 24);
-
-            this.btnNovo.Name =
-                "btnNovo";
-
-            this.btnNovo.Size =
-                new System.Drawing.Size(105, 38);
-
-            this.btnNovo.TabIndex = 2;
-            this.btnNovo.Text = "+  Novo";
-            this.btnNovo.UseVisualStyleBackColor = false;
-            this.btnNovo.Cursor =
-                System.Windows.Forms.Cursors.Hand;
-
-            // 
-            // pnlFiltros
-            // 
-            this.pnlFiltros.Anchor =
-                ((System.Windows.Forms.AnchorStyles)
-                (((System.Windows.Forms.AnchorStyles.Top |
-                   System.Windows.Forms.AnchorStyles.Left) |
-                   System.Windows.Forms.AnchorStyles.Right)));
-
-            this.pnlFiltros.BackColor =
-                System.Drawing.Color.White;
-
-            this.pnlFiltros.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.pnlFiltros.Controls.Add(this.btnCancelado);
-            this.pnlFiltros.Controls.Add(this.btnEntregue);
-            this.pnlFiltros.Controls.Add(this.btnPronto);
-            this.pnlFiltros.Controls.Add(this.btnPreparo);
-            this.pnlFiltros.Controls.Add(this.btnPendente);
-            this.pnlFiltros.Controls.Add(this.btnTodos);
-            this.pnlFiltros.Controls.Add(this.txtBuscar);
-            this.pnlFiltros.Controls.Add(this.lblBuscarIcone);
-
-            this.pnlFiltros.Location =
-                new System.Drawing.Point(30, 102);
-
-            this.pnlFiltros.Name =
-                "pnlFiltros";
-
-            this.pnlFiltros.Size =
-                new System.Drawing.Size(1120, 105);
-
-            this.pnlFiltros.TabIndex = 3;
-
-            // 
-            // lblBuscarIcone
-            // 
-            this.lblBuscarIcone.AutoSize = true;
-
-            this.lblBuscarIcone.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Symbol",
-                    12F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.lblBuscarIcone.ForeColor =
-                System.Drawing.Color.FromArgb(150, 130, 120);
-
-            this.lblBuscarIcone.Location =
-                new System.Drawing.Point(18, 17);
-
-            this.lblBuscarIcone.Name =
-                "lblBuscarIcone";
-
-            this.lblBuscarIcone.Size =
-                new System.Drawing.Size(25, 21);
-
-            this.lblBuscarIcone.TabIndex = 0;
-            this.lblBuscarIcone.Text = "⌕";
-
-            // 
-            // txtBuscar
-            // 
-            this.txtBuscar.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtBuscar.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    10F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.txtBuscar.ForeColor =
-                System.Drawing.Color.FromArgb(110, 90, 80);
-
-            this.txtBuscar.Location =
-                new System.Drawing.Point(46, 13);
-
-            this.txtBuscar.Name =
-                "txtBuscar";
-
-            this.txtBuscar.Size =
-                new System.Drawing.Size(430, 30);
-
-            this.txtBuscar.TabIndex = 1;
-
-            // 
-            // btnTodos
-            // 
-            this.btnTodos.BackColor =
-                System.Drawing.Color.FromArgb(211, 119, 82);
-
-            this.btnTodos.FlatAppearance.BorderSize = 0;
-
-            this.btnTodos.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnTodos.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    9F,
-                    System.Drawing.FontStyle.Bold,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.btnTodos.ForeColor =
-                System.Drawing.Color.White;
-
-            this.btnTodos.Location =
-                new System.Drawing.Point(18, 58);
-
-            this.btnTodos.Name =
-                "btnTodos";
-
-            this.btnTodos.Size =
-                new System.Drawing.Size(105, 32);
-
-            this.btnTodos.TabIndex = 2;
-            this.btnTodos.Text = "Todos  0";
-            this.btnTodos.UseVisualStyleBackColor = false;
-            this.btnTodos.Cursor =
-                System.Windows.Forms.Cursors.Hand;
-
-            // 
-            // btnPendente
-            // 
-            this.btnPendente.BackColor =
-                System.Drawing.Color.FromArgb(249, 244, 240);
-
-            this.btnPendente.FlatAppearance.BorderSize = 0;
-
-            this.btnPendente.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnPendente.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    9F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.btnPendente.ForeColor =
-                System.Drawing.Color.FromArgb(130, 91, 75);
-
-            this.btnPendente.Location =
-                new System.Drawing.Point(128, 58);
-
-            this.btnPendente.Name =
-                "btnPendente";
-
-            this.btnPendente.Size =
-                new System.Drawing.Size(115, 32);
-
-            this.btnPendente.TabIndex = 3;
-            this.btnPendente.Text = "Pendente  0";
-            this.btnPendente.UseVisualStyleBackColor = false;
-            this.btnPendente.Cursor =
-                System.Windows.Forms.Cursors.Hand;
-
-            // 
-            // btnPreparo
-            // 
-            this.btnPreparo.BackColor =
-                System.Drawing.Color.FromArgb(249, 244, 240);
-
-            this.btnPreparo.FlatAppearance.BorderSize = 0;
-
-            this.btnPreparo.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnPreparo.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    9F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.btnPreparo.ForeColor =
-                System.Drawing.Color.FromArgb(130, 91, 75);
-
-            this.btnPreparo.Location =
-                new System.Drawing.Point(248, 58);
-
-            this.btnPreparo.Name =
-                "btnPreparo";
-
-            this.btnPreparo.Size =
-                new System.Drawing.Size(125, 32);
-
-            this.btnPreparo.TabIndex = 4;
-            this.btnPreparo.Text = "Em preparo  0";
-            this.btnPreparo.UseVisualStyleBackColor = false;
-            this.btnPreparo.Cursor =
-                System.Windows.Forms.Cursors.Hand;
-
-            // 
-            // btnPronto
-            // 
-            this.btnPronto.BackColor =
-                System.Drawing.Color.FromArgb(249, 244, 240);
-
-            this.btnPronto.FlatAppearance.BorderSize = 0;
-
-            this.btnPronto.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnPronto.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    9F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.btnPronto.ForeColor =
-                System.Drawing.Color.FromArgb(130, 91, 75);
-
-            this.btnPronto.Location =
-                new System.Drawing.Point(378, 58);
-
-            this.btnPronto.Name =
-                "btnPronto";
-
-            this.btnPronto.Size =
-                new System.Drawing.Size(105, 32);
-
-            this.btnPronto.TabIndex = 5;
-            this.btnPronto.Text = "Pronto  0";
-            this.btnPronto.UseVisualStyleBackColor = false;
-            this.btnPronto.Cursor =
-                System.Windows.Forms.Cursors.Hand;
-
-            // 
-            // btnEntregue
-            // 
-            this.btnEntregue.BackColor =
-                System.Drawing.Color.FromArgb(249, 244, 240);
-
-            this.btnEntregue.FlatAppearance.BorderSize = 0;
-
-            this.btnEntregue.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnEntregue.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    9F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.btnEntregue.ForeColor =
-                System.Drawing.Color.FromArgb(130, 91, 75);
-
-            this.btnEntregue.Location =
-                new System.Drawing.Point(488, 58);
-
-            this.btnEntregue.Name =
-                "btnEntregue";
-
-            this.btnEntregue.Size =
-                new System.Drawing.Size(115, 32);
-
-            this.btnEntregue.TabIndex = 6;
-            this.btnEntregue.Text = "Entregue  0";
-            this.btnEntregue.UseVisualStyleBackColor = false;
-            this.btnEntregue.Cursor =
-                System.Windows.Forms.Cursors.Hand;
-
-            // 
-            // btnCancelado
-            // 
-            this.btnCancelado.BackColor =
-                System.Drawing.Color.FromArgb(249, 244, 240);
-
-            this.btnCancelado.FlatAppearance.BorderSize = 0;
-
-            this.btnCancelado.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnCancelado.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    9F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.btnCancelado.ForeColor =
-                System.Drawing.Color.FromArgb(130, 91, 75);
-
-            this.btnCancelado.Location =
-                new System.Drawing.Point(608, 58);
-
-            this.btnCancelado.Name =
-                "btnCancelado";
-
-            this.btnCancelado.Size =
-                new System.Drawing.Size(120, 32);
-
-            this.btnCancelado.TabIndex = 7;
-            this.btnCancelado.Text = "Cancelado  0";
-            this.btnCancelado.UseVisualStyleBackColor = false;
-            this.btnCancelado.Cursor =
-                System.Windows.Forms.Cursors.Hand;
-
-            // 
-            // dgvPedidos
-            // 
-            this.dgvPedidos.AllowUserToAddRows = false;
-            this.dgvPedidos.AllowUserToDeleteRows = false;
-            this.dgvPedidos.AllowUserToResizeRows = false;
-
-            this.dgvPedidos.Anchor =
-                ((System.Windows.Forms.AnchorStyles)
-                ((((System.Windows.Forms.AnchorStyles.Top |
-                    System.Windows.Forms.AnchorStyles.Bottom) |
-                    System.Windows.Forms.AnchorStyles.Left) |
-                    System.Windows.Forms.AnchorStyles.Right)));
-
-            this.dgvPedidos.BackgroundColor =
-                System.Drawing.Color.White;
-
-            this.dgvPedidos.BorderStyle =
-                System.Windows.Forms.BorderStyle.None;
-
-            this.dgvPedidos.CellBorderStyle =
-                System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-
-            this.dgvPedidos.ColumnHeadersBorderStyle =
-                System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-
-            this.dgvPedidos.ColumnHeadersDefaultCellStyle =
-                new System.Windows.Forms.DataGridViewCellStyle
-                {
-                    Alignment =
-                        System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft,
-
-                    BackColor =
-                        System.Drawing.Color.FromArgb(249, 247, 245),
-
-                    Font =
-                        new System.Drawing.Font(
-                            "Segoe UI",
-                            9F,
-                            System.Drawing.FontStyle.Bold,
-                            System.Drawing.GraphicsUnit.Point),
-
-                    ForeColor =
-                        System.Drawing.Color.FromArgb(115, 85, 72),
-
-                    SelectionBackColor =
-                        System.Drawing.Color.FromArgb(249, 247, 245),
-
-                    SelectionForeColor =
-                        System.Drawing.Color.FromArgb(115, 85, 72),
-
-                    WrapMode =
-                        System.Windows.Forms.DataGridViewTriState.False
-                };
-
-            this.dgvPedidos.ColumnHeadersHeight = 38;
-            this.dgvPedidos.ColumnHeadersHeightSizeMode =
-                System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-
-            this.dgvPedidos.EnableHeadersVisualStyles = false;
-
-            this.dgvPedidos.DefaultCellStyle =
-                new System.Windows.Forms.DataGridViewCellStyle
-                {
-                    Alignment =
-                        System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft,
-
-                    BackColor =
-                        System.Drawing.Color.White,
-
-                    Font =
-                        new System.Drawing.Font(
-                            "Segoe UI",
-                            9.5F,
-                            System.Drawing.FontStyle.Regular,
-                            System.Drawing.GraphicsUnit.Point),
-
-                    ForeColor =
-                        System.Drawing.Color.FromArgb(65, 55, 50),
-
-                    SelectionBackColor =
-                        System.Drawing.Color.FromArgb(250, 239, 233),
-
-                    SelectionForeColor =
-                        System.Drawing.Color.FromArgb(65, 55, 50),
-
-                    WrapMode =
-                        System.Windows.Forms.DataGridViewTriState.False
-                };
-
-            this.dgvPedidos.GridColor =
-                System.Drawing.Color.FromArgb(238, 231, 227);
-
-            this.dgvPedidos.Location =
-                new System.Drawing.Point(30, 245);
-
-            this.dgvPedidos.MultiSelect = false;
-
-            this.dgvPedidos.Name =
-                "dgvPedidos";
-
-            this.dgvPedidos.ReadOnly = true;
-
-            this.dgvPedidos.RowHeadersVisible = false;
-
-            this.dgvPedidos.RowTemplate.Height = 42;
-
-            this.dgvPedidos.SelectionMode =
-                System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-
-            this.dgvPedidos.Size =
-                new System.Drawing.Size(1120, 365);
-
-            this.dgvPedidos.TabIndex = 4;
-
-            // 
-            // colNumero
-            // 
-            this.colNumero.DataPropertyName = "Id";
-            this.colNumero.HeaderText = "Nº PEDIDO";
-            this.colNumero.Name = "colNumero";
-            this.colNumero.ReadOnly = true;
-            this.colNumero.Width = 105;
-
-            // 
-            // colCliente
-            // 
-            this.colCliente.DataPropertyName = "NomeCliente";
-            this.colCliente.HeaderText = "CLIENTE";
-            this.colCliente.Name = "colCliente";
-            this.colCliente.ReadOnly = true;
-            this.colCliente.Width = 150;
-
-            // 
-            // colData
-            // 
-            this.colData.DataPropertyName = "CreatedAt";
-            this.colData.HeaderText = "DATA";
-            this.colData.Name = "colData";
-            this.colData.ReadOnly = true;
-            this.colData.Width = 125;
-
-            // 
-            // colProdutos
-            // 
-            this.colProdutos.DataPropertyName = "Produtos";
-            this.colProdutos.HeaderText = "PRODUTOS";
-            this.colProdutos.Name = "colProdutos";
-            this.colProdutos.ReadOnly = true;
-            this.colProdutos.Width = 180;
-
-            // 
-            // colValor
-            // 
-            this.colValor.DataPropertyName = "Total";
-            this.colValor.HeaderText = "VALOR";
-            this.colValor.Name = "colValor";
-            this.colValor.ReadOnly = true;
-            this.colValor.Width = 110;
-
-            // 
-            // colPagamento
-            // 
-            this.colPagamento.DataPropertyName = "PaymentMethod";
-            this.colPagamento.HeaderText = "PAGAMENTO";
-            this.colPagamento.Name = "colPagamento";
-            this.colPagamento.ReadOnly = true;
-            this.colPagamento.Width = 120;
-
-            // 
-            // colStatus
-            // 
-            this.colStatus.DataPropertyName = "Status";
-            this.colStatus.HeaderText = "STATUS";
-            this.colStatus.Name = "colStatus";
-            this.colStatus.ReadOnly = true;
-            this.colStatus.Width = 110;
-
-            // 
-            // colAcoes
-            // 
-            this.colAcoes.DataPropertyName = "";
-            this.colAcoes.HeaderText = "AÇÕES";
-            this.colAcoes.Name = "colAcoes";
-            this.colAcoes.ReadOnly = true;
-            this.colAcoes.AutoSizeMode =
-                System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.colAcoes.Width = 170;
-
-            // 
-            // dgvPedidos - Columns
-            // 
-            this.dgvPedidos.Columns.AddRange(
-                new System.Windows.Forms.DataGridViewColumn[]
-                {
-                    this.colNumero,
-                    this.colCliente,
-                    this.colData,
-                    this.colProdutos,
-                    this.colValor,
-                    this.colPagamento,
-                    this.colStatus,
-                    this.colAcoes
-                });
-
+            pnlPrincipal.BackColor = Color.FromArgb(247, 244, 241);
+            pnlPrincipal.Controls.Add(lblTotalPedidos);
+            pnlPrincipal.Controls.Add(dgvPedidos);
+            pnlPrincipal.Controls.Add(pnlFiltros);
+            pnlPrincipal.Controls.Add(btnNovo);
+            pnlPrincipal.Controls.Add(lblTitulo);
+            pnlPrincipal.Controls.Add(lblSubtitulo);
+            pnlPrincipal.Dock = DockStyle.Fill;
+            pnlPrincipal.Location = new Point(0, 0);
+            pnlPrincipal.Name = "pnlPrincipal";
+            pnlPrincipal.Size = new Size(1180, 700);
+            pnlPrincipal.TabIndex = 0;
             // 
             // lblTotalPedidos
             // 
-            this.lblTotalPedidos.AutoSize = true;
-
-            this.lblTotalPedidos.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    9F,
-                    System.Drawing.FontStyle.Regular,
-                    System.Drawing.GraphicsUnit.Point);
-
-            this.lblTotalPedidos.ForeColor =
-                System.Drawing.Color.FromArgb(145, 117, 105);
-
-            this.lblTotalPedidos.Location =
-                new System.Drawing.Point(32, 625);
-
-            this.lblTotalPedidos.Name =
-                "lblTotalPedidos";
-
-            this.lblTotalPedidos.Size =
-                new System.Drawing.Size(98, 15);
-
-            this.lblTotalPedidos.TabIndex = 5;
-
-            this.lblTotalPedidos.Text =
-                "Total de pedidos:";
-
+            lblTotalPedidos.AutoSize = true;
+            lblTotalPedidos.Font = new Font("Segoe UI", 9F);
+            lblTotalPedidos.ForeColor = Color.FromArgb(145, 117, 105);
+            lblTotalPedidos.Location = new Point(32, 625);
+            lblTotalPedidos.Name = "lblTotalPedidos";
+            lblTotalPedidos.Size = new Size(97, 15);
+            lblTotalPedidos.TabIndex = 5;
+            lblTotalPedidos.Text = "Total de pedidos:";
+            // 
+            // dgvPedidos
+            // 
+            dgvPedidos.AllowUserToAddRows = false;
+            dgvPedidos.AllowUserToDeleteRows = false;
+            dgvPedidos.AllowUserToResizeRows = false;
+            dgvPedidos.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvPedidos.BackgroundColor = Color.White;
+            dgvPedidos.BorderStyle = BorderStyle.None;
+            dgvPedidos.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvPedidos.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgvPedidos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dgvPedidos.ColumnHeadersHeight = 38;
+            dgvPedidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvPedidos.Columns.AddRange(new DataGridViewColumn[] { colNumero, colCliente, colData, colProdutos, colValor, colPagamento, colStatus, colAcoes });
+            dgvPedidos.EnableHeadersVisualStyles = false;
+            dgvPedidos.GridColor = Color.FromArgb(238, 231, 227);
+            dgvPedidos.Location = new Point(30, 245);
+            dgvPedidos.MultiSelect = false;
+            dgvPedidos.Name = "dgvPedidos";
+            dgvPedidos.ReadOnly = true;
+            dgvPedidos.RowHeadersVisible = false;
+            dgvPedidos.RowTemplate.Height = 42;
+            dgvPedidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvPedidos.Size = new Size(1120, 365);
+            dgvPedidos.TabIndex = 4;
+            // 
+            // colNumero
+            // 
+            colNumero.DataPropertyName = "Id";
+            colNumero.HeaderText = "Nº PEDIDO";
+            colNumero.Name = "colNumero";
+            colNumero.ReadOnly = true;
+            colNumero.Width = 105;
+            // 
+            // colCliente
+            // 
+            colCliente.DataPropertyName = "NomeCliente";
+            colCliente.HeaderText = "CLIENTE";
+            colCliente.Name = "colCliente";
+            colCliente.ReadOnly = true;
+            colCliente.Width = 150;
+            // 
+            // colData
+            // 
+            colData.DataPropertyName = "CreatedAt";
+            colData.HeaderText = "DATA";
+            colData.Name = "colData";
+            colData.ReadOnly = true;
+            colData.Width = 125;
+            // 
+            // colProdutos
+            // 
+            colProdutos.DataPropertyName = "Produtos";
+            colProdutos.HeaderText = "PRODUTOS";
+            colProdutos.Name = "colProdutos";
+            colProdutos.ReadOnly = true;
+            colProdutos.Width = 180;
+            // 
+            // colValor
+            // 
+            colValor.DataPropertyName = "Total";
+            colValor.HeaderText = "VALOR";
+            colValor.Name = "colValor";
+            colValor.ReadOnly = true;
+            colValor.Width = 110;
+            // 
+            // colPagamento
+            // 
+            colPagamento.DataPropertyName = "PaymentMethod";
+            colPagamento.HeaderText = "PAGAMENTO";
+            colPagamento.Name = "colPagamento";
+            colPagamento.ReadOnly = true;
+            colPagamento.Width = 120;
+            // 
+            // colStatus
+            // 
+            colStatus.DataPropertyName = "Status";
+            colStatus.HeaderText = "STATUS";
+            colStatus.Name = "colStatus";
+            colStatus.ReadOnly = true;
+            colStatus.Width = 110;
+            // 
+            // colAcoes
+            // 
+            colAcoes.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            colAcoes.HeaderText = "AÇÕES";
+            colAcoes.Name = "colAcoes";
+            colAcoes.ReadOnly = true;
+            colAcoes.Width = 170;
+            // 
+            // pnlFiltros
+            // 
+            pnlFiltros.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pnlFiltros.BackColor = Color.White;
+            pnlFiltros.BorderStyle = BorderStyle.FixedSingle;
+            pnlFiltros.Controls.Add(btnCancelado);
+            pnlFiltros.Controls.Add(btnEntregue);
+            pnlFiltros.Controls.Add(btnPronto);
+            pnlFiltros.Controls.Add(btnPreparo);
+            pnlFiltros.Controls.Add(btnPendente);
+            pnlFiltros.Controls.Add(btnTodos);
+            pnlFiltros.Controls.Add(txtBuscar);
+            pnlFiltros.Controls.Add(lblBuscarIcone);
+            pnlFiltros.Location = new Point(30, 102);
+            pnlFiltros.Name = "pnlFiltros";
+            pnlFiltros.Size = new Size(1120, 105);
+            pnlFiltros.TabIndex = 3;
+            // 
+            // btnCancelado
+            // 
+            btnCancelado.BackColor = Color.FromArgb(249, 244, 240);
+            btnCancelado.Cursor = Cursors.Hand;
+            btnCancelado.FlatAppearance.BorderSize = 0;
+            btnCancelado.FlatStyle = FlatStyle.Flat;
+            btnCancelado.Font = new Font("Segoe UI", 9F);
+            btnCancelado.ForeColor = Color.FromArgb(130, 91, 75);
+            btnCancelado.Location = new Point(608, 58);
+            btnCancelado.Name = "btnCancelado";
+            btnCancelado.Size = new Size(120, 32);
+            btnCancelado.TabIndex = 7;
+            btnCancelado.Text = "Cancelado  0";
+            btnCancelado.UseVisualStyleBackColor = false;
+            // 
+            // btnEntregue
+            // 
+            btnEntregue.BackColor = Color.FromArgb(249, 244, 240);
+            btnEntregue.Cursor = Cursors.Hand;
+            btnEntregue.FlatAppearance.BorderSize = 0;
+            btnEntregue.FlatStyle = FlatStyle.Flat;
+            btnEntregue.Font = new Font("Segoe UI", 9F);
+            btnEntregue.ForeColor = Color.FromArgb(130, 91, 75);
+            btnEntregue.Location = new Point(488, 58);
+            btnEntregue.Name = "btnEntregue";
+            btnEntregue.Size = new Size(115, 32);
+            btnEntregue.TabIndex = 6;
+            btnEntregue.Text = "Entregue  0";
+            btnEntregue.UseVisualStyleBackColor = false;
+            // 
+            // btnPronto
+            // 
+            btnPronto.BackColor = Color.FromArgb(249, 244, 240);
+            btnPronto.Cursor = Cursors.Hand;
+            btnPronto.FlatAppearance.BorderSize = 0;
+            btnPronto.FlatStyle = FlatStyle.Flat;
+            btnPronto.Font = new Font("Segoe UI", 9F);
+            btnPronto.ForeColor = Color.FromArgb(130, 91, 75);
+            btnPronto.Location = new Point(378, 58);
+            btnPronto.Name = "btnPronto";
+            btnPronto.Size = new Size(105, 32);
+            btnPronto.TabIndex = 5;
+            btnPronto.Text = "Pronto  0";
+            btnPronto.UseVisualStyleBackColor = false;
+            // 
+            // btnPreparo
+            // 
+            btnPreparo.BackColor = Color.FromArgb(249, 244, 240);
+            btnPreparo.Cursor = Cursors.Hand;
+            btnPreparo.FlatAppearance.BorderSize = 0;
+            btnPreparo.FlatStyle = FlatStyle.Flat;
+            btnPreparo.Font = new Font("Segoe UI", 9F);
+            btnPreparo.ForeColor = Color.FromArgb(130, 91, 75);
+            btnPreparo.Location = new Point(248, 58);
+            btnPreparo.Name = "btnPreparo";
+            btnPreparo.Size = new Size(125, 32);
+            btnPreparo.TabIndex = 4;
+            btnPreparo.Text = "Em preparo  0";
+            btnPreparo.UseVisualStyleBackColor = false;
+            // 
+            // btnPendente
+            // 
+            btnPendente.BackColor = Color.FromArgb(249, 244, 240);
+            btnPendente.Cursor = Cursors.Hand;
+            btnPendente.FlatAppearance.BorderSize = 0;
+            btnPendente.FlatStyle = FlatStyle.Flat;
+            btnPendente.Font = new Font("Segoe UI", 9F);
+            btnPendente.ForeColor = Color.FromArgb(130, 91, 75);
+            btnPendente.Location = new Point(128, 58);
+            btnPendente.Name = "btnPendente";
+            btnPendente.Size = new Size(115, 32);
+            btnPendente.TabIndex = 3;
+            btnPendente.Text = "Pendente  0";
+            btnPendente.UseVisualStyleBackColor = false;
+            // 
+            // btnTodos
+            // 
+            btnTodos.BackColor = Color.FromArgb(211, 119, 82);
+            btnTodos.Cursor = Cursors.Hand;
+            btnTodos.FlatAppearance.BorderSize = 0;
+            btnTodos.FlatStyle = FlatStyle.Flat;
+            btnTodos.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnTodos.ForeColor = Color.White;
+            btnTodos.Location = new Point(18, 58);
+            btnTodos.Name = "btnTodos";
+            btnTodos.Size = new Size(105, 32);
+            btnTodos.TabIndex = 2;
+            btnTodos.Text = "Todos  0";
+            btnTodos.UseVisualStyleBackColor = false;
+            // 
+            // txtBuscar
+            // 
+            txtBuscar.BorderStyle = BorderStyle.FixedSingle;
+            txtBuscar.Font = new Font("Segoe UI", 10F);
+            txtBuscar.ForeColor = Color.FromArgb(110, 90, 80);
+            txtBuscar.Location = new Point(46, 13);
+            txtBuscar.Name = "txtBuscar";
+            txtBuscar.Size = new Size(430, 25);
+            txtBuscar.TabIndex = 1;
+            // 
+            // lblBuscarIcone
+            // 
+            lblBuscarIcone.AutoSize = true;
+            lblBuscarIcone.Font = new Font("Segoe UI Symbol", 12F);
+            lblBuscarIcone.ForeColor = Color.FromArgb(150, 130, 120);
+            lblBuscarIcone.Location = new Point(18, 17);
+            lblBuscarIcone.Name = "lblBuscarIcone";
+            lblBuscarIcone.Size = new Size(22, 21);
+            lblBuscarIcone.TabIndex = 0;
+            lblBuscarIcone.Text = "⌕";
+            // 
+            // btnNovo
+            // 
+            btnNovo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnNovo.BackColor = Color.FromArgb(211, 119, 82);
+            btnNovo.Cursor = Cursors.Hand;
+            btnNovo.FlatAppearance.BorderSize = 0;
+            btnNovo.FlatStyle = FlatStyle.Flat;
+            btnNovo.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnNovo.ForeColor = Color.White;
+            btnNovo.Location = new Point(1045, 58);
+            btnNovo.Name = "btnNovo";
+            btnNovo.Size = new Size(105, 38);
+            btnNovo.TabIndex = 2;
+            btnNovo.Text = "+  Novo";
+            btnNovo.UseVisualStyleBackColor = false;
+            // 
+            // lblTitulo
+            // 
+            lblTitulo.AutoSize = true;
+            lblTitulo.Font = new Font("Segoe UI", 25F, FontStyle.Bold);
+            lblTitulo.ForeColor = Color.FromArgb(55, 39, 34);
+            lblTitulo.Location = new Point(34, 24);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(146, 46);
+            lblTitulo.TabIndex = 0;
+            lblTitulo.Text = "Pedidos";
+            // 
+            // lblSubtitulo
+            // 
+            lblSubtitulo.AutoSize = true;
+            lblSubtitulo.Font = new Font("Segoe UI", 10F);
+            lblSubtitulo.ForeColor = Color.FromArgb(145, 117, 105);
+            lblSubtitulo.Location = new Point(38, 68);
+            lblSubtitulo.Name = "lblSubtitulo";
+            lblSubtitulo.Size = new Size(128, 19);
+            lblSubtitulo.TabIndex = 1;
+            lblSubtitulo.Text = "Pedidos registrados";
             // 
             // PedidosUserControl
             // 
-            this.AutoScaleDimensions =
-                new System.Drawing.SizeF(7F, 15F);
-
-            this.AutoScaleMode =
-                System.Windows.Forms.AutoScaleMode.Font;
-
-            this.BackColor =
-                System.Drawing.Color.FromArgb(247, 244, 241);
-
-            this.Controls.Add(this.pnlPrincipal);
-
-            this.Name =
-                "PedidosUserControl";
-
-            this.Size =
-                new System.Drawing.Size(1180, 700);
-
-            this.pnlPrincipal.ResumeLayout(false);
-            this.pnlPrincipal.PerformLayout();
-
-            ((System.ComponentModel.ISupportInitialize)
-                (this.dgvPedidos)).EndInit();
-
-            this.pnlFiltros.ResumeLayout(false);
-            this.pnlFiltros.PerformLayout();
-
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(247, 244, 241);
+            Controls.Add(pnlPrincipal);
+            Name = "PedidosUserControl";
+            Size = new Size(1180, 700);
+            pnlPrincipal.ResumeLayout(false);
+            pnlPrincipal.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvPedidos).EndInit();
+            pnlFiltros.ResumeLayout(false);
+            pnlFiltros.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
