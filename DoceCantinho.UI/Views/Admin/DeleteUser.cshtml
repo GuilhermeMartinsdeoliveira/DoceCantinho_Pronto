@@ -2,13 +2,26 @@
 @{
     ViewData["Title"] = "Excluir Usuário";
 }
-<h2>Excluir Usuário</h2>
-<div>
-    <p>Tem certeza que deseja excluir o usuário <strong>@Model.Email</strong> ?</p>
-    <form asp-action="DeleteUserConfirmed" method="post">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="id" value="@Model.Id" />
-        <button type="submit" class="btn btn-danger">Excluir</button>
-        <a asp-action="Index" class="btn">Cancelar</a>
-    </form>
+
+<div class="admin-form-page">
+    <div class="admin-delete-card">
+
+        <div class="admin-delete-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        <h2>Excluir Usuário</h2>
+        <p>Você realmente deseja excluir o usuário <strong>@Model.Email</strong>? Essa ação não pode ser desfeita.</p>
+
+        <form asp-action="DeleteUserConfirmed" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+            <div class="admin-form-actions">
+                <a asp-action="Index" class="admin-btn admin-btn-outline">
+                    <i class="bi bi-x-lg"></i> Cancelar
+                </a>
+                <button type="submit" class="admin-btn admin-btn-danger">
+                    <i class="bi bi-trash3"></i> Excluir
+                </button>
+            </div>
+        </form>
+
+    </div>
 </div>

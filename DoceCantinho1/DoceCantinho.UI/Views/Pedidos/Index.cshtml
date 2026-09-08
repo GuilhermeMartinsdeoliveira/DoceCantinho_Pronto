@@ -1,0 +1,133 @@
+@using DoceCantinho.Application.DTOs
+@model List<PedidoDto>
+
+@{
+    ViewData["Title"] = ViewData["Title"] ?? "Pedidos";
+    var isAdmin = ViewData["IsAdmin"] as bool? ?? false;
+
+    (string bg, string fg) StatusCores(string status) => status switch
+    {
+        "Pago" => ("#dcfce7", "#16a34a"),
+        "Entregue" => ("#dcfce7", "#16a34a"),
+        "Em Preparo" => ("#fef3c7", "#b45309"),
+        "Saiu para Entrega" => ("#dbeafe", "#1d4ed8"),
+        "Cancelado" => ("#fee2e2", "#dc2626"),
+        _ => ("#fef3c7", "#b45309") // Pendente
+    };
+}
+
+<div class="container my-5" style="max-width:1100px">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div>
+            <h1 class="pedidos-title">@ViewData["Title"]</h1>
+            <p class="mb-0" style="color:#8A6555">
+                @(isAdmin ? "Gerenciar todos os pedidos do sistema" : "Visualize e acompanhe seus pedidos")
+            </p>
+        </div>
+        @if (isAdmin)
+        {
+            <a href="@Url.Action("Create", "Pedidos")" class="btn-pedido-primary">+ Novo Pedido</a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="pedido-card text-center py-5">
+            <div style="font-size:2.5rem">🧁</div>
+            <h3 class="mt-3" style="color:#3D2314">Nenhum pedido encontrado</h3>
+            <p style="color:#8A6555">Seus pedidos aparecerão aqui assim que forem realizados.</p>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column gap-3">
+            @foreach (var pedido in Model)
+            {
+                var (bg, fg) = StatusCores(pedido.Status);
+                var podeCancelar = isAdmin ? (pedido.Status != "Cancelado" && pedido.Status != "Entregue") : pedido.Status == "Pendente";
+                <div class="pedido-card">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <strong style="color:#3D2314;font-size:1.05rem">#@pedido.Id.ToString("D4")</strong>
+                                <span class="pedido-badge" style="background:@bg;color:@fg">@pedido.Status</span>
+                            </div>
+                            <div style="color:#8A6555;font-size:0.85rem">
+                                @pedido.NomeCliente · @pedido.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                @if (isAdmin)
+                                {
+                                    <span> · Usuário: @pedido.UserId</span>
+                                }
+                            </div>
+                        </div>
+                        <div style="text-align:right">
+                            <div style="color:#8A6555;font-size:0.78rem">Total</div>
+                            <div style="color:#D4704A;font-weight:700;font-size:1.15rem">R$ @pedido.Total.ToString("F2")</div>
+                        </div>
+                    </div>
+
+                    <hr style="border-color:rgba(92,46,14,.1);margin:0.9rem 0" />
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <span style="color:#8A6555;font-size:0.85rem">
+                            @pedido.Items.Count item(s) · @pedido.PaymentMethod
+                        </span>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="@Url.Action("Details", "Pedidos", new { id = pedido.Id })" class="btn-pedido-outline">Ver Detalhes</a>
+                            @if (isAdmin)
+                            {
+                                <a href="@Url.Action("Edit", "Pedidos", new { id = pedido.Id })" class="btn-pedido-outline">Editar</a>
+                                <a href="@Url.Action("Delete", "Pedidos", new { id = pedido.Id })" class="btn-pedido-danger-outline">Excluir</a>
+                            }
+                            @if (podeCancelar)
+                            {
+                                <form method="post" action="@Url.Action("Cancel", "Pedidos", new { id = pedido.Id })"
+                                      onsubmit="return confirm('Tem certeza que deseja cancelar este pedido?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-pedido-danger-outline">Cancelar Pedido</button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .pedidos-title { font-family:'Playfair Display',serif; font-weight:700; color:#3D2314; }
+    .pedido-card {
+        background:#FFF8F0; border:1px solid rgba(92,46,14,.12); border-radius:12px;
+        padding:1.25rem 1.5rem; box-shadow:0 2px 12px rgba(92,46,14,.06);
+    }
+    .pedido-badge { padding:0.2rem 0.7rem; border-radius:100px; font-size:0.75rem; font-weight:700; }
+    .btn-pedido-primary {
+        background:#3D2314; color:#FDF6ED; border-radius:8px; padding:0.6rem 1.1rem;
+        font-weight:600; font-size:0.875rem; text-decoration:none; display:inline-block;
+    }
+    .btn-pedido-primary:hover { background:#4A2810; color:#FDF6ED; }
+    .btn-pedido-outline, .btn-pedido-danger-outline {
+        border-radius:8px; padding:0.5rem 0.9rem; font-weight:600; font-size:0.8125rem;
+        text-decoration:none; border:1.5px solid; cursor:pointer; background:transparent;
+    }
+    .btn-pedido-outline { color:#3D2314; border-color:#3D2314; }
+    .btn-pedido-outline:hover { background:#3D2314; color:#FDF6ED; }
+    .btn-pedido-danger-outline { color:#dc2626; border-color:#dc2626; }
+    .btn-pedido-danger-outline:hover { background:#dc2626; color:#fff; }
+</style>

@@ -119,10 +119,17 @@
     }
 
     .info-icon {
-        font-size: 0; /* imagens em vez de emoji */
         flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--muted);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
     }
-    .info-icon img { width:48px; height:48px; object-fit:contain; display:block; }
 
     .info-content h3 {
         font-size: 1.2rem;
@@ -159,13 +166,14 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         background: var(--accent);
         color: white;
         border-radius: 50%;
         text-decoration: none;
-        font-size: 1.2rem;
+        font-size: 1.15rem;
+        line-height: 1;
         transition: all 0.2s;
     }
 
@@ -280,7 +288,7 @@
             <div class="contact-info">
                 <!-- Telefone e WhatsApp -->
                 <div class="info-card">
-                    <div class="info-icon"><img src="https://images.unsplash.com/photo-1518546305922-4b8a3e7b4d1b?w=200&h=200&fit=crop&auto=format" alt="Telefone" loading="lazy" width="48" height="48" onerror="this.onerror=null;this.src='https://via.placeholder.com/48'"/></div>
+                    <div class="info-icon"><i class="bi bi-telephone-fill"></i></div>
                     <div class="info-content">
                         <h3>Telefone e WhatsApp</h3>
                         <p>
@@ -294,7 +302,7 @@
 
                 <!-- Email -->
                 <div class="info-card">
-                    <div class="info-icon"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=200&h=200&fit=crop&auto=format" alt="Email" loading="lazy" width="48" height="48" onerror="this.onerror=null;this.src='https://via.placeholder.com/48'"/></div>
+                    <div class="info-icon"><i class="bi bi-envelope-fill"></i></div>
                     <div class="info-content">
                         <h3>Email</h3>
                         <p>
@@ -308,7 +316,7 @@
 
                 <!-- Endereço -->
                 <div class="info-card">
-                    <div class="info-icon"><img src="https://images.unsplash.com/photo-1505691723518-36a2a62ad0a5?w=200&h=200&fit=crop&auto=format" alt="Endereço" loading="lazy" width="48" height="48" onerror="this.onerror=null;this.src='https://via.placeholder.com/48'"/></div>
+                    <div class="info-icon"><i class="bi bi-geo-alt-fill"></i></div>
                     <div class="info-content">
                         <h3>Endereço</h3>
                         <p>Rua das Flores, 123<br>São Paulo - SP, 01234-567</p>
@@ -338,7 +346,7 @@
 
                 <!-- Redes Sociais -->
                 <div class="info-card">
-                    <div class="info-icon"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.93790745222!2d-46.436406399999996!3d-23.4987459!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce63e09c957d7d%3A0xcf128208fb85d013!2sR.%20Ten.%20Miguel%20Delia%20-%20Vila%20Rosaria%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2008021-090!5e0!3m2!1spt-BR!2sbr!4v1787688658619!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+                    <div class="info-icon"><i class="bi bi-share-fill"></i></div>
                     <div class="info-content">
                         <h3>Nos Siga</h3>
                         <p style="font-size: 0.9rem; color: var(--muted-fg); margin-bottom: 1rem;">
@@ -346,18 +354,25 @@
                         </p>
                         <div class="social-links">
                             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-btn" title="Instagram">
-                                <img src="https://images.unsplash.com/photo-1516139009-1f18b2a7a1b1?w=120&h=120&fit=crop&auto=format" alt="Instagram" width="20" height="20" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/20'" />
+                                <i class="bi bi-instagram"></i>
                             </a>
                             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-btn" title="Facebook">
-                                <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=120&h=120&fit=crop&auto=format" alt="Facebook" width="20" height="20" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/20'" />
+                                <i class="bi bi-facebook"></i>
                             </a>
                             <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer" class="social-btn" title="WhatsApp">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToKpSlAIS17imIIRZ53o5i7AhRo2czrJFldIXd0xGqoQ&s=10" alt="WhatsApp" width="20" height="20" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/20'" />
+                                <i class="bi bi-whatsapp"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Mapa -->
+        <div class="map-section">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.93790745222!2d-46.436406399999996!3d-23.4987459!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce63e09c957d7d%3A0xcf128208fb85d013!2sR.%20Ten.%20Miguel%20Delia%20-%20Vila%20Rosaria%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2008021-090!5e0!3m2!1spt-BR!2sbr!4v1787688658619!5m2!1spt-BR!2sbr"
+                    width="100%" height="400" style="border:0; display:block;" allowfullscreen=""
+                    loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
         <!-- CTA Section -->
         <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); border-radius: var(--radius); color: white;">

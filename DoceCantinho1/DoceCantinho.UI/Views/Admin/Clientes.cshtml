@@ -1,0 +1,109 @@
+@{
+    var usersJson = ViewData["UsersJson"] as string;
+    var total = ViewData["UsersTotal"] as int? ?? 0;
+    var ativos = ViewData["UsersActive"] as int? ?? 0;
+    var admins = ViewData["AdminsCount"] as int? ?? 0;
+}
+
+<div class="table-card">
+    <div id="clientes-table" data-server="@(usersJson != null ? "1" : "0")">
+        @if (usersJson == null)
+        {
+            <p style="color:var(--muted-fg)">Carregando clientes...</p>
+        }
+        else
+        {
+            // Desserializar o JSON gerado no controller
+            var users = System.Text.Json.JsonSerializer.Deserialize<System.Collections.Generic.List<UserViewModel>>(usersJson!);
+
+            <div class="admin-users-header" style="display:flex;gap:1rem;margin-bottom:1rem">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value">@total</div>
+                    <div class="stat-label">Total de Usuarios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value">@ativos</div>
+                    <div class="stat-label">Usuarios Ativos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">@admins</div>
+                    <div class="stat-label">Administradores</div>
+                </div>
+            </div>
+
+            <div class="admin-users-controls" style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+                <input type="search" id="user-search" placeholder="Buscar usuário..." style="flex:1;padding:0.6rem 0.9rem;border-radius:999px;border:1px solid var(--muted-border);background:var(--card-bg)" />
+                <a id="btn-create-user" class="btn" href="@Url.Action("CreateUser","Admin")">Novo Usuario</a>
+                <button id="btn-edit-user" class="btn">Editar</button>
+                <button id="btn-delete-user" class="btn btn-danger">Excluir</button>
+                <button class="btn" id="refresh-users">Atualizar</button>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width:45%">ID</th>
+                        <th style="width:35%">Email</th>
+                        <th style="width:20%">Perfil</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody">
+                    @foreach (var u in users ?? new System.Collections.Generic.List<UserViewModel>())
+                    {
+                        var perfil = (u.roles != null && u.roles.Count > 0) ? string.Join(", ", u.roles) : "Usuário";
+                        <tr data-id="@u.id">
+                            <td style="font-family:monospace;color:var(--muted-fg)">@u.id</td>
+                            <td>@u.email</td>
+                            <td style="color:var(--muted-fg)">@perfil</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <script>
+                document.getElementById('refresh-users').addEventListener('click', function(){ location.reload(); });
+                document.getElementById('user-search').addEventListener('input', function(e){
+                    const q = e.target.value.toLowerCase();
+                    document.querySelectorAll('#users-tbody tr').forEach(tr => {
+                        const txt = tr.textContent.toLowerCase();
+                        tr.style.display = txt.indexOf(q) === -1 ? 'none' : '';
+                    });
+                });
+
+                // Seleção de usuário
+                let selectedId = null;
+                document.querySelectorAll('#users-tbody tr').forEach(tr => {
+                    tr.addEventListener('click', function(){
+                        document.querySelectorAll('#users-tbody tr').forEach(r=>r.classList.remove('selected'));
+                        tr.classList.add('selected');
+                        selectedId = tr.dataset.id;
+                    });
+                });
+
+                document.getElementById('btn-edit-user').addEventListener('click', function(){
+                    if (!selectedId) { alert('Selecione um usuário na lista para editar.'); return; }
+                    location.href = '@Url.Action("EditUser","Admin")' + '?id=' + encodeURIComponent(selectedId);
+                });
+
+                document.getElementById('btn-delete-user').addEventListener('click', function(){
+                    if (!selectedId) { alert('Selecione um usuário na lista para excluir.'); return; }
+                    if (!confirm('Confirma exclusão do usuário selecionado?')) return;
+                    location.href = '@Url.Action("DeleteUser","Admin")' + '?id=' + encodeURIComponent(selectedId);
+                });
+            </script>
+        }
+    </div>
+</div>
+
+@functions {
+    public class UserViewModel
+    {
+        public string id { get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
+        public System.Collections.Generic.List<string>? roles { get; set; }
+        public bool emailConfirmed { get; set; }
+    }
+}

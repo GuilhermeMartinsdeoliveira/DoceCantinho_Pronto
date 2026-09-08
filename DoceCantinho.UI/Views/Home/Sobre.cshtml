@@ -58,18 +58,20 @@
         margin-bottom: 1rem;
     }
 
-    .about-image {
-        border-radius: var(--radius);
-        overflow: hidden;
-        box-shadow: var(--shadow-lg);
-    }
+  .about-image {
+    height: 360px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(61,35,20,.12);
+}
 
-    .about-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
 
     .values-grid {
         display: grid;
@@ -93,14 +95,11 @@
     }
 
     .value-icon {
-        margin-bottom: 1rem;
+        width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 1.25rem;
+        background: rgba(212,112,74,.12);
+        display: flex; align-items: center; justify-content: center;
     }
-    .value-icon img {
-        width: 80px;
-        height: 80px;
-        object-fit: contain;
-        display: inline-block;
-    }
+    .value-icon i { color: var(--accent); font-size: 1.75rem; }
 
     .value-title {
         font-size: 1.25rem;
@@ -139,21 +138,15 @@
 
     .team-image {
         width: 100%;
-        height: 250px;
-        background: var(--bg);
+        height: 220px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--muted-fg);
-        font-size: 0; /* evita que o texto ALT apareça grande quando a imagem falha */
+        color: rgba(255,255,255,.9);
         overflow: hidden;
     }
-    .team-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
+    .team-image i { font-size: 3.5rem; }
 
     .team-info {
         padding: 1.5rem;
@@ -200,6 +193,12 @@
         font-size: 0.95rem;
         opacity: 0.9;
     }
+
+    @@media (max-width: 860px) {
+        .about-content { grid-template-columns: 1fr; gap: 2rem; }
+        .about-image { order: -1; }
+        .section-title { font-size: 2rem; }
+    }
 </style>
 
 <div class="page active">
@@ -232,7 +231,11 @@
                 </p>
             </div>
             <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1400&h=400&fit=crop&auto=format" alt="Bolos e confeitaria" loading="lazy" width="1400" height="400" onerror="this.onerror=null;this.src='https://via.placeholder.com/1400x400?text=Doce+Cantinho'" />
+              <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1400&h=500&fit=crop&auto=format" />
+     alt="Bolo de chocolate artesanal"
+     loading="lazy"
+     width="1400"
+     height="500" />
             </div>
         </div>
 
@@ -243,28 +246,28 @@
             </div>
             <div class="values-grid">
                 <div class="value-card">
-                    <div class="value-icon" aria-hidden="true"><img src="https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=200&h=200&fit=crop&auto=format" alt="" loading="lazy" width="80" height="80" onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=+'"/></div>
+                    <div class="value-icon" aria-hidden="true"><i class="bi bi-gem"></i></div>
                     <div class="value-title">Qualidade</div>
                     <p class="value-description">
                         Ingredientes premium selecionados e processos rigorosos garantem doces de excelência.
                     </p>
                 </div>
                 <div class="value-card">
-                    <div class="value-icon" aria-hidden="true"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&auto=format" alt="" loading="lazy" width="80" height="80" onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=+'"/></div>
+                    <div class="value-icon" aria-hidden="true"><i class="bi bi-heart-fill"></i></div>
                     <div class="value-title">Dedicação</div>
                     <p class="value-description">
                         Fazemos cada doce com cuidado e carinho, como se fosse para nossa própria família.
                     </p>
                 </div>
                 <div class="value-card">
-                    <div class="value-icon" aria-hidden="true"><img src="https://images.unsplash.com/photo-1558980664-10d27a3c6f0f?w=200&h=200&fit=crop&auto=format" alt="" loading="lazy" width="80" height="80" onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=+'"/></div>
+                    <div class="value-icon" aria-hidden="true"><i class="bi bi-stars"></i></div>
                     <div class="value-title">Inovação</div>
                     <p class="value-description">
                         Sem perder a tradição, buscamos constantemente novas receitas e combinações.
                     </p>
                 </div>
                 <div class="value-card">
-                    <div class="value-icon" aria-hidden="true"><img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=200&h=200&fit=crop&auto=format" alt="" loading="lazy" width="80" height="80" onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=+'"/></div>
+                    <div class="value-icon" aria-hidden="true"><i class="bi bi-shield-check"></i></div>
                     <div class="value-title">Confiança</div>
                     <p class="value-description">
                         Transparência e honestidade em tudo o que fazemos com nossos clientes.
@@ -303,7 +306,7 @@
             </div>
             <div class="team-grid">
                 <div class="team-member">
-                    <div class="team-image" aria-label="Foto de Maria Silva"><img src="https://placehold.co/400x400?text=Maria+Silva" alt="" loading="lazy" width="400" height="400" /></div>
+                    <div class="team-image" aria-label="Foto de Maria Silva"><i class="bi bi-person-circle"></i></div>
                     <div class="team-info">
                         <div class="team-name">Maria Silva</div>
                         <div class="team-role">Confeiteira Chefe</div>
@@ -313,7 +316,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="team-image" aria-label="Foto de João Santos"><img src="https://placehold.co/400x400?text=João+Santos" alt="" loading="lazy" width="400" height="400" /></div>
+                    <div class="team-image" aria-label="Foto de João Santos"><i class="bi bi-person-circle"></i></div>
                     <div class="team-info">
                         <div class="team-name">João Santos</div>
                         <div class="team-role">Confeiteiro Artesanal</div>
@@ -323,7 +326,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="team-image" aria-label="Foto de Ana Oliveira"><img src="https://placehold.co/400x400?text=Ana+Oliveira" alt="" loading="lazy" width="400" height="400" /></div>
+                    <div class="team-image" aria-label="Foto de Ana Oliveira"><i class="bi bi-person-circle"></i></div>
                     <div class="team-info">
                         <div class="team-name">Ana Oliveira</div>
                         <div class="team-role">Gerente de Produção</div>

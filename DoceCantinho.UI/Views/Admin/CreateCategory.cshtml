@@ -1,31 +1,35 @@
-﻿@using DoceCantinho.Domain.Entities
+﻿﻿@using DoceCantinho.Domain.Entities
 
 <link href="~/css/site.css" rel="stylesheet" />
 
-
 @model Category
 
-<div class="container mt-4">
+<div class="admin-form-page">
+    <div class="admin-form-card" style="max-width: 480px;">
 
-    <h2>Nova Categoria</h2>
+        <p class="admin-form-eyebrow">Área Administrativa</p>
+        <h2 class="admin-form-title"><i class="bi bi-tags"></i>Nova Categoria</h2>
 
-    <form asp-action="CreateCategory">
+        <form asp-action="CreateCategory">
 
-        <div class="mb-3">
-            <label class="form-label">Nome</label>
-            <input asp-for="Name" class="form-control" />
-        </div>
+            <div class="admin-field">
+                <label>Nome</label>
+                <input asp-for="Name" type="text" placeholder="Ex: Bolos, Brigadeiros, Tortas..." />
+                <span asp-validation-for="Name" class="admin-field-error"></span>
+            </div>
 
-        <button type="submit" class="btn btn-success">
-            Salvar
-        </button>
+            <div class="admin-form-actions">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                    <i class="bi bi-check-lg"></i> Salvar
+                </button>
+                <a asp-action="Categories" class="admin-btn admin-btn-outline">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
 
-        <a asp-action="Categories" class="btn btn-secondary">
-            Voltar
-        </a>
+        </form>
 
-    </form>
-
+    </div>
 </div>
 
 <script src="~/js/site.js"></script>

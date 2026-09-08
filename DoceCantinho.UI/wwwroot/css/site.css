@@ -412,15 +412,13 @@ a { text-decoration: none; color: inherit; }
 
   position: relative; height: 210px; overflow: hidden; background: var(--muted); 
 
-} 
+}
+ .product-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+ }
 
-.product-img-wrap img { 
-
-  width: 100%; height: 100%; object-fit: cover; 
-
-  transition: transform .5s; 
-
-} 
 
 .product-card:hover .product-img-wrap img { transform: scale(1.06); } 
 
@@ -1872,4 +1870,708 @@ a.admin-logout-btn { text-decoration: none; }
 }
 @media (max-width: 520px) {
     .testimonials-grid { grid-template-columns: 1fr; }
+}
+/* ─── Loja: lista de produtos (um abaixo do outro) ─── */
+.loja-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.loja-item {
+    display: flex;
+    gap: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: box-shadow .25s, transform .25s;
+    position: relative;
+}
+
+    .loja-item:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+    }
+
+.loja-item-img-wrap {
+    position: relative;
+    width: 220px;
+    min-width: 220px;
+    height: 170px;
+    overflow: hidden;
+    background: var(--muted);
+}
+
+    .loja-item-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.loja-item-body {
+    padding: 1.1rem 1.5rem 1.1rem 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.loja-item-cat {
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: capitalize;
+    margin-bottom: .2rem;
+}
+
+.loja-item-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--fg);
+    margin-bottom: .35rem;
+}
+
+.loja-item-desc {
+    font-size: .85rem;
+    color: var(--muted-fg);
+    line-height: 1.55;
+    margin-bottom: .75rem;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.loja-item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.loja-item-price {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--primary);
+}
+
+.loja-item-actions {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+/* Estrela de destaque, pequena e elegante, no canto do card */
+.loja-star {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255,248,240,.95);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 6px rgba(92,46,14,.18);
+}
+
+    .loja-star svg {
+        width: 14px;
+        height: 14px;
+        color: #f5a623;
+        fill: #f5a623;
+    }
+
+@media (max-width: 640px) {
+    .loja-item {
+        flex-direction: column;
+    }
+
+    .loja-item-img-wrap {
+        width: 100%;
+        min-width: 0;
+        height: 190px;
+    }
+
+    .loja-item-body {
+        padding: 1rem;
+    }
+}
+
+/* ─── Admin: cards de formulário (Novo/Editar/Excluir) ─── */
+.admin-form-card {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+}
+
+    .admin-form-card h2 {
+        font-family: 'Playfair Display', serif;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+.admin-form-group {
+    margin-bottom: 1.5rem;
+}
+
+    .admin-form-group label {
+        display: block;
+        margin-bottom: .5rem;
+        color: var(--fg);
+        font-weight: 600;
+        font-size: .95rem;
+    }
+
+    .admin-form-group input,
+    .admin-form-group textarea,
+    .admin-form-group select {
+        width: 100%;
+        padding: .75rem;
+        border: 2px solid var(--border);
+        border-radius: calc(var(--radius) - .25rem);
+        font-size: 1rem;
+        transition: all .2s ease;
+        background: var(--bg);
+        font-family: 'Nunito', sans-serif;
+    }
+
+        .admin-form-group input:focus,
+        .admin-form-group textarea:focus,
+        .admin-form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(92,46,14,.1);
+        }
+
+    .admin-form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .admin-form-group small {
+        color: var(--muted-fg);
+    }
+
+.admin-checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1.5rem;
+}
+
+    .admin-checkbox-group input[type="checkbox"] {
+        width: auto;
+        accent-color: var(--primary);
+    }
+
+    .admin-checkbox-group label {
+        margin: 0;
+        font-weight: 600;
+    }
+
+.admin-button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+    .admin-button-group button,
+    .admin-button-group a {
+        flex: 1;
+        min-width: 140px;
+        padding: .85rem;
+        border-radius: calc(var(--radius) - .25rem);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 2px solid;
+        transition: all .2s ease;
+        cursor: pointer;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .4rem;
+    }
+
+    .admin-button-group .admin-btn-save {
+        background: var(--primary);
+        color: var(--primary-fg);
+        border-color: var(--primary);
+    }
+
+        .admin-button-group .admin-btn-save:hover {
+            background: #4a2309;
+            border-color: #4a2309;
+            box-shadow: 0 4px 12px rgba(92,46,14,.25);
+        }
+
+    .admin-button-group .admin-btn-cancel {
+        background: transparent;
+        color: var(--muted-fg);
+        border-color: var(--muted);
+    }
+
+        .admin-button-group .admin-btn-cancel:hover {
+            background: var(--muted);
+            border-color: var(--muted);
+            box-shadow: 0 4px 12px rgba(92,46,14,.1);
+        }
+
+    .admin-button-group .admin-btn-delete {
+        background: #dc2626;
+        color: #fff;
+        border-color: #dc2626;
+    }
+
+        .admin-button-group .admin-btn-delete:hover {
+            background: #991b1b;
+            border-color: #991b1b;
+            box-shadow: 0 4px 12px rgba(220,38,38,.25);
+        }
+
+.admin-alert-danger {
+    background: #fef2f2;
+    border: 2px solid #fecaca;
+    border-radius: calc(var(--radius) - .25rem);
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    color: #7f1d1d;
+}
+
+    .admin-alert-danger strong {
+        display: block;
+        margin-top: .5rem;
+        font-size: 1.1rem;
+    }
+
+.admin-form-card.is-delete h2 {
+    color: #c2410c;
+}
+
+/* ─── Ícones sociais (círculo único, ícone centralizado) ─── */
+.social-icons {
+    display: flex;
+    gap: .75rem;
+    margin-top: 1rem;
+}
+
+.social-icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all .2s;
+    flex-shrink: 0;
+}
+
+    .social-icon-btn i {
+        font-size: 1.05rem;
+        line-height: 1;
+    }
+
+    .social-icon-btn:hover {
+        background: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(92,46,14,.25);
+    }
+
+/* ─────────────────────────────────────────────────────────────
+   Selo de produto em destaque (estrela) — Loja
+   ───────────────────────────────────────────────────────────── */
+.product-featured-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255,248,240,.95);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+    .product-featured-badge i {
+        color: #f5a524;
+        font-size: .8rem;
+        line-height: 1;
+    }
+
+/* ─────────────────────────────────────────────────────────────
+   Ícones sociais (Instagram / Facebook / WhatsApp) — círculo único
+   ───────────────────────────────────────────────────────────── */
+.social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-fg) !important;
+    transition: background .2s, transform .2s;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+    .social-btn i {
+        font-size: 1.05rem;
+        line-height: 1;
+        display: block;
+    }
+
+    .social-btn:hover {
+        background: var(--primary);
+        transform: translateY(-2px);
+    }
+
+/* ─────────────────────────────────────────────────────────────
+   Ícones de informação (Contato / Serviços) — estilo unificado
+   ───────────────────────────────────────────────────────────── */
+.brand-icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius);
+    flex-shrink: 0;
+    background: rgba(212,112,74,.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .brand-icon-circle i {
+        color: var(--accent);
+        font-size: 1.35rem;
+    }
+
+/* ─────────────────────────────────────────────────────────────
+   Formulários administrativos (Novo Produto / Categoria / Usuário)
+   ───────────────────────────────────────────────────────────── */
+.admin-form-page {
+    padding: 3rem 0 4rem;
+}
+
+.admin-form-card {
+    max-width: 640px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1.15rem;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.admin-form-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: .75rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: .4rem;
+}
+
+.admin-form-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.65rem;
+    color: var(--fg);
+    margin-bottom: 1.75rem;
+}
+
+    .admin-form-title i {
+        color: var(--accent);
+        margin-right: .5rem;
+    }
+
+.admin-field {
+    margin-bottom: 1.35rem;
+}
+
+    .admin-field label {
+        display: block;
+        font-size: .875rem;
+        font-weight: 700;
+        color: var(--fg);
+        margin-bottom: .45rem;
+    }
+
+    .admin-field input[type="text"],
+    .admin-field input[type="email"],
+    .admin-field input[type="password"],
+    .admin-field input[type="number"],
+    .admin-field input[type="file"],
+    .admin-field select,
+    .admin-field textarea {
+        width: 100%;
+        padding: .75rem 1rem;
+        border-radius: var(--radius);
+        border: 1.5px solid var(--border);
+        background: var(--bg);
+        color: var(--fg);
+        font-family: 'Nunito', sans-serif;
+        font-size: .9375rem;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .admin-field textarea {
+        resize: vertical;
+        min-height: 110px;
+    }
+
+        .admin-field input:focus, .admin-field select:focus, .admin-field textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212,112,74,.15);
+        }
+
+    .admin-field .field-hint {
+        display: block;
+        color: var(--muted-fg);
+        font-size: .78rem;
+        margin-top: .35rem;
+    }
+
+.admin-checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    margin-bottom: 1.1rem;
+    padding: .75rem 1rem;
+    background: rgba(237,224,212,.35);
+    border-radius: var(--radius);
+}
+
+    .admin-checkbox-field input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--accent);
+        cursor: pointer;
+    }
+
+    .admin-checkbox-field label {
+        font-size: .875rem;
+        font-weight: 700;
+        color: var(--fg);
+        margin: 0;
+        cursor: pointer;
+    }
+
+.admin-field-error {
+    color: #dc2626;
+    font-size: .8rem;
+    margin-top: .3rem;
+    display: block;
+}
+
+.admin-form-actions {
+    display: flex;
+    gap: .85rem;
+    margin-top: 1.75rem;
+}
+
+.admin-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .85rem 1.25rem;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: .9375rem;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+}
+
+.admin-btn-primary {
+    background: var(--primary);
+    color: var(--primary-fg);
+}
+
+    .admin-btn-primary:hover {
+        background: var(--accent);
+    }
+
+.admin-btn-outline {
+    background: transparent;
+    color: var(--muted-fg);
+    border-color: var(--border);
+}
+
+    .admin-btn-outline:hover {
+        background: var(--muted);
+        color: var(--fg);
+    }
+
+.admin-btn-danger {
+    background: #dc2626;
+    color: #fff;
+}
+
+    .admin-btn-danger:hover {
+        background: #b91c1c;
+    }
+
+/* Tela de confirmação de exclusão (usuários) */
+.admin-delete-card {
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid #fecaca;
+    border-radius: 1.15rem;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+.admin-delete-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    margin: 0 auto 1.25rem;
+    background: #fef2f2;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.admin-delete-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--fg);
+    margin-bottom: .75rem;
+}
+
+.admin-delete-card p {
+    color: var(--muted-fg);
+    margin-bottom: 1.75rem;
+    line-height: 1.6;
+}
+
+.admin-delete-card strong {
+    color: var(--fg);
+}
+
+@media (max-width: 600px) {
+    .admin-form-card, .admin-delete-card {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+
+    .admin-form-actions {
+        flex-direction: column;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Reskin leve de formulários Bootstrap padrão (Pedidos)
+   ───────────────────────────────────────────────────────────── */
+.brand-form-page h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--fg);
+    font-weight: 700;
+}
+
+.brand-form-page .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+}
+
+    .brand-form-page .card.border-danger {
+        border-color: #fecaca !important;
+    }
+
+.brand-form-page .card-header {
+    background: rgba(237,224,212,.4) !important;
+    border-bottom: 1px solid var(--border);
+    border-radius: 1rem 1rem 0 0 !important;
+}
+
+    .brand-form-page .card-header.bg-danger {
+        background: #dc2626 !important;
+    }
+
+.brand-form-page .form-control, .brand-form-page .form-select, .brand-form-page .input-group-text {
+    border-radius: var(--radius);
+    border-color: var(--border);
+}
+
+    .brand-form-page .form-control:focus, .brand-form-page .form-select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(212,112,74,.15);
+    }
+
+.brand-form-page .btn-success {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+    .brand-form-page .btn-success:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+    }
+
+.brand-form-page .btn-secondary {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--muted-fg);
+}
+
+    .brand-form-page .btn-secondary:hover {
+        background: var(--muted);
+        color: var(--fg);
+    }
+
+.brand-form-page .btn-outline-primary {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+    .brand-form-page .btn-outline-primary:hover {
+        background: var(--accent);
+        color: var(--accent-fg);
+    }
+
+.brand-form-page .btn-danger {
+    background: #dc2626;
+    border-color: #dc2626;
+}
+
+.brand-form-page .item-row {
+    background: var(--bg) !important;
+    border-color: var(--border) !important;
 }

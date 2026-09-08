@@ -5,129 +5,1032 @@
     ViewData["Title"] = ViewData["Title"] ?? "Pedidos";
     var isAdmin = ViewData["IsAdmin"] as bool? ?? false;
 
-    (string bg, string fg) StatusCores(string status) => status switch
+    (string bg, string fg, string icon) StatusInfo(string status) => status switch
     {
-        "Pago" => ("#dcfce7", "#16a34a"),
-        "Entregue" => ("#dcfce7", "#16a34a"),
-        "Em Preparo" => ("#fef3c7", "#b45309"),
-        "Saiu para Entrega" => ("#dbeafe", "#1d4ed8"),
-        "Cancelado" => ("#fee2e2", "#dc2626"),
-        _ => ("#fef3c7", "#b45309") // Pendente
+        "Pago" => ("#E8F8EF", "#159447", "bi-check-circle-fill"),
+        "Entregue" => ("#E8F8EF", "#159447", "bi-bag-check-fill"),
+        "Em Preparo" => ("#FFF4D8", "#B87900", "bi-hourglass-split"),
+        "Saiu para Entrega" => ("#E8F0FF", "#3D70D6", "bi-truck"),
+        "Cancelado" => ("#FDECEC", "#D64545", "bi-x-circle-fill"),
+        _ => ("#FFF4D8", "#B87900", "bi-clock-fill")
     };
 }
 
-<div class="container my-5" style="max-width:1100px">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+<div class="pedidos-page">
+
+    <!-- CABEÇALHO -->
+    <div class="pedidos-header">
+
         <div>
-            <h1 class="pedidos-title">@ViewData["Title"]</h1>
-            <p class="mb-0" style="color:#8A6555">
-                @(isAdmin ? "Gerenciar todos os pedidos do sistema" : "Visualize e acompanhe seus pedidos")
+            <div class="pedidos-eyebrow">
+                <i class="bi bi-receipt"></i>
+                PAINEL DE PEDIDOS
+            </div>
+
+            <h1>
+                @(isAdmin ? "Gerenciar Pedidos" : "Meus Pedidos")
+            </h1>
+
+            <p>
+                @(isAdmin
+                    ? "Gerencie todos os pedidos do Doce Cantinho em um só lugar."
+                    : "Acompanhe seus pedidos e veja todos os detalhes.")
             </p>
         </div>
+
         @if (isAdmin)
         {
-            <a href="@Url.Action("Create", "Pedidos")" class="btn-pedido-primary">+ Novo Pedido</a>
+            <a href="@Url.Action("Create", "Pedidos")"
+               class="pedido-btn pedido-btn-primary">
+
+                <i class="bi bi-plus-lg"></i>
+                Novo Pedido
+            </a>
         }
+
     </div>
 
+
+    <!-- MENSAGENS -->
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div class="pedido-alert pedido-alert-success">
+            <i class="bi bi-check-circle-fill"></i>
+
+            <span>@TempData["Success"]</span>
+
+            <button type="button"
+                    onclick="this.parentElement.remove()">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
     }
 
+    @if (TempData["Error"] != null)
+    {
+        <div class="pedido-alert pedido-alert-danger">
+            <i class="bi bi-exclamation-circle-fill"></i>
+
+            <span>@TempData["Error"]</span>
+
+            <button type="button"
+                    onclick="this.parentElement.remove()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    }
+
+
+    <!-- CARDS DE RESUMO -->
+    @if (isAdmin)
+    {
+        var totalPedidos = Model?.Count ?? 0;
+        var pendentes = Model?.Count(x => x.Status == "Pendente") ?? 0;
+        var andamento = Model?.Count(x =>
+            x.Status == "Em Preparo" ||
+            x.Status == "Saiu para Entrega") ?? 0;
+        var valorTotal = Model?.Sum(x => x.Total) ?? 0;
+
+        <div class="pedido-stats">
+
+            <div class="pedido-stat-card">
+                <div class="pedido-stat-icon pedido-stat-brown">
+                    <i class="bi bi-receipt"></i>
+                </div>
+
+                <div>
+                    <strong>@totalPedidos</strong>
+                    <span>Pedidos no total</span>
+                </div>
+            </div>
+
+            <div class="pedido-stat-card">
+                <div class="pedido-stat-icon pedido-stat-yellow">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+
+                <div>
+                    <strong>@pendentes</strong>
+                    <span>Pendentes</span>
+                </div>
+            </div>
+
+            <div class="pedido-stat-card">
+                <div class="pedido-stat-icon pedido-stat-blue">
+                    <i class="bi bi-truck"></i>
+                </div>
+
+                <div>
+                    <strong>@andamento</strong>
+                    <span>Em andamento</span>
+                </div>
+            </div>
+
+            <div class="pedido-stat-card">
+                <div class="pedido-stat-icon pedido-stat-green">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+
+                <div>
+                    <strong>R$ @valorTotal.ToString("N2")</strong>
+                    <span>Valor total</span>
+                </div>
+            </div>
+
+        </div>
+    }
+
+
+    <!-- FILTROS -->
+    @if (isAdmin)
+    {
+        <div class="pedido-filters">
+
+            <button class="pedido-filter active"
+                    data-filter="todos">
+                Todos
+            </button>
+
+            <button class="pedido-filter"
+                    data-filter="Pendente">
+                Pendentes
+            </button>
+
+            <button class="pedido-filter"
+                    data-filter="Em Preparo">
+                Em preparo
+            </button>
+
+            <button class="pedido-filter"
+                    data-filter="Saiu para Entrega">
+                Em entrega
+            </button>
+
+            <button class="pedido-filter"
+                    data-filter="Pago">
+                Pagos
+            </button>
+
+            <button class="pedido-filter"
+                    data-filter="Cancelado">
+                Cancelados
+            </button>
+
+        </div>
+    }
+
+
+    <!-- PEDIDOS -->
     @if (Model == null || Model.Count == 0)
     {
-        <div class="pedido-card text-center py-5">
-            <div style="font-size:2.5rem">🧁</div>
-            <h3 class="mt-3" style="color:#3D2314">Nenhum pedido encontrado</h3>
-            <p style="color:#8A6555">Seus pedidos aparecerão aqui assim que forem realizados.</p>
+        <div class="pedido-empty">
+
+            <div class="pedido-empty-icon">
+                <i class="bi bi-bag-x"></i>
+            </div>
+
+            <h2>Nenhum pedido encontrado</h2>
+
+            <p>
+                Os pedidos aparecerão aqui quando forem cadastrados.
+            </p>
+
         </div>
     }
     else
     {
-        <div class="d-flex flex-column gap-3">
+        <div class="pedido-list">
+
             @foreach (var pedido in Model)
             {
-                var (bg, fg) = StatusCores(pedido.Status);
-                var podeCancelar = isAdmin ? (pedido.Status != "Cancelado" && pedido.Status != "Entregue") : pedido.Status == "Pendente";
-                <div class="pedido-card">
-                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                        <div>
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <strong style="color:#3D2314;font-size:1.05rem">#@pedido.Id.ToString("D4")</strong>
-                                <span class="pedido-badge" style="background:@bg;color:@fg">@pedido.Status</span>
+                var (bg, fg, icon) = StatusInfo(pedido.Status);
+
+                var podeCancelar = isAdmin
+                    ? pedido.Status != "Cancelado" && pedido.Status != "Entregue"
+                    : pedido.Status == "Pendente";
+
+                <article class="pedido-modern-card"
+                         data-status="@pedido.Status">
+
+                    <!-- PARTE SUPERIOR -->
+                    <div class="pedido-card-top">
+
+                        <div class="pedido-number">
+
+                            <div class="pedido-status-icon"
+                                 style="background:@bg;color:@fg">
+
+                                <i class="bi @icon"></i>
+
                             </div>
-                            <div style="color:#8A6555;font-size:0.85rem">
-                                @pedido.NomeCliente · @pedido.CreatedAt.ToString("dd/MM/yyyy HH:mm")
-                                @if (isAdmin)
-                                {
-                                    <span> · Usuário: @pedido.UserId</span>
-                                }
+
+                            <div>
+
+                                <div class="pedido-number-row">
+
+                                    <strong>
+                                        #@pedido.Id.ToString("D4")
+                                    </strong>
+
+                                    <span class="pedido-status"
+                                          style="background:@bg;color:@fg">
+
+                                        @pedido.Status
+
+                                    </span>
+
+                                </div>
+
+                                <p>
+                                    <i class="bi bi-person"></i>
+                                    @pedido.NomeCliente
+                                </p>
+
+                                <small>
+                                    <i class="bi bi-calendar3"></i>
+                                    @pedido.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+
+                                    @if (isAdmin)
+                                    {
+                                        <span>
+                                            · Usuário: @pedido.UserId
+                                        </span>
+                                    }
+                                </small>
+
                             </div>
+
                         </div>
-                        <div style="text-align:right">
-                            <div style="color:#8A6555;font-size:0.78rem">Total</div>
-                            <div style="color:#D4704A;font-weight:700;font-size:1.15rem">R$ @pedido.Total.ToString("F2")</div>
+
+                        <div class="pedido-total">
+
+                            <span>Total do pedido</span>
+
+                            <strong>
+                                R$ @pedido.Total.ToString("N2")
+                            </strong>
+
                         </div>
+
                     </div>
 
-                    <hr style="border-color:rgba(92,46,14,.1);margin:0.9rem 0" />
 
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <span style="color:#8A6555;font-size:0.85rem">
-                            @pedido.Items.Count item(s) · @pedido.PaymentMethod
-                        </span>
-                        <div class="d-flex gap-2 flex-wrap">
-                            <a href="@Url.Action("Details", "Pedidos", new { id = pedido.Id })" class="btn-pedido-outline">Ver Detalhes</a>
+                    <!-- PARTE INFERIOR -->
+                    <div class="pedido-card-bottom">
+
+                        <div class="pedido-info">
+
+                            <span>
+                                <i class="bi bi-basket2"></i>
+                                @pedido.Items.Count item(s)
+                            </span>
+
+                            <span>
+                                <i class="bi bi-credit-card"></i>
+                                @pedido.PaymentMethod
+                            </span>
+
+                        </div>
+
+
+                        <div class="pedido-actions">
+
+                            <!-- DETALHES -->
+                            <a href="@Url.Action("Details", "Pedidos", new { id = pedido.Id })"
+                               class="pedido-action pedido-action-details">
+
+                                <i class="bi bi-eye"></i>
+                                Detalhes
+
+                            </a>
+
+
                             @if (isAdmin)
                             {
-                                <a href="@Url.Action("Edit", "Pedidos", new { id = pedido.Id })" class="btn-pedido-outline">Editar</a>
-                                <a href="@Url.Action("Delete", "Pedidos", new { id = pedido.Id })" class="btn-pedido-danger-outline">Excluir</a>
+                                <!-- EDITAR -->
+                                <a href="@Url.Action("Edit", "Pedidos", new { id = pedido.Id })"
+                                   class="pedido-action pedido-action-edit">
+
+                                    <i class="bi bi-pencil"></i>
+                                    Editar
+
+                                </a>
+
+
+                                <!-- EXCLUIR -->
+                                <a href="@Url.Action("Delete", "Pedidos", new { id = pedido.Id })"
+                                   class="pedido-action pedido-action-delete">
+
+                                    <i class="bi bi-trash3"></i>
+                                    Excluir
+
+                                </a>
                             }
+
+
                             @if (podeCancelar)
                             {
-                                <form method="post" action="@Url.Action("Cancel", "Pedidos", new { id = pedido.Id })"
-                                      onsubmit="return confirm('Tem certeza que deseja cancelar este pedido?');">
+                                <!-- CANCELAR -->
+                                <form method="post"
+                                      action="@Url.Action("Cancel", "Pedidos", new { id = pedido.Id })"
+                                      class="pedido-cancel-form"
+                                      onsubmit="return confirmarCancelamento();">
+
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn-pedido-danger-outline">Cancelar Pedido</button>
+
+                                    <button type="submit"
+                                            class="pedido-action pedido-action-cancel">
+
+                                        <i class="bi bi-x-circle"></i>
+                                        Cancelar
+
+                                    </button>
+
                                 </form>
                             }
+
                         </div>
+
                     </div>
-                </div>
+
+                </article>
             }
+
         </div>
     }
+
 </div>
 
+
+<script>
+
+    function confirmarCancelamento() {
+
+        return confirm(
+            "Tem certeza que deseja cancelar este pedido?"
+        );
+
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const filtros =
+            document.querySelectorAll(".pedido-filter");
+
+        const pedidos =
+            document.querySelectorAll(".pedido-modern-card");
+
+
+        filtros.forEach(function (filtro) {
+
+            filtro.addEventListener("click", function () {
+
+                filtros.forEach(function (item) {
+                    item.classList.remove("active");
+                });
+
+                this.classList.add("active");
+
+                const status =
+                    this.dataset.filter;
+
+
+                pedidos.forEach(function (pedido) {
+
+                    if (
+                        status === "todos" ||
+                        pedido.dataset.status === status
+                    ) {
+
+                        pedido.style.display = "";
+
+                    }
+                    else {
+
+                        pedido.style.display = "none";
+
+                    }
+
+                });
+
+            });
+
+        });
+
+    });
+
+</script>
+
+
 <style>
-    .pedidos-title { font-family:'Playfair Display',serif; font-weight:700; color:#3D2314; }
-    .pedido-card {
-        background:#FFF8F0; border:1px solid rgba(92,46,14,.12); border-radius:12px;
-        padding:1.25rem 1.5rem; box-shadow:0 2px 12px rgba(92,46,14,.06);
+
+    /* ================================
+       PÁGINA
+       ================================ */
+
+    .pedidos-page {
+
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 50px 25px 80px;
+
     }
-    .pedido-badge { padding:0.2rem 0.7rem; border-radius:100px; font-size:0.75rem; font-weight:700; }
-    .btn-pedido-primary {
-        background:#3D2314; color:#FDF6ED; border-radius:8px; padding:0.6rem 1.1rem;
-        font-weight:600; font-size:0.875rem; text-decoration:none; display:inline-block;
+
+
+    /* ================================
+       CABEÇALHO
+       ================================ */
+
+    .pedidos-header {
+
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 25px;
+        margin-bottom: 35px;
+
     }
-    .btn-pedido-primary:hover { background:#4A2810; color:#FDF6ED; }
-    .btn-pedido-outline, .btn-pedido-danger-outline {
-        border-radius:8px; padding:0.5rem 0.9rem; font-weight:600; font-size:0.8125rem;
-        text-decoration:none; border:1.5px solid; cursor:pointer; background:transparent;
+
+    .pedidos-eyebrow {
+
+        color: #C96B45;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+
     }
-    .btn-pedido-outline { color:#3D2314; border-color:#3D2314; }
-    .btn-pedido-outline:hover { background:#3D2314; color:#FDF6ED; }
-    .btn-pedido-danger-outline { color:#dc2626; border-color:#dc2626; }
-    .btn-pedido-danger-outline:hover { background:#dc2626; color:#fff; }
+
+    .pedidos-eyebrow i {
+
+        margin-right: 5px;
+
+    }
+
+    .pedidos-header h1 {
+
+        margin: 0;
+        color: #3D2314;
+        font-family: 'Playfair Display', serif;
+        font-size: 42px;
+        font-weight: 700;
+
+    }
+
+    .pedidos-header p {
+
+        margin: 8px 0 0;
+        color: #8A6555;
+        font-size: 16px;
+
+    }
+
+
+    /* ================================
+       BOTÃO NOVO PEDIDO
+       ================================ */
+
+    .pedido-btn {
+
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 13px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: .2s;
+
+    }
+
+    .pedido-btn-primary {
+
+        color: white;
+        background: #3D2314;
+        box-shadow: 0 8px 20px rgba(61,35,20,.15);
+
+    }
+
+    .pedido-btn-primary:hover {
+
+        color: white;
+        background: #C96B45;
+        transform: translateY(-2px);
+
+    }
+
+
+    /* ================================
+       ALERTAS
+       ================================ */
+
+    .pedido-alert {
+
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+
+    }
+
+    .pedido-alert button {
+
+        margin-left: auto;
+        border: none;
+        background: transparent;
+
+    }
+
+    .pedido-alert-success {
+
+        background: #E8F8EF;
+        color: #16834A;
+
+    }
+
+    .pedido-alert-danger {
+
+        background: #FDECEC;
+        color: #C83E3E;
+
+    }
+
+
+    /* ================================
+       STATS
+       ================================ */
+
+    .pedido-stats {
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+
+    }
+
+    .pedido-stat-card {
+
+        background: #FFF9F3;
+        border: 1px solid #EBDDD1;
+        border-radius: 18px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 5px 20px rgba(70,35,15,.05);
+
+    }
+
+    .pedido-stat-icon {
+
+        width: 52px;
+        height: 52px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+
+    }
+
+    .pedido-stat-brown {
+
+        background: #F0E8E0;
+        color: #5C2E0E;
+
+    }
+
+    .pedido-stat-yellow {
+
+        background: #FFF1C8;
+        color: #B87900;
+
+    }
+
+    .pedido-stat-blue {
+
+        background: #E4EDFF;
+        color: #3D70D6;
+
+    }
+
+    .pedido-stat-green {
+
+        background: #DCF8E7;
+        color: #159447;
+
+    }
+
+    .pedido-stat-card strong {
+
+        display: block;
+        color: #3D2314;
+        font-size: 20px;
+
+    }
+
+    .pedido-stat-card span {
+
+        color: #947668;
+        font-size: 13px;
+
+    }
+
+
+    /* ================================
+       FILTROS
+       ================================ */
+
+    .pedido-filters {
+
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+
+    }
+
+    .pedido-filter {
+
+        border: 1px solid #E2D2C5;
+        background: #FFF9F3;
+        color: #684838;
+        padding: 9px 17px;
+        border-radius: 100px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: .2s;
+
+    }
+
+    .pedido-filter:hover {
+
+        border-color: #C96B45;
+        color: #C96B45;
+
+    }
+
+    .pedido-filter.active {
+
+        background: #3D2314;
+        color: white;
+        border-color: #3D2314;
+
+    }
+
+
+    /* ================================
+       CARD DO PEDIDO
+       ================================ */
+
+    .pedido-list {
+
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+    }
+
+    .pedido-modern-card {
+
+        background: #FFF9F3;
+        border: 1px solid #EBDDD1;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 6px 25px rgba(70,35,15,.055);
+        transition: .25s;
+
+    }
+
+    .pedido-modern-card:hover {
+
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(70,35,15,.10);
+
+    }
+
+    .pedido-card-top {
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 25px;
+        padding: 25px;
+
+    }
+
+    .pedido-number {
+
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+    }
+
+    .pedido-status-icon {
+
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+
+    }
+
+    .pedido-number-row {
+
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+    }
+
+    .pedido-number-row strong {
+
+        color: #3D2314;
+        font-size: 18px;
+
+    }
+
+    .pedido-status {
+
+        padding: 5px 10px;
+        border-radius: 100px;
+        font-size: 11px;
+        font-weight: 800;
+
+    }
+
+    .pedido-number p {
+
+        margin: 5px 0 2px;
+        color: #755443;
+        font-size: 14px;
+
+    }
+
+    .pedido-number small {
+
+        color: #A08070;
+        font-size: 12px;
+
+    }
+
+    .pedido-total {
+
+        text-align: right;
+
+    }
+
+    .pedido-total span {
+
+        display: block;
+        color: #9A7B6B;
+        font-size: 12px;
+
+    }
+
+    .pedido-total strong {
+
+        display: block;
+        color: #C96B45;
+        font-size: 23px;
+        margin-top: 3px;
+
+    }
+
+
+    /* ================================
+       PARTE INFERIOR
+       ================================ */
+
+    .pedido-card-bottom {
+
+        border-top: 1px solid #EBDDD1;
+        padding: 17px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+
+    }
+
+    .pedido-info {
+
+        display: flex;
+        gap: 18px;
+        color: #8C6B5B;
+        font-size: 13px;
+
+    }
+
+    .pedido-actions {
+
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+
+    }
+
+    .pedido-action {
+
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 13px;
+        border-radius: 9px;
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        cursor: pointer;
+        background: transparent;
+        transition: .2s;
+
+    }
+
+    .pedido-action-details {
+
+        color: #3D2314;
+        border: 1px solid #3D2314;
+
+    }
+
+    .pedido-action-details:hover {
+
+        color: white;
+        background: #3D2314;
+
+    }
+
+    .pedido-action-edit {
+
+        color: #C96B45;
+        border: 1px solid #C96B45;
+
+    }
+
+    .pedido-action-edit:hover {
+
+        color: white;
+        background: #C96B45;
+
+    }
+
+    .pedido-action-delete,
+    .pedido-action-cancel {
+
+        color: #D64545;
+        border: 1px solid #E07A7A;
+
+    }
+
+    .pedido-action-delete:hover,
+    .pedido-action-cancel:hover {
+
+        color: white;
+        background: #D64545;
+
+    }
+
+    .pedido-cancel-form {
+
+        margin: 0;
+
+    }
+
+
+    /* ================================
+       VAZIO
+       ================================ */
+
+    .pedido-empty {
+
+        text-align: center;
+        padding: 70px 20px;
+        background: #FFF9F3;
+        border: 1px solid #EBDDD1;
+        border-radius: 20px;
+
+    }
+
+    .pedido-empty-icon {
+
+        width: 70px;
+        height: 70px;
+        margin: auto;
+        border-radius: 50%;
+        background: #F4E8DE;
+        color: #C96B45;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+
+    }
+
+    .pedido-empty h2 {
+
+        color: #3D2314;
+        font-family: 'Playfair Display', serif;
+        margin-top: 18px;
+
+    }
+
+    .pedido-empty p {
+
+        color: #947668;
+
+    }
+
+
+    /* ================================
+       RESPONSIVO
+       ================================ */
+
+    @@media (max-width: 900px) {
+
+        .pedido-stats {
+
+            grid-template-columns: repeat(2, 1fr);
+
+        }
+
+    }
+
+    @@media (max-width: 650px) {
+
+        .pedidos-page {
+
+            padding: 30px 15px 60px;
+
+        }
+
+        .pedidos-header {
+
+            align-items: flex-start;
+            flex-direction: column;
+
+        }
+
+        .pedidos-header h1 {
+
+            font-size: 34px;
+
+        }
+
+        .pedido-stats {
+
+            grid-template-columns: 1fr;
+
+        }
+
+        .pedido-card-top {
+
+            align-items: flex-start;
+            flex-direction: column;
+
+        }
+
+        .pedido-total {
+
+            text-align: left;
+
+        }
+
+        .pedido-card-bottom {
+
+            align-items: flex-start;
+            flex-direction: column;
+
+        }
+
+        .pedido-info {
+
+            flex-direction: column;
+            gap: 5px;
+
+        }
+
+        .pedido-actions {
+
+            width: 100%;
+
+        }
+
+        .pedido-action {
+
+            flex: 1;
+
+            justify-content: center;
+
+        }
+
+    }
+
 </style>

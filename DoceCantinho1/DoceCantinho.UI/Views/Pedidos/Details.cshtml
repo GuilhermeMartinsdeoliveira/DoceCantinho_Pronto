@@ -1,0 +1,186 @@
+@using DoceCantinho.Application.DTOs
+@model PedidoDto
+
+@{
+    ViewData["Title"] = "Detalhes do Pedido";
+    var isAdmin = ViewData["IsAdmin"] as bool? ?? false;
+    var podeCancelar = isAdmin ? (Model.Status != "Cancelado" && Model.Status != "Entregue") : Model.Status == "Pendente";
+    var statusList = new[] { "Pendente", "Pago", "Em Preparo", "Saiu para Entrega", "Entregue", "Cancelado" };
+
+    (string bg, string fg) StatusCores(string status) => status switch
+    {
+        "Pago" => ("#dcfce7", "#16a34a"),
+        "Entregue" => ("#dcfce7", "#16a34a"),
+        "Em Preparo" => ("#fef3c7", "#b45309"),
+        "Saiu para Entrega" => ("#dbeafe", "#1d4ed8"),
+        "Cancelado" => ("#fee2e2", "#dc2626"),
+        _ => ("#fef3c7", "#b45309")
+    };
+    var (bgC, fgC) = StatusCores(Model.Status);
+}
+
+<div class="container my-5" style="max-width:1100px">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <h1 class="pedidos-title">Pedido #@Model.Id.ToString("D4")</h1>
+        <div class="d-flex gap-2 flex-wrap">
+            @if (isAdmin)
+            {
+                <a href="@Url.Action("Edit", "Pedidos", new { id = Model.Id })" class="btn-pedido-outline">Editar</a>
+                <a href="@Url.Action("Delete", "Pedidos", new { id = Model.Id })" class="btn-pedido-danger-outline">Excluir</a>
+            }
+            <a href="@Url.Action("Index", "Pedidos")" class="btn-pedido-outline">Voltar</a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <!-- Resumo -->
+            <div class="pedido-card mb-3">
+                <h5 class="pedido-card-title">Resumo do Pedido</h5>
+                <div class="row">
+                    <div class="col-6 col-md-3 mb-2">
+                        <div class="pedido-label">Data</div>
+                        <div class="pedido-value">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-2">
+                        <div class="pedido-label">Status</div>
+                        <span class="pedido-badge" style="background:@bgC;color:@fgC">@Model.Status</span>
+                    </div>
+                    <div class="col-6 col-md-3 mb-2">
+                        <div class="pedido-label">Pagamento</div>
+                        <div class="pedido-value">@Model.PaymentMethod</div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-2">
+                        <div class="pedido-label">Total</div>
+                        <div class="pedido-value" style="color:#D4704A;font-weight:700">R$ @Model.Total.ToString("F2")</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados de Entrega -->
+            <div class="pedido-card mb-3">
+                <h5 class="pedido-card-title">Dados de Entrega</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <div class="pedido-label">Cliente</div>
+                        <div class="pedido-value">@Model.NomeCliente</div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="pedido-label">Telefone</div>
+                        <div class="pedido-value">@Model.Telefone</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="pedido-label">Endereço</div>
+                        <div class="pedido-value">@(string.IsNullOrEmpty(Model.Endereco) ? "Não informado" : Model.Endereco)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Itens -->
+            <div class="pedido-card">
+                <h5 class="pedido-card-title">Itens do Pedido (@Model.Items.Count)</h5>
+                @if (Model.Items == null || Model.Items.Count == 0)
+                {
+                    <p class="text-center py-3" style="color:#8A6555">Nenhum item neste pedido</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0" style="font-size:0.9rem">
+                            <thead>
+                                <tr style="color:#8A6555;font-size:0.78rem;text-transform:uppercase">
+                                    <th class="border-0">Produto</th>
+                                    <th class="border-0 text-end">Preço</th>
+                                    <th class="border-0 text-center">Qtd.</th>
+                                    <th class="border-0 text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td class="border-0" style="color:#3D2314">@item.Nome</td>
+                                        <td class="border-0 text-end">R$ @item.Preco.ToString("F2")</td>
+                                        <td class="border-0 text-center">@item.Quantidade</td>
+                                        <td class="border-0 text-end fw-bold">R$ @((item.Preco * item.Quantidade).ToString("F2"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr style="border-top:2px solid rgba(92,46,14,.15)">
+                                    <td colspan="3" class="text-end fw-bold pt-3">TOTAL:</td>
+                                    <td class="text-end fw-bold pt-3" style="color:#D4704A">R$ @Model.Total.ToString("F2")</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="col-lg-4">
+            <div class="pedido-card">
+                <h5 class="pedido-card-title">Ações</h5>
+                <div class="d-flex flex-column gap-2">
+                    @if (isAdmin)
+                    {
+                        <form method="post" action="@Url.Action("UpdateStatus", "Pedidos", new { id = Model.Id })" class="d-flex gap-2">
+                            @Html.AntiForgeryToken()
+                            <select name="newStatus" class="form-select form-select-sm">
+                                @foreach (var s in statusList)
+                                {
+                                    <option value="@s" selected="@(Model.Status == s)">@s</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn-pedido-primary" style="border:none">Atualizar</button>
+                        </form>
+                    }
+
+                    @if (podeCancelar)
+                    {
+                        <form method="post" action="@Url.Action("Cancel", "Pedidos", new { id = Model.Id })"
+                              onsubmit="return confirm('Tem certeza que deseja cancelar este pedido?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-pedido-danger-outline w-100">Cancelar Pedido</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pedidos-title { font-family:'Playfair Display',serif; font-weight:700; color:#3D2314; }
+    .pedido-card {
+        background:#FFF8F0; border:1px solid rgba(92,46,14,.12); border-radius:12px;
+        padding:1.25rem 1.5rem; box-shadow:0 2px 12px rgba(92,46,14,.06);
+    }
+    .pedido-card-title { font-family:'Playfair Display',serif; font-weight:700; color:#3D2314; margin-bottom:1rem; }
+    .pedido-label { color:#8A6555; font-size:0.75rem; text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px; }
+    .pedido-value { color:#3D2314; font-weight:600; }
+    .pedido-badge { padding:0.2rem 0.7rem; border-radius:100px; font-size:0.75rem; font-weight:700; display:inline-block; }
+    .btn-pedido-primary {
+        background:#3D2314; color:#FDF6ED; border-radius:8px; padding:0.5rem 1rem;
+        font-weight:600; font-size:0.8125rem; text-decoration:none; cursor:pointer;
+    }
+    .btn-pedido-primary:hover { background:#4A2810; color:#FDF6ED; }
+    .btn-pedido-outline, .btn-pedido-danger-outline {
+        border-radius:8px; padding:0.5rem 0.9rem; font-weight:600; font-size:0.8125rem;
+        text-decoration:none; border:1.5px solid; cursor:pointer; background:transparent;
+    }
+    .btn-pedido-outline { color:#3D2314; border-color:#3D2314; }
+    .btn-pedido-outline:hover { background:#3D2314; color:#FDF6ED; }
+    .btn-pedido-danger-outline { color:#dc2626; border-color:#dc2626; }
+    .btn-pedido-danger-outline:hover { background:#dc2626; color:#fff; }
+</style>

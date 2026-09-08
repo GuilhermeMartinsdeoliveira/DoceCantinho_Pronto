@@ -31,6 +31,12 @@
                 {
                     <div class="product-card">
                         <div class="product-img-wrap">
+                            @if (doce.IsFeatured)
+                            {
+                                <span class="product-featured-badge" title="Produto em destaque">
+                                    <i class="bi bi-star-fill"></i>
+                                </span>
+                            }
                             @if (!string.IsNullOrEmpty(doce.CoverImageUrl))
                             {
                                 <img src="@doce.CoverImageUrl" alt="@doce.Title" class="product-img" />
@@ -54,7 +60,7 @@
                             <h3 class="product-name">@doce.Title</h3>
                             <p class="product-desc">@doce.Description</p>
                             <div class="product-footer">
-                                <span class="product-preco">@doce.Preco.ToString("C")</span>
+                                <span class="product-price">@doce.Preco.ToString("C")</span>
                                 <a asp-action="Details" asp-route-id="@doce.Id" class="btn btn-accent btn-sm">Ver detalhes</a>
 
                                 <form asp-controller="Carrinho" asp-action="Adicionar" method="post" style="display:inline;margin-left:.5rem">

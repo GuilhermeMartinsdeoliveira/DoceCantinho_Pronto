@@ -1,0 +1,31 @@
+@model DoceCantinho.UI.ViewModels.EditUserViewModel
+@{
+    ViewData["Title"] = "Editar Usuário";
+}
+<h2>Editar Usuário</h2>
+<form asp-action="EditUser" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" />
+        @Html.ValidationMessageFor(m => m.Email)
+    </div>
+    <div>
+        <label>Nova Senha (opcional)</label>
+        <input asp-for="Password" type="password" />
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+    <div>
+        <label>Confirmar Senha</label>
+        <input asp-for="ConfirmPassword" type="password" />
+    </div>
+    <div>
+        <label>Perfil</label>
+        <select asp-for="Role" asp-items="new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.Roles)"></select>
+    </div>
+    <div style="margin-top:1rem">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a asp-action="Index" class="btn">Cancelar</a>
+    </div>
+</form>

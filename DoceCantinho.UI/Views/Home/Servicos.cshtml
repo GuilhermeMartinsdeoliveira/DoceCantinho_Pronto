@@ -3,9 +3,14 @@
 }
 
 <style>
-    .page { padding-top: 2rem; padding-bottom: 4rem; }
+    .page {
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+    }
 
-    .section { margin-bottom: 4rem; }
+    .section {
+        margin-bottom: 4rem;
+    }
 
     .section-header {
         text-align: center;
@@ -52,23 +57,27 @@
         flex-direction: column;
     }
 
-    .service-card:hover {
-        transform: translateY(-8px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--accent);
-    }
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
 
     .service-icon {
-        font-size: 0; /* imagens substituem emojis */
-        margin-bottom: 1rem;
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius);
+        background: rgba(212, 112, 74, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
     }
-    .service-icon img {
-        width: 48px;
-        height: 48px;
-        object-fit: contain;
-        display: inline-block;
-        margin-bottom: 0.5rem;
-    }
+
+        .service-icon i {
+            color: var(--accent);
+            font-size: 1.6rem;
+        }
 
     .service-title {
         font-size: 1.4rem;
@@ -91,20 +100,20 @@
         margin-bottom: 1.5rem;
     }
 
-    .service-features li {
-        color: var(--muted-fg);
-        margin-bottom: 0.5rem;
-        padding-left: 1.5rem;
-        position: relative;
-    }
+        .service-features li {
+            color: var(--muted-fg);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
 
-    .service-features li:before {
-        content: "✓";
-        color: var(--accent);
-        font-weight: 700;
-        position: absolute;
-        left: 0;
-    }
+            .service-features li:before {
+                content: "✓";
+                color: var(--accent);
+                font-weight: 700;
+                position: absolute;
+                left: 0;
+            }
 
     .btn-service {
         display: inline-block;
@@ -119,11 +128,11 @@
         border: 2px solid var(--primary);
     }
 
-    .btn-service:hover {
-        background: transparent;
-        color: var(--primary);
-        box-shadow: 0 4px 12px rgba(92, 46, 14, 0.25);
-    }
+        .btn-service:hover {
+            background: transparent;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(92, 46, 14, 0.25);
+        }
 
     .process-section {
         background: linear-gradient(135deg, rgba(92, 46, 14, 0.05) 0%, rgba(212, 112, 74, 0.05) 100%);
@@ -184,9 +193,9 @@
         transition: all 0.3s ease;
     }
 
-    .faq-item:hover {
-        box-shadow: var(--shadow);
-    }
+        .faq-item:hover {
+            box-shadow: var(--shadow);
+        }
 
     .faq-question {
         font-weight: 700;
@@ -233,7 +242,7 @@
         <div class="services-grid">
             <!-- Doces Artesanais -->
             <div class="service-card">
-                <div class="service-icon"><img src="https://images.unsplash.com/photo-1527515637467-5a2c1b0a6b58?w=200&h=200&fit=crop&auto=format" alt="Doces Artesanais" loading="lazy" width="48" height="48" onerror="this.onerror=null;this.src='https://via.placeholder.com/48?text=+'"/></div>
+                <div class="service-icon"><i class="bi bi-cookie"></i></div>
                 <h3 class="service-title">Doces Artesanais</h3>
                 <p class="service-description">
                     Nossa linha de doces feitos à mão com ingredientes premium selecionados.
@@ -249,7 +258,7 @@
 
             <!-- Bolos Personalizados -->
             <div class="service-card">
-                <div class="service-icon"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=200&h=200&fit=crop&auto=format" alt="Bolos Personalizados" loading="lazy" width="48" height="48" onerror="this.onerror=null;this.src='https://via.placeholder.com/48?text=+'"/></div>
+                <div class="service-icon"><i class="bi bi-cake2"></i></div>
                 <h3 class="service-title">Bolos Personalizados</h3>
                 <p class="service-description">
                     Bolos sob encomenda para seus eventos especiais com design personalizado.
@@ -265,7 +274,7 @@
 
             <!-- Encomendas para Eventos -->
             <div class="service-card">
-                <div class="service-icon"><img src="https://images.unsplash.com/photo-1523906834658-6e24ef238a5f?w=200&h=200&fit=crop&auto=format" alt="Encomendas para Eventos" loading="lazy" width="48" height="48" onerror="this.onerror=null;this.src='https://via.placeholder.com/48?text=+'"/></div>
+                <div class="service-icon"><i class="bi bi-box-seam"></i></div>
                 <h3 class="service-title">Encomendas para Eventos</h3>
                 <p class="service-description">
                     Pacotes completos de doces para casamentos, aniversários e confraternizações.
@@ -281,7 +290,7 @@
 
             <!-- Cestas Personalizadas -->
             <div class="service-card">
-                <div class="service-icon"><img src="https://images.unsplash.com/photo-1519744792095-2f2205e87b6f?w=200&h=200&fit=crop&auto=format" alt="Cestas Personalizadas" loading="lazy" width="48" height="48" onerror="this.onerror=null;this.src='https://via.placeholder.com/48?text=+'"/></div>
+                <div class="service-icon"><i class="bi bi-gift"></i></div>
                 <h3 class="service-title">Cestas Personalizadas</h3>
                 <p class="service-description">
                     Presentes especiais em cestas montadas conforme sua preferência.
@@ -297,10 +306,10 @@
 
             <!-- Consultorias para Empresa -->
             <div class="service-card">
-                <div class="service-icon"><img src="https://images.unsplash.com/photo-1542228262-9b8b8f1a2d6b?w=200&h=200&fit=crop&auto=format" alt="Serviço Corporativo" loading="lazy" width="48" height="48" onerror="this.onerror=null;this.src='https://via.placeholder.com/48?text=+'"/></div>
+                <div class="service-icon"><i class="bi bi-briefcase"></i></div>
                 <h3 class="service-title">Serviço Corporativo</h3>
                 <p class="service-description">
-                    Soluções de doces para empresas em cofres, events e office supplies.
+                    Soluções de doces para empresas em eventos, brindes e escritórios.
                 </p>
                 <ul class="service-features">
                     <li>Fornecimento contínuo</li>
@@ -310,6 +319,7 @@
                 </ul>
                 <a asp-action="Contato" class="btn-service">Falar com Vendas</a>
             </div>
+        </div>
 
         <!-- Processo de Encomenda -->
         <div class="process-section">
@@ -349,7 +359,7 @@
             <div class="faq-item">
                 <div class="faq-question">
                     <span>Qual é o tempo de entrega?</span>
-                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg></span>
                 </div>
                 <div class="faq-answer">
                     Entregamos nossos produtos em até 2 dias úteis para a região de São Paulo. Para encomendas personalizadas, o prazo varia conforme a complexidade. Consulte-nos!
@@ -359,7 +369,7 @@
             <div class="faq-item">
                 <div class="faq-question">
                     <span>Vocês fazem bolos sem glúten ou veganos?</span>
-                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg></span>
                 </div>
                 <div class="faq-answer">
                     Sim! Fazemos opções sem glúten e veganas mediante encomenda prévia. Consulte nossos especialistas para conhecer as opções disponíveis.
@@ -369,7 +379,7 @@
             <div class="faq-item">
                 <div class="faq-question">
                     <span>Qual é o valor mínimo para encomenda?</span>
-                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg></span>
                 </div>
                 <div class="faq-answer">
                     Não temos valor mínimo! Você pode encomendar desde um único doce até grandes quantidades. Quanto maior o volume, maior o desconto.
@@ -379,7 +389,7 @@
             <div class="faq-item">
                 <div class="faq-question">
                     <span>Posso modificar um pedido já realizado?</span>
-                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg></span>
                 </div>
                 <div class="faq-answer">
                     Sim! Se o pedido ainda não iniciou o processo de produção, podemos fazer alterações sem problema. Entre em contato conosco o mais breve possível.
@@ -389,7 +399,7 @@
             <div class="faq-item">
                 <div class="faq-question">
                     <span>Como faço para pagar meu pedido?</span>
-                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9" /></svg></span>
                 </div>
                 <div class="faq-answer">
                     Aceitamos cartão de crédito, débito, Pix e transferência bancária. O pagamento pode ser feito na hora da entrega ou antecipadamente conforme sua preferência.

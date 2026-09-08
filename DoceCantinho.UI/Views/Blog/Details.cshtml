@@ -112,8 +112,9 @@
     }
     .article-author-avatar {
         flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: var(--muted);
-        display: flex; align-items: center; justify-content: center; font-size: 2rem;
+        display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden;
     }
+    .article-author-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .article-author-card h4 { font-family: 'Playfair Display', serif; color: var(--primary); font-size: 1.15rem; margin-bottom: .15rem; }
     .article-author-card .role { color: var(--accent); font-size: .82rem; font-weight: 700; margin-bottom: .6rem; }
     .article-author-card p.bio { color: var(--muted-fg); font-size: .9rem; line-height: 1.6; margin: 0; }
@@ -154,8 +155,6 @@
     <section class="article-hero">
         <div class="article-hero-bg">
             <img src="@Url.Content(post.CoverImageUrl)" onerror="this.src='https://placehold.co/1200x500?text=Imagem+indisponível'" alt="@post.Title" />
-            <img src="@Url.Content(post.AuthorAvatar)" onerror="this.src='https://placehold.co/50x50?text=User'" alt="@post.AuthorName">
-
         </div>
         <div class="article-hero-overlay"></div>
         <div class="container article-hero-content">
@@ -276,7 +275,7 @@
                     </div>
                 }
 
-                <d<div class="article-author-card">
+                <div class="article-author-card">
                     <div class="article-author-avatar">
                         <img src="@Url.Content(post.AuthorAvatar)" onerror="this.src='https://placehold.co/80x80?text=User'" alt="@post.AuthorName" />
                     </div>

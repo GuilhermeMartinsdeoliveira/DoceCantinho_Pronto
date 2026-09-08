@@ -2,29 +2,48 @@
 @{
     ViewData["Title"] = "Novo Usuário";
 }
-<h2>Novo Usuário</h2>
-<form asp-action="CreateUser" method="post">
-    @Html.AntiForgeryToken()
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" />
-        @Html.ValidationMessageFor(m => m.Email)
+
+<div class="admin-form-page">
+    <div class="admin-form-card" style="max-width: 480px;">
+
+        <p class="admin-form-eyebrow">Área Administrativa</p>
+        <h2 class="admin-form-title"><i class="bi bi-person-plus"></i>Novo Usuário</h2>
+
+        <form asp-action="CreateUser" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="admin-field">
+                <label>Email</label>
+                <input asp-for="Email" type="email" placeholder="usuario@exemplo.com" />
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "admin-field-error" })
+            </div>
+
+            <div class="admin-field">
+                <label>Senha</label>
+                <input asp-for="Password" type="password" placeholder="••••••••" />
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "admin-field-error" })
+            </div>
+
+            <div class="admin-field">
+                <label>Confirmar Senha</label>
+                <input asp-for="ConfirmPassword" type="password" placeholder="••••••••" />
+            </div>
+
+            <div class="admin-field">
+                <label>Perfil</label>
+                <select asp-for="Role" asp-items="new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.Roles)"></select>
+            </div>
+
+            <div class="admin-form-actions">
+                <button type="submit" class="admin-btn admin-btn-primary">
+                    <i class="bi bi-check-lg"></i> Criar
+                </button>
+                <a asp-action="Index" class="admin-btn admin-btn-outline">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </a>
+            </div>
+
+        </form>
+
     </div>
-    <div>
-        <label>Senha</label>
-        <input asp-for="Password" type="password" />
-        @Html.ValidationMessageFor(m => m.Password)
-    </div>
-    <div>
-        <label>Confirmar Senha</label>
-        <input asp-for="ConfirmPassword" type="password" />
-    </div>
-    <div>
-        <label>Perfil</label>
-        <select asp-for="Role" asp-items="new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.Roles)"></select>
-    </div>
-    <div style="margin-top:1rem">
-        <button type="submit" class="btn btn-primary">Criar</button>
-        <a asp-action="Index" class="btn">Cancelar</a>
-    </div>
-</form>
+</div>

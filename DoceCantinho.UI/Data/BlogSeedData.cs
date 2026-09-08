@@ -29,7 +29,7 @@ namespace DoceCantinho.UI.Data
                     PublishedAt = new DateTime(2026, 7, 2),
                     AuthorName = "Maria Silva",
                     AuthorRole = "Confeiteira-chefe",
-                    AuthorAvatar = "https://f5.folha.uol.com.br/voceviu/2025/04/quem-e-o-confeiteiro-que-virou-fenomeno-no-tiktok-mostrando-sua-rotina-em-uma-padaria.shtml",
+                   AuthorAvatar = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=100&h=100&fit=crop&auto=format",
                     AuthorBio = "Maria lidera a cozinha do Doce Cantinho há mais de 12 anos e é apaixonada por transformar receitas clássicas em experiências gourmet.",
                     Featured = true,
                     Content = new List<BlogContentBlock>

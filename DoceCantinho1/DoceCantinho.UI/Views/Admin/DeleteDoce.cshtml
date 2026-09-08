@@ -1,0 +1,112 @@
+﻿@using DoceCantinho.Application.DTOs
+
+<link href="~/css/site.css" rel="stylesheet" />
+
+@model DoceDto
+
+<style>
+    .delete-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+    }
+
+    .delete-container h2 {
+        font-family: 'Playfair Display', serif;
+        color: #c2410c;
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        border: 2px solid #fecaca;
+        border-radius: calc(var(--radius) - 0.25rem);
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+        color: #7f1d1d;
+    }
+
+    .alert-danger strong {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .button-group button,
+    .button-group a {
+        flex: 1;
+        padding: 0.85rem;
+        border-radius: calc(var(--radius) - 0.25rem);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 2px solid;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .button-group button {
+        background: #dc2626;
+        color: white;
+        border-color: #dc2626;
+    }
+
+    .button-group button:hover {
+        background: #991b1b;
+        border-color: #991b1b;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+    }
+
+    .button-group a {
+        background: transparent;
+        color: var(--muted-fg);
+        border-color: var(--muted);
+    }
+
+    .button-group a:hover {
+        background: var(--muted);
+        border-color: var(--muted);
+        box-shadow: 0 4px 12px rgba(92, 46, 14, 0.1);
+    }
+</style>
+
+<div class="delete-container">
+
+    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22" style="vertical-align:middle;margin-right:8px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>Excluir Doce</h2>
+
+    <div class="alert-danger">
+        Tem certeza que deseja excluir este doce? Esta ação não pode ser desfeita.
+        <strong>@Model.Title</strong>
+    </div>
+
+    <form asp-action="DeleteDoceConfirmed" method="post" asp-route-id="@Model.Id">
+        @Html.AntiForgeryToken()
+
+        <input name="id" value="@Model.Id" type="hidden" />
+
+        <div class="button-group">
+            <button type="submit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align:middle;margin-right:6px"><path d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6"/></svg>Excluir Definitivamente
+            </button>
+
+            <a asp-action="Doces">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align:middle;margin-right:6px"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Cancelar
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+<script src="~/js/site.js"></script>

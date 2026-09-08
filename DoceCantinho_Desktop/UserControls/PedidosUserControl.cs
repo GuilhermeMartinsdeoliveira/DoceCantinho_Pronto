@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,7 +14,7 @@ namespace DoceCantinho.Desktop1.UserControls
     {
         private PedidosApiService? _pedidosService;
 
-        private List<PedidoResponseDto> _pedidos = new();
+    private List<PedidoResponseDto> _pedidos = new();
 
         public PedidosUserControl()
         {
@@ -38,30 +34,31 @@ namespace DoceCantinho.Desktop1.UserControls
         {
             dgvPedidos.AutoGenerateColumns = false;
 
-            // Coluna Nº Pedido
+            // Nº PEDIDO
             colNumero.DataPropertyName = "Id";
 
-            // Cliente
+            // CLIENTE
             colCliente.DataPropertyName = "NomeCliente";
 
-            // Data
+            // DATA
             colData.DataPropertyName = "CreatedAt";
             colData.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
 
-            // Produtos
-            colProdutos.DataPropertyName = "Produtos";
+            // PRODUTOS
+            // O DTO possui ItemsCount e não Produtos
+            colProdutos.DataPropertyName = "ItemsCount";
 
-            // Valor
+            // VALOR
             colValor.DataPropertyName = "Total";
             colValor.DefaultCellStyle.Format = "C2";
 
-            // Pagamento
+            // PAGAMENTO
             colPagamento.DataPropertyName = "PaymentMethod";
 
-            // Status
+            // STATUS
             colStatus.DataPropertyName = "Status";
 
-            // Ações
+            // AÇÕES
             colAcoes.DataPropertyName = "";
 
             dgvPedidos.AllowUserToAddRows = false;
@@ -76,8 +73,6 @@ namespace DoceCantinho.Desktop1.UserControls
             dgvPedidos.MultiSelect = false;
 
             dgvPedidos.RowHeadersVisible = false;
-
-            dgvPedidos.AutoGenerateColumns = false;
 
             try
             {
@@ -187,8 +182,9 @@ namespace DoceCantinho.Desktop1.UserControls
         private void AtualizarTabela(
             IEnumerable<PedidoResponseDto> pedidos)
         {
-            var lista =
-                pedidos.ToList();
+            var lista = pedidos.ToList();
+
+            dgvPedidos.DataSource = null;
 
             dgvPedidos.DataSource =
                 new BindingList<PedidoResponseDto>(lista);
@@ -204,8 +200,7 @@ namespace DoceCantinho.Desktop1.UserControls
 
         private void AtualizarContadores()
         {
-            int total =
-                _pedidos.Count;
+            int total = _pedidos.Count;
 
             int pendentes =
                 _pedidos.Count(p =>
@@ -247,6 +242,11 @@ namespace DoceCantinho.Desktop1.UserControls
 
             lblTotalPedidosValor.Text =
                 total.ToString();
+
+            lblSubTitulo.Text =
+                total == 1
+                    ? "1 pedido registrado"
+                    : $"{total} pedidos registrados";
         }
 
         // ============================================================
@@ -299,17 +299,18 @@ namespace DoceCantinho.Desktop1.UserControls
             }
 
             var resultado =
-                _pedidos.Where(p =>
-                    (p.NomeCliente ?? "")
-                        .Contains(
-                            texto,
-                            StringComparison.OrdinalIgnoreCase)
-                    ||
-                    p.Id.ToString()
-                        .Contains(
-                            texto,
-                            StringComparison.OrdinalIgnoreCase))
-                .ToList();
+                _pedidos
+                    .Where(p =>
+                        (p.NomeCliente ?? "")
+                            .Contains(
+                                texto,
+                                StringComparison.OrdinalIgnoreCase)
+                        ||
+                        p.Id.ToString()
+                            .Contains(
+                                texto,
+                                StringComparison.OrdinalIgnoreCase))
+                    .ToList();
 
             AtualizarTabela(resultado);
         }
@@ -360,8 +361,7 @@ namespace DoceCantinho.Desktop1.UserControls
             FiltrarStatus("cancelado");
         }
 
-        private void FiltrarStatus(
-            string status)
+        private void FiltrarStatus(string status)
         {
             var resultado =
                 _pedidos
@@ -381,7 +381,7 @@ namespace DoceCantinho.Desktop1.UserControls
             EventArgs e)
         {
             MessageBox.Show(
-                "Tela de cadastro de novo pedido.",
+                "O cadastro de um novo pedido ainda não está disponível nesta tela.",
                 "Novo Pedido",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
@@ -410,6 +410,8 @@ namespace DoceCantinho.Desktop1.UserControls
                 if (pedido == null)
                     return;
 
+                Cursor = Cursors.WaitCursor;
+
                 var detalhes =
                     await _pedidosService
                         .GetByIdAsync(pedido.Id);
@@ -425,30 +427,25 @@ namespace DoceCantinho.Desktop1.UserControls
                     return;
                 }
 
-                // Caso você tenha o formulário de detalhes:
-                //
-                // var modal =
-                //     new DoceCantinho.Desktop1.Forms.PedidoForm(detalhes);
-                //
-                // modal.ShowDialog();
+                using var form =
+                    new DoceCantinho.Desktop1.Forms.PedidoForm(detalhes);
 
-                MessageBox.Show(
-                    $"Pedido #{pedido.Id}\n\n" +
-                    $"Cliente: {pedido.NomeCliente}\n" +
-                    $"Valor: {pedido.Total:C2}\n" +
-                    $"Status: {pedido.Status}",
-                    "Detalhes do Pedido",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                form.ShowDialog(this);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Erro ao abrir o pedido:\n\n{ex.Message}",
+                    $"Erro ao abrir os detalhes do pedido:\n\n{ex.Message}",
                     "Doce Cantinho",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
         }
     }
+
+
 }

@@ -1,0 +1,14 @@
+@model DoceCantinho.Domain.Entities.Pedido
+@{
+    ViewData["Title"] = "Pagamento - Resultado";
+}
+
+<div style="max-width:800px;margin:2rem auto;background:var(--card);padding:2rem;border-radius:var(--radius);border:1px solid var(--border);">
+    <h2>Pagamento concluído</h2>
+    <p>Pedido <strong>#@Model.Id</strong> confirmado.</p>
+    <p>Cliente: @Model.NomeCliente</p>
+    <p>Forma de pagamento: @Model.PaymentMethod</p>
+    <p>Status: @Model.Status</p>
+    <p>Total: R$ @Model.Total.ToString("F2")</p>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Voltar ao Painel</a>
+</div>
