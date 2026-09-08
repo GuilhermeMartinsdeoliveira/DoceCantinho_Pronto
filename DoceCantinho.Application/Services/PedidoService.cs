@@ -119,15 +119,7 @@ namespace DoceCantinho.Application.Services
                 return null;
 
             // Validar status
-            var statusValidos = new[]
-            {
-                "Pendente",
-                "Pago",
-                "Em Preparo",
-                "Saiu para Entrega",
-                "Entregue",
-                "Cancelado"
-            };
+            var statusValidos = new[] { "Pendente", "Pago", "Cancelado" };
             if (!statusValidos.Contains(newStatus))
                 throw new ArgumentException($"Status '{newStatus}' inválido. Use: {string.Join(", ", statusValidos)}", nameof(newStatus));
 
