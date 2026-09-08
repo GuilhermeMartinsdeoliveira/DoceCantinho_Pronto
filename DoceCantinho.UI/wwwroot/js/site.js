@@ -603,3 +603,99 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+/* =========================================================
+   DARK MODE / LIGHT MODE
+   ========================================================= */
+
+(function () {
+    const savedTheme = localStorage.getItem('docecantinho-theme');
+
+    const systemPrefersDark =
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    const theme =
+        savedTheme ||
+        (systemPrefersDark ? 'dark' : 'light');
+
+    document.documentElement.setAttribute('data-theme', theme);
+})();
+
+function toggleTheme() {
+    const html = document.documentElement;
+
+    const currentTheme =
+        html.getAttribute('data-theme') || 'light';
+
+    const newTheme =
+        currentTheme === 'dark'
+            ? 'light'
+            : 'dark';
+
+    html.setAttribute('data-theme', newTheme);
+
+    localStorage.setItem(
+        'docecantinho-theme',
+        newTheme
+    );
+
+    updateThemeButton();
+}
+
+function updateThemeButton() {
+    const html = document.documentElement;
+
+    const theme =
+        html.getAttribute('data-theme') || 'light';
+
+    const button =
+        document.getElementById('theme-toggle');
+
+    const text =
+        document.getElementById('theme-text');
+
+    if (!button) {
+        return;
+    }
+
+    if (theme === 'dark') {
+
+        button.setAttribute(
+            'aria-label',
+            'Ativar tema claro'
+        );
+
+        button.setAttribute(
+            'title',
+            'Ativar tema claro'
+        );
+
+        if (text) {
+            text.textContent = 'Claro';
+        }
+
+    } else {
+
+        button.setAttribute(
+            'aria-label',
+            'Ativar tema escuro'
+        );
+
+        button.setAttribute(
+            'title',
+            'Ativar tema escuro'
+        );
+
+        if (text) {
+            text.textContent = 'Escuro';
+        }
+    }
+}
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+        updateThemeButton();
+    }
+);
+
