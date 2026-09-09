@@ -3,9 +3,12 @@ using DoceCantinho.Desktop.Forms;
 using DoceCantinho.Desktop.Helpers;
 using DoceCantinho.Desktop.Services;
 using DoceCantinho.Desktop.Themes;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,6 +24,13 @@ namespace DoceCantinho.Desktop.UserControls
 
         private DoceApiService? _doceService;
         private CategoriasApiService? _categoriasService;
+
+        // ============================================================
+        // HTTP
+        // ============================================================
+
+        private static readonly HttpClient _httpClient =
+            CriarHttpClient();
 
         // ============================================================
         // DADOS
@@ -60,6 +70,7 @@ namespace DoceCantinho.Desktop.UserControls
                     new CategoriasApiService();
 
                 ConfigurarGrid();
+
                 ConfigurarPermissoes();
 
                 await CarregarDadosAsync();
@@ -73,24 +84,60 @@ namespace DoceCantinho.Desktop.UserControls
         }
 
         // ============================================================
+        // HTTP CLIENT
+        // ============================================================
+
+        private static HttpClient CriarHttpClient()
+        {
+            var client =
+                new HttpClient
+                {
+                    Timeout =
+                        TimeSpan.FromSeconds(15)
+                };
+
+            client.DefaultRequestHeaders
+                .UserAgent
+                .ParseAdd(
+                    "DoceCantinho-Desktop/1.0");
+
+            client.DefaultRequestHeaders
+                .Accept
+                .ParseAdd(
+                    "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8");
+
+            return client;
+        }
+
+        // ============================================================
         // CONFIGURAR GRID
         // ============================================================
 
         private void ConfigurarGrid()
         {
-            gridBanco.AutoGenerateColumns = false;
+            gridBanco.AutoGenerateColumns =
+                false;
 
             gridBanco.SelectionMode =
                 DataGridViewSelectionMode.FullRowSelect;
 
-            gridBanco.MultiSelect = false;
+            gridBanco.MultiSelect =
+                false;
 
-            gridBanco.ReadOnly = true;
+            gridBanco.ReadOnly =
+                true;
 
-            gridBanco.AllowUserToAddRows = false;
-            gridBanco.AllowUserToDeleteRows = false;
+            gridBanco.AllowUserToAddRows =
+                false;
 
-            gridBanco.RowTemplate.Height = 65;
+            gridBanco.AllowUserToDeleteRows =
+                false;
+
+            gridBanco.AllowUserToResizeRows =
+                false;
+
+            gridBanco.RowTemplate.Height =
+                65;
 
             try
             {
@@ -100,7 +147,7 @@ namespace DoceCantinho.Desktop.UserControls
             catch
             {
                 // Mantém o grid funcionando
-                // mesmo se houver alguma incompatibilidade
+                // mesmo se houver incompatibilidade
                 // no tema.
             }
         }
@@ -120,13 +167,19 @@ namespace DoceCantinho.Desktop.UserControls
             }
             catch
             {
-                isAdmin = true;
+                // Nunca liberar CRUD
+                // por falha na leitura da sessão.
+                isAdmin = false;
             }
 
-            btnNovo.Visible = isAdmin;
+            btnNovo.Visible =
+                isAdmin;
 
-            colEditar.Visible = isAdmin;
-            colExcluir.Visible = isAdmin;
+            colEditar.Visible =
+                isAdmin;
+
+            colExcluir.Visible =
+                isAdmin;
         }
 
         // ============================================================
@@ -146,10 +199,10 @@ namespace DoceCantinho.Desktop.UserControls
                 Cursor =
                     Cursors.WaitCursor;
 
-                var tarefaDoces =
+                Task<List<DoceResponseDto>> tarefaDoces =
                     _doceService.GetAllAsync();
 
-                var tarefaCategorias =
+                Task<List<CategoriaResponseDto>> tarefaCategorias =
                     _categoriasService.GetAllAsync();
 
                 await Task.WhenAll(
@@ -193,6 +246,10 @@ namespace DoceCantinho.Desktop.UserControls
         private void PopularGrid(
             List<DoceResponseDto> doces)
         {
+            // Libera imagens antigas antes de reconstruir
+            // a grade.
+            LiberarImagensGrid();
+
             gridBanco.Rows.Clear();
 
             foreach (var doce in doces)
@@ -202,24 +259,65 @@ namespace DoceCantinho.Desktop.UserControls
 
                 int indice =
                     gridBanco.Rows.Add(
-                        null,
+                        CriarImagemPlaceholder(),
                         doce.Id,
-                        doce.Title ?? string.Empty,
-                        doce.CategoryName ?? string.Empty,
+                        doce.Title ??
+                        string.Empty,
+                        doce.CategoryName ??
+                        string.Empty,
                         doce.Preco.ToString("C2"),
                         doce.QuantidadeEstoque,
                         status,
                         "Editar",
                         "Excluir");
 
+                // Não usamos mais o índice da linha.
+                // A busca da linha será feita pelo ID.
                 _ = CarregarImagemAsync(
-                    indice,
+                    doce.Id,
                     doce.CoverImageUrl);
             }
 
             lblResultados.Text =
                 $"{doces.Count} resultado" +
                 $"{(doces.Count == 1 ? "" : "s")}";
+        }
+
+        // ============================================================
+        // LIBERAR IMAGENS DO GRID
+        // ============================================================
+
+        private void LiberarImagensGrid()
+        {
+            try
+            {
+                DataGridViewColumn? colunaImagem =
+                    gridBanco.Columns["colImagem"];
+
+                if (colunaImagem == null)
+                    return;
+
+                foreach (DataGridViewRow linha
+                         in gridBanco.Rows)
+                {
+                    if (linha.IsNewRow)
+                        continue;
+
+                    DataGridViewCell celula =
+                        linha.Cells[colunaImagem.Index];
+
+                    if (celula.Value is Image imagem)
+                    {
+                        celula.Value = null;
+
+                        imagem.Dispose();
+                    }
+                }
+            }
+            catch
+            {
+                // Não interrompe a reconstrução do grid.
+            }
         }
 
         // ============================================================
@@ -245,52 +343,529 @@ namespace DoceCantinho.Desktop.UserControls
         // CARREGAR IMAGEM
         // ============================================================
 
+        // ============================================================
+        // CARREGAR IMAGEM DO DOCE
+        // ============================================================
+
         private async Task CarregarImagemAsync(
-            int indiceLinha,
+            int doceId,
             string? imageUrl)
         {
-            if (string.IsNullOrWhiteSpace(imageUrl))
-                return;
-
             try
             {
-                using HttpClient client =
-                    new HttpClient();
+                if (string.IsNullOrWhiteSpace(imageUrl))
+                    return;
 
-                byte[] bytes =
-                    await client.GetByteArrayAsync(
-                        imageUrl);
+                Image? imagem =
+                    await BaixarImagemAsync(imageUrl);
 
-                using var stream =
-                    new System.IO.MemoryStream(bytes);
+                if (imagem == null)
+                    return;
 
-                using var imagemOriginal =
-                    Image.FromStream(stream);
-
-                Image imagem =
-                    new Bitmap(imagemOriginal);
-
-                if (indiceLinha >= 0 &&
-                    indiceLinha < gridBanco.Rows.Count)
+                if (IsDisposed ||
+                    Disposing ||
+                    gridBanco.IsDisposed)
                 {
-                    gridBanco.Invoke(
-                        new Action(() =>
+                    imagem.Dispose();
+                    return;
+                }
+
+                void AplicarImagem()
+                {
+                    try
+                    {
+                        if (IsDisposed ||
+                            Disposing ||
+                            gridBanco.IsDisposed)
                         {
-                            if (indiceLinha <
-                                gridBanco.Rows.Count)
+                            imagem.Dispose();
+                            return;
+                        }
+
+                        foreach (DataGridViewRow linha
+                                 in gridBanco.Rows)
+                        {
+                            if (linha.IsNewRow)
+                                continue;
+
+                            object? valorId =
+                                linha.Cells["colId"].Value;
+
+                            if (valorId == null)
+                                continue;
+
+                            if (!int.TryParse(
+                                    valorId.ToString(),
+                                    out int idLinha))
                             {
-                                gridBanco.Rows[indiceLinha]
-                                    .Cells["colImagem"]
-                                    .Value = imagem;
+                                continue;
                             }
-                        }));
+
+                            if (idLinha != doceId)
+                                continue;
+
+                            // Libera imagem anterior
+                            if (linha.Cells["colImagem"].Value
+                                is Image imagemAnterior)
+                            {
+                                linha.Cells["colImagem"].Value = null;
+
+                                try
+                                {
+                                    imagemAnterior.Dispose();
+                                }
+                                catch
+                                {
+                                }
+                            }
+
+                            // Aplica nova imagem
+                            linha.Cells["colImagem"].Value =
+                                imagem;
+
+                            gridBanco.InvalidateRow(
+                                linha.Index);
+
+                            return;
+                        }
+
+                        // A linha não existe mais
+                        imagem.Dispose();
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            imagem.Dispose();
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+
+                if (gridBanco.InvokeRequired)
+                {
+                    try
+                    {
+                        gridBanco.BeginInvoke(
+                            new Action(AplicarImagem));
+                    }
+                    catch
+                    {
+                        imagem.Dispose();
+                    }
+                }
+                else
+                {
+                    AplicarImagem();
                 }
             }
             catch
             {
-                // A imagem permanece vazia
-                // se houver falha no carregamento.
+                // Mantém o placeholder
             }
+        }
+
+
+        // ============================================================
+        // BAIXAR / CONVERTER IMAGEM
+        // ============================================================
+
+        private async Task<Image?> BaixarImagemAsync(
+            string valorImagem)
+        {
+            string valor =
+                valorImagem.Trim();
+
+            if (string.IsNullOrWhiteSpace(valor))
+                return null;
+
+
+            // ========================================================
+            // BASE64 / DATA URI
+            // ========================================================
+
+            if (valor.StartsWith(
+                    "data:image",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                int virgula =
+                    valor.IndexOf(',');
+
+                if (virgula >= 0)
+                {
+                    string base64 =
+                        valor.Substring(
+                            virgula + 1);
+
+                    try
+                    {
+                        return ConverterBase64ParaImagemDoce(
+                            base64);
+                    }
+                    catch
+                    {
+                        return null;
+                    }
+                }
+
+                return null;
+            }
+
+
+            // ========================================================
+            // BASE64 PURO
+            // ========================================================
+
+            if (!valor.StartsWith(
+                    "http://",
+                    StringComparison.OrdinalIgnoreCase) &&
+                !valor.StartsWith(
+                    "https://",
+                    StringComparison.OrdinalIgnoreCase) &&
+                !valor.StartsWith(
+                    "/",
+                    StringComparison.OrdinalIgnoreCase) &&
+                !valor.StartsWith(
+                    "\\",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    return ConverterBase64ParaImagemDoce(
+                        valor);
+                }
+                catch
+                {
+                    // Não era Base64.
+                }
+            }
+
+
+            // ========================================================
+            // CAMINHO LOCAL
+            // ========================================================
+
+            if (Path.IsPathRooted(valor))
+            {
+                try
+                {
+                    if (!File.Exists(valor))
+                        return null;
+
+                    using FileStream arquivo =
+                        new FileStream(
+                            valor,
+                            FileMode.Open,
+                            FileAccess.Read,
+                            FileShare.ReadWrite);
+
+                    using MemoryStream memoria =
+                        new MemoryStream();
+
+                    await arquivo.CopyToAsync(
+                        memoria);
+
+                    memoria.Position = 0;
+
+                    using Image original =
+                        Image.FromStream(
+                            memoria);
+
+                    return new Bitmap(original);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+
+            // ========================================================
+            // URL ABSOLUTA
+            // ========================================================
+
+            string urlFinal =
+                MontarUrlImagem(valor);
+
+            if (string.IsNullOrWhiteSpace(urlFinal))
+                return null;
+
+
+            // ========================================================
+            // DOWNLOAD
+            // ========================================================
+
+            try
+            {
+                using HttpRequestMessage request =
+                    new HttpRequestMessage(
+                        HttpMethod.Get,
+                        urlFinal);
+
+                using HttpResponseMessage resposta =
+                    await _httpClient.SendAsync(
+                        request,
+                        HttpCompletionOption.ResponseHeadersRead);
+
+                if (!resposta.IsSuccessStatusCode)
+                    return null;
+
+                byte[] bytes =
+                    await resposta.Content
+                        .ReadAsByteArrayAsync();
+
+                if (bytes.Length == 0)
+                    return null;
+
+                using MemoryStream stream =
+                    new MemoryStream(bytes);
+
+                using Image original =
+                    Image.FromStream(stream);
+
+                return new Bitmap(original);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
+        // ============================================================
+        // MONTAR URL DA IMAGEM
+        // ============================================================
+
+        private string MontarUrlImagem(
+            string valorImagem)
+        {
+            string valor =
+                valorImagem.Trim();
+
+            if (string.IsNullOrWhiteSpace(valor))
+                return string.Empty;
+
+
+            // ========================================================
+            // URL ABSOLUTA
+            // ========================================================
+
+            if (Uri.TryCreate(
+                    valor,
+                    UriKind.Absolute,
+                    out Uri? uriAbsoluta))
+            {
+                if (uriAbsoluta.Scheme ==
+                        Uri.UriSchemeHttp ||
+                    uriAbsoluta.Scheme ==
+                        Uri.UriSchemeHttps)
+                {
+                    return uriAbsoluta.AbsoluteUri;
+                }
+            }
+
+
+            // ========================================================
+            // CONFIGURAÇÃO DA API
+            // ========================================================
+
+            string baseApi =
+                AppConfig.ApiBaseUrl?.Trim()
+                ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(baseApi))
+                return string.Empty;
+
+
+            if (!baseApi.EndsWith("/"))
+                baseApi += "/";
+
+
+            // ========================================================
+            // NORMALIZAR CAMINHO
+            // ========================================================
+
+            string caminho =
+                valor.TrimStart(
+                    '/',
+                    '\\');
+
+
+            // ========================================================
+            // SE JÁ FOR UMA ROTA DA API
+            // ========================================================
+
+            if (caminho.StartsWith(
+                    "api/",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return baseApi + caminho;
+            }
+
+
+            // ========================================================
+            // UPLOADS
+            // ========================================================
+
+            if (caminho.StartsWith(
+                    "uploads/",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return baseApi + caminho;
+            }
+
+
+            // ========================================================
+            // IMAGES
+            // ========================================================
+
+            if (caminho.StartsWith(
+                    "images/",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return baseApi + caminho;
+            }
+
+
+            // ========================================================
+            // WWWROOT
+            // ========================================================
+
+            if (caminho.StartsWith(
+                    "wwwroot/",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                caminho =
+                    caminho.Substring(
+                        "wwwroot/".Length);
+            }
+
+
+            // ========================================================
+            // CAMINHO RELATIVO GENÉRICO
+            // ========================================================
+
+            if (Uri.TryCreate(
+                    baseApi + caminho,
+                    UriKind.Absolute,
+                    out Uri? uriFinal))
+            {
+                return uriFinal.AbsoluteUri;
+            }
+
+            return string.Empty;
+        }
+
+
+        // ============================================================
+        // BASE64 → IMAGEM
+        // ============================================================
+
+        private Image ConverterBase64ParaImagemDoce(
+            string base64)
+        {
+            string valor =
+                base64.Trim();
+
+            if (valor.Contains(","))
+            {
+                valor =
+                    valor.Substring(
+                        valor.IndexOf(",") + 1);
+            }
+
+            valor =
+                valor.Trim();
+
+            byte[] bytes =
+                Convert.FromBase64String(
+                    valor);
+
+            using MemoryStream stream =
+                new MemoryStream(bytes);
+
+            using Image original =
+                Image.FromStream(stream);
+
+            return new Bitmap(original);
+        }
+
+        // ============================================================
+        // PLACEHOLDER
+        // ============================================================
+
+        private Bitmap CriarImagemPlaceholder()
+        {
+            const int largura = 58;
+            const int altura = 58;
+
+            Bitmap bitmap =
+                new Bitmap(
+                    largura,
+                    altura);
+
+            using Graphics g =
+                Graphics.FromImage(
+                    bitmap);
+
+            g.Clear(
+                Color.FromArgb(
+                    246,
+                    242,
+                    239));
+
+            using Pen pen =
+                new Pen(
+                    Color.FromArgb(
+                        210,
+                        195,
+                        187),
+                    1);
+
+            g.DrawRectangle(
+                pen,
+                0,
+                0,
+                largura - 1,
+                altura - 1);
+
+            using Font fonte =
+                new Font(
+                    "Segoe UI",
+                    7F,
+                    FontStyle.Regular);
+
+            using Brush brush =
+                new SolidBrush(
+                    Color.FromArgb(
+                        145,
+                        125,
+                        115));
+
+            StringFormat formato =
+                new StringFormat
+                {
+                    Alignment =
+                        StringAlignment.Center,
+
+                    LineAlignment =
+                        StringAlignment.Center
+                };
+
+            g.DrawString(
+                "Sem\nimagem",
+                fonte,
+                brush,
+                new RectangleF(
+                    0,
+                    0,
+                    largura,
+                    altura),
+                formato);
+
+            return bitmap;
         }
 
         // ============================================================
@@ -304,6 +879,10 @@ namespace DoceCantinho.Desktop.UserControls
             FiltrarDoces();
         }
 
+        // ============================================================
+        // PESQUISA AUTOMÁTICA
+        // ============================================================
+
         private void txtPesquisa_TextChanged(
             object sender,
             EventArgs e)
@@ -316,7 +895,8 @@ namespace DoceCantinho.Desktop.UserControls
             string termo =
                 txtPesquisa.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(termo))
+            if (string.IsNullOrWhiteSpace(
+                termo))
             {
                 PopularGrid(
                     _todosDoces);
@@ -326,19 +906,28 @@ namespace DoceCantinho.Desktop.UserControls
 
             var filtrados =
                 _todosDoces
-                    .Where(d =>
-                        (!string.IsNullOrEmpty(d.Title) &&
-                         d.Title.Contains(
-                             termo,
-                             StringComparison
-                                 .OrdinalIgnoreCase))
-                        ||
-                        (!string.IsNullOrEmpty(
-                             d.CategoryName) &&
-                         d.CategoryName.Contains(
-                             termo,
-                             StringComparison
-                                 .OrdinalIgnoreCase)))
+                    .Where(
+                        d =>
+                            (
+                                !string.IsNullOrEmpty(
+                                    d.Title)
+                                &&
+                                d.Title.Contains(
+                                    termo,
+                                    StringComparison
+                                        .OrdinalIgnoreCase)
+                            )
+                            ||
+                            (
+                                !string.IsNullOrEmpty(
+                                    d.CategoryName)
+                                &&
+                                d.CategoryName.Contains(
+                                    termo,
+                                    StringComparison
+                                        .OrdinalIgnoreCase)
+                            )
+                    )
                     .ToList();
 
             PopularGrid(
@@ -355,19 +944,23 @@ namespace DoceCantinho.Desktop.UserControls
             if (gridBanco.SelectedRows.Count == 0)
                 return null;
 
-            var linha =
+            DataGridViewRow linha =
                 gridBanco.SelectedRows[0];
 
             if (linha.Cells["colId"].Value == null)
                 return null;
 
-            int id =
-                Convert.ToInt32(
-                    linha.Cells["colId"].Value);
+            if (!int.TryParse(
+                    linha.Cells["colId"].Value.ToString(),
+                    out int id))
+            {
+                return null;
+            }
 
             return _todosDoces
                 .FirstOrDefault(
-                    d => d.Id == id);
+                    d =>
+                        d.Id == id);
         }
 
         // ============================================================
@@ -378,6 +971,15 @@ namespace DoceCantinho.Desktop.UserControls
             object sender,
             EventArgs e)
         {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAvisoDoce(
+                    "Seu perfil não possui permissão para criar doces.",
+                    TipoAvisoDoce.Aviso);
+
+                return;
+            }
+
             if (_doceService == null)
                 return;
 
@@ -398,8 +1000,9 @@ namespace DoceCantinho.Desktop.UserControls
             try
             {
                 var (success, _, error) =
-                    await _doceService.CreateAsync(
-                        form.DoceDto);
+                    await _doceService
+                        .CreateAsync(
+                            form.DoceDto);
 
                 if (success)
                 {
@@ -431,6 +1034,15 @@ namespace DoceCantinho.Desktop.UserControls
 
         private async Task EditarDoceAsync()
         {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAvisoDoce(
+                    "Seu perfil não possui permissão para editar doces.",
+                    TipoAvisoDoce.Aviso);
+
+                return;
+            }
+
             if (_doceService == null)
                 return;
 
@@ -463,9 +1075,10 @@ namespace DoceCantinho.Desktop.UserControls
             try
             {
                 var (success, _, error) =
-                    await _doceService.UpdateAsync(
-                        doce.Id,
-                        form.UpdateDto);
+                    await _doceService
+                        .UpdateAsync(
+                            doce.Id,
+                            form.UpdateDto);
 
                 if (success)
                 {
@@ -497,6 +1110,15 @@ namespace DoceCantinho.Desktop.UserControls
 
         private async Task ExcluirDoceAsync()
         {
+            if (!SessionManager.Instance.IsAdmin)
+            {
+                MostrarAvisoDoce(
+                    "Seu perfil não possui permissão para excluir doces.",
+                    TipoAvisoDoce.Aviso);
+
+                return;
+            }
+
             if (_doceService == null)
                 return;
 
@@ -513,7 +1135,7 @@ namespace DoceCantinho.Desktop.UserControls
             }
 
             // ========================================================
-            // CONFIRMAÇÃO PERSONALIZADA
+            // CONFIRMAÇÃO
             // ========================================================
 
             using (var confirmar =
@@ -540,8 +1162,9 @@ namespace DoceCantinho.Desktop.UserControls
             try
             {
                 var (success, error) =
-                    await _doceService.DeleteAsync(
-                        doce.Id);
+                    await _doceService
+                        .DeleteAsync(
+                            doce.Id);
 
                 if (success)
                 {
@@ -568,7 +1191,7 @@ namespace DoceCantinho.Desktop.UserControls
         }
 
         // ============================================================
-        // AVISOS PERSONALIZADOS
+        // AVISOS
         // ============================================================
 
         private enum TipoAvisoDoce
@@ -577,6 +1200,10 @@ namespace DoceCantinho.Desktop.UserControls
             Aviso,
             Erro
         }
+
+        // ============================================================
+        // AVISO PERSONALIZADO
+        // ============================================================
 
         private void MostrarAvisoDoce(
             string mensagem,
@@ -593,7 +1220,9 @@ namespace DoceCantinho.Desktop.UserControls
                     if (controle.Name ==
                         "pnlAvisoDoce")
                     {
-                        Controls.Remove(controle);
+                        Controls.Remove(
+                            controle);
+
                         controle.Dispose();
                     }
                 }
@@ -610,7 +1239,8 @@ namespace DoceCantinho.Desktop.UserControls
                                 420,
                                 62),
 
-                        BorderRadius = 12,
+                        BorderRadius =
+                            12,
 
                         Anchor =
                             AnchorStyles.Top |
@@ -684,7 +1314,8 @@ namespace DoceCantinho.Desktop.UserControls
                 var lblTituloAviso =
                     new Label
                     {
-                        AutoSize = false,
+                        AutoSize =
+                            false,
 
                         Location =
                             new Point(
@@ -696,7 +1327,8 @@ namespace DoceCantinho.Desktop.UserControls
                                 120,
                                 20),
 
-                        Text = titulo,
+                        Text =
+                            titulo,
 
                         Font =
                             new Font(
@@ -711,7 +1343,8 @@ namespace DoceCantinho.Desktop.UserControls
                 var lblMensagemAviso =
                     new Label
                     {
-                        AutoSize = false,
+                        AutoSize =
+                            false,
 
                         Location =
                             new Point(
@@ -723,7 +1356,8 @@ namespace DoceCantinho.Desktop.UserControls
                                 350,
                                 24),
 
-                        Text = mensagem,
+                        Text =
+                            mensagem,
 
                         Font =
                             new Font(
@@ -736,7 +1370,8 @@ namespace DoceCantinho.Desktop.UserControls
                                 70,
                                 70),
 
-                        AutoEllipsis = true
+                        AutoEllipsis =
+                            true
                     };
 
                 var btnFechar =
@@ -753,7 +1388,8 @@ namespace DoceCantinho.Desktop.UserControls
                                 380,
                                 8),
 
-                        Text = "×",
+                        Text =
+                            "×",
 
                         Font =
                             new Font(
@@ -769,7 +1405,11 @@ namespace DoceCantinho.Desktop.UserControls
                         FillColor =
                             Color.Transparent,
 
-                        BorderRadius = 8
+                        BorderRadius =
+                            8,
+
+                        Cursor =
+                            Cursors.Hand
                     };
 
                 btnFechar.HoverState.FillColor =
@@ -810,13 +1450,15 @@ namespace DoceCantinho.Desktop.UserControls
                 var timer =
                     new System.Windows.Forms.Timer
                     {
-                        Interval = 3500
+                        Interval =
+                            3500
                     };
 
                 timer.Tick +=
                     (_, __) =>
                     {
                         timer.Stop();
+
                         timer.Dispose();
 
                         if (!pnlAviso.IsDisposed)
@@ -848,22 +1490,58 @@ namespace DoceCantinho.Desktop.UserControls
             if (e.RowIndex < 0)
                 return;
 
+            if (e.RowIndex >=
+                gridBanco.Rows.Count)
+            {
+                return;
+            }
+
             gridBanco.ClearSelection();
 
             gridBanco.Rows[e.RowIndex]
-                .Selected = true;
+                .Selected =
+                true;
 
             string nomeColuna =
                 gridBanco
                     .Columns[e.ColumnIndex]
                     .Name;
 
-            if (nomeColuna == "colEditar")
+            // --------------------------------------------------------
+            // EDITAR
+            // --------------------------------------------------------
+
+            if (nomeColuna ==
+                "colEditar")
             {
+                if (!SessionManager.Instance.IsAdmin)
+                {
+                    MostrarAvisoDoce(
+                        "Seu perfil não possui permissão para editar doces.",
+                        TipoAvisoDoce.Aviso);
+
+                    return;
+                }
+
                 await EditarDoceAsync();
             }
-            else if (nomeColuna == "colExcluir")
+
+            // --------------------------------------------------------
+            // EXCLUIR
+            // --------------------------------------------------------
+
+            else if (nomeColuna ==
+                     "colExcluir")
             {
+                if (!SessionManager.Instance.IsAdmin)
+                {
+                    MostrarAvisoDoce(
+                        "Seu perfil não possui permissão para excluir doces.",
+                        TipoAvisoDoce.Aviso);
+
+                    return;
+                }
+
                 await ExcluirDoceAsync();
             }
         }
@@ -878,5 +1556,6 @@ namespace DoceCantinho.Desktop.UserControls
         {
             await CarregarDadosAsync();
         }
+
     }
 }

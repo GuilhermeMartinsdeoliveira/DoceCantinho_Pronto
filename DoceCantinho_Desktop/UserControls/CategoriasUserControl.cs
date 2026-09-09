@@ -2,7 +2,6 @@
 using DoceCantinho.Desktop.Forms;
 using DoceCantinho.Desktop.Helpers;
 using DoceCantinho.Desktop.Services;
-using DoceCantinho.Desktop.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -48,12 +47,10 @@ namespace DoceCantinho.Desktop1.UserControls
             bool isAdmin =
                 SessionManager.Instance.IsAdmin;
 
-            // Usuário comum pode VISUALIZAR categorias,
-            // mas não pode realizar operações de CRUD.
+            // Usuário comum pode visualizar categorias,
+            // mas somente administrador pode realizar CRUD.
             btnNovoCat.Visible = isAdmin;
 
-            // O formulário de criação/edição nunca fica disponível
-            // para usuário comum.
             pnlForm.Visible = false;
         }
 
@@ -127,38 +124,45 @@ namespace DoceCantinho.Desktop1.UserControls
 
             pnlCards.SuspendLayout();
 
-            pnlCards.Controls.Clear();
-
-            int totalCategorias =
-                _categorias.Count;
-
-            int totalProdutos =
-                _categorias.Sum(
-                    c => c.DoceCount);
-
-            lblSubtitulo.Text =
-                $"{totalCategorias} categorias • " +
-                $"{totalProdutos} produtos no total";
-
-            AtualizarResumo();
-
-            foreach (var categoria in _categorias)
+            try
             {
-                Panel card =
-                    CriarCardCategoria(
-                        categoria);
+                pnlCards.Controls.Clear();
 
-                pnlCards.Controls.Add(
-                    card);
+                int totalCategorias =
+                    _categorias.Count;
+
+                int totalProdutos =
+                    _categorias.Sum(
+                        c => c.DoceCount);
+
+                lblSubtitulo.Text =
+                    $"{totalCategorias} categorias • " +
+                    $"{totalProdutos} produtos no total";
+
+                AtualizarResumo();
+
+                foreach (var categoria in _categorias)
+                {
+                    Panel card =
+                        CriarCardCategoria(
+                            categoria);
+
+                    pnlCards.Controls.Add(
+                        card);
+                }
+
+                // Somente administrador vê
+                // o card de nova categoria.
+                if (SessionManager.Instance.IsAdmin)
+                {
+                    pnlCards.Controls.Add(
+                        CriarCardNovaCategoria());
+                }
             }
-
-            if (SessionManager.Instance.IsAdmin)
+            finally
             {
-                pnlCards.Controls.Add(
-                    CriarCardNovaCategoria());
+                pnlCards.ResumeLayout();
             }
-
-            pnlCards.ResumeLayout();
         }
 
         // ============================================================
@@ -219,224 +223,252 @@ namespace DoceCantinho.Desktop1.UserControls
             CategoriaResponseDto categoria)
         {
             Panel card =
-                new Panel();
-
-            card.Width = 270;
-            card.Height = 180;
-
-            card.BackColor =
-                Color.White;
-
-            card.BorderStyle =
-                BorderStyle.FixedSingle;
-
-            card.Margin =
-                new Padding(
-                    0,
-                    0,
-                    16,
-                    14);
+                new Panel
+                {
+                    Width = 270,
+                    Height = 180,
+                    BackColor = Color.White,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Margin = new Padding(
+                        0,
+                        0,
+                        16,
+                        14)
+                };
 
             Color cor =
                 ObterCorCategoria(
                     categoria.Name);
 
+            // ========================================================
+            // ÍCONE
+            // ========================================================
+
             Label icone =
-                new Label();
+                new Label
+                {
+                    Text = "✦",
 
-            icone.Text = "✦";
+                    Font =
+                        new Font(
+                            "Segoe UI",
+                            15F,
+                            FontStyle.Regular),
 
-            icone.Font =
-                new Font(
-                    "Segoe UI",
-                    15F,
-                    FontStyle.Regular);
+                    ForeColor = cor,
 
-            icone.ForeColor =
-                cor;
+                    BackColor =
+                        Color.FromArgb(
+                            250,
+                            246,
+                            243),
 
-            icone.BackColor =
-                Color.FromArgb(
-                    250,
-                    246,
-                    243);
+                    TextAlign =
+                        ContentAlignment.MiddleCenter,
 
-            icone.TextAlign =
-                ContentAlignment.MiddleCenter;
+                    Location =
+                        new Point(
+                            15,
+                            15),
 
-            icone.Location =
-                new Point(
-                    15,
-                    15);
+                    Size =
+                        new Size(
+                            40,
+                            40)
+                };
 
-            icone.Size =
-                new Size(
-                    40,
-                    40);
-
-            Label quantidade =
-                new Label();
+            // ========================================================
+            // QUANTIDADE SUPERIOR
+            // ========================================================
 
             int quantidadeProdutos =
                 categoria.DoceCount;
 
-            quantidade.Text =
-                quantidadeProdutos == 1
-                    ? "1 produto"
-                    : $"{quantidadeProdutos} produtos";
+            Label quantidade =
+                new Label
+                {
+                    Text =
+                        quantidadeProdutos == 1
+                            ? "1 produto"
+                            : $"{quantidadeProdutos} produtos",
 
-            quantidade.Font =
-                new Font(
-                    "Segoe UI",
-                    8F);
+                    Font =
+                        new Font(
+                            "Segoe UI",
+                            8F),
 
-            quantidade.ForeColor =
-                cor;
+                    ForeColor = cor,
 
-            quantidade.BackColor =
-                Color.FromArgb(
-                    252,
-                    247,
-                    244);
+                    BackColor =
+                        Color.FromArgb(
+                            252,
+                            247,
+                            244),
 
-            quantidade.TextAlign =
-                ContentAlignment.MiddleCenter;
+                    TextAlign =
+                        ContentAlignment.MiddleCenter,
 
-            quantidade.Location =
-                new Point(
-                    178,
-                    18);
+                    Location =
+                        new Point(
+                            178,
+                            18),
 
-            quantidade.Size =
-                new Size(
-                    77,
-                    25);
+                    Size =
+                        new Size(
+                            77,
+                            25)
+                };
+
+            // ========================================================
+            // NOME
+            // ========================================================
 
             Label nome =
-                new Label();
+                new Label
+                {
+                    Text =
+                        categoria.Name,
 
-            nome.Text =
-                categoria.Name;
+                    Font =
+                        new Font(
+                            "Georgia",
+                            11F,
+                            FontStyle.Bold),
 
-            nome.Font =
-                new Font(
-                    "Georgia",
-                    11F,
-                    FontStyle.Bold);
+                    ForeColor =
+                        Color.FromArgb(
+                            50,
+                            35,
+                            28),
 
-            nome.ForeColor =
-                Color.FromArgb(
-                    50,
-                    35,
-                    28);
+                    Location =
+                        new Point(
+                            15,
+                            68),
 
-            nome.Location =
-                new Point(
-                    15,
-                    68);
+                    AutoSize = true
+                };
 
-            nome.AutoSize =
-                true;
+            // ========================================================
+            // DESCRIÇÃO
+            // ========================================================
 
             Label descricao =
-                new Label();
+                new Label
+                {
+                    Text =
+                        ObterDescricaoCategoria(
+                            categoria.Name),
 
-            descricao.Text =
-                ObterDescricaoCategoria(
-                    categoria.Name);
+                    Font =
+                        new Font(
+                            "Segoe UI",
+                            8F),
 
-            descricao.Font =
-                new Font(
-                    "Segoe UI",
-                    8F);
+                    ForeColor =
+                        Color.FromArgb(
+                            120,
+                            100,
+                            90),
 
-            descricao.ForeColor =
-                Color.FromArgb(
-                    120,
-                    100,
-                    90);
+                    Location =
+                        new Point(
+                            15,
+                            91),
 
-            descricao.Location =
-                new Point(
-                    15,
-                    91);
+                    AutoSize = true
+                };
 
-            descricao.AutoSize =
-                true;
+            // ========================================================
+            // PRODUTOS CADASTRADOS
+            // ========================================================
 
             Label produtosCadastrados =
-                new Label();
+                new Label
+                {
+                    Text =
+                        "Produtos cadastrados",
 
-            produtosCadastrados.Text =
-                "Produtos cadastrados";
+                    Font =
+                        new Font(
+                            "Segoe UI",
+                            7.5F),
 
-            produtosCadastrados.Font =
-                new Font(
-                    "Segoe UI",
-                    7.5F);
+                    ForeColor =
+                        Color.FromArgb(
+                            130,
+                            110,
+                            100),
 
-            produtosCadastrados.ForeColor =
-                Color.FromArgb(
-                    130,
-                    110,
-                    100);
+                    Location =
+                        new Point(
+                            15,
+                            110),
 
-            produtosCadastrados.Location =
-                new Point(
-                    15,
-                    110);
+                    AutoSize = true
+                };
 
-            produtosCadastrados.AutoSize =
-                true;
+            // ========================================================
+            // QUANTIDADE INFERIOR
+            // ========================================================
 
             Label quantidadeProdutosLabel =
-                new Label();
+                new Label
+                {
+                    Text =
+                        quantidadeProdutos == 1
+                            ? "1 produto"
+                            : $"{quantidadeProdutos} produtos",
 
-            quantidadeProdutosLabel.Text =
-                quantidadeProdutos == 1
-                    ? "1 produto"
-                    : $"{quantidadeProdutos} produtos";
+                    Font =
+                        new Font(
+                            "Segoe UI Semibold",
+                            8F,
+                            FontStyle.Bold),
 
-            quantidadeProdutosLabel.Font =
-                new Font(
-                    "Segoe UI Semibold",
-                    8F,
-                    FontStyle.Bold);
+                    ForeColor = cor,
 
-            quantidadeProdutosLabel.ForeColor =
-                cor;
+                    TextAlign =
+                        ContentAlignment.MiddleRight,
 
-            quantidadeProdutosLabel.TextAlign =
-                ContentAlignment.MiddleRight;
+                    Location =
+                        new Point(
+                            150,
+                            108),
 
-            quantidadeProdutosLabel.Location =
-                new Point(
-                    150,
-                    108);
+                    Size =
+                        new Size(
+                            105,
+                            18)
+                };
 
-            quantidadeProdutosLabel.Size =
-                new Size(
-                    105,
-                    18);
+            // ========================================================
+            // LINHA
+            // ========================================================
 
             Panel linha =
-                new Panel();
+                new Panel
+                {
+                    BackColor =
+                        Color.FromArgb(
+                            239,
+                            232,
+                            228),
 
-            linha.BackColor =
-                Color.FromArgb(
-                    239,
-                    232,
-                    228);
+                    Location =
+                        new Point(
+                            15,
+                            132),
 
-            linha.Location =
-                new Point(
-                    15,
-                    132);
+                    Size =
+                        new Size(
+                            240,
+                            1)
+                };
 
-            linha.Size =
-                new Size(
-                    240,
-                    1);
+            // ========================================================
+            // ADICIONAR ELEMENTOS
+            // ========================================================
 
             card.Controls.Add(icone);
             card.Controls.Add(quantidade);
@@ -446,11 +478,18 @@ namespace DoceCantinho.Desktop1.UserControls
             card.Controls.Add(quantidadeProdutosLabel);
             card.Controls.Add(linha);
 
+            // ========================================================
+            // BOTÕES SOMENTE PARA ADMIN
+            // ========================================================
+
             if (SessionManager.Instance.IsAdmin)
             {
                 Button btnEditar =
                     CriarBotaoCard(
                         "Editar");
+
+                btnEditar.Tag =
+                    categoria;
 
                 btnEditar.Location =
                     new Point(
@@ -463,40 +502,79 @@ namespace DoceCantinho.Desktop1.UserControls
                         25);
 
                 btnEditar.Click +=
-                    (sender, e) =>
-                    {
-                        MostrarFormulario(
-                            categoria);
-                    };
+                    BtnEditarCategoria_Click;
 
-                Button btnExcluirCard =
+                Button btnExcluir =
                     CriarBotaoCard(
                         "Excluir");
 
-                btnExcluirCard.Location =
+                btnExcluir.Tag =
+                    categoria;
+
+                btnExcluir.Location =
                     new Point(
                         135,
                         143);
 
-                btnExcluirCard.Size =
+                btnExcluir.Size =
                     new Size(
                         120,
                         25);
 
-                btnExcluirCard.Click +=
-                    async (sender, e) =>
-                    {
-                        await ExcluirCategoriaAsync(
-                            categoria);
-                    };
+                btnExcluir.Click +=
+                    BtnExcluirCategoria_Click;
 
-                card.Controls.Add(btnEditar);
-                card.Controls.Add(btnExcluirCard);
+                card.Controls.Add(
+                    btnEditar);
+
+                card.Controls.Add(
+                    btnExcluir);
             }
 
             return card;
         }
 
+        // ============================================================
+        // EDITAR CATEGORIA
+        // ============================================================
+
+        private void BtnEditarCategoria_Click(
+            object? sender,
+            EventArgs e)
+        {
+            if (!SessionManager.Instance.IsAdmin)
+                return;
+
+            if (sender is not Button botao)
+                return;
+
+            if (botao.Tag is not CategoriaResponseDto categoria)
+                return;
+
+            MostrarFormulario(
+                categoria);
+        }
+
+        // ============================================================
+        // EXCLUIR CATEGORIA
+        // ============================================================
+
+        private async void BtnExcluirCategoria_Click(
+            object? sender,
+            EventArgs e)
+        {
+            if (!SessionManager.Instance.IsAdmin)
+                return;
+
+            if (sender is not Button botao)
+                return;
+
+            if (botao.Tag is not CategoriaResponseDto categoria)
+                return;
+
+            await ExcluirCategoriaAsync(
+                categoria);
+        }
 
         // ============================================================
         // CARD NOVA CATEGORIA
@@ -505,149 +583,161 @@ namespace DoceCantinho.Desktop1.UserControls
         private Panel CriarCardNovaCategoria()
         {
             Panel card =
-                new Panel();
+                new Panel
+                {
+                    Width = 270,
+                    Height = 180,
 
-            card.Width = 270;
-            card.Height = 180;
+                    BackColor =
+                        Color.FromArgb(
+                            250,
+                            248,
+                            246),
 
-            card.BackColor =
-                Color.FromArgb(
-                    250,
-                    248,
-                    246);
+                    BorderStyle =
+                        BorderStyle.FixedSingle,
 
-            card.BorderStyle =
-                BorderStyle.FixedSingle;
+                    Margin =
+                        new Padding(
+                            0,
+                            0,
+                            16,
+                            14),
 
-            card.Margin =
-                new Padding(
-                    0,
-                    0,
-                    16,
-                    14);
-
-            card.Cursor =
-                Cursors.Hand;
+                    Cursor =
+                        Cursors.Hand
+                };
 
             Label icone =
-                new Label();
+                new Label
+                {
+                    Text = "+",
 
-            icone.Text = "+";
+                    Font =
+                        new Font(
+                            "Segoe UI Light",
+                            25F),
 
-            icone.Font =
-                new Font(
-                    "Segoe UI Light",
-                    25F);
+                    ForeColor =
+                        Color.FromArgb(
+                            145,
+                            117,
+                            106),
 
-            icone.ForeColor =
-                Color.FromArgb(
-                    145,
-                    117,
-                    106);
+                    Location =
+                        new Point(
+                            115,
+                            35),
 
-            icone.Location =
-                new Point(
-                    115,
-                    35);
+                    Size =
+                        new Size(
+                            40,
+                            40),
 
-            icone.Size =
-                new Size(
-                    40,
-                    40);
-
-            icone.TextAlign =
-                ContentAlignment.MiddleCenter;
+                    TextAlign =
+                        ContentAlignment.MiddleCenter
+                };
 
             Label titulo =
-                new Label();
+                new Label
+                {
+                    Text =
+                        "Nova Categoria",
 
-            titulo.Text =
-                "Nova Categoria";
+                    Font =
+                        new Font(
+                            "Georgia",
+                            10F,
+                            FontStyle.Bold),
 
-            titulo.Font =
-                new Font(
-                    "Georgia",
-                    10F,
-                    FontStyle.Bold);
+                    ForeColor =
+                        Color.FromArgb(
+                            94,
+                            70,
+                            60),
 
-            titulo.ForeColor =
-                Color.FromArgb(
-                    94,
-                    70,
-                    60);
+                    Location =
+                        new Point(
+                            55,
+                            88),
 
-            titulo.Location =
-                new Point(
-                    55,
-                    88);
+                    Size =
+                        new Size(
+                            160,
+                            25),
 
-            titulo.Size =
-                new Size(
-                    160,
-                    25);
-
-            titulo.TextAlign =
-                ContentAlignment.MiddleCenter;
+                    TextAlign =
+                        ContentAlignment.MiddleCenter
+                };
 
             Label descricao =
-                new Label();
+                new Label
+                {
+                    Text =
+                        "Clique para adicionar",
 
-            descricao.Text =
-                "Clique para adicionar";
+                    Font =
+                        new Font(
+                            "Segoe UI",
+                            8F),
 
-            descricao.Font =
-                new Font(
-                    "Segoe UI",
-                    8F);
+                    ForeColor =
+                        Color.FromArgb(
+                            155,
+                            137,
+                            129),
 
-            descricao.ForeColor =
-                Color.FromArgb(
-                    155,
-                    137,
-                    129);
+                    Location =
+                        new Point(
+                            50,
+                            116),
 
-            descricao.Location =
-                new Point(
-                    50,
-                    116);
+                    Size =
+                        new Size(
+                            170,
+                            20),
 
-            descricao.Size =
-                new Size(
-                    170,
-                    20);
-
-            descricao.TextAlign =
-                ContentAlignment.MiddleCenter;
+                    TextAlign =
+                        ContentAlignment.MiddleCenter
+                };
 
             card.Click +=
-                (sender, e) =>
-                {
-                    MostrarFormulario(null);
-                };
+                CardNovaCategoria_Click;
 
             icone.Click +=
-                (sender, e) =>
-                {
-                    MostrarFormulario(null);
-                };
+                CardNovaCategoria_Click;
 
             titulo.Click +=
-                (sender, e) =>
-                {
-                    MostrarFormulario(null);
-                };
+                CardNovaCategoria_Click;
 
             descricao.Click +=
-                (sender, e) =>
-                {
-                    MostrarFormulario(null);
-                };
+                CardNovaCategoria_Click;
 
-            card.Controls.Add(icone);
-            card.Controls.Add(titulo);
-            card.Controls.Add(descricao);
+            card.Controls.Add(
+                icone);
+
+            card.Controls.Add(
+                titulo);
+
+            card.Controls.Add(
+                descricao);
 
             return card;
+        }
+
+        // ============================================================
+        // CLIQUE NOVA CATEGORIA
+        // ============================================================
+
+        private void CardNovaCategoria_Click(
+            object? sender,
+            EventArgs e)
+        {
+            if (!SessionManager.Instance.IsAdmin)
+                return;
+
+            MostrarFormulario(
+                null);
         }
 
         // ============================================================
@@ -658,36 +748,36 @@ namespace DoceCantinho.Desktop1.UserControls
             string texto)
         {
             Button botao =
-                new Button();
+                new Button
+                {
+                    Text = texto,
 
-            botao.Text =
-                texto;
+                    Font =
+                        new Font(
+                            "Segoe UI",
+                            8F),
 
-            botao.Font =
-                new Font(
-                    "Segoe UI",
-                    8F);
+                    BackColor =
+                        Color.FromArgb(
+                            247,
+                            244,
+                            242),
 
-            botao.BackColor =
-                Color.FromArgb(
-                    247,
-                    244,
-                    242);
+                    ForeColor =
+                        Color.FromArgb(
+                            105,
+                            85,
+                            75),
 
-            botao.ForeColor =
-                Color.FromArgb(
-                    105,
-                    85,
-                    75);
+                    FlatStyle =
+                        FlatStyle.Flat,
 
-            botao.FlatStyle =
-                FlatStyle.Flat;
+                    Cursor =
+                        Cursors.Hand
+                };
 
             botao.FlatAppearance.BorderSize =
                 0;
-
-            botao.Cursor =
-                Cursors.Hand;
 
             return botao;
         }
@@ -708,7 +798,58 @@ namespace DoceCantinho.Desktop1.UserControls
                 return;
             }
 
-            _editandoId = categoria?.Id;
+            // ========================================================
+            // DEFINIR MODO
+            // ========================================================
+
+            _editandoId =
+                categoria?.Id;
+
+            // ========================================================
+            // PREENCHER CAMPOS
+            // ========================================================
+
+            txtNome.Text =
+                categoria?.Name ??
+                string.Empty;
+
+            // ========================================================
+            // TÍTULO
+            // ========================================================
+
+            lblFormTitulo.Text =
+                categoria == null
+                    ? "Nova Categoria"
+                    : "Editar Categoria";
+
+            // ========================================================
+            // MOSTRAR FORMULÁRIO
+            // ========================================================
+
+            pnlForm.Visible =
+                true;
+
+            pnlForm.BringToFront();
+
+            // ========================================================
+            // CENTRALIZAR
+            // ========================================================
+
+            pnlForm.Left =
+                (pnlPrincipal.ClientSize.Width -
+                 pnlForm.Width) / 2;
+
+            pnlForm.Top =
+                (pnlPrincipal.ClientSize.Height -
+                 pnlForm.Height) / 2;
+
+            // ========================================================
+            // FOCO
+            // ========================================================
+
+            txtNome.Focus();
+
+            txtNome.SelectAll();
         }
 
         // ============================================================
@@ -776,7 +917,8 @@ namespace DoceCantinho.Desktop1.UserControls
 
                     var resultado =
                         await _categoriasService
-                            .CreateAsync(dto);
+                            .CreateAsync(
+                                dto);
 
                     if (resultado.Success)
                     {
@@ -887,7 +1029,7 @@ namespace DoceCantinho.Desktop1.UserControls
             }
 
             // ========================================================
-            // CONFIRMAÇÃO PERSONALIZADA
+            // CONFIRMAÇÃO
             // ========================================================
 
             using (var confirmar =
@@ -950,6 +1092,9 @@ namespace DoceCantinho.Desktop1.UserControls
             object sender,
             EventArgs e)
         {
+            if (!SessionManager.Instance.IsAdmin)
+                return;
+
             MostrarFormulario(
                 null);
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -6,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using DoceCantinho.Desktop.DTOs;
+using DoceCantinho.Desktop.Helpers;
 using DoceCantinho.Desktop.Services;
 using DoceCantinho.Desktop1.Forms;
-using DoceCantinho.Desktop.Helpers;
 
 namespace DoceCantinho.Desktop1.UserControls
 {
@@ -32,7 +33,14 @@ namespace DoceCantinho.Desktop1.UserControls
 
         private Panel? _painelAviso;
         private Label? _lblAviso;
+
         private System.Windows.Forms.Timer? _timerAviso;
+
+        // ============================================================
+        // BOTÃO PDF
+        // ============================================================
+
+        private Button? _btnExportarPdf;
 
         // ============================================================
         // PERMISSÕES
@@ -43,12 +51,19 @@ namespace DoceCantinho.Desktop1.UserControls
             bool isAdmin =
                 SessionManager.Instance.IsAdmin;
 
-            // Usuário comum pode consultar pedidos,
-            // mas não pode criar, editar ou excluir.
-            btnNovo.Visible = isAdmin;
+            // --------------------------------------------------------
+            // NOVO PEDIDO
+            // --------------------------------------------------------
 
-            // Esconde a coluna de ações inteira para usuário comum.
-            colAcoes.Visible = isAdmin;
+            btnNovo.Visible =
+                isAdmin;
+
+            // --------------------------------------------------------
+            // AÇÕES
+            // --------------------------------------------------------
+
+            colAcoes.Visible =
+                isAdmin;
         }
 
         // ============================================================
@@ -62,7 +77,10 @@ namespace DoceCantinho.Desktop1.UserControls
             if (!DesignMode)
             {
                 ConfigurarTabela();
+
                 ConfigurarPermissoes();
+
+                CriarBotaoExportarPdf();
             }
         }
 
@@ -72,13 +90,15 @@ namespace DoceCantinho.Desktop1.UserControls
 
         private void ConfigurarTabela()
         {
-            dgvPedidos.AutoGenerateColumns = false;
+            dgvPedidos.AutoGenerateColumns =
+                false;
 
             // --------------------------------------------------------
             // COLUNAS
             // --------------------------------------------------------
 
-            colNumero.DataPropertyName = "Id";
+            colNumero.DataPropertyName =
+                "Id";
 
             colCliente.DataPropertyName =
                 "NomeCliente";
@@ -104,7 +124,8 @@ namespace DoceCantinho.Desktop1.UserControls
             colStatus.DataPropertyName =
                 "Status";
 
-            colAcoes.DataPropertyName = "";
+            colAcoes.DataPropertyName =
+                string.Empty;
 
             // --------------------------------------------------------
             // COLUNA AÇÕES
@@ -113,35 +134,43 @@ namespace DoceCantinho.Desktop1.UserControls
             colAcoes.AutoSizeMode =
                 DataGridViewAutoSizeColumnMode.None;
 
-            colAcoes.Width = 160;
+            colAcoes.Width =
+                160;
 
             colAcoes.HeaderText =
                 "AÇÕES";
 
-            colAcoes.ReadOnly = true;
+            colAcoes.ReadOnly =
+                true;
 
             // --------------------------------------------------------
             // CONFIGURAÇÃO GERAL
             // --------------------------------------------------------
 
-            dgvPedidos.AllowUserToAddRows = false;
+            dgvPedidos.AllowUserToAddRows =
+                false;
 
-            dgvPedidos.AllowUserToDeleteRows = false;
+            dgvPedidos.AllowUserToDeleteRows =
+                false;
 
-            dgvPedidos.AllowUserToResizeRows = false;
+            dgvPedidos.AllowUserToResizeRows =
+                false;
 
-            dgvPedidos.ReadOnly = true;
+            dgvPedidos.ReadOnly =
+                true;
 
             dgvPedidos.SelectionMode =
                 DataGridViewSelectionMode.FullRowSelect;
 
-            dgvPedidos.MultiSelect = false;
+            dgvPedidos.MultiSelect =
+                false;
 
-            dgvPedidos.RowHeadersVisible = false;
+            dgvPedidos.RowHeadersVisible =
+                false;
 
-            // ==========================================
-            // COR NORMAL DA SELEÇÃO
-            // ==========================================
+            // --------------------------------------------------------
+            // COR NORMAL
+            // --------------------------------------------------------
 
             dgvPedidos.DefaultCellStyle.SelectionBackColor =
                 Color.White;
@@ -152,8 +181,6 @@ namespace DoceCantinho.Desktop1.UserControls
                     39,
                     34);
 
-            dgvPedidos.AutoGenerateColumns = false;
-
             dgvPedidos.RowsDefaultCellStyle.BackColor =
                 Color.White;
 
@@ -163,9 +190,9 @@ namespace DoceCantinho.Desktop1.UserControls
                     248,
                     246);
 
-            // ==========================================
-            // EVENTOS DA COLUNA DE AÇÕES
-            // ==========================================
+            // --------------------------------------------------------
+            // EVENTO DE PINTURA
+            // --------------------------------------------------------
 
             dgvPedidos.CellPainting -=
                 DgvPedidos_CellPainting;
@@ -173,11 +200,231 @@ namespace DoceCantinho.Desktop1.UserControls
             dgvPedidos.CellPainting +=
                 DgvPedidos_CellPainting;
 
+            // --------------------------------------------------------
+            // EVENTO DE CLIQUE
+            // --------------------------------------------------------
+
             dgvPedidos.CellMouseClick -=
                 DgvPedidos_CellMouseClick;
 
             dgvPedidos.CellMouseClick +=
                 DgvPedidos_CellMouseClick;
+        }
+
+        // ============================================================
+        // BOTÃO EXPORTAR PDF
+        // ============================================================
+
+        private void CriarBotaoExportarPdf()
+        {
+            if (_btnExportarPdf != null)
+                return;
+
+            _btnExportarPdf =
+                new Button
+                {
+                    Name =
+                        "btnExportarPdf",
+
+                    Text =
+                        "↓  PDF",
+
+                    Size =
+                        new Size(
+                            105,
+                            38),
+
+                    BackColor =
+                        Color.FromArgb(
+                            238,
+                            230,
+                            225),
+
+                    ForeColor =
+                        Color.FromArgb(
+                            105,
+                            78,
+                            68),
+
+                    FlatStyle =
+                        FlatStyle.Flat,
+
+                    Font =
+                        new Font(
+                            "Segoe UI",
+                            9F,
+                            FontStyle.Bold),
+
+                    Cursor =
+                        Cursors.Hand,
+
+                    TabStop =
+                        false
+                };
+
+            _btnExportarPdf.FlatAppearance.BorderColor =
+                Color.FromArgb(
+                    210,
+                    190,
+                    180);
+
+            _btnExportarPdf.FlatAppearance.BorderSize =
+                1;
+
+            _btnExportarPdf.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Right;
+
+            _btnExportarPdf.Click +=
+                BtnExportarPdf_Click;
+
+            _btnExportarPdf.MouseEnter +=
+                BtnExportarPdf_MouseEnter;
+
+            _btnExportarPdf.MouseLeave +=
+                BtnExportarPdf_MouseLeave;
+
+            pnlPrincipal.Controls.Add(
+                _btnExportarPdf);
+
+            ReposicionarBotaoPdf();
+
+            _btnExportarPdf.BringToFront();
+        }
+
+        // ============================================================
+        // HOVER PDF
+        // ============================================================
+
+        private void BtnExportarPdf_MouseEnter(
+            object? sender,
+            EventArgs e)
+        {
+            if (_btnExportarPdf == null)
+                return;
+
+            _btnExportarPdf.BackColor =
+                Color.FromArgb(
+                    226,
+                    211,
+                    202);
+        }
+
+        private void BtnExportarPdf_MouseLeave(
+            object? sender,
+            EventArgs e)
+        {
+            if (_btnExportarPdf == null)
+                return;
+
+            _btnExportarPdf.BackColor =
+                Color.FromArgb(
+                    238,
+                    230,
+                    225);
+        }
+
+        // ============================================================
+        // POSICIONAR PDF
+        // ============================================================
+
+        private void ReposicionarBotaoPdf()
+        {
+            if (_btnExportarPdf == null)
+                return;
+
+            if (btnNovo.Visible)
+            {
+                _btnExportarPdf.Location =
+                    new Point(
+                        btnNovo.Left -
+                        _btnExportarPdf.Width -
+                        10,
+                        btnNovo.Top);
+            }
+            else
+            {
+                _btnExportarPdf.Location =
+                    new Point(
+                        pnlPrincipal.ClientSize.Width -
+                        _btnExportarPdf.Width -
+                        15,
+                        58);
+            }
+
+            _btnExportarPdf.BringToFront();
+        }
+
+        // ============================================================
+        // EXPORTAR PDF
+        // ============================================================
+
+        private void BtnExportarPdf_Click(
+            object? sender,
+            EventArgs e)
+        {
+            if (_pedidos.Count == 0)
+            {
+                MostrarAviso(
+                    "Não existem pedidos para exportar.",
+                    true);
+
+                return;
+            }
+
+            using SaveFileDialog dialog =
+                new SaveFileDialog
+                {
+                    Title =
+                        "Salvar relatório de pedidos",
+
+                    Filter =
+                        "Arquivo PDF (*.pdf)|*.pdf",
+
+                    FileName =
+                        $"Pedidos_{DateTime.Now:yyyyMMdd_HHmmss}.pdf",
+
+                    DefaultExt =
+                        "pdf",
+
+                    AddExtension =
+                        true,
+
+                    OverwritePrompt =
+                        true
+                };
+
+            if (dialog.ShowDialog(
+                    FindForm())
+                != DialogResult.OK)
+            {
+                return;
+            }
+
+            try
+            {
+                Cursor =
+                    Cursors.WaitCursor;
+
+                PedidosPdfService.Gerar(
+                    _pedidos,
+                    dialog.FileName);
+
+                MostrarAviso(
+                    "Relatório PDF gerado com sucesso.",
+                    false);
+            }
+            catch (Exception ex)
+            {
+                MostrarAviso(
+                    $"Não foi possível gerar o PDF: {ex.Message}",
+                    true);
+            }
+            finally
+            {
+                Cursor =
+                    Cursors.Default;
+            }
         }
 
         // ============================================================
@@ -188,6 +435,9 @@ namespace DoceCantinho.Desktop1.UserControls
             object? sender,
             DataGridViewCellPaintingEventArgs e)
         {
+            if (!SessionManager.Instance.IsAdmin)
+                return;
+
             if (e.RowIndex < 0)
                 return;
 
@@ -204,15 +454,19 @@ namespace DoceCantinho.Desktop1.UserControls
             Rectangle area =
                 e.CellBounds;
 
-            int margem = 5;
-            int espacamento = 5;
+            int margem =
+                5;
+
+            int espacamento =
+                5;
 
             int larguraBotao =
                 (area.Width -
                  (margem * 2) -
                  espacamento) / 2;
 
-            int alturaBotao = 28;
+            int alturaBotao =
+                28;
 
             int posY =
                 area.Y +
@@ -225,7 +479,8 @@ namespace DoceCantinho.Desktop1.UserControls
 
             Rectangle rectEditar =
                 new Rectangle(
-                    area.X + margem,
+                    area.X +
+                    margem,
                     posY,
                     larguraBotao,
                     alturaBotao);
@@ -301,7 +556,7 @@ namespace DoceCantinho.Desktop1.UserControls
             using (var fonte =
                    new Font(
                        "Segoe UI",
-                       8.5f,
+                       8.5F,
                        FontStyle.Bold))
             using (var brush =
                    new SolidBrush(
@@ -332,7 +587,7 @@ namespace DoceCantinho.Desktop1.UserControls
             using (var fonte =
                    new Font(
                        "Segoe UI",
-                       8.5f,
+                       8.5F,
                        FontStyle.Bold))
             using (var brush =
                    new SolidBrush(
@@ -356,7 +611,8 @@ namespace DoceCantinho.Desktop1.UserControls
                     });
             }
 
-            e.Handled = true;
+            e.Handled =
+                true;
         }
 
         // ============================================================
@@ -379,18 +635,17 @@ namespace DoceCantinho.Desktop1.UserControls
                 return;
             }
 
-            if (e.Button != MouseButtons.Left)
+            if (e.Button !=
+                MouseButtons.Left)
+            {
                 return;
+            }
 
             if (e.RowIndex >=
                 dgvPedidos.Rows.Count)
             {
                 return;
             }
-
-            // --------------------------------------------------------
-            // OBTÉM PEDIDO
-            // --------------------------------------------------------
 
             if (dgvPedidos.Rows[e.RowIndex]
                     .DataBoundItem
@@ -419,10 +674,6 @@ namespace DoceCantinho.Desktop1.UserControls
             }
             else
             {
-                // ----------------------------------------------------
-                // EXCLUIR
-                // ----------------------------------------------------
-
                 await ExcluirPedidoAsync(
                     pedido);
             }
@@ -457,7 +708,8 @@ namespace DoceCantinho.Desktop1.UserControls
                 if (resultado ==
                     DialogResult.OK)
                 {
-                    _ = CarregarDadosAsync();
+                    _ =
+                        CarregarDadosAsync();
                 }
             }
             catch (Exception ex)
@@ -483,9 +735,10 @@ namespace DoceCantinho.Desktop1.UserControls
 
                 return;
             }
-            // ========================================================
-            // CONFIRMAÇÃO PERSONALIZADA
-            // ========================================================
+
+            // --------------------------------------------------------
+            // CONFIRMAÇÃO
+            // --------------------------------------------------------
 
             using (var confirmacao =
                 new DoceCantinho.Desktop.Forms
@@ -504,9 +757,9 @@ namespace DoceCantinho.Desktop1.UserControls
                 }
             }
 
-            // ========================================================
-            // EXCLUIR
-            // ========================================================
+            // --------------------------------------------------------
+            // EXCLUSÃO
+            // --------------------------------------------------------
 
             try
             {
@@ -521,16 +774,14 @@ namespace DoceCantinho.Desktop1.UserControls
                         .DeleteAsync(
                             pedido.Id);
 
-                // ====================================================
-                // SUCESSO
-                // ====================================================
-
                 if (resultado.Success)
                 {
                     _pedidos =
                         _pedidos
-                            .Where(p =>
-                                p.Id != pedido.Id)
+                            .Where(
+                                p =>
+                                    p.Id !=
+                                    pedido.Id)
                             .ToList();
 
                     AtualizarTabela(
@@ -665,7 +916,9 @@ namespace DoceCantinho.Desktop1.UserControls
             if (_lblAviso != null)
             {
                 _lblAviso.Text =
-                    (erro ? "⚠ " : "✓ ") +
+                    (erro
+                        ? "⚠ "
+                        : "✓ ") +
                     mensagem;
 
                 _lblAviso.ForeColor =
@@ -701,13 +954,14 @@ namespace DoceCantinho.Desktop1.UserControls
             _painelAviso.BringToFront();
 
             // --------------------------------------------------------
-            // FECHAR AUTOMATICAMENTE
+            // TIMER
             // --------------------------------------------------------
 
             _timerAviso =
                 new System.Windows.Forms.Timer
                 {
-                    Interval = 3500
+                    Interval =
+                        3500
                 };
 
             _timerAviso.Tick +=
@@ -757,7 +1011,12 @@ namespace DoceCantinho.Desktop1.UserControls
 
             ConfigurarEventos();
 
-            _ = CarregarDadosAsync();
+            ConfigurarPermissoes();
+
+            ReposicionarBotaoPdf();
+
+            _ =
+                CarregarDadosAsync();
         }
 
         // ============================================================
@@ -817,7 +1076,7 @@ namespace DoceCantinho.Desktop1.UserControls
                 BtnCancelado_Click;
 
             // --------------------------------------------------------
-            // NOVO PEDIDO
+            // NOVO
             // --------------------------------------------------------
 
             btnNovo.Click -=
@@ -883,7 +1142,8 @@ namespace DoceCantinho.Desktop1.UserControls
                 new BindingList<PedidoResponseDto>(
                     pedidos.ToList());
 
-            dgvPedidos.DataSource = null;
+            dgvPedidos.DataSource =
+                null;
 
             dgvPedidos.DataSource =
                 lista;
@@ -893,6 +1153,8 @@ namespace DoceCantinho.Desktop1.UserControls
                 dgvPedidos.InvalidateColumn(
                     colAcoes.Index);
             }
+
+            ReposicionarBotaoPdf();
         }
 
         // ============================================================
@@ -901,7 +1163,8 @@ namespace DoceCantinho.Desktop1.UserControls
 
         private void AtualizarContadores()
         {
-            int total = _pedidos.Count;
+            int total =
+                _pedidos.Count;
 
             int pendente =
                 _pedidos.Count(
@@ -968,9 +1231,15 @@ namespace DoceCantinho.Desktop1.UserControls
                     string.Empty)
                 .Trim()
                 .ToLowerInvariant()
-                .Replace("í", "i")
-                .Replace("ó", "o")
-                .Replace("ã", "a");
+                .Replace(
+                    "í",
+                    "i")
+                .Replace(
+                    "ó",
+                    "o")
+                .Replace(
+                    "ã",
+                    "a");
         }
 
         // ============================================================
@@ -991,7 +1260,8 @@ namespace DoceCantinho.Desktop1.UserControls
                     .Trim()
                     .ToLowerInvariant();
 
-            if (string.IsNullOrWhiteSpace(texto))
+            if (string.IsNullOrWhiteSpace(
+                texto))
             {
                 AtualizarTabela(
                     _pedidos);
@@ -1114,12 +1384,13 @@ namespace DoceCantinho.Desktop1.UserControls
             if (resultado ==
                 DialogResult.OK)
             {
-                _ = CarregarDadosAsync();
+                _ =
+                    CarregarDadosAsync();
             }
         }
 
         // ============================================================
-        // DUPLO CLIQUE
+        // DUPLO CLIQUE - DETALHES
         // ============================================================
 
         private async void DgvPedidos_CellDoubleClick(
@@ -1150,7 +1421,8 @@ namespace DoceCantinho.Desktop1.UserControls
                         new PedidosApiService();
                 }
 
-                Cursor = Cursors.WaitCursor;
+                Cursor =
+                    Cursors.WaitCursor;
 
                 var detalhes =
                     await _pedidosService
@@ -1194,10 +1466,33 @@ namespace DoceCantinho.Desktop1.UserControls
             }
             finally
             {
-                Cursor = Cursors.Default;
+                Cursor =
+                    Cursors.Default;
+            }
+        }
+
+        // ============================================================
+        // REDIMENSIONAMENTO
+        // ============================================================
+
+        protected override void OnResize(
+            EventArgs e)
+        {
+            base.OnResize(e);
+
+            ReposicionarBotaoPdf();
+
+            if (_painelAviso != null)
+            {
+                _painelAviso.Location =
+                    new Point(
+                        Math.Max(
+                            10,
+                            Width -
+                            _painelAviso.Width -
+                            20),
+                        20);
             }
         }
     }
-
-
 }

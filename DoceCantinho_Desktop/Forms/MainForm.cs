@@ -180,6 +180,9 @@ namespace DoceCantinho.Desktop.Forms
             object? sender,
             EventArgs e)
         {
+            if (!await ConfirmarSaidaAsync())
+                return;
+
             await VoltarParaLoginAsync();
         }
 
@@ -752,18 +755,22 @@ namespace DoceCantinho.Desktop.Forms
             object? sender,
             EventArgs e)
         {
-            var resposta =
-                MessageBox.Show(
-                    "Deseja realmente sair do sistema?",
-                    "Confirmar Logout",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
+            if (await ConfirmarSaidaAsync())
+            {
+                await VoltarParaLoginAsync();
+            }
+        }
 
-            if (resposta != DialogResult.Yes)
-                return;
+        private async Task<bool> ConfirmarSaidaAsync()
+        {
+            using var confirmar =
+                new ConfirmarLogoutForm();
 
-            await VoltarParaLoginAsync();
+            DialogResult resultado =
+                confirmar.ShowDialog(this);
+
+            return resultado ==
+                   DialogResult.Yes;
         }
 
         // ==========================================

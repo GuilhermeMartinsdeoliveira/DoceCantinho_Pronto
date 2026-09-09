@@ -26,7 +26,7 @@ namespace DoceCantinho.Desktop.Forms
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -34,7 +34,6 @@ namespace DoceCantinho.Desktop.Forms
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlPanel = new Panel();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             lblSair = new Guna.UI2.WinForms.Guna2Button();
@@ -52,14 +51,14 @@ namespace DoceCantinho.Desktop.Forms
             lblMenu = new Label();
             lblLogoSub = new Label();
             lblLogo = new Label();
-            pnlLogoIcon = new Guna.UI2.WinForms.Guna2Panel();
             lblLogoIcon = new Label();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             guna2DragControl1 = new Guna.UI2.WinForms.Guna2DragControl(components);
             guna2ShadowForm1 = new Guna.UI2.WinForms.Guna2ShadowForm(components);
+            pnlLogoIcon = new PictureBox();
             guna2Panel1.SuspendLayout();
             pnlUsuario.SuspendLayout();
-            pnlLogoIcon.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pnlLogoIcon).BeginInit();
             SuspendLayout();
             // 
             // pnlPanel
@@ -74,6 +73,8 @@ namespace DoceCantinho.Desktop.Forms
             // guna2Panel1
             // 
             guna2Panel1.BackColor = Color.FromArgb(47, 34, 30);
+            guna2Panel1.Controls.Add(pnlLogoIcon);
+            guna2Panel1.Controls.Add(lblLogoIcon);
             guna2Panel1.Controls.Add(lblSair);
             guna2Panel1.Controls.Add(pnlUsuario);
             guna2Panel1.Controls.Add(lblSeparador);
@@ -85,13 +86,12 @@ namespace DoceCantinho.Desktop.Forms
             guna2Panel1.Controls.Add(lblMenu);
             guna2Panel1.Controls.Add(lblLogoSub);
             guna2Panel1.Controls.Add(lblLogo);
-            guna2Panel1.Controls.Add(pnlLogoIcon);
-            guna2Panel1.CustomizableEdges = customizableEdges9;
+            guna2Panel1.CustomizableEdges = customizableEdges8;
             guna2Panel1.Dock = DockStyle.Left;
             guna2Panel1.FillColor = Color.FromArgb(47, 34, 30);
             guna2Panel1.Location = new Point(0, 0);
             guna2Panel1.Name = "guna2Panel1";
-            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges9;
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges8;
             guna2Panel1.Size = new Size(225, 720);
             guna2Panel1.TabIndex = 1;
             // 
@@ -132,7 +132,6 @@ namespace DoceCantinho.Desktop.Forms
             pnlUsuario.Size = new Size(197, 78);
             pnlUsuario.TabIndex = 9;
             pnlUsuario.Click += pnlUsuario_Click;
-
             // 
             // lblSessao
             // 
@@ -145,7 +144,6 @@ namespace DoceCantinho.Desktop.Forms
             lblSessao.Size = new Size(125, 13);
             lblSessao.TabIndex = 3;
             lblSessao.Text = "● conectado";
-
             // 
             // lblPerfil
             // 
@@ -338,26 +336,13 @@ namespace DoceCantinho.Desktop.Forms
             lblLogo.TabIndex = 1;
             lblLogo.Text = "DoceCantinho";
             // 
-            // pnlLogoIcon
-            // 
-            pnlLogoIcon.BackColor = Color.FromArgb(214, 126, 91);
-            pnlLogoIcon.BorderRadius = 10;
-            pnlLogoIcon.Controls.Add(lblLogoIcon);
-            pnlLogoIcon.CustomizableEdges = customizableEdges8;
-            pnlLogoIcon.FillColor = Color.FromArgb(214, 126, 91);
-            pnlLogoIcon.Location = new Point(22, 23);
-            pnlLogoIcon.Name = "pnlLogoIcon";
-            pnlLogoIcon.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            pnlLogoIcon.Size = new Size(38, 38);
-            pnlLogoIcon.TabIndex = 0;
-            // 
             // lblLogoIcon
             // 
             lblLogoIcon.AutoSize = true;
             lblLogoIcon.BackColor = Color.Transparent;
             lblLogoIcon.Font = new Font("Segoe UI Emoji", 17F);
             lblLogoIcon.ForeColor = Color.White;
-            lblLogoIcon.Location = new Point(6, 5);
+            lblLogoIcon.Location = new Point(177, 43);
             lblLogoIcon.Name = "lblLogoIcon";
             lblLogoIcon.Size = new Size(34, 31);
             lblLogoIcon.TabIndex = 0;
@@ -373,12 +358,21 @@ namespace DoceCantinho.Desktop.Forms
             // guna2DragControl1
             // 
             guna2DragControl1.DockIndicatorTransparencyValue = 0.6D;
-            guna2DragControl1.TargetControl = pnlLogoIcon;
             guna2DragControl1.UseTransparentDrag = true;
             // 
             // guna2ShadowForm1
             // 
             guna2ShadowForm1.TargetForm = this;
+            // 
+            // pnlLogoIcon
+            // 
+            pnlLogoIcon.Image = Desktop1.Properties.Resources.doce;
+            pnlLogoIcon.Location = new Point(14, 12);
+            pnlLogoIcon.Name = "pnlLogoIcon";
+            pnlLogoIcon.Size = new Size(54, 47);
+            pnlLogoIcon.SizeMode = PictureBoxSizeMode.Zoom;
+            pnlLogoIcon.TabIndex = 0;
+            pnlLogoIcon.TabStop = false;
             // 
             // MainForm
             // 
@@ -399,8 +393,7 @@ namespace DoceCantinho.Desktop.Forms
             guna2Panel1.PerformLayout();
             pnlUsuario.ResumeLayout(false);
             pnlUsuario.PerformLayout();
-            pnlLogoIcon.ResumeLayout(false);
-            pnlLogoIcon.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pnlLogoIcon).EndInit();
             ResumeLayout(false);
         }
 
@@ -412,7 +405,6 @@ namespace DoceCantinho.Desktop.Forms
 
         private Label lblLogo;
         private Label lblLogoSub;
-        private Guna.UI2.WinForms.Guna2Panel pnlLogoIcon;
 
         private Label lblMenu;
 
@@ -437,5 +429,6 @@ namespace DoceCantinho.Desktop.Forms
         private Guna.UI2.WinForms.Guna2DragControl guna2DragControl1;
         private Guna.UI2.WinForms.Guna2ShadowForm guna2ShadowForm1;
         private Label lblLogoIcon;
+        private PictureBox pnlLogoIcon;
     }
 }
