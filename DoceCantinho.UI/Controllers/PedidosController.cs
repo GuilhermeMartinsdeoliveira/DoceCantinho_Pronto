@@ -84,6 +84,14 @@ namespace DoceCantinho.UI.Controllers
             return View(pedido);
         }
 
+
+        [HttpGet]
+        public IActionResult NovoPedido()
+        {
+            return RedirectToAction("Index", "Doces");
+        }
+
+
         /// <summary>
         /// Formulário para criar novo pedido (apenas Admin)
         /// GET: /Pedidos/Create
