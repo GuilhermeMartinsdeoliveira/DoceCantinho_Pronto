@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DoceCantinho.Desktop.Properties {
+namespace DoceCantinho.Desktop1.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DoceCantinho.Desktop.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DoceCantinho.Desktop.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DoceCantinho.Desktop1.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,16 @@ namespace DoceCantinho.Desktop.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap doce {
+            get {
+                object obj = ResourceManager.GetObject("doce", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
