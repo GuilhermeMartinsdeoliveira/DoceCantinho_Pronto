@@ -39,14 +39,17 @@
         </div>
 
         @if (isAdmin)
-        {
-            <a href="@Url.Action("Create", "Pedidos")"
-               class="pedido-btn pedido-btn-primary">
+{
+    <a asp-controller="Pedidos"
+       asp-action="NovoPedido"
+       class="pedido-btn pedido-btn-primary">
 
-                <i class="bi bi-plus-lg"></i>
-                Novo Pedido
-            </a>
-        }
+        <i class="bi bi-plus-lg"></i>
+        Novo Pedido
+
+    </a>
+}
+     
 
     </div>
 

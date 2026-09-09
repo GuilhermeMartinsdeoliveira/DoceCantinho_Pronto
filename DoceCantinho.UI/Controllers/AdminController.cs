@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace DoceCantinho.UI.Controllers
 {
-    // [Authorize(Roles = "Admin")] - Comentado para permitir acesso durante testes
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IDoceService _doceService;
@@ -31,6 +31,7 @@ namespace DoceCantinho.UI.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
+
 
         // =====================
         // CRUD de Usuários (Admin)
@@ -272,7 +273,8 @@ namespace DoceCantinho.UI.Controllers
             try
             {
                 var users = await _db.Users
-                    .Select(u => new {
+                    .Select(u => new
+                    {
                         Id = u.Id,
                         Email = u.Email,
                         EmailConfirmed = u.EmailConfirmed
@@ -283,7 +285,8 @@ namespace DoceCantinho.UI.Controllers
                 var userRoles = await _db.UserRoles.ToListAsync();
                 var roles = await _db.Roles.ToListAsync();
 
-                var usersDto = users.Select(u => new {
+                var usersDto = users.Select(u => new
+                {
                     id = u.Id,
                     email = u.Email ?? string.Empty,
                     roles = userRoles
@@ -526,5 +529,6 @@ namespace DoceCantinho.UI.Controllers
             TempData["Success"] = "Categoria excluída com sucesso!";
             return RedirectToAction(nameof(Categories));
         }
+
     }
 }
