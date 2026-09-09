@@ -1,0 +1,378 @@
+﻿@model DoceCantinho.UI.ViewModels.BlogAdminViewModel
+
+@{
+    ViewData["Title"] = "Novo artigo";
+}
+
+<style>
+    .blog-form-container {
+        max-width: 950px;
+        margin: 40px auto;
+        padding: 0 20px 60px;
+    }
+
+    .blog-form-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 30px;
+        box-shadow: var(--shadow);
+    }
+
+        .blog-form-card h1 {
+            font-family: 'Playfair Display', serif;
+            margin-top: 0;
+            color: var(--fg);
+        }
+
+        .blog-form-card > p {
+            color: var(--muted-fg);
+            margin-bottom: 30px;
+        }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            color: var(--fg);
+            margin-bottom: 7px;
+        }
+
+    .form-control-blog {
+        box-sizing: border-box;
+        width: 100%;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--fg);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-family: inherit;
+        font-size: 15px;
+        outline: none;
+    }
+
+        .form-control-blog:focus {
+            border-color: var(--primary);
+        }
+
+    textarea.form-control-blog {
+        resize: vertical;
+    }
+
+    .editor-ajuda {
+        background: var(--muted);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--muted-fg);
+        line-height: 1.8;
+    }
+
+        .editor-ajuda code {
+            background: var(--card);
+            padding: 3px 6px;
+            border-radius: 5px;
+            color: var(--primary);
+        }
+
+    .check-area {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        padding: 15px 0;
+    }
+
+        .check-area label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+        border-top: 1px solid var(--border);
+        padding-top: 25px;
+    }
+
+    .btn-salvar {
+        border: 0;
+        background: var(--primary);
+        color: var(--primary-fg);
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .btn-cancelar {
+        background: var(--muted);
+        color: var(--fg);
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .validation-summary-errors {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .text-danger {
+        display: block;
+        color: #dc2626;
+        margin-top: 5px;
+        font-size: 13px;
+    }
+
+    @@media(max-width:700px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full {
+            grid-column: auto;
+        }
+    }
+</style>
+
+<div class="blog-form-container">
+
+    <div class="blog-form-card">
+
+        <h1>Novo artigo</h1>
+
+        <p>
+            Preencha as informações do artigo.
+            Após salvar ele poderá aparecer automaticamente no Blog.
+        </p>
+
+        <form asp-controller="Admin"
+              asp-action="CreateBlogPost"
+              method="post"
+              enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label asp-for="Title"></label>
+
+                    <input asp-for="Title"
+                           class="form-control-blog"
+                           placeholder="Ex: 5 dicas para fazer o brigadeiro perfeito" />
+
+                    <span asp-validation-for="Title"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-group full">
+                    <label asp-for="Excerpt"></label>
+
+                    <textarea asp-for="Excerpt"
+                              rows="3"
+                              class="form-control-blog"
+                              placeholder="Pequeno resumo que aparecerá no card do Blog"></textarea>
+
+                    <span asp-validation-for="Excerpt"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Category"></label>
+
+                    <input asp-for="Category"
+                           class="form-control-blog"
+                           placeholder="Ex: Receitas" />
+
+                    <span asp-validation-for="Category"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Tags"></label>
+
+                    <input asp-for="Tags"
+                           class="form-control-blog"
+                           placeholder="brigadeiro, chocolate, receitas" />
+
+                    <small>
+                        Separe as tags por vírgula.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="CoverImageUrl">
+                        URL da capa
+                    </label>
+
+                    <input asp-for="CoverImageUrl"
+                           class="form-control-blog"
+                           placeholder="https://..." />
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Ou enviar imagem da capa
+                    </label>
+
+                    <input type="file"
+                           name="coverFile"
+                           class="form-control-blog"
+                           accept=".jpg,.jpeg,.png,.webp,image/*" />
+                </div>
+
+                <div class="form-group full">
+                    <label asp-for="Content"></label>
+
+                    <textarea asp-for="Content"
+                              rows="18"
+                              class="form-control-blog"
+                              placeholder="Digite o conteúdo completo do artigo..."></textarea>
+
+                    <span asp-validation-for="Content"
+                          class="text-danger"></span>
+
+                    <div class="editor-ajuda">
+                        <strong>Como formatar:</strong><br />
+
+                        <code>## Título da seção</code><br />
+
+                        <code>### Subtítulo</code><br />
+
+                        <code>- Item da lista</code><br />
+
+                        <code>&gt; Uma citação</code><br />
+
+                        <code>[DICA] Sua dica aqui</code><br />
+
+                        <code>[IMAGEM] https://site.com/foto.jpg</code><br />
+
+                        <code>---</code> cria uma divisão.<br /><br />
+
+                        Qualquer texto normal vira um parágrafo.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AuthorName"></label>
+
+                    <input asp-for="AuthorName"
+                           class="form-control-blog"
+                           placeholder="Nome do autor" />
+
+                    <span asp-validation-for="AuthorName"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AuthorRole"></label>
+
+                    <input asp-for="AuthorRole"
+                           class="form-control-blog"
+                           placeholder="Ex: Confeiteira-chefe" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AuthorAvatar">
+                        URL da foto do autor
+                    </label>
+
+                    <input asp-for="AuthorAvatar"
+                           class="form-control-blog"
+                           placeholder="/imagens/autores/confeiteira.jpg" />
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Ou enviar foto do autor
+                    </label>
+
+                    <input type="file"
+                           name="authorFile"
+                           class="form-control-blog"
+                           accept=".jpg,.jpeg,.png,.webp,image/*" />
+                </div>
+
+                <div class="form-group full">
+                    <label asp-for="AuthorBio"></label>
+
+                    <textarea asp-for="AuthorBio"
+                              rows="3"
+                              class="form-control-blog"
+                              placeholder="Pequena apresentação do autor"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PublishedAt"></label>
+
+                    <input asp-for="PublishedAt"
+                           type="date"
+                           class="form-control-blog" />
+                </div>
+
+            </div>
+
+            <div class="check-area">
+
+                <label>
+                    <input asp-for="IsPublished" />
+                    Publicar no site
+                </label>
+
+                <label>
+                    <input asp-for="Featured" />
+                    Artigo em destaque
+                </label>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="btn-salvar">
+                    Salvar artigo
+                </button>
+
+                <a asp-controller="Admin"
+                   asp-action="Blog"
+                   class="btn-cancelar">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

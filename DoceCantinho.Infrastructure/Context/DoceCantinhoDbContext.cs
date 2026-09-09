@@ -35,6 +35,7 @@ namespace DoceCantinho.Infrastructure.Context
         /// DbSet que representa a tabela de Categories no banco de dados.
         /// </summary>
         public DbSet<Category> Categories { get; set; }
+        public DbSet<BlogPost> BlogPosts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,6 +60,52 @@ namespace DoceCantinho.Infrastructure.Context
                 b.HasKey(i => i.Id);
                 b.Property(i => i.Nome).IsRequired().HasMaxLength(200);
                 b.Property(i => i.Preco).HasPrecision(18, 2);
+            });
+
+            modelBuilder.Entity<BlogPost>(b =>
+            {
+                b.HasKey(x => x.Id);
+
+                b.Property(x => x.Title)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                b.Property(x => x.Slug)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                b.HasIndex(x => x.Slug)
+                    .IsUnique();
+
+                b.Property(x => x.Excerpt)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                b.Property(x => x.Content)
+                    .IsRequired();
+
+                b.Property(x => x.CoverImageUrl)
+                    .HasMaxLength(500);
+
+                b.Property(x => x.Category)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                b.Property(x => x.Tags)
+                    .HasMaxLength(500);
+
+                b.Property(x => x.AuthorName)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                b.Property(x => x.AuthorRole)
+                    .HasMaxLength(150);
+
+                b.Property(x => x.AuthorAvatar)
+                    .HasMaxLength(500);
+
+                b.Property(x => x.AuthorBio)
+                    .HasMaxLength(1000);
             });
         }
 

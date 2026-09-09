@@ -1,6 +1,10 @@
 using DoceCantinho.Application.DTOs;
 using DoceCantinho.Application.Interfaces;
 using DoceCantinho.Application.ViewModels;
+using DoceCantinho.Domain.Entities;
+using DoceCantinho.UI.ViewModels;
+using System.Text;
+using System.Globalization;
 using DoceCantinho.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -326,6 +330,15 @@ namespace DoceCantinho.UI.Controllers
             return View(doces);
         }
 
+        public async Task<IActionResult> Blog()
+        {
+            var posts = await _db.BlogPosts
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
+
+            return View(posts);
+        }
+
         /// <summary>
         /// Formulário para criação de um novo game.
         /// GET : /Admin/CreateGame
@@ -530,5 +543,588 @@ namespace DoceCantinho.UI.Controllers
             return RedirectToAction(nameof(Categories));
         }
 
+
+        // =====================================================
+        // CRUD DO BLOG
+        // =====================================================
+
+      
+   
+
+        // =====================================================
+        // CRIAR POST
+        // =====================================================
+
+        [HttpGet]
+        public IActionResult CreateBlogPost()
+        {
+            ViewData["ActiveMenu"] = "Blog";
+            ViewData["Title"] = "Novo artigo";
+
+            var model = new BlogAdminViewModel
+            {
+                PublishedAt = DateTime.Today,
+                IsPublished = true,
+                AuthorName = User.Identity?.Name ?? "Doce Cantinho",
+                AuthorRole = "Equipe Doce Cantinho",
+                AuthorAvatar = "/imagens/autores/confeiteira.jpg"
+            };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateBlogPost(
+            BlogAdminViewModel model,
+            IFormFile? coverFile,
+            IFormFile? authorFile)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewData["ActiveMenu"] = "Blog";
+                ViewData["Title"] = "Novo artigo";
+
+                return View(model);
+            }
+
+            var slug = GerarSlug(model.Title);
+
+            // Evita slugs repetidos
+            var slugOriginal = slug;
+            var contador = 1;
+
+            while (await _db.BlogPosts.AnyAsync(p => p.Slug == slug))
+            {
+                slug = $"{slugOriginal}-{contador}";
+                contador++;
+            }
+
+            string? coverUrl = null;
+            string? authorUrl = null;
+
+            try
+            {
+                coverUrl = await SalvarImagemBlogAsync(
+                    coverFile,
+                    "capas"
+                );
+
+                authorUrl = await SalvarImagemBlogAsync(
+                    authorFile,
+                    "autores"
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+
+                ViewData["ActiveMenu"] = "Blog";
+                ViewData["Title"] = "Novo artigo";
+
+                return View(model);
+            }
+
+            // Se esse artigo for destaque,
+            // remove destaque dos outros.
+            if (model.Featured)
+            {
+                var destaques = await _db.BlogPosts
+                    .Where(p => p.Featured)
+                    .ToListAsync();
+
+                foreach (var item in destaques)
+                {
+                    item.Featured = false;
+                }
+            }
+
+            var post = new BlogPost
+            {
+                Title = model.Title.Trim(),
+
+                Slug = slug,
+
+                Excerpt = model.Excerpt.Trim(),
+
+                Content = model.Content,
+
+                CoverImageUrl =
+                    coverUrl ??
+                    model.CoverImageUrl ??
+                    string.Empty,
+
+                Category = model.Category.Trim(),
+
+                Tags = model.Tags?.Trim() ?? string.Empty,
+
+                AuthorName = model.AuthorName.Trim(),
+
+                AuthorRole =
+                    model.AuthorRole?.Trim() ??
+                    string.Empty,
+
+                AuthorAvatar =
+                    authorUrl ??
+                    model.AuthorAvatar ??
+                    "/imagens/autores/confeiteira.jpg",
+
+                AuthorBio =
+                    model.AuthorBio?.Trim() ??
+                    string.Empty,
+
+                PublishedAt = model.PublishedAt,
+
+                CreatedAt = DateTime.Now,
+
+                IsPublished = model.IsPublished,
+
+                Featured = model.Featured
+            };
+
+            _db.BlogPosts.Add(post);
+
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] = "Artigo criado com sucesso!";
+
+            return RedirectToAction(nameof(Blog));
+        }
+
+
+        // =====================================================
+        // EDITAR POST
+        // =====================================================
+
+        [HttpGet]
+        public async Task<IActionResult> EditBlogPost(int id)
+        {
+            ViewData["ActiveMenu"] = "Blog";
+            ViewData["Title"] = "Editar artigo";
+
+            var post = await _db.BlogPosts
+                .FindAsync(id);
+
+            if (post == null)
+                return NotFound();
+
+            var model = new BlogAdminViewModel
+            {
+                Id = post.Id,
+
+                Title = post.Title,
+
+                Excerpt = post.Excerpt,
+
+                Content = post.Content,
+
+                CoverImageUrl = post.CoverImageUrl,
+
+                Category = post.Category,
+
+                Tags = post.Tags,
+
+                AuthorName = post.AuthorName,
+
+                AuthorRole = post.AuthorRole,
+
+                AuthorAvatar = post.AuthorAvatar,
+
+                AuthorBio = post.AuthorBio,
+
+                PublishedAt = post.PublishedAt,
+
+                IsPublished = post.IsPublished,
+
+                Featured = post.Featured
+            };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditBlogPost(
+            int id,
+            BlogAdminViewModel model,
+            IFormFile? coverFile,
+            IFormFile? authorFile)
+        {
+            if (id != model.Id)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
+            {
+                ViewData["ActiveMenu"] = "Blog";
+                ViewData["Title"] = "Editar artigo";
+
+                return View(model);
+            }
+
+            var post = await _db.BlogPosts.FindAsync(id);
+
+            if (post == null)
+                return NotFound();
+
+            string? novaCapa = null;
+            string? novoAutor = null;
+
+            try
+            {
+                novaCapa = await SalvarImagemBlogAsync(
+                    coverFile,
+                    "capas"
+                );
+
+                novoAutor = await SalvarImagemBlogAsync(
+                    authorFile,
+                    "autores"
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+
+                ViewData["ActiveMenu"] = "Blog";
+                ViewData["Title"] = "Editar artigo";
+
+                return View(model);
+            }
+
+            // Se marcou esse como destaque,
+            // tira destaque dos outros.
+            if (model.Featured)
+            {
+                var outrosDestaques = await _db.BlogPosts
+                    .Where(p =>
+                        p.Featured &&
+                        p.Id != id)
+                    .ToListAsync();
+
+                foreach (var item in outrosDestaques)
+                {
+                    item.Featured = false;
+                }
+            }
+
+            post.Title = model.Title.Trim();
+
+            // Atualiza também o slug caso o título mude.
+            var novoSlug = GerarSlug(model.Title);
+
+            var slugOriginal = novoSlug;
+
+            var contador = 1;
+
+            while (await _db.BlogPosts.AnyAsync(p =>
+                       p.Slug == novoSlug &&
+                       p.Id != id))
+            {
+                novoSlug = $"{slugOriginal}-{contador}";
+
+                contador++;
+            }
+
+            post.Slug = novoSlug;
+
+            post.Excerpt = model.Excerpt.Trim();
+
+            post.Content = model.Content;
+
+            post.Category = model.Category.Trim();
+
+            post.Tags =
+                model.Tags?.Trim() ??
+                string.Empty;
+
+            post.AuthorName =
+                model.AuthorName.Trim();
+
+            post.AuthorRole =
+                model.AuthorRole?.Trim() ??
+                string.Empty;
+
+            post.AuthorBio =
+                model.AuthorBio?.Trim() ??
+                string.Empty;
+
+            post.PublishedAt =
+                model.PublishedAt;
+
+            post.IsPublished =
+                model.IsPublished;
+
+            post.Featured =
+                model.Featured;
+
+            post.UpdatedAt =
+                DateTime.Now;
+
+            if (!string.IsNullOrWhiteSpace(novaCapa))
+            {
+                post.CoverImageUrl = novaCapa;
+            }
+            else if (!string.IsNullOrWhiteSpace(model.CoverImageUrl))
+            {
+                post.CoverImageUrl = model.CoverImageUrl;
+            }
+
+            if (!string.IsNullOrWhiteSpace(novoAutor))
+            {
+                post.AuthorAvatar = novoAutor;
+            }
+            else if (!string.IsNullOrWhiteSpace(model.AuthorAvatar))
+            {
+                post.AuthorAvatar = model.AuthorAvatar;
+            }
+
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] =
+                "Artigo atualizado com sucesso!";
+
+            return RedirectToAction(nameof(Blog));
+        }
+
+
+        // =====================================================
+        // EXCLUIR POST - TELA DE CONFIRMAÇÃO
+        // =====================================================
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteBlogPost(int id)
+        {
+            ViewData["ActiveMenu"] = "Blog";
+            ViewData["Title"] = "Excluir artigo";
+
+            var post = await _db.BlogPosts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (post == null)
+                return NotFound();
+
+            return View(post);
+        }
+
+
+        // =====================================================
+        // EXCLUIR POST - CONFIRMAR
+        // =====================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteBlogPostConfirmed(int id)
+        {
+            var post = await _db.BlogPosts
+                .FindAsync(id);
+
+            if (post == null)
+                return NotFound();
+
+            _db.BlogPosts.Remove(post);
+
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] =
+                "Artigo excluído com sucesso!";
+
+            return RedirectToAction(nameof(Blog));
+        }
+
+
+        // =====================================================
+        // PUBLICAR / DESPUBLICAR
+        // =====================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleBlogPublished(int id)
+        {
+            var post = await _db.BlogPosts
+                .FindAsync(id);
+
+            if (post == null)
+                return NotFound();
+
+            post.IsPublished = !post.IsPublished;
+
+            post.UpdatedAt = DateTime.Now;
+
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] =
+                post.IsPublished
+                    ? "Artigo publicado!"
+                    : "Artigo ocultado do Blog.";
+
+            return RedirectToAction(nameof(Blog));
+        }
+
+
+        // =====================================================
+        // DESTACAR POST
+        // =====================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleBlogFeatured(int id)
+        {
+            var post = await _db.BlogPosts
+                .FindAsync(id);
+
+            if (post == null)
+                return NotFound();
+
+            var novoEstado = !post.Featured;
+
+            // Somente um post pode ser destaque.
+            if (novoEstado)
+            {
+                var destaques = await _db.BlogPosts
+                    .Where(p =>
+                        p.Featured &&
+                        p.Id != id)
+                    .ToListAsync();
+
+                foreach (var outro in destaques)
+                {
+                    outro.Featured = false;
+                }
+            }
+
+            post.Featured = novoEstado;
+
+            post.UpdatedAt = DateTime.Now;
+
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] =
+                novoEstado
+                    ? "Artigo definido como destaque!"
+                    : "Destaque removido.";
+
+            return RedirectToAction(nameof(Blog));
+        }
+
+
+        // =====================================================
+        // SALVAR IMAGENS DO BLOG
+        // =====================================================
+
+        private async Task<string?> SalvarImagemBlogAsync(
+            IFormFile? arquivo,
+            string subPasta)
+        {
+            if (arquivo == null || arquivo.Length == 0)
+                return null;
+
+            // Máximo 5 MB
+            if (arquivo.Length > 5 * 1024 * 1024)
+            {
+                throw new ArgumentException(
+                    "A imagem deve ter no máximo 5 MB."
+                );
+            }
+
+            var extensao = Path
+                .GetExtension(arquivo.FileName)
+                .ToLowerInvariant();
+
+            string[] extensoesPermitidas =
+            {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp"
+    };
+
+            if (!extensoesPermitidas.Contains(extensao))
+            {
+                throw new ArgumentException(
+                    "Formato inválido. Use JPG, JPEG, PNG ou WEBP."
+                );
+            }
+
+            var pasta = Path.Combine(
+                _webHostEnvironment.WebRootPath,
+                "uploads",
+                "blog",
+                subPasta
+            );
+
+            Directory.CreateDirectory(pasta);
+
+            var nome =
+                $"{Guid.NewGuid()}{extensao}";
+
+            var caminho = Path.Combine(
+                pasta,
+                nome
+            );
+
+            using var stream = new FileStream(
+                caminho,
+                FileMode.Create
+            );
+
+            await arquivo.CopyToAsync(stream);
+
+            return $"/uploads/blog/{subPasta}/{nome}";
+        }
+
+
+        // =====================================================
+        // GERADOR DE SLUG
+        // Exemplo:
+        // "Como Fazer Brigadeiro?" ->
+        // "como-fazer-brigadeiro"
+        // =====================================================
+
+        private static string GerarSlug(string texto)
+        {
+            texto = texto
+                .ToLowerInvariant()
+                .Normalize(NormalizationForm.FormD);
+
+            var sb = new StringBuilder();
+
+            foreach (var c in texto)
+            {
+                var categoria =
+                    CharUnicodeInfo.GetUnicodeCategory(c);
+
+                if (categoria != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            var resultado = sb
+                .ToString()
+                .Normalize(NormalizationForm.FormC);
+
+            resultado = new string(
+                resultado
+                    .Select(c =>
+                        char.IsLetterOrDigit(c)
+                            ? c
+                            : '-')
+                    .ToArray()
+            );
+
+            while (resultado.Contains("--"))
+            {
+                resultado =
+                    resultado.Replace("--", "-");
+            }
+
+            return resultado.Trim('-');
+        }
+
     }
+
+
 }

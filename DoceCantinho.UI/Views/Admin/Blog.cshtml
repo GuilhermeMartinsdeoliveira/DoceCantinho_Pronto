@@ -1,0 +1,425 @@
+﻿@using DoceCantinho.Domain.Entities
+@model IEnumerable<BlogPost>
+
+@{
+    ViewData["Title"] = "Gerenciar Blog";
+    ViewData["ActiveMenu"] = "Blog";
+}
+
+<style>
+    .blog-admin-container {
+        padding: 30px;
+        color: #f5e9df;
+    }
+
+    .blog-admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        gap: 20px;
+    }
+
+    .blog-admin-title h1 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .blog-admin-title p {
+        margin: 8px 0 0;
+        color: #cdb9aa;
+        font-size: 14px;
+    }
+
+    .btn-novo-blog {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        background: #df9b6d;
+        color: #24150f;
+        text-decoration: none;
+        font-weight: 700;
+        transition: .2s;
+    }
+
+        .btn-novo-blog:hover {
+            background: #eca979;
+            color: #24150f;
+            transform: translateY(-1px);
+        }
+
+    .blog-table-container {
+        background: #241914;
+        border: 1px solid #4a3428;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .blog-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .blog-table th {
+            background: #3a261d;
+            color: #e8a579;
+            padding: 16px;
+            text-align: left;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .blog-table td {
+            padding: 16px;
+            border-top: 1px solid #3d2a21;
+            vertical-align: middle;
+        }
+
+        .blog-table tbody tr {
+            transition: .2s;
+        }
+
+            .blog-table tbody tr:hover {
+                background: #2d1e18;
+            }
+
+    .post-title {
+        font-weight: 700;
+        color: #fff4ed;
+        margin-bottom: 5px;
+    }
+
+    .post-excerpt {
+        color: #bca99c;
+        font-size: 12px;
+        max-width: 350px;
+    }
+
+    .post-cover {
+        width: 70px;
+        height: 55px;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #38251c;
+    }
+
+    .sem-imagem {
+        width: 70px;
+        height: 55px;
+        border-radius: 8px;
+        background: #38251c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #927c70;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .badge-publicado {
+        background: rgba(88, 180, 116, .15);
+        color: #75d697;
+    }
+
+    .badge-rascunho {
+        background: rgba(220, 160, 90, .15);
+        color: #e6ad72;
+    }
+
+    .badge-destaque {
+        background: rgba(180, 130, 255, .15);
+        color: #c9a5ff;
+        margin-left: 5px;
+    }
+
+    .acoes {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .btn-acao {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 11px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: 1px solid #523a2e;
+        background: #302019;
+        color: #ead9ce;
+        font-size: 12px;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+        .btn-acao:hover {
+            background: #493126;
+            color: white;
+        }
+
+    .btn-editar {
+        color: #e9ae7d;
+    }
+
+    .btn-excluir {
+        color: #ef8585;
+    }
+
+    .btn-publicar {
+        color: #79d69a;
+    }
+
+    .btn-destaque {
+        color: #c7a2ff;
+    }
+
+    .blog-vazio {
+        text-align: center;
+        padding: 60px 20px;
+        color: #bca99c;
+    }
+
+    .blog-vazio-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+
+    @@media (max-width: 900px) {
+        .blog-admin-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .blog-table-container {
+            overflow-x: auto;
+        }
+
+        .blog-table {
+            min-width: 900px;
+        }
+    }
+</style>
+
+<div class="blog-admin-container">
+
+    <div class="blog-admin-header">
+
+        <div class="blog-admin-title">
+            <h1>Gerenciar Blog</h1>
+            <p>Crie, edite, publique e organize os artigos do DoceCantinho.</p>
+        </div>
+
+        <a asp-controller="Admin"
+           asp-action="CreateBlogPost"
+           class="btn-novo-blog">
+            <span>＋</span>
+            Novo Post
+        </a>
+
+    </div>
+
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="blog-table-container">
+
+            <table class="blog-table">
+
+                <thead>
+                    <tr>
+                        <th>Capa</th>
+                        <th>Publicação</th>
+                        <th>Categoria</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var post in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+                                {
+                                    <img src="@post.CoverImageUrl"
+                                         alt="@post.Title"
+                                         class="post-cover" />
+                                }
+                                else
+                                {
+                                    <div class="sem-imagem">
+                                        Sem imagem
+                                    </div>
+                                }
+                            </td>
+
+                            <td>
+                                <div class="post-title">
+                                    @post.Title
+                                </div>
+
+                                <div class="post-excerpt">
+                                    @post.Excerpt
+                                </div>
+                            </td>
+
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(post.Category))
+                                {
+                                    <span>@post.Category</span>
+                                }
+                                else
+                                {
+                                    <span>—</span>
+                                }
+                            </td>
+
+                            <td>
+                                @post.PublishedAt.ToString("dd/MM/yyyy")
+                            </td>
+
+                            <td>
+
+                                @if (post.IsPublished)
+                                {
+                                    <span class="badge badge-publicado">
+                                        Publicado
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-rascunho">
+                                        Rascunho
+                                    </span>
+                                }
+
+                                @if (post.Featured)
+                                {
+                                    <span class="badge badge-destaque">
+                                        Destaque
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                <div class="acoes">
+
+                                    <a asp-controller="Admin"
+                                       asp-action="EditBlogPost"
+                                       asp-route-id="@post.Id"
+                                       class="btn-acao btn-editar">
+                                        ✏ Editar
+                                    </a>
+
+                                    <a asp-controller="Admin"
+                                       asp-action="DeleteBlogPost"
+                                       asp-route-id="@post.Id"
+                                       class="btn-acao btn-excluir">
+                                        🗑 Excluir
+                                    </a>
+
+                                    <form asp-controller="Admin"
+                                          asp-action="ToggleBlogPublished"
+                                          asp-route-id="@post.Id"
+                                          method="post"
+                                          style="display:inline;">
+
+                                        <button type="submit"
+                                                class="btn-acao btn-publicar">
+
+                                            @if (post.IsPublished)
+                                            {
+                                                <span>Ocultar</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Publicar</span>
+                                            }
+
+                                        </button>
+
+                                    </form>
+
+                                    <form asp-controller="Admin"
+                                          asp-action="ToggleBlogFeatured"
+                                          asp-route-id="@post.Id"
+                                          method="post"
+                                          style="display:inline;">
+
+                                        <button type="submit"
+                                                class="btn-acao btn-destaque">
+
+                                            @if (post.Featured)
+                                            {
+                                                <span>Retirar destaque</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Destacar</span>
+                                            }
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <div class="blog-table-container">
+
+            <div class="blog-vazio">
+
+                <div class="blog-vazio-icon">
+                    📝
+                </div>
+
+                <h2>Nenhuma publicação encontrada</h2>
+
+                <p>
+                    Você ainda não possui artigos cadastrados no Blog.
+                </p>
+
+                <br />
+
+                <a asp-controller="Admin"
+                   asp-action="CreateBlogPost"
+                   class="btn-novo-blog">
+                    ＋ Criar primeiro post
+                </a>
+
+            </div>
+
+        </div>
+    }
+
+</div>
