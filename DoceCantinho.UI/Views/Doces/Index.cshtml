@@ -1,86 +1,170 @@
 @model DoceCantinho.Application.ViewModels.DoceListViewModel
+
 @{
     ViewData["Title"] = "Loja";
 }
 
 <div class="page active" id="page-loja">
+
     <div class="container" style="padding-top:2.5rem;padding-bottom:4rem">
 
         <div style="margin-bottom:2rem">
             <p class="section-eyebrow">Catálogo</p>
             <h1 class="section-title">Nossa Loja</h1>
+            <p class=Pequenos doces, grandes momentos</p>
         </div>
 
-        <!-- Filtro por Categoria -->
-        <div class="loja-toolbar">
-            <div class="filter-tabs">
-                <a class="filter-tab @(!Model.SelectedCategoryId.HasValue ? "active" : "")"
-                   asp-action="Index">Todos</a>
-                @foreach (var cat in Model.Categories)
-                {
-                    <a class="filter-tab @(Model.SelectedCategoryId == cat.Id ? "active" : "")"
-                       asp-action="Index" asp-route-categoryId="@cat.Id">@cat.Name</a>
-                }
-            </div>
-        </div>
-
+        <!-- PRODUTOS -->
         @if (Model.Doces.Any())
         {
             <div class="products-grid">
+
                 @foreach (var doce in Model.Doces)
                 {
                     <div class="product-card">
+
+                        <!-- IMAGEM -->
                         <div class="product-img-wrap">
+
                             @if (doce.IsFeatured)
                             {
-                                <span class="product-featured-badge" title="Produto em destaque">
+                                <span class="product-featured-badge"
+                                      title="Produto em destaque">
+
                                     <i class="bi bi-star-fill"></i>
+
                                 </span>
                             }
+
+
                             @if (!string.IsNullOrEmpty(doce.CoverImageUrl))
                             {
-                                <img src="@doce.CoverImageUrl" alt="@doce.Title" class="product-img" />
+                                <img src="@doce.CoverImageUrl"
+                                     alt="@doce.Title"
+                                     class="product-img" />
                             }
                             else
                             {
                                 <div class="product-img-placeholder">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
+
+                                    <svg viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.5"
+                                         width="48"
+                                         height="48">
+
+                                        <rect x="3"
+                                              y="3"
+                                              width="18"
+                                              height="18"
+                                              rx="2" />
+
+                                        <circle cx="8.5"
+                                                cy="8.5"
+                                                r="1.5" />
+
                                         <polyline points="21 15 16 10 5 21" />
+
                                     </svg>
+
                                 </div>
                             }
+
                         </div>
+
+
+                        <!-- INFORMAÇÕES DO PRODUTO -->
+
                         <div class="product-body">
+
                             @if (!string.IsNullOrEmpty(doce.CategoryName))
                             {
-                                <p class="product-cat">@doce.CategoryName</p>
+                                <p class="product-cat">
+                                    @doce.CategoryName
+                                </p>
                             }
-                            <h3 class="product-name">@doce.Title</h3>
-                            <p class="product-desc">@doce.Description</p>
-                            <div class="product-footer">
-                                <span class="product-price">@doce.Preco.ToString("C")</span>
-                                <a asp-action="Details" asp-route-id="@doce.Id" class="btn btn-accent btn-sm">Ver detalhes</a>
 
-                                <form asp-controller="Carrinho" asp-action="Adicionar" method="post" style="display:inline;margin-left:.5rem">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@doce.Id" />
-                                    <input type="hidden" name="quantidade" value="1" />
-                                    <button type="submit" class="btn btn-outline btn-sm">Adicionar</button>
-                                </form>
+
+                            <h3 class="product-name">
+                                @doce.Title
+                            </h3>
+
+
+                            <p class="product-desc">
+                                @doce.Description
+                            </p>
+
+
+                            <!-- PREÇO E BOTÕES -->
+
+                            <div class="doce-card-bottom">
+
+                                <span class="doce-card-price">
+                                    @doce.Preco.ToString("C")
+                                </span>
+
+
+                                <div class="doce-card-buttons">
+
+                                    <!-- VER DETALHES -->
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@doce.Id"
+                                       class="doce-btn-dois">
+
+                                        Ver detalhes
+
+                                    </a>
+
+
+                                    <!-- ADICIONAR AO CARRINHO -->
+
+                                    <form asp-controller="Carrinho"
+                                          asp-action="Adicionar"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@doce.Id" />
+
+                                        <input type="hidden"
+                                               name="quantidade"
+                                               value="1" />
+
+                                        <button type="submit"
+                                                class="doce-btn-dois doce-btn-adicionar">
+
+                                            Adicionar
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
                             </div>
+
                         </div>
+
                     </div>
                 }
+
             </div>
         }
         else
         {
-            <p style="text-align:center;color:var(--muted-fg);padding:5rem 0">
+            <p style="text-align:center;
+                color:var(--muted-fg);
+                padding:5rem 0">
+
                 Nenhum produto encontrado nesta categoria.
+
             </p>
         }
 
     </div>
+
 </div>

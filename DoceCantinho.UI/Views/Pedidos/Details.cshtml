@@ -3,184 +3,1568 @@
 
 @{
     ViewData["Title"] = "Detalhes do Pedido";
+
     var isAdmin = ViewData["IsAdmin"] as bool? ?? false;
-    var podeCancelar = isAdmin ? (Model.Status != "Cancelado" && Model.Status != "Entregue") : Model.Status == "Pendente";
-    var statusList = new[] { "Pendente", "Pago", "Em Preparo", "Saiu para Entrega", "Entregue", "Cancelado" };
+
+    var podeCancelar = isAdmin
+        ? (Model.Status != "Cancelado" && Model.Status != "Entregue")
+        : Model.Status == "Pendente";
+
+    var statusList = new[]
+    {
+        "Pendente",
+        "Pago",
+        "Em Preparo",
+        "Saiu para Entrega",
+        "Entregue",
+        "Cancelado"
+    };
 
     (string bg, string fg) StatusCores(string status) => status switch
     {
-        "Pago" => ("#dcfce7", "#16a34a"),
-        "Entregue" => ("#dcfce7", "#16a34a"),
-        "Em Preparo" => ("#fef3c7", "#b45309"),
-        "Saiu para Entrega" => ("#dbeafe", "#1d4ed8"),
-        "Cancelado" => ("#fee2e2", "#dc2626"),
-        _ => ("#fef3c7", "#b45309")
+        "Pago" => ("#DCFCE7", "#15803D"),
+        "Entregue" => ("#DCFCE7", "#15803D"),
+        "Em Preparo" => ("#FEF3C7", "#B45309"),
+        "Saiu para Entrega" => ("#DBEAFE", "#1D4ED8"),
+        "Cancelado" => ("#FEE2E2", "#DC2626"),
+        _ => ("#FEF3C7", "#B45309")
     };
+
     var (bgC, fgC) = StatusCores(Model.Status);
 }
 
-<div class="container my-5" style="max-width:1100px">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-        <h1 class="pedidos-title">Pedido #@Model.Id.ToString("D4")</h1>
-        <div class="d-flex gap-2 flex-wrap">
-            @if (isAdmin)
-            {
-                <a href="@Url.Action("Edit", "Pedidos", new { id = Model.Id })" class="btn-pedido-outline">Editar</a>
-                <a href="@Url.Action("Delete", "Pedidos", new { id = Model.Id })" class="btn-pedido-danger-outline">Excluir</a>
-            }
-            <a href="@Url.Action("Index", "Pedidos")" class="btn-pedido-outline">Voltar</a>
+<div class="pedido-page">
+
+    <!-- =========================================
+         CABEÇALHO
+         ========================================= -->
+
+    <div class="pedido-topo">
+
+        <div>
+            <a href="@Url.Action("Index", "Pedidos")" class="pedido-voltar">
+                <span>←</span>
+                Voltar aos pedidos
+            </a>
+
+            <div class="pedido-heading">
+
+                <div>
+                    <div class="pedido-overline">
+                        DETALHES DO PEDIDO
+                    </div>
+
+                    <h1>
+                        Pedido
+                        <span>#@Model.Id.ToString("D4")</span>
+                    </h1>
+
+                    <p>
+                        Realizado em
+                        @Model.CreatedAt.ToString("dd/MM/yyyy")
+                        às
+                        @Model.CreatedAt.ToString("HH:mm")
+                    </p>
+                </div>
+
+                <div class="pedido-acoes-topo">
+
+                    @if (isAdmin)
+                    {
+                        <a href="@Url.Action("Edit", "Pedidos", new { id = Model.Id })"
+                           class="pedido-btn pedido-btn-light">
+                            Editar
+                        </a>
+
+                        <a href="@Url.Action("Delete", "Pedidos", new { id = Model.Id })"
+                           class="pedido-btn pedido-btn-danger">
+                            Excluir
+                        </a>
+                    }
+
+                </div>
+
+            </div>
         </div>
+
     </div>
+
+
+    <!-- =========================================
+         ALERTAS
+         ========================================= -->
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show">@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+        <div class="pedido-alert pedido-alert-success">
+            <span>✓</span>
+            <div>@TempData["Success"]</div>
+        </div>
     }
+
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show">@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+        <div class="pedido-alert pedido-alert-error">
+            <span>!</span>
+            <div>@TempData["Error"]</div>
+        </div>
     }
 
-    <div class="row g-4">
-        <div class="col-lg-8">
-            <!-- Resumo -->
-            <div class="pedido-card mb-3">
-                <h5 class="pedido-card-title">Resumo do Pedido</h5>
-                <div class="row">
-                    <div class="col-6 col-md-3 mb-2">
-                        <div class="pedido-label">Data</div>
-                        <div class="pedido-value">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
-                    </div>
-                    <div class="col-6 col-md-3 mb-2">
-                        <div class="pedido-label">Status</div>
-                        <span class="pedido-badge" style="background:@bgC;color:@fgC">@Model.Status</span>
-                    </div>
-                    <div class="col-6 col-md-3 mb-2">
-                        <div class="pedido-label">Pagamento</div>
-                        <div class="pedido-value">@Model.PaymentMethod</div>
-                    </div>
-                    <div class="col-6 col-md-3 mb-2">
-                        <div class="pedido-label">Total</div>
-                        <div class="pedido-value" style="color:#D4704A;font-weight:700">R$ @Model.Total.ToString("F2")</div>
-                    </div>
+
+    <!-- =========================================
+         STATUS + TOTAL
+         ========================================= -->
+
+    <div class="pedido-status">
+
+        <div class="status-left">
+
+            <div class="status-icon">
+                ✓
+            </div>
+
+            <div>
+                <div class="status-label">
+                    STATUS DO PEDIDO
+                </div>
+
+                <div class="status-title">
+                    @Model.Status
+                </div>
+
+                <div class="status-description">
+                    @if (Model.Status == "Pago")
+                    {
+                        <span>Seu pagamento foi confirmado.</span>
+                    }
+                    else if (Model.Status == "Em Preparo")
+                    {
+                        <span>Seu pedido está sendo preparado.</span>
+                    }
+                    else if (Model.Status == "Saiu para Entrega")
+                    {
+                        <span>Seu pedido está a caminho.</span>
+                    }
+                    else if (Model.Status == "Entregue")
+                    {
+                        <span>Pedido entregue com sucesso.</span>
+                    }
+                    else if (Model.Status == "Cancelado")
+                    {
+                        <span>Este pedido foi cancelado.</span>
+                    }
+                    else
+                    {
+                        <span>Aguardando processamento do pedido.</span>
+                    }
                 </div>
             </div>
 
-            <!-- Dados de Entrega -->
-            <div class="pedido-card mb-3">
-                <h5 class="pedido-card-title">Dados de Entrega</h5>
-                <div class="row">
-                    <div class="col-md-6 mb-2">
-                        <div class="pedido-label">Cliente</div>
-                        <div class="pedido-value">@Model.NomeCliente</div>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <div class="pedido-label">Telefone</div>
-                        <div class="pedido-value">@Model.Telefone</div>
-                    </div>
-                    <div class="col-12">
-                        <div class="pedido-label">Endereço</div>
-                        <div class="pedido-value">@(string.IsNullOrEmpty(Model.Endereco) ? "Não informado" : Model.Endereco)</div>
-                    </div>
-                </div>
-            </div>
+        </div>
 
-            <!-- Itens -->
-            <div class="pedido-card">
-                <h5 class="pedido-card-title">Itens do Pedido (@Model.Items.Count)</h5>
+        <div class="status-total">
+
+            <span>Total do pedido</span>
+
+            <strong>
+                R$ @Model.Total.ToString("F2")
+            </strong>
+
+            <small>
+                Pagamento: @Model.PaymentMethod
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         CONTEÚDO
+         ========================================= -->
+
+    <div class="pedido-layout">
+
+
+        <!-- =====================================
+             COLUNA PRINCIPAL
+             ===================================== -->
+
+        <main>
+
+
+            <!-- RESUMO -->
+            <section class="pedido-box">
+
+                <div class="box-header">
+
+                    <div class="box-icon">
+                        🧾
+                    </div>
+
+                    <div>
+                        <h2>Resumo do pedido</h2>
+                        <p>Informações gerais da compra</p>
+                    </div>
+
+                </div>
+
+
+                <div class="resumo-grid">
+
+                    <div class="resumo-item">
+
+                        <span class="resumo-label">
+                            DATA
+                        </span>
+
+                        <strong>
+                            @Model.CreatedAt.ToString("dd/MM/yyyy")
+                        </strong>
+
+                        <small>
+                            @Model.CreatedAt.ToString("HH:mm")
+                        </small>
+
+                    </div>
+
+
+                    <div class="resumo-item">
+
+                        <span class="resumo-label">
+                            STATUS
+                        </span>
+
+                        <span class="pedido-badge"
+                              style="background:@bgC;color:@fgC">
+                            @Model.Status
+                        </span>
+
+                    </div>
+
+
+                    <div class="resumo-item">
+
+                        <span class="resumo-label">
+                            PAGAMENTO
+                        </span>
+
+                        <strong>
+                            @Model.PaymentMethod
+                        </strong>
+
+                    </div>
+
+
+                    <div class="resumo-item">
+
+                        <span class="resumo-label">
+                            VALOR TOTAL
+                        </span>
+
+                        <strong class="valor-destaque">
+                            R$ @Model.Total.ToString("F2")
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CLIENTE -->
+            <section class="pedido-box">
+
+                <div class="box-header">
+
+                    <div class="box-icon">
+                        👤
+                    </div>
+
+                    <div>
+                        <h2>Dados de entrega</h2>
+                        <p>Informações do cliente</p>
+                    </div>
+
+                </div>
+
+
+                <div class="cliente-grid">
+
+                    <div class="cliente-item">
+
+                        <span>
+                            CLIENTE
+                        </span>
+
+                        <strong>
+                            @Model.NomeCliente
+                        </strong>
+
+                    </div>
+
+
+                    <div class="cliente-item">
+
+                        <span>
+                            TELEFONE
+                        </span>
+
+                        <strong>
+                            @Model.Telefone
+                        </strong>
+
+                    </div>
+
+
+                    <div class="cliente-item cliente-endereco">
+
+                        <span>
+                            ENDEREÇO
+                        </span>
+
+                        <strong>
+                            @(string.IsNullOrEmpty(Model.Endereco)
+                                ? "Não informado"
+                                : Model.Endereco)
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- PRODUTOS -->
+            <section class="pedido-box">
+
+                <div class="box-header box-header-products">
+
+                    <div class="box-header-left">
+
+                        <div class="box-icon">
+                            🛍
+                        </div>
+
+                        <div>
+                            <h2>Itens do pedido</h2>
+
+                            <p>
+                                @Model.Items.Count
+                                @(Model.Items.Count == 1 ? "item" : "itens")
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
                 @if (Model.Items == null || Model.Items.Count == 0)
                 {
-                    <p class="text-center py-3" style="color:#8A6555">Nenhum item neste pedido</p>
+                    <div class="pedido-vazio">
+                        Nenhum item neste pedido.
+                    </div>
                 }
                 else
                 {
-                    <div class="table-responsive">
-                        <table class="table table-sm align-middle mb-0" style="font-size:0.9rem">
-                            <thead>
-                                <tr style="color:#8A6555;font-size:0.78rem;text-transform:uppercase">
-                                    <th class="border-0">Produto</th>
-                                    <th class="border-0 text-end">Preço</th>
-                                    <th class="border-0 text-center">Qtd.</th>
-                                    <th class="border-0 text-end">Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.Items)
-                                {
-                                    <tr>
-                                        <td class="border-0" style="color:#3D2314">@item.Nome</td>
-                                        <td class="border-0 text-end">R$ @item.Preco.ToString("F2")</td>
-                                        <td class="border-0 text-center">@item.Quantidade</td>
-                                        <td class="border-0 text-end fw-bold">R$ @((item.Preco * item.Quantidade).ToString("F2"))</td>
-                                    </tr>
-                                }
-                            </tbody>
-                            <tfoot>
-                                <tr style="border-top:2px solid rgba(92,46,14,.15)">
-                                    <td colspan="3" class="text-end fw-bold pt-3">TOTAL:</td>
-                                    <td class="text-end fw-bold pt-3" style="color:#D4704A">R$ @Model.Total.ToString("F2")</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                    <div class="produtos-lista">
+
+                        @foreach (var item in Model.Items)
+                        {
+                            <div class="produto">
+
+                                <div class="produto-icon">
+                                    🍰
+                                </div>
+
+                                <div class="produto-info">
+
+                                    <strong>
+                                        @item.Nome
+                                    </strong>
+
+                                    <span>
+                                        R$ @item.Preco.ToString("F2")
+                                        ×
+                                        @item.Quantidade
+                                    </span>
+
+                                </div>
+
+                                <div class="produto-subtotal">
+                                    R$
+                                    @((item.Preco * item.Quantidade).ToString("F2"))
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+
+                    <div class="pedido-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong>
+                            R$ @Model.Total.ToString("F2")
+                        </strong>
+
                     </div>
                 }
-            </div>
-        </div>
 
-        <!-- Ações -->
-        <div class="col-lg-4">
-            <div class="pedido-card">
-                <h5 class="pedido-card-title">Ações</h5>
-                <div class="d-flex flex-column gap-2">
-                    @if (isAdmin)
-                    {
-                        <form method="post" action="@Url.Action("UpdateStatus", "Pedidos", new { id = Model.Id })" class="d-flex gap-2">
+            </section>
+
+        </main>
+
+
+        <!-- =====================================
+             SIDEBAR
+             ===================================== -->
+
+        <aside class="pedido-sidebar">
+
+
+            <!-- AÇÕES -->
+            <section class="pedido-box acoes-box">
+
+                <div class="box-header">
+
+                    <div class="box-icon">
+                        ⚡
+                    </div>
+
+                    <div>
+                        <h2>Ações</h2>
+                        <p>Gerencie este pedido</p>
+                    </div>
+
+                </div>
+
+
+                @if (isAdmin)
+                {
+                    <div class="acao-section">
+
+                        <label>
+                            Atualizar status
+                        </label>
+
+                        <form method="post"
+                              action="@Url.Action("UpdateStatus", "Pedidos", new { id = Model.Id })">
+
                             @Html.AntiForgeryToken()
-                            <select name="newStatus" class="form-select form-select-sm">
+
+                            <select name="newStatus"
+                                    class="pedido-select">
+
                                 @foreach (var s in statusList)
                                 {
-                                    <option value="@s" selected="@(Model.Status == s)">@s</option>
+                                    <option value="@s"
+                                            selected="@(Model.Status == s)">
+                                        @s
+                                    </option>
                                 }
-                            </select>
-                            <button type="submit" class="btn-pedido-primary" style="border:none">Atualizar</button>
-                        </form>
-                    }
 
-                    @if (podeCancelar)
-                    {
-                        <form method="post" action="@Url.Action("Cancel", "Pedidos", new { id = Model.Id })"
-                              onsubmit="return confirm('Tem certeza que deseja cancelar este pedido?');">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn-pedido-danger-outline w-100">Cancelar Pedido</button>
+                            </select>
+
+                            <button type="submit"
+                                    class="pedido-btn pedido-btn-primary">
+                                Atualizar status
+                            </button>
+
                         </form>
-                    }
+
+                    </div>
+                }
+
+
+                @if (podeCancelar)
+                {
+                    <div class="acao-cancelar">
+
+                        <form method="post"
+                              action="@Url.Action("Cancel", "Pedidos", new { id = Model.Id })"
+                              onsubmit="return confirm('Tem certeza que deseja cancelar este pedido?');">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="pedido-btn pedido-btn-cancelar">
+
+                                Cancelar pedido
+
+                            </button>
+
+                        </form>
+
+                    </div>
+                }
+
+            </section>
+
+
+            <!-- PAGAMENTO -->
+            <section class="pedido-box pagamento-box">
+
+                <div class="pagamento-title">
+                    Pagamento
                 </div>
-            </div>
-        </div>
+
+                <div class="pagamento-linha">
+
+                    <span>
+                        Método
+                    </span>
+
+                    <strong>
+                        @Model.PaymentMethod
+                    </strong>
+
+                </div>
+
+                <div class="pagamento-linha">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong class="pagamento-total">
+                        R$ @Model.Total.ToString("F2")
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+        </aside>
+
     </div>
+
 </div>
 
+
 <style>
-    .pedidos-title { font-family:'Playfair Display',serif; font-weight:700; color:#3D2314; }
-    .pedido-card {
-        background:#FFF8F0; border:1px solid rgba(92,46,14,.12); border-radius:12px;
-        padding:1.25rem 1.5rem; box-shadow:0 2px 12px rgba(92,46,14,.06);
+
+    /* =========================================
+       BASE
+       ========================================= */
+
+    .pedido-page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 35px 25px 70px;
+        color: #321b0f;
     }
-    .pedido-card-title { font-family:'Playfair Display',serif; font-weight:700; color:#3D2314; margin-bottom:1rem; }
-    .pedido-label { color:#8A6555; font-size:0.75rem; text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px; }
-    .pedido-value { color:#3D2314; font-weight:600; }
-    .pedido-badge { padding:0.2rem 0.7rem; border-radius:100px; font-size:0.75rem; font-weight:700; display:inline-block; }
-    .btn-pedido-primary {
-        background:#3D2314; color:#FDF6ED; border-radius:8px; padding:0.5rem 1rem;
-        font-weight:600; font-size:0.8125rem; text-decoration:none; cursor:pointer;
+
+
+    /* =========================================
+       CABEÇALHO
+       ========================================= */
+
+    .pedido-voltar {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        margin-bottom: 20px;
+
+        color: #866653;
+        text-decoration: none;
+
+        font-size: .85rem;
+        font-weight: 600;
+
+        transition: .2s;
     }
-    .btn-pedido-primary:hover { background:#4A2810; color:#FDF6ED; }
-    .btn-pedido-outline, .btn-pedido-danger-outline {
-        border-radius:8px; padding:0.5rem 0.9rem; font-weight:600; font-size:0.8125rem;
-        text-decoration:none; border:1.5px solid; cursor:pointer; background:transparent;
+
+    .pedido-voltar:hover {
+        color: #4b2815;
     }
-    .btn-pedido-outline { color:#3D2314; border-color:#3D2314; }
-    .btn-pedido-outline:hover { background:#3D2314; color:#FDF6ED; }
-    .btn-pedido-danger-outline { color:#dc2626; border-color:#dc2626; }
-    .btn-pedido-danger-outline:hover { background:#dc2626; color:#fff; }
+
+    .pedido-voltar span {
+        font-size: 1.1rem;
+    }
+
+
+    .pedido-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 25px;
+
+        margin-bottom: 30px;
+    }
+
+
+    .pedido-overline {
+        margin-bottom: 7px;
+
+        color: #b27659;
+
+        font-size: .68rem;
+        font-weight: 800;
+
+        letter-spacing: 1.8px;
+    }
+
+
+    .pedido-heading h1 {
+        margin: 0;
+
+        font-family: 'Playfair Display', Georgia, serif;
+
+        font-size: clamp(2.1rem, 4vw, 3rem);
+
+        line-height: 1.1;
+
+        color: #321b0f;
+
+        letter-spacing: -1px;
+    }
+
+
+    .pedido-heading h1 span {
+        color: #b8653e;
+    }
+
+
+    .pedido-heading p {
+        margin: 8px 0 0;
+
+        color: #967c6d;
+
+        font-size: .88rem;
+    }
+
+
+    .pedido-acoes-topo {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+
+    /* =========================================
+       BOTÕES
+       ========================================= */
+
+    .pedido-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-height: 43px;
+
+        padding: 0 17px;
+
+        border-radius: 10px;
+
+        font-size: .82rem;
+        font-weight: 700;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease,
+            background .2s ease;
+    }
+
+
+    .pedido-btn:hover {
+        transform: translateY(-1px);
+    }
+
+
+    .pedido-btn-light {
+        color: #4b2815;
+        background: #fff;
+
+        border: 1px solid #dfd0c5;
+    }
+
+
+    .pedido-btn-light:hover {
+        color: #fff;
+        background: #4b2815;
+        border-color: #4b2815;
+    }
+
+
+    .pedido-btn-danger {
+        color: #b7372b;
+        background: #fff;
+
+        border: 1px solid #e5bbb5;
+    }
+
+
+    .pedido-btn-danger:hover {
+        color: #fff;
+        background: #b7372b;
+        border-color: #b7372b;
+    }
+
+
+    .pedido-btn-primary {
+        width: 100%;
+
+        color: #fff;
+
+        background: #4b2815;
+
+        border: 0;
+
+        box-shadow:
+            0 5px 14px rgba(75, 40, 21, .16);
+    }
+
+
+    .pedido-btn-primary:hover {
+        background: #66381f;
+
+        box-shadow:
+            0 8px 20px rgba(75, 40, 21, .22);
+    }
+
+
+    .pedido-btn-cancelar {
+        width: 100%;
+
+        color: #bd3d31;
+
+        background: #fff;
+
+        border: 1px solid #e7bbb5;
+    }
+
+
+    .pedido-btn-cancelar:hover {
+        color: #fff;
+
+        background: #bd3d31;
+
+        border-color: #bd3d31;
+    }
+
+
+    /* =========================================
+       ALERTAS
+       ========================================= */
+
+    .pedido-alert {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        margin-bottom: 20px;
+
+        padding: 14px 17px;
+
+        border-radius: 12px;
+
+        font-size: .88rem;
+        font-weight: 600;
+    }
+
+
+    .pedido-alert-success {
+        color: #166534;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+    }
+
+
+    .pedido-alert-error {
+        color: #991b1b;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+    }
+
+
+    .pedido-alert > span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 25px;
+        height: 25px;
+
+        border-radius: 50%;
+
+        background: rgba(0,0,0,.06);
+    }
+
+
+    /* =========================================
+       STATUS PRINCIPAL
+       ========================================= */
+
+    .pedido-status {
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 30px;
+
+        margin-bottom: 25px;
+
+        padding: 25px 28px;
+
+        border-radius: 20px;
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #432310 0%,
+                #683719 100%
+            );
+
+        box-shadow:
+            0 15px 35px rgba(61, 32, 14, .16);
+    }
+
+
+    .status-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+
+    .status-icon {
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 52px;
+        height: 52px;
+
+        flex-shrink: 0;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,.12);
+
+        border: 1px solid rgba(255,255,255,.15);
+
+        font-size: 1.2rem;
+    }
+
+
+    .status-label {
+        margin-bottom: 3px;
+
+        color: #d8bca9;
+
+        font-size: .66rem;
+        font-weight: 800;
+
+        letter-spacing: 1.3px;
+    }
+
+
+    .status-title {
+        font-family: 'Playfair Display', Georgia, serif;
+
+        font-size: 1.45rem;
+        font-weight: 700;
+    }
+
+
+    .status-description {
+        margin-top: 3px;
+
+        color: #dbc6b8;
+
+        font-size: .8rem;
+    }
+
+
+    .status-total {
+        text-align: right;
+    }
+
+
+    .status-total span {
+        display: block;
+
+        color: #d8bca9;
+
+        font-size: .7rem;
+    }
+
+
+    .status-total strong {
+        display: block;
+
+        margin-top: 3px;
+
+        color: #fff;
+
+        font-size: 1.55rem;
+    }
+
+
+    .status-total small {
+        display: block;
+
+        margin-top: 3px;
+
+        color: #d6bca9;
+
+        font-size: .72rem;
+    }
+
+
+    /* =========================================
+       LAYOUT
+       ========================================= */
+
+    .pedido-layout {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            330px;
+
+        gap: 22px;
+
+        align-items: start;
+    }
+
+
+    .pedido-layout main {
+        min-width: 0;
+    }
+
+
+    .pedido-sidebar {
+        position: sticky;
+        top: 90px;
+    }
+
+
+    /* =========================================
+       BOX
+       ========================================= */
+
+    .pedido-box {
+
+        margin-bottom: 22px;
+
+        padding: 25px;
+
+        background: #fff;
+
+        border: 1px solid #eee4dc;
+
+        border-radius: 18px;
+
+        box-shadow:
+            0 6px 20px rgba(65, 34, 16, .045);
+    }
+
+
+    .box-header {
+
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        margin-bottom: 23px;
+    }
+
+
+    .box-icon {
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 40px;
+        height: 40px;
+
+        flex-shrink: 0;
+
+        border-radius: 11px;
+
+        background: #f9eee6;
+
+        font-size: 1rem;
+    }
+
+
+    .box-header h2 {
+
+        margin: 0;
+
+        font-family: 'Playfair Display', Georgia, serif;
+
+        font-size: 1.08rem;
+
+        color: #3b2113;
+    }
+
+
+    .box-header p {
+
+        margin: 3px 0 0;
+
+        color: #a08778;
+
+        font-size: .75rem;
+    }
+
+
+    /* =========================================
+       RESUMO
+       ========================================= */
+
+    .resumo-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap: 15px;
+    }
+
+
+    .resumo-item {
+
+        min-height: 85px;
+
+        padding: 15px;
+
+        border-radius: 12px;
+
+        background: #fcf9f6;
+
+        border: 1px solid #f0e7e0;
+    }
+
+
+    .resumo-label {
+
+        display: block;
+
+        margin-bottom: 9px;
+
+        color: #a08778;
+
+        font-size: .65rem;
+        font-weight: 800;
+
+        letter-spacing: 1px;
+    }
+
+
+    .resumo-item strong {
+
+        display: inline-block;
+
+        color: #3b2113;
+
+        font-size: .9rem;
+    }
+
+
+    .resumo-item small {
+
+        margin-left: 3px;
+
+        color: #927769;
+
+        font-size: .72rem;
+    }
+
+
+    .valor-destaque {
+        color: #d26942 !important;
+        font-size: 1rem !important;
+    }
+
+
+    /* =========================================
+       BADGE
+       ========================================= */
+
+    .pedido-badge {
+
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        padding: 6px 10px;
+
+        border-radius: 999px;
+
+        font-size: .68rem;
+        font-weight: 800;
+    }
+
+
+    .pedido-badge::before {
+
+        content: "";
+
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: currentColor;
+    }
+
+
+    /* =========================================
+       CLIENTE
+       ========================================= */
+
+    .cliente-grid {
+
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 20px;
+    }
+
+
+    .cliente-item {
+
+        padding: 14px 0;
+
+        border-bottom: 1px solid #f0e7e0;
+    }
+
+
+    .cliente-item span {
+
+        display: block;
+
+        margin-bottom: 6px;
+
+        color: #a08778;
+
+        font-size: .65rem;
+        font-weight: 800;
+
+        letter-spacing: 1px;
+    }
+
+
+    .cliente-item strong {
+
+        color: #3b2113;
+
+        font-size: .92rem;
+
+        font-weight: 600;
+    }
+
+
+    .cliente-endereco {
+        grid-column: 1 / -1;
+    }
+
+
+    /* =========================================
+       PRODUTOS
+       ========================================= */
+
+    .produtos-lista {
+
+        display: flex;
+
+        flex-direction: column;
+
+        border-top: 1px solid #eee7e1;
+    }
+
+
+    .produto {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 14px;
+
+        padding: 15px 5px;
+
+        border-bottom: 1px solid #f0e9e3;
+    }
+
+
+    .produto-icon {
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 46px;
+        height: 46px;
+
+        flex-shrink: 0;
+
+        border-radius: 12px;
+
+        background: #f9eee6;
+
+        font-size: 1.1rem;
+    }
+
+
+    .produto-info {
+
+        flex: 1;
+
+        min-width: 0;
+    }
+
+
+    .produto-info strong {
+
+        display: block;
+
+        margin-bottom: 4px;
+
+        color: #3b2113;
+
+        font-size: .9rem;
+    }
+
+
+    .produto-info span {
+
+        color: #9a7b6b;
+
+        font-size: .76rem;
+    }
+
+
+    .produto-subtotal {
+
+        color: #4a2a19;
+
+        font-size: .9rem;
+
+        font-weight: 800;
+    }
+
+
+    .pedido-total {
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        margin-top: 5px;
+
+        padding-top: 20px;
+    }
+
+
+    .pedido-total span {
+
+        color: #755b4c;
+
+        font-size: .85rem;
+
+        font-weight: 700;
+    }
+
+
+    .pedido-total strong {
+
+        color: #d26942;
+
+        font-size: 1.25rem;
+    }
+
+
+    .pedido-vazio {
+
+        padding: 30px;
+
+        text-align: center;
+
+        color: #967c6d;
+
+        background: #fcf9f6;
+
+        border-radius: 12px;
+    }
+
+
+    /* =========================================
+       AÇÕES
+       ========================================= */
+
+    .acao-section label {
+
+        display: block;
+
+        margin-bottom: 8px;
+
+        color: #846859;
+
+        font-size: .7rem;
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .8px;
+    }
+
+
+    .acao-section form {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+
+    .pedido-select {
+
+        width: 100%;
+
+        min-height: 43px;
+
+        padding: 0 12px;
+
+        border: 1px solid #ded0c6;
+
+        border-radius: 10px;
+
+        background: #fff;
+
+        color: #432617;
+
+        font-size: .82rem;
+        font-weight: 600;
+
+        outline: none;
+    }
+
+
+    .pedido-select:focus {
+
+        border-color: #bd7652;
+
+        box-shadow:
+            0 0 0 3px rgba(189,118,82,.1);
+    }
+
+
+    .acao-cancelar {
+
+        margin-top: 16px;
+
+        padding-top: 16px;
+
+        border-top: 1px solid #eee5df;
+    }
+
+
+    /* =========================================
+       PAGAMENTO
+       ========================================= */
+
+    .pagamento-title {
+
+        margin-bottom: 18px;
+
+        color: #3b2113;
+
+        font-family: 'Playfair Display', Georgia, serif;
+
+        font-weight: 700;
+
+        font-size: 1rem;
+    }
+
+
+    .pagamento-linha {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        padding: 12px 0;
+
+        border-bottom: 1px solid #f0e7e0;
+    }
+
+
+    .pagamento-linha:last-child {
+        border-bottom: 0;
+    }
+
+
+    .pagamento-linha span {
+
+        color: #967b6c;
+
+        font-size: .78rem;
+    }
+
+
+    .pagamento-linha strong {
+
+        color: #402517;
+
+        font-size: .82rem;
+    }
+
+
+    .pagamento-total {
+        color: #d26942 !important;
+        font-size: 1rem !important;
+    }
+
+
+    /* =========================================
+       RESPONSIVO
+       ========================================= */
+
+     (max-width: 1000px) {
+
+        .pedido-layout {
+
+            grid-template-columns: 1fr;
+
+        }
+
+        .pedido-sidebar {
+
+            position: static;
+
+        }
+
+        .resumo-grid {
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+        }
+
+    }
+
+
+     (max-width: 700px) {
+
+        .pedido-page {
+
+            padding: 25px 15px 50px;
+
+        }
+
+        .pedido-heading {
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+        }
+
+        .pedido-status {
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+        }
+
+        .status-total {
+
+            width: 100%;
+
+            padding-top: 15px;
+
+            border-top: 1px solid rgba(255,255,255,.12);
+
+            text-align: left;
+
+        }
+
+        .cliente-grid {
+
+            grid-template-columns: 1fr;
+
+        }
+
+        .cliente-endereco {
+
+            grid-column: auto;
+
+        }
+
+    }
+
+
+     (max-width: 500px) {
+
+        .pedido-heading h1 {
+
+            font-size: 2rem;
+
+        }
+
+        .pedido-box {
+
+            padding: 20px 17px;
+
+            border-radius: 15px;
+
+        }
+
+        .resumo-grid {
+
+            grid-template-columns: 1fr;
+
+        }
+
+        .pedido-acoes-topo {
+
+            width: 100%;
+
+        }
+
+        .pedido-acoes-topo .pedido-btn {
+
+            flex: 1;
+
+        }
+
+        .produto-subtotal {
+
+            font-size: .82rem;
+
+        }
+
+    }
+
 </style>

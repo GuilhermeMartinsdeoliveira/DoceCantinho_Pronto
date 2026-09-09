@@ -4991,3 +4991,366 @@ html[data-theme="dark"] .footer-bottom {
     color: #9F8272;
     border-top-color: rgba(229, 154, 114, 0.15);
 }
+/* ==========================================
+   NOSSA EQUIPE - DOCE CANTINHO
+========================================== */
+
+.equipe-section {
+    position: relative;
+    padding: 75px 30px 85px;
+    overflow: hidden;
+    background: #fbf3e8;
+}
+
+
+/* DECORAÇÕES DO FUNDO */
+
+.equipe-decoracao {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(196, 113, 73, 0.10);
+    pointer-events: none;
+}
+
+.equipe-decoracao-esquerda {
+    left: -130px;
+    top: -100px;
+}
+
+.equipe-decoracao-direita {
+    right: -120px;
+    top: 30px;
+    width: 300px;
+    height: 300px;
+    background: rgba(171, 91, 54, 0.08);
+}
+
+
+/* CABEÇALHO */
+
+.equipe-header {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto 48px;
+    text-align: center;
+}
+
+.equipe-overline {
+    display: block;
+    margin-bottom: 10px;
+    color: #c55c35;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 5px;
+}
+
+.equipe-header h1 {
+    margin: 0;
+    color: #5a2910;
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1.1;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+
+/* DIVISOR */
+
+.equipe-divisor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 20px auto 14px;
+}
+
+    .equipe-divisor span {
+        width: 135px;
+        height: 1px;
+        background: #c96543;
+    }
+
+    .equipe-divisor b {
+        color: #c96543;
+        font-size: 22px;
+        font-weight: normal;
+    }
+
+.equipe-header p {
+    margin: 0;
+    color: #805b47;
+    font-size: 18px;
+}
+
+
+/* GRID */
+
+.equipe-grid {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+
+/* CARD */
+
+.equipe-card {
+    overflow: hidden;
+    background: #fffaf4;
+    border: 1px solid #e7cfba;
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(91, 45, 18, 0.09);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+    .equipe-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(91, 45, 18, 0.16);
+    }
+
+
+/* FOTO */
+
+.equipe-foto {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    background: #ead7c4;
+}
+
+    .equipe-foto img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center top;
+        transition: transform .5s ease;
+    }
+
+.equipe-card:hover .equipe-foto img {
+    transform: scale(1.04);
+}
+
+
+/* INFORMAÇÕES */
+
+.equipe-info {
+    padding: 25px 25px 28px;
+    text-align: center;
+}
+
+    .equipe-info h2 {
+        margin: 0 0 8px;
+        color: #5a2910;
+        font-size: 28px;
+        font-family: Georgia, "Times New Roman", serif;
+    }
+
+.equipe-cargo {
+    display: inline-block;
+    padding: 7px 22px;
+    border-radius: 30px;
+    background: #f7dfcf;
+    color: #c45832;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+
+/* MINI DIVISOR */
+
+.equipe-mini-divisor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px auto 12px;
+}
+
+    .equipe-mini-divisor span {
+        width: 38px;
+        height: 1px;
+        background: #c96543;
+    }
+
+    .equipe-mini-divisor b {
+        color: #c96543;
+        font-size: 14px;
+    }
+
+.equipe-info p {
+    max-width: 310px;
+    margin: 0 auto;
+    color: #765646;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+
+/* RESPONSIVO */
+
+     (max-width: 900px) {
+
+    .equipe-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+(max-width: 600px) {
+
+    .equipe-section {
+        padding: 55px 18px 65px;
+    }
+
+    .equipe-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+    }
+
+    .equipe-foto {
+        height: 360px;
+    }
+
+    .equipe-overline {
+        letter-spacing: 3px;
+        font-size: 11px;
+    }
+
+    .equipe-divisor span {
+        width: 70px;
+    }
+    /* ==========================================
+   BOTÕES DOS PRODUTOS - NOVO LAYOUT
+   ========================================== */
+
+    .doce-card-bottom {
+        width: 100%;
+        margin-top: 20px;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px;
+    }
+    /* PREÇO */
+
+    .doce-card-price {
+        flex-shrink: 0;
+        font-size: 17px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    /* GRUPO DOS BOTÕES */
+
+    .doce-card-buttons {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+        /* FORM */
+
+        .doce-card-buttons form {
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    /* BOTÕES */
+
+    .doce-btn-dois {
+        width: 92px;
+        height: 40px;
+        padding: 0 6px;
+        border-radius: 10px;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+    /* VER DETALHES */
+
+    .doce-card-buttons > a.doce-btn-dois {
+        background: #d9744b;
+        color: white;
+        border: 1px solid #d9744b;
+    }
+    /* ADICIONAR */
+
+    .doce-btn-adicionar {
+        background: transparent;
+        color: #5b2d0c;
+        border: 1px solid #5b2d0c;
+    }
+    /* EFEITO AO PASSAR O MOUSE */
+
+    .doce-card-buttons > a.doce-btn-dois:hover {
+        transform: translateY(-1px);
+    }
+
+    .doce-btn-adicionar:hover {
+        background: #5b2d0c;
+        color: white;
+    }
+    /* ==========================================
+   CARDS MAIS ORGANIZADOS
+   ========================================== */
+
+    .product-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    /* ==========================================
+   TELAS MENORES
+   ========================================== */
+
+    @media (max-width: 1100px) {
+
+        .doce-card-bottom {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+
+        .doce-card-price {
+            text-align: center;
+        }
+
+        .doce-card-buttons {
+            width: 100%;
+            justify-content: center !important;
+        }
+    }
+
+
+    @media (max-width: 600px) {
+
+        .doce-card-buttons {
+            width: 100%;
+        }
+
+        .doce-btn-dois {
+            width: 50%;
+            height: 40px;
+        }
+    }
