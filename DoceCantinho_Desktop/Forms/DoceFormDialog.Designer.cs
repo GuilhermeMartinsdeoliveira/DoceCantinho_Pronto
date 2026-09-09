@@ -40,6 +40,19 @@
         private Guna.UI2.WinForms.Guna2Button btnSelecionarImagem;
         private Guna.UI2.WinForms.Guna2Button btnLimparImagem;
 
+        /*
+         * ============================================================
+         * COMPATIBILIDADE COM O DoceFormDialog.cs ANTIGO
+         * ============================================================
+         *
+         * O código antigo utiliza estes nomes.
+         * Eles apontarão para os controles novos.
+         */
+
+        private Guna.UI2.WinForms.Guna2Button btnRemoverImagem;
+        private System.Windows.Forms.Label lblArquivoImagem;
+        private System.Windows.Forms.PictureBox pictureImagem;
+
         private Guna.UI2.WinForms.Guna2CheckBox chkDestaque;
         private Guna.UI2.WinForms.Guna2CheckBox chkRecomendado;
 
@@ -159,11 +172,15 @@
             this.openFileDialogImagem =
                 new System.Windows.Forms.OpenFileDialog();
 
+            ((System.ComponentModel.ISupportInitialize)(this.nudPreco)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudEstoque)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picturePreview)).BeginInit();
+
+            this.SuspendLayout();
+
             // ============================================================
             // FORM
             // ============================================================
-
-            this.SuspendLayout();
 
             this.AutoScaleDimensions =
                 new System.Drawing.SizeF(7F, 15F);
@@ -189,23 +206,23 @@
             this.ShowInTaskbar =
                 false;
 
+            // ============================================================
+            // BORDERLESS
+            // ============================================================
+
             this.guna2BorderlessForm1.BorderRadius = 14;
             this.guna2BorderlessForm1.ContainerControl = this;
             this.guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
             this.guna2BorderlessForm1.TransparentWhileDrag = true;
 
             // ============================================================
-            // PAINEL PRINCIPAL
+            // PRINCIPAL
             // ============================================================
 
-            this.pnlPrincipal.BorderRadius = 14;
-            this.pnlPrincipal.Controls.Add(this.pnlCabecalho);
-            this.pnlPrincipal.Controls.Add(this.pnlConteudo);
-            this.pnlPrincipal.Controls.Add(this.pnlImagem);
-            this.pnlPrincipal.Controls.Add(this.pnlOpcoes);
-            this.pnlPrincipal.Controls.Add(this.btnSalvar);
-            this.pnlPrincipal.Controls.Add(this.btnCancelar);
+            this.pnlPrincipal =
+                new Guna.UI2.WinForms.Guna2Panel();
 
+            this.pnlPrincipal.BorderRadius = 14;
             this.pnlPrincipal.FillColor =
                 System.Drawing.Color.White;
 
@@ -222,11 +239,11 @@
             // CABEÇALHO
             // ============================================================
 
+            this.pnlCabecalho =
+                new Guna.UI2.WinForms.Guna2Panel();
+
             this.pnlCabecalho.BackColor =
                 System.Drawing.Color.Transparent;
-
-            this.pnlCabecalho.Controls.Add(this.lblTitulo);
-            this.pnlCabecalho.Controls.Add(this.lblSubtitulo);
 
             this.pnlCabecalho.FillColor =
                 System.Drawing.Color.FromArgb(250, 247, 244);
@@ -243,6 +260,9 @@
             // ============================================================
             // TÍTULO
             // ============================================================
+
+            this.lblTitulo =
+                new System.Windows.Forms.Label();
 
             this.lblTitulo.AutoSize = true;
 
@@ -268,6 +288,9 @@
             // SUBTÍTULO
             // ============================================================
 
+            this.lblSubtitulo =
+                new System.Windows.Forms.Label();
+
             this.lblSubtitulo.AutoSize = true;
 
             this.lblSubtitulo.Font =
@@ -288,22 +311,14 @@
                 "Cadastre um novo produto no DoceCantinho";
 
             // ============================================================
-            // CONTEÚDO - ESQUERDA
+            // CONTEÚDO
             // ============================================================
+
+            this.pnlConteudo =
+                new Guna.UI2.WinForms.Guna2Panel();
 
             this.pnlConteudo.BackColor =
                 System.Drawing.Color.Transparent;
-
-            this.pnlConteudo.Controls.Add(this.lblNome);
-            this.pnlConteudo.Controls.Add(this.txtTitulo);
-            this.pnlConteudo.Controls.Add(this.lblDescricao);
-            this.pnlConteudo.Controls.Add(this.txtDescricao);
-            this.pnlConteudo.Controls.Add(this.lblPreco);
-            this.pnlConteudo.Controls.Add(this.nudPreco);
-            this.pnlConteudo.Controls.Add(this.lblEstoque);
-            this.pnlConteudo.Controls.Add(this.nudEstoque);
-            this.pnlConteudo.Controls.Add(this.lblCategoria);
-            this.pnlConteudo.Controls.Add(this.cmbCategoria);
 
             this.pnlConteudo.FillColor =
                 System.Drawing.Color.Transparent;
@@ -321,6 +336,9 @@
             // NOME
             // ============================================================
 
+            this.lblNome =
+                new System.Windows.Forms.Label();
+
             this.lblNome.AutoSize = true;
 
             this.lblNome.Font =
@@ -335,6 +353,9 @@
             this.lblNome.Location =
                 new System.Drawing.Point(2, 0);
 
+            this.lblNome.Name =
+                "lblNome";
+
             this.lblNome.Text =
                 "Nome do doce";
 
@@ -342,15 +363,18 @@
             // TÍTULO
             // ============================================================
 
+            this.txtTitulo =
+                new Guna.UI2.WinForms.Guna2TextBox();
+
             this.txtTitulo.BorderColor =
                 System.Drawing.Color.FromArgb(220, 208, 201);
 
             this.txtTitulo.BorderRadius = 8;
+
             this.txtTitulo.Cursor =
                 System.Windows.Forms.Cursors.IBeam;
 
-            this.txtTitulo.DefaultText =
-                "";
+            this.txtTitulo.DefaultText = "";
 
             this.txtTitulo.FillColor =
                 System.Drawing.Color.WhiteSmoke;
@@ -372,8 +396,7 @@
             this.txtTitulo.PlaceholderText =
                 "Ex.: Brigadeiro Gourmet";
 
-            this.txtTitulo.SelectedText =
-                "";
+            this.txtTitulo.SelectedText = "";
 
             this.txtTitulo.Size =
                 new System.Drawing.Size(350, 42);
@@ -381,6 +404,9 @@
             // ============================================================
             // DESCRIÇÃO
             // ============================================================
+
+            this.lblDescricao =
+                new System.Windows.Forms.Label();
 
             this.lblDescricao.AutoSize = true;
 
@@ -396,8 +422,14 @@
             this.lblDescricao.Location =
                 new System.Drawing.Point(2, 78);
 
+            this.lblDescricao.Name =
+                "lblDescricao";
+
             this.lblDescricao.Text =
                 "Descrição";
+
+            this.txtDescricao =
+                new Guna.UI2.WinForms.Guna2TextBox();
 
             this.txtDescricao.BorderColor =
                 System.Drawing.Color.FromArgb(220, 208, 201);
@@ -407,8 +439,7 @@
             this.txtDescricao.Cursor =
                 System.Windows.Forms.Cursors.IBeam;
 
-            this.txtDescricao.DefaultText =
-                "";
+            this.txtDescricao.DefaultText = "";
 
             this.txtDescricao.FillColor =
                 System.Drawing.Color.WhiteSmoke;
@@ -432,8 +463,7 @@
             this.txtDescricao.ScrollBars =
                 System.Windows.Forms.ScrollBars.Vertical;
 
-            this.txtDescricao.SelectedText =
-                "";
+            this.txtDescricao.SelectedText = "";
 
             this.txtDescricao.Size =
                 new System.Drawing.Size(350, 100);
@@ -441,6 +471,9 @@
             // ============================================================
             // PREÇO
             // ============================================================
+
+            this.lblPreco =
+                new System.Windows.Forms.Label();
 
             this.lblPreco.AutoSize = true;
 
@@ -456,8 +489,14 @@
             this.lblPreco.Location =
                 new System.Drawing.Point(2, 215);
 
+            this.lblPreco.Name =
+                "lblPreco";
+
             this.lblPreco.Text =
                 "Preço";
+
+            this.nudPreco =
+                new Guna.UI2.WinForms.Guna2NumericUpDown();
 
             this.nudPreco.BackColor =
                 System.Drawing.Color.Transparent;
@@ -466,9 +505,6 @@
                 System.Drawing.Color.FromArgb(220, 208, 201);
 
             this.nudPreco.BorderRadius = 8;
-
-            this.nudPreco.Cursor =
-                System.Windows.Forms.Cursors.IBeam;
 
             this.nudPreco.DecimalPlaces = 2;
 
@@ -501,6 +537,9 @@
             // ESTOQUE
             // ============================================================
 
+            this.lblEstoque =
+                new System.Windows.Forms.Label();
+
             this.lblEstoque.AutoSize = true;
 
             this.lblEstoque.Font =
@@ -515,8 +554,14 @@
             this.lblEstoque.Location =
                 new System.Drawing.Point(2, 292);
 
+            this.lblEstoque.Name =
+                "lblEstoque";
+
             this.lblEstoque.Text =
                 "Estoque";
+
+            this.nudEstoque =
+                new Guna.UI2.WinForms.Guna2NumericUpDown();
 
             this.nudEstoque.BackColor =
                 System.Drawing.Color.Transparent;
@@ -525,9 +570,6 @@
                 System.Drawing.Color.FromArgb(220, 208, 201);
 
             this.nudEstoque.BorderRadius = 8;
-
-            this.nudEstoque.Cursor =
-                System.Windows.Forms.Cursors.IBeam;
 
             this.nudEstoque.DecimalPlaces = 0;
 
@@ -558,6 +600,9 @@
             // CATEGORIA
             // ============================================================
 
+            this.lblCategoria =
+                new System.Windows.Forms.Label();
+
             this.lblCategoria.AutoSize = true;
 
             this.lblCategoria.Font =
@@ -572,8 +617,14 @@
             this.lblCategoria.Location =
                 new System.Drawing.Point(2, 369);
 
+            this.lblCategoria.Name =
+                "lblCategoria";
+
             this.lblCategoria.Text =
                 "Categoria";
+
+            this.cmbCategoria =
+                new Guna.UI2.WinForms.Guna2ComboBox();
 
             this.cmbCategoria.BackColor =
                 System.Drawing.Color.Transparent;
@@ -612,8 +663,11 @@
                 new System.Drawing.Size(350, 36);
 
             // ============================================================
-            // PAINEL DE IMAGEM
+            // PAINEL IMAGEM
             // ============================================================
+
+            this.pnlImagem =
+                new Guna.UI2.WinForms.Guna2Panel();
 
             this.pnlImagem.BackColor =
                 System.Drawing.Color.Transparent;
@@ -622,17 +676,8 @@
                 System.Drawing.Color.FromArgb(235, 226, 221);
 
             this.pnlImagem.BorderRadius = 10;
-            this.pnlImagem.BorderThickness = 1;
 
-            this.pnlImagem.Controls.Add(this.lblImagemTitulo);
-            this.pnlImagem.Controls.Add(this.lblImagemUrl);
-            this.pnlImagem.Controls.Add(this.txtUrl);
-            this.pnlImagem.Controls.Add(this.lblImagemArquivo);
-            this.pnlImagem.Controls.Add(this.btnSelecionarImagem);
-            this.pnlImagem.Controls.Add(this.lblArquivoSelecionado);
-            this.pnlImagem.Controls.Add(this.btnLimparImagem);
-            this.pnlImagem.Controls.Add(this.lblPreview);
-            this.pnlImagem.Controls.Add(this.picturePreview);
+            this.pnlImagem.BorderThickness = 1;
 
             this.pnlImagem.FillColor =
                 System.Drawing.Color.FromArgb(250, 247, 244);
@@ -650,6 +695,9 @@
             // TÍTULO IMAGEM
             // ============================================================
 
+            this.lblImagemTitulo =
+                new System.Windows.Forms.Label();
+
             this.lblImagemTitulo.AutoSize = true;
 
             this.lblImagemTitulo.Font =
@@ -664,12 +712,18 @@
             this.lblImagemTitulo.Location =
                 new System.Drawing.Point(18, 16);
 
+            this.lblImagemTitulo.Name =
+                "lblImagemTitulo";
+
             this.lblImagemTitulo.Text =
                 "Imagem do produto";
 
             // ============================================================
             // URL
             // ============================================================
+
+            this.lblImagemUrl =
+                new System.Windows.Forms.Label();
 
             this.lblImagemUrl.AutoSize = true;
 
@@ -685,8 +739,14 @@
             this.lblImagemUrl.Location =
                 new System.Drawing.Point(18, 51);
 
+            this.lblImagemUrl.Name =
+                "lblImagemUrl";
+
             this.lblImagemUrl.Text =
                 "Imagem (URL)";
+
+            this.txtUrl =
+                new Guna.UI2.WinForms.Guna2TextBox();
 
             this.txtUrl.BorderColor =
                 System.Drawing.Color.FromArgb(220, 208, 201);
@@ -696,8 +756,7 @@
             this.txtUrl.Cursor =
                 System.Windows.Forms.Cursors.IBeam;
 
-            this.txtUrl.DefaultText =
-                "";
+            this.txtUrl.DefaultText = "";
 
             this.txtUrl.FillColor =
                 System.Drawing.Color.White;
@@ -719,8 +778,7 @@
             this.txtUrl.PlaceholderText =
                 "https://exemplo.com/imagem.jpg";
 
-            this.txtUrl.SelectedText =
-                "";
+            this.txtUrl.SelectedText = "";
 
             this.txtUrl.Size =
                 new System.Drawing.Size(324, 40);
@@ -728,6 +786,9 @@
             // ============================================================
             // ARQUIVO
             // ============================================================
+
+            this.lblImagemArquivo =
+                new System.Windows.Forms.Label();
 
             this.lblImagemArquivo.AutoSize = true;
 
@@ -743,12 +804,18 @@
             this.lblImagemArquivo.Location =
                 new System.Drawing.Point(18, 127);
 
+            this.lblImagemArquivo.Name =
+                "lblImagemArquivo";
+
             this.lblImagemArquivo.Text =
                 "Imagem (arquivo local)";
 
             // ============================================================
-            // BOTÃO ESCOLHER ARQUIVO
+            // BOTÃO SELECIONAR
             // ============================================================
+
+            this.btnSelecionarImagem =
+                new Guna.UI2.WinForms.Guna2Button();
 
             this.btnSelecionarImagem.BorderRadius = 7;
 
@@ -780,6 +847,9 @@
             // ARQUIVO SELECIONADO
             // ============================================================
 
+            this.lblArquivoSelecionado =
+                new System.Windows.Forms.Label();
+
             this.lblArquivoSelecionado.AutoEllipsis = true;
 
             this.lblArquivoSelecionado.Font =
@@ -803,8 +873,11 @@
                 "Nenhum arquivo selecionado";
 
             // ============================================================
-            // LIMPAR IMAGEM
+            // LIMPAR
             // ============================================================
+
+            this.btnLimparImagem =
+                new Guna.UI2.WinForms.Guna2Button();
 
             this.btnLimparImagem.BorderRadius = 7;
 
@@ -835,6 +908,9 @@
             // PREVIEW
             // ============================================================
 
+            this.lblPreview =
+                new System.Windows.Forms.Label();
+
             this.lblPreview.AutoSize = true;
 
             this.lblPreview.Font =
@@ -849,8 +925,14 @@
             this.lblPreview.Location =
                 new System.Drawing.Point(18, 237);
 
+            this.lblPreview.Name =
+                "lblPreview";
+
             this.lblPreview.Text =
                 "Pré-visualização";
+
+            this.picturePreview =
+                new System.Windows.Forms.PictureBox();
 
             this.picturePreview.BackColor =
                 System.Drawing.Color.FromArgb(239, 233, 229);
@@ -871,16 +953,29 @@
                 System.Windows.Forms.PictureBoxSizeMode.Zoom;
 
             // ============================================================
+            // COMPATIBILIDADE
+            // ============================================================
+
+            this.btnRemoverImagem =
+                this.btnLimparImagem;
+
+            this.lblArquivoImagem =
+                this.lblArquivoSelecionado;
+
+            this.pictureImagem =
+                this.picturePreview;
+
+            // ============================================================
             // OPÇÕES
             // ============================================================
+
+            this.pnlOpcoes =
+                new Guna.UI2.WinForms.Guna2Panel();
 
             this.pnlOpcoes.BackColor =
                 System.Drawing.Color.Transparent;
 
             this.pnlOpcoes.BorderRadius = 9;
-
-            this.pnlOpcoes.Controls.Add(this.chkDestaque);
-            this.pnlOpcoes.Controls.Add(this.chkRecomendado);
 
             this.pnlOpcoes.FillColor =
                 System.Drawing.Color.FromArgb(250, 247, 244);
@@ -897,6 +992,9 @@
             // ============================================================
             // DESTAQUE
             // ============================================================
+
+            this.chkDestaque =
+                new Guna.UI2.WinForms.Guna2CheckBox();
 
             this.chkDestaque.AutoSize = true;
 
@@ -928,6 +1026,9 @@
             // RECOMENDADO
             // ============================================================
 
+            this.chkRecomendado =
+                new Guna.UI2.WinForms.Guna2CheckBox();
+
             this.chkRecomendado.AutoSize = true;
 
             this.chkRecomendado.CheckedState.BorderColor =
@@ -955,8 +1056,11 @@
                 "👍 Marcar como recomendado";
 
             // ============================================================
-            // BOTÃO SALVAR
+            // SALVAR
             // ============================================================
+
+            this.btnSalvar =
+                new Guna.UI2.WinForms.Guna2Button();
 
             this.btnSalvar.BorderRadius = 8;
 
@@ -989,13 +1093,17 @@
                     this.btnSalvar_Click);
 
             // ============================================================
-            // BOTÃO CANCELAR
+            // CANCELAR
             // ============================================================
+
+            this.btnCancelar =
+                new Guna.UI2.WinForms.Guna2Button();
 
             this.btnCancelar.BorderColor =
                 System.Drawing.Color.FromArgb(215, 200, 192);
 
             this.btnCancelar.BorderRadius = 8;
+
             this.btnCancelar.BorderThickness = 1;
 
             this.btnCancelar.FillColor =
@@ -1040,8 +1148,77 @@
                 false;
 
             // ============================================================
-            // ADICIONAR AO FORM
+            // ADICIONAR CONTROLES
             // ============================================================
+
+            this.pnlCabecalho.Controls.Add(
+                this.lblTitulo);
+
+            this.pnlCabecalho.Controls.Add(
+                this.lblSubtitulo);
+
+            this.pnlConteudo.Controls.Add(
+                this.lblNome);
+
+            this.pnlConteudo.Controls.Add(
+                this.txtTitulo);
+
+            this.pnlConteudo.Controls.Add(
+                this.lblDescricao);
+
+            this.pnlConteudo.Controls.Add(
+                this.txtDescricao);
+
+            this.pnlConteudo.Controls.Add(
+                this.lblPreco);
+
+            this.pnlConteudo.Controls.Add(
+                this.nudPreco);
+
+            this.pnlConteudo.Controls.Add(
+                this.lblEstoque);
+
+            this.pnlConteudo.Controls.Add(
+                this.nudEstoque);
+
+            this.pnlConteudo.Controls.Add(
+                this.lblCategoria);
+
+            this.pnlConteudo.Controls.Add(
+                this.cmbCategoria);
+
+            this.pnlImagem.Controls.Add(
+                this.lblImagemTitulo);
+
+            this.pnlImagem.Controls.Add(
+                this.lblImagemUrl);
+
+            this.pnlImagem.Controls.Add(
+                this.txtUrl);
+
+            this.pnlImagem.Controls.Add(
+                this.lblImagemArquivo);
+
+            this.pnlImagem.Controls.Add(
+                this.btnSelecionarImagem);
+
+            this.pnlImagem.Controls.Add(
+                this.lblArquivoSelecionado);
+
+            this.pnlImagem.Controls.Add(
+                this.btnLimparImagem);
+
+            this.pnlImagem.Controls.Add(
+                this.lblPreview);
+
+            this.pnlImagem.Controls.Add(
+                this.picturePreview);
+
+            this.pnlOpcoes.Controls.Add(
+                this.chkDestaque);
+
+            this.pnlOpcoes.Controls.Add(
+                this.chkRecomendado);
 
             this.pnlPrincipal.Controls.Add(
                 this.pnlCabecalho);
@@ -1064,8 +1241,16 @@
             this.Controls.Add(
                 this.pnlPrincipal);
 
+            // ============================================================
+            // FINALIZAÇÃO
+            // ============================================================
+
             this.Name =
                 "DoceFormDialog";
+
+            ((System.ComponentModel.ISupportInitialize)(this.nudPreco)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudEstoque)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picturePreview)).EndInit();
 
             this.ResumeLayout(false);
         }
