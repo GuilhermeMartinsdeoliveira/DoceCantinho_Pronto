@@ -1,0 +1,130 @@
+﻿@model DoceCantinho.Domain.Entities.BlogPost
+
+@{
+    ViewData["Title"] = "Excluir artigo";
+}
+
+<style>
+    .delete-blog-container {
+        max-width: 650px;
+        margin: 60px auto;
+        padding: 20px;
+    }
+
+    .delete-blog-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 30px;
+        box-shadow: var(--shadow);
+    }
+
+        .delete-blog-card h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--fg);
+        }
+
+        .delete-blog-card p {
+            color: var(--muted-fg);
+            line-height: 1.6;
+        }
+
+    .delete-blog-image {
+        width: 100%;
+        max-height: 280px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin: 15px 0;
+    }
+
+    .delete-blog-title {
+        font-size: 20px;
+        color: var(--fg);
+        font-weight: 800;
+    }
+
+    .delete-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .btn-confirm-delete {
+        border: 0;
+        background: #dc2626;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 800;
+    }
+
+    .btn-cancel {
+        text-decoration: none;
+        background: var(--muted);
+        color: var(--fg);
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 700;
+    }
+</style>
+
+<div class="delete-blog-container">
+
+    <div class="delete-blog-card">
+
+        <h1>Excluir artigo</h1>
+
+        <p>
+            Tem certeza que deseja excluir este artigo?
+            Essa ação não poderá ser desfeita.
+        </p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.CoverImageUrl))
+        {
+            <img src="@Model.CoverImageUrl"
+                 class="delete-blog-image"
+                 alt="@Model.Title" />
+        }
+
+        <div class="delete-blog-title">
+            @Model.Title
+        </div>
+
+        <p>
+            <strong>Categoria:</strong>
+            @Model.Category
+        </p>
+
+        <p>
+            <strong>Autor:</strong>
+            @Model.AuthorName
+        </p>
+
+        <form asp-controller="Admin"
+              asp-action="DeleteBlogPostConfirmed"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div class="delete-actions">
+
+                <button type="submit"
+                        class="btn-confirm-delete">
+                    Sim, excluir
+                </button>
+
+                <a asp-controller="Admin"
+                   asp-action="Blog"
+                   class="btn-cancel">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
