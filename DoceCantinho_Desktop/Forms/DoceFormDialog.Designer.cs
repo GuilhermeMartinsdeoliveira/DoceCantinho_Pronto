@@ -2,876 +2,1072 @@
 {
     partial class DoceFormDialog
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">
-        /// true if managed resources should be disposed; otherwise, false.
-        /// </param>
+        private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
+        private Guna.UI2.WinForms.Guna2ShadowForm guna2ShadowForm1;
+
+        private Guna.UI2.WinForms.Guna2Panel pnlPrincipal;
+        private Guna.UI2.WinForms.Guna2Panel pnlCabecalho;
+        private Guna.UI2.WinForms.Guna2Panel pnlConteudo;
+        private Guna.UI2.WinForms.Guna2Panel pnlImagem;
+        private Guna.UI2.WinForms.Guna2Panel pnlOpcoes;
+
+        private System.Windows.Forms.Label lblTitulo;
+        private System.Windows.Forms.Label lblSubtitulo;
+
+        private System.Windows.Forms.Label lblNome;
+        private System.Windows.Forms.Label lblDescricao;
+        private System.Windows.Forms.Label lblPreco;
+        private System.Windows.Forms.Label lblEstoque;
+        private System.Windows.Forms.Label lblCategoria;
+
+        private System.Windows.Forms.Label lblImagemTitulo;
+        private System.Windows.Forms.Label lblImagemUrl;
+        private System.Windows.Forms.Label lblImagemArquivo;
+        private System.Windows.Forms.Label lblArquivoSelecionado;
+
+        private System.Windows.Forms.Label lblPreview;
+        private System.Windows.Forms.PictureBox picturePreview;
+
+        private Guna.UI2.WinForms.Guna2TextBox txtTitulo;
+        private Guna.UI2.WinForms.Guna2TextBox txtDescricao;
+        private Guna.UI2.WinForms.Guna2NumericUpDown nudPreco;
+        private Guna.UI2.WinForms.Guna2NumericUpDown nudEstoque;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbCategoria;
+        private Guna.UI2.WinForms.Guna2TextBox txtUrl;
+
+        private Guna.UI2.WinForms.Guna2Button btnSelecionarImagem;
+        private Guna.UI2.WinForms.Guna2Button btnLimparImagem;
+
+        private Guna.UI2.WinForms.Guna2CheckBox chkDestaque;
+        private Guna.UI2.WinForms.Guna2CheckBox chkRecomendado;
+
+        private Guna.UI2.WinForms.Guna2Button btnSalvar;
+        private Guna.UI2.WinForms.Guna2Button btnCancelar;
+
+        private System.Windows.Forms.OpenFileDialog openFileDialogImagem;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
 
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges1 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.components = new System.ComponentModel.Container();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges2 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.guna2BorderlessForm1 =
+                new Guna.UI2.WinForms.Guna2BorderlessForm(this.components);
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges3 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.guna2ShadowForm1 =
+                new Guna.UI2.WinForms.Guna2ShadowForm();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges4 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.pnlPrincipal =
+                new Guna.UI2.WinForms.Guna2Panel();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges5 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.pnlCabecalho =
+                new Guna.UI2.WinForms.Guna2Panel();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges6 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.lblTitulo =
+                new System.Windows.Forms.Label();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges7 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.lblSubtitulo =
+                new System.Windows.Forms.Label();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges8 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.pnlConteudo =
+                new Guna.UI2.WinForms.Guna2Panel();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges9 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.lblNome =
+                new System.Windows.Forms.Label();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges10 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.txtTitulo =
+                new Guna.UI2.WinForms.Guna2TextBox();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges11 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.lblDescricao =
+                new System.Windows.Forms.Label();
 
-            Guna.UI2.WinForms.Suite.CustomizableEdges edges12 =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.txtDescricao =
+                new Guna.UI2.WinForms.Guna2TextBox();
 
-            lblTituloJanela = new Label();
-            lblTitulo = new Label();
+            this.lblPreco =
+                new System.Windows.Forms.Label();
 
-            lblNome = new Label();
-            txtTitulo = new Guna.UI2.WinForms.Guna2TextBox();
+            this.nudPreco =
+                new Guna.UI2.WinForms.Guna2NumericUpDown();
 
-            lblDescricao = new Label();
-            txtDescricao = new Guna.UI2.WinForms.Guna2TextBox();
+            this.lblEstoque =
+                new System.Windows.Forms.Label();
 
-            lblUrl = new Label();
-            txtUrl = new Guna.UI2.WinForms.Guna2TextBox();
+            this.nudEstoque =
+                new Guna.UI2.WinForms.Guna2NumericUpDown();
 
-            lblPreco = new Label();
-            nudPreco = new Guna.UI2.WinForms.Guna2NumericUpDown();
+            this.lblCategoria =
+                new System.Windows.Forms.Label();
 
-            lblEstoque = new Label();
-            nudEstoque = new Guna.UI2.WinForms.Guna2NumericUpDown();
+            this.cmbCategoria =
+                new Guna.UI2.WinForms.Guna2ComboBox();
 
-            lblCategoria = new Label();
-            cmbCategoria = new ComboBox();
+            this.pnlImagem =
+                new Guna.UI2.WinForms.Guna2Panel();
 
-            chkDestaque = new Guna.UI2.WinForms.Guna2CustomCheckBox();
-            lblDestaque = new Label();
+            this.lblImagemTitulo =
+                new System.Windows.Forms.Label();
 
-            btnSalvar = new Guna.UI2.WinForms.Guna2Button();
-            btnCancelar = new Guna.UI2.WinForms.Guna2Button();
+            this.lblImagemUrl =
+                new System.Windows.Forms.Label();
 
-            SuspendLayout();
+            this.txtUrl =
+                new Guna.UI2.WinForms.Guna2TextBox();
 
-            // =========================================================
-            // lblTituloJanela
-            // =========================================================
+            this.lblImagemArquivo =
+                new System.Windows.Forms.Label();
 
-            lblTituloJanela.AutoSize = true;
-            lblTituloJanela.Font = new Font(
-                "Segoe UI",
-                13F,
-                FontStyle.Bold,
-                GraphicsUnit.Point);
+            this.btnSelecionarImagem =
+                new Guna.UI2.WinForms.Guna2Button();
 
-            lblTituloJanela.ForeColor =
-                Color.FromArgb(92, 46, 14);
+            this.lblArquivoSelecionado =
+                new System.Windows.Forms.Label();
 
-            lblTituloJanela.Location =
-                new Point(24, 18);
+            this.btnLimparImagem =
+                new Guna.UI2.WinForms.Guna2Button();
 
-            lblTituloJanela.Name =
-                "lblTituloJanela";
+            this.lblPreview =
+                new System.Windows.Forms.Label();
 
-            lblTituloJanela.Size =
-                new Size(55, 25);
+            this.picturePreview =
+                new System.Windows.Forms.PictureBox();
 
-            lblTituloJanela.TabIndex = 0;
+            this.pnlOpcoes =
+                new Guna.UI2.WinForms.Guna2Panel();
 
-            lblTituloJanela.Text =
-                "Doce";
+            this.chkDestaque =
+                new Guna.UI2.WinForms.Guna2CheckBox();
 
-            // =========================================================
-            // lblTitulo
-            // =========================================================
+            this.chkRecomendado =
+                new Guna.UI2.WinForms.Guna2CheckBox();
 
-            lblTitulo.AutoSize = true;
+            this.btnSalvar =
+                new Guna.UI2.WinForms.Guna2Button();
 
-            lblTitulo.Font =
-                new Font(
-                    "Segoe UI",
-                    9F,
-                    FontStyle.Bold,
-                    GraphicsUnit.Point);
+            this.btnCancelar =
+                new Guna.UI2.WinForms.Guna2Button();
 
-            lblTitulo.ForeColor =
-                Color.FromArgb(138, 101, 85);
+            this.openFileDialogImagem =
+                new System.Windows.Forms.OpenFileDialog();
 
-            lblTitulo.Location =
-                new Point(24, 58);
+            // ============================================================
+            // FORM
+            // ============================================================
 
-            lblTitulo.Name =
+            this.SuspendLayout();
+
+            this.AutoScaleDimensions =
+                new System.Drawing.SizeF(7F, 15F);
+
+            this.AutoScaleMode =
+                System.Windows.Forms.AutoScaleMode.Font;
+
+            this.BackColor =
+                System.Drawing.Color.FromArgb(248, 245, 242);
+
+            this.ClientSize =
+                new System.Drawing.Size(820, 720);
+
+            this.FormBorderStyle =
+                System.Windows.Forms.FormBorderStyle.None;
+
+            this.StartPosition =
+                System.Windows.Forms.FormStartPosition.CenterParent;
+
+            this.Text =
+                "Novo Doce";
+
+            this.ShowInTaskbar =
+                false;
+
+            this.guna2BorderlessForm1.BorderRadius = 14;
+            this.guna2BorderlessForm1.ContainerControl = this;
+            this.guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
+            this.guna2BorderlessForm1.TransparentWhileDrag = true;
+
+            // ============================================================
+            // PAINEL PRINCIPAL
+            // ============================================================
+
+            this.pnlPrincipal.BorderRadius = 14;
+            this.pnlPrincipal.Controls.Add(this.pnlCabecalho);
+            this.pnlPrincipal.Controls.Add(this.pnlConteudo);
+            this.pnlPrincipal.Controls.Add(this.pnlImagem);
+            this.pnlPrincipal.Controls.Add(this.pnlOpcoes);
+            this.pnlPrincipal.Controls.Add(this.btnSalvar);
+            this.pnlPrincipal.Controls.Add(this.btnCancelar);
+
+            this.pnlPrincipal.FillColor =
+                System.Drawing.Color.White;
+
+            this.pnlPrincipal.Location =
+                new System.Drawing.Point(10, 10);
+
+            this.pnlPrincipal.Name =
+                "pnlPrincipal";
+
+            this.pnlPrincipal.Size =
+                new System.Drawing.Size(800, 700);
+
+            // ============================================================
+            // CABEÇALHO
+            // ============================================================
+
+            this.pnlCabecalho.BackColor =
+                System.Drawing.Color.Transparent;
+
+            this.pnlCabecalho.Controls.Add(this.lblTitulo);
+            this.pnlCabecalho.Controls.Add(this.lblSubtitulo);
+
+            this.pnlCabecalho.FillColor =
+                System.Drawing.Color.FromArgb(250, 247, 244);
+
+            this.pnlCabecalho.Location =
+                new System.Drawing.Point(0, 0);
+
+            this.pnlCabecalho.Name =
+                "pnlCabecalho";
+
+            this.pnlCabecalho.Size =
+                new System.Drawing.Size(800, 82);
+
+            // ============================================================
+            // TÍTULO
+            // ============================================================
+
+            this.lblTitulo.AutoSize = true;
+
+            this.lblTitulo.Font =
+                new System.Drawing.Font(
+                    "Georgia",
+                    20F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblTitulo.ForeColor =
+                System.Drawing.Color.FromArgb(58, 40, 34);
+
+            this.lblTitulo.Location =
+                new System.Drawing.Point(28, 17);
+
+            this.lblTitulo.Name =
                 "lblTitulo";
 
-            lblTitulo.Size =
-                new Size(112, 15);
+            this.lblTitulo.Text =
+                "➕ Novo Doce";
 
-            lblTitulo.TabIndex = 1;
+            // ============================================================
+            // SUBTÍTULO
+            // ============================================================
 
-            lblTitulo.Text =
-                "TÍTULO DO DOCE *";
+            this.lblSubtitulo.AutoSize = true;
 
-            // =========================================================
-            // txtTitulo
-            // =========================================================
-
-            txtTitulo.BorderRadius = 10;
-
-            txtTitulo.CustomizableEdges =
-                edges1;
-
-            txtTitulo.FillColor =
-                Color.FromArgb(255, 248, 240);
-
-            txtTitulo.FocusedState.BorderColor =
-                Color.FromArgb(212, 112, 74);
-
-            txtTitulo.Font =
-                new Font(
+            this.lblSubtitulo.Font =
+                new System.Drawing.Font(
                     "Segoe UI",
                     9F);
 
-            txtTitulo.ForeColor =
-                Color.FromArgb(44, 24, 16);
+            this.lblSubtitulo.ForeColor =
+                System.Drawing.Color.FromArgb(145, 117, 105);
 
-            txtTitulo.HoverState.BorderColor =
-                Color.FromArgb(212, 112, 74);
+            this.lblSubtitulo.Location =
+                new System.Drawing.Point(31, 51);
 
-            txtTitulo.Location =
-                new Point(24, 78);
+            this.lblSubtitulo.Name =
+                "lblSubtitulo";
 
-            txtTitulo.Name =
-                "txtTitulo";
+            this.lblSubtitulo.Text =
+                "Cadastre um novo produto no DoceCantinho";
 
-            txtTitulo.PlaceholderText =
-                "Ex: Chocolate";
+            // ============================================================
+            // CONTEÚDO - ESQUERDA
+            // ============================================================
 
-            txtTitulo.SelectedText =
+            this.pnlConteudo.BackColor =
+                System.Drawing.Color.Transparent;
+
+            this.pnlConteudo.Controls.Add(this.lblNome);
+            this.pnlConteudo.Controls.Add(this.txtTitulo);
+            this.pnlConteudo.Controls.Add(this.lblDescricao);
+            this.pnlConteudo.Controls.Add(this.txtDescricao);
+            this.pnlConteudo.Controls.Add(this.lblPreco);
+            this.pnlConteudo.Controls.Add(this.nudPreco);
+            this.pnlConteudo.Controls.Add(this.lblEstoque);
+            this.pnlConteudo.Controls.Add(this.nudEstoque);
+            this.pnlConteudo.Controls.Add(this.lblCategoria);
+            this.pnlConteudo.Controls.Add(this.cmbCategoria);
+
+            this.pnlConteudo.FillColor =
+                System.Drawing.Color.Transparent;
+
+            this.pnlConteudo.Location =
+                new System.Drawing.Point(28, 98);
+
+            this.pnlConteudo.Name =
+                "pnlConteudo";
+
+            this.pnlConteudo.Size =
+                new System.Drawing.Size(360, 405);
+
+            // ============================================================
+            // NOME
+            // ============================================================
+
+            this.lblNome.AutoSize = true;
+
+            this.lblNome.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblNome.ForeColor =
+                System.Drawing.Color.FromArgb(72, 52, 45);
+
+            this.lblNome.Location =
+                new System.Drawing.Point(2, 0);
+
+            this.lblNome.Text =
+                "Nome do doce";
+
+            // ============================================================
+            // TÍTULO
+            // ============================================================
+
+            this.txtTitulo.BorderColor =
+                System.Drawing.Color.FromArgb(220, 208, 201);
+
+            this.txtTitulo.BorderRadius = 8;
+            this.txtTitulo.Cursor =
+                System.Windows.Forms.Cursors.IBeam;
+
+            this.txtTitulo.DefaultText =
                 "";
 
-            txtTitulo.ShadowDecoration.CustomizableEdges =
-                edges2;
-
-            txtTitulo.Size =
-                new Size(480, 38);
-
-            txtTitulo.TabIndex = 2;
-
-            // =========================================================
-            // lblDescricao
-            // =========================================================
-
-            lblDescricao.AutoSize = true;
-
-            lblDescricao.Font =
-                new Font(
-                    "Segoe UI",
-                    8F,
-                    FontStyle.Bold,
-                    GraphicsUnit.Point);
-
-            lblDescricao.ForeColor =
-                Color.FromArgb(138, 101, 85);
-
-            lblDescricao.Location =
-                new Point(24, 128);
-
-            lblDescricao.Name =
-                "lblDescricao";
-
-            lblDescricao.Size =
-                new Size(67, 13);
-
-            lblDescricao.TabIndex = 3;
-
-            lblDescricao.Text =
-                "DESCRIÇÃO";
-
-            // =========================================================
-            // txtDescricao
-            // =========================================================
-
-            txtDescricao.BorderRadius = 10;
-
-            txtDescricao.CustomizableEdges =
-                edges3;
-
-            txtDescricao.FillColor =
-                Color.FromArgb(255, 248, 240);
-
-            txtDescricao.FocusedState.BorderColor =
-                Color.FromArgb(212, 112, 74);
-
-            txtDescricao.Font =
-                new Font(
-                    "Segoe UI",
-                    9F);
-
-            txtDescricao.ForeColor =
-                Color.FromArgb(44, 24, 16);
-
-            txtDescricao.HoverState.BorderColor =
-                Color.FromArgb(212, 112, 74);
-
-            txtDescricao.Location =
-                new Point(24, 148);
-
-            txtDescricao.Multiline = true;
-
-            txtDescricao.Name =
-                "txtDescricao";
-
-            txtDescricao.PlaceholderText =
-                "Descreva o produto...";
-
-            txtDescricao.SelectedText =
-                "";
-
-            txtDescricao.ShadowDecoration.CustomizableEdges =
-                edges4;
-
-            txtDescricao.Size =
-                new Size(480, 105);
-
-            txtDescricao.TabIndex = 4;
-
-            // =========================================================
-            // lblUrl
-            // =========================================================
-
-            lblUrl.AutoSize = true;
-
-            lblUrl.Font =
-                new Font(
-                    "Segoe UI",
-                    8F,
-                    FontStyle.Bold,
-                    GraphicsUnit.Point);
-
-            lblUrl.ForeColor =
-                Color.FromArgb(138, 101, 85);
-
-            lblUrl.Location =
-                new Point(24, 270);
-
-            lblUrl.Name =
-                "lblUrl";
-
-            lblUrl.Size =
-                new Size(79, 13);
-
-            lblUrl.TabIndex = 5;
-
-            lblUrl.Text =
-                "URL DA CAPA";
-
-            // =========================================================
-            // txtUrl
-            // =========================================================
-
-            txtUrl.BorderRadius = 10;
-
-            txtUrl.CustomizableEdges =
-                edges5;
-
-            txtUrl.FillColor =
-                Color.FromArgb(255, 248, 240);
-
-            txtUrl.FocusedState.BorderColor =
-                Color.FromArgb(212, 112, 74);
-
-            txtUrl.Font =
-                new Font(
-                    "Segoe UI",
-                    9F);
-
-            txtUrl.ForeColor =
-                Color.FromArgb(44, 24, 16);
-
-            txtUrl.HoverState.BorderColor =
-                Color.FromArgb(212, 112, 74);
-
-            txtUrl.Location =
-                new Point(24, 290);
-
-            txtUrl.Name =
-                "txtUrl";
-
-            txtUrl.PlaceholderText =
-                "https://...";
-
-            txtUrl.SelectedText =
-                "";
-
-            txtUrl.ShadowDecoration.CustomizableEdges =
-                edges6;
-
-            txtUrl.Size =
-                new Size(480, 38);
-
-            txtUrl.TabIndex = 6;
-
-            // =========================================================
-            // lblPreco
-            // =========================================================
-
-            lblPreco.AutoSize = true;
-
-            lblPreco.Font =
-                new Font(
-                    "Segoe UI",
-                    8F,
-                    FontStyle.Bold,
-                    GraphicsUnit.Point);
-
-            lblPreco.ForeColor =
-                Color.FromArgb(138, 101, 85);
-
-            lblPreco.Location =
-                new Point(24, 345);
-
-            lblPreco.Name =
-                "lblPreco";
-
-            lblPreco.Size =
-                new Size(48, 13);
-
-            lblPreco.TabIndex = 7;
-
-            lblPreco.Text =
-                "PREÇO *";
-
-            // =========================================================
-            // nudPreco
-            // =========================================================
-
-            nudPreco.BackColor =
-                Color.Transparent;
-
-            nudPreco.BorderRadius = 10;
-
-            nudPreco.CustomizableEdges =
-                edges7;
-
-            nudPreco.DecimalPlaces = 2;
-
-            nudPreco.FillColor =
-                Color.FromArgb(255, 248, 240);
-
-            nudPreco.Font =
-                new Font(
-                    "Segoe UI",
-                    10F);
-
-            nudPreco.ForeColor =
-                Color.FromArgb(44, 24, 16);
-
-            nudPreco.Location =
-                new Point(24, 365);
-
-            nudPreco.Maximum =
-                new decimal(
-                    new int[]
-                    {
-                        999999,
-                        0,
-                        0,
-                        0
-                    });
-
-            nudPreco.Minimum =
-                new decimal(
-                    new int[]
-                    {
-                        0,
-                        0,
-                        0,
-                        0
-                    });
-
-            nudPreco.Name =
-                "nudPreco";
-
-            nudPreco.ShadowDecoration.CustomizableEdges =
-                edges8;
-
-            nudPreco.Size =
-                new Size(225, 38);
-
-            nudPreco.TabIndex = 8;
-
-            nudPreco.ThousandsSeparator = true;
-
-            nudPreco.UpDownButtonFillColor =
-                Color.FromArgb(212, 112, 74);
-
-            nudPreco.UpDownButtonForeColor =
-                Color.White;
-
-            // =========================================================
-            // lblEstoque
-            // =========================================================
-
-            lblEstoque.AutoSize = true;
-
-            lblEstoque.Font =
-                new Font(
-                    "Segoe UI",
-                    8F,
-                    FontStyle.Bold,
-                    GraphicsUnit.Point);
-
-            lblEstoque.ForeColor =
-                Color.FromArgb(138, 101, 85);
-
-            lblEstoque.Location =
-                new Point(279, 345);
-
-            lblEstoque.Name =
-                "lblEstoque";
-
-            lblEstoque.Size =
-                new Size(55, 13);
-
-            lblEstoque.TabIndex = 9;
-
-            lblEstoque.Text =
-                "ESTOQUE *";
-
-            // =========================================================
-            // nudEstoque
-            // =========================================================
-
-            nudEstoque.BackColor =
-                Color.Transparent;
-
-            nudEstoque.BorderRadius = 10;
-
-            nudEstoque.CustomizableEdges =
-                edges9;
-
-            nudEstoque.DecimalPlaces = 0;
-
-            nudEstoque.FillColor =
-                Color.FromArgb(255, 248, 240);
-
-            nudEstoque.Font =
-                new Font(
-                    "Segoe UI",
-                    10F);
-
-            nudEstoque.ForeColor =
-                Color.FromArgb(44, 24, 16);
-
-            nudEstoque.Location =
-                new Point(279, 365);
-
-            nudEstoque.Maximum =
-                new decimal(
-                    new int[]
-                    {
-                        999999,
-                        0,
-                        0,
-                        0
-                    });
-
-            nudEstoque.Minimum =
-                new decimal(
-                    new int[]
-                    {
-                        0,
-                        0,
-                        0,
-                        0
-                    });
-
-            nudEstoque.Name =
-                "nudEstoque";
-
-            nudEstoque.ShadowDecoration.CustomizableEdges =
-                edges10;
-
-            nudEstoque.Size =
-                new Size(225, 38);
-
-            nudEstoque.TabIndex = 10;
-
-            nudEstoque.ThousandsSeparator = true;
-
-            nudEstoque.UpDownButtonFillColor =
-                Color.FromArgb(212, 112, 74);
-
-            nudEstoque.UpDownButtonForeColor =
-                Color.White;
-
-            // =========================================================
-            // lblCategoria
-            // =========================================================
-
-            lblCategoria.AutoSize = true;
-
-            lblCategoria.Font =
-                new Font(
-                    "Segoe UI",
-                    8F,
-                    FontStyle.Bold,
-                    GraphicsUnit.Point);
-
-            lblCategoria.ForeColor =
-                Color.FromArgb(138, 101, 85);
-
-            lblCategoria.Location =
-                new Point(24, 420);
-
-            lblCategoria.Name =
-                "lblCategoria";
-
-            lblCategoria.Size =
-                new Size(75, 13);
-
-            lblCategoria.TabIndex = 11;
-
-            lblCategoria.Text =
-                "CATEGORIA *";
-
-            // =========================================================
-            // cmbCategoria
-            // =========================================================
-
-            cmbCategoria.BackColor =
-                Color.FromArgb(255, 248, 240);
-
-            cmbCategoria.DropDownStyle =
-                ComboBoxStyle.DropDownList;
-
-            cmbCategoria.FlatStyle =
-                FlatStyle.Flat;
-
-            cmbCategoria.Font =
-                new Font(
+            this.txtTitulo.FillColor =
+                System.Drawing.Color.WhiteSmoke;
+
+            this.txtTitulo.Font =
+                new System.Drawing.Font(
                     "Segoe UI",
                     9.5F);
 
-            cmbCategoria.ForeColor =
-                Color.FromArgb(44, 24, 16);
+            this.txtTitulo.ForeColor =
+                System.Drawing.Color.FromArgb(60, 45, 40);
 
-            cmbCategoria.FormattingEnabled = true;
+            this.txtTitulo.Location =
+                new System.Drawing.Point(0, 22);
 
-            cmbCategoria.Location =
-                new Point(24, 440);
+            this.txtTitulo.Name =
+                "txtTitulo";
 
-            cmbCategoria.Name =
+            this.txtTitulo.PlaceholderText =
+                "Ex.: Brigadeiro Gourmet";
+
+            this.txtTitulo.SelectedText =
+                "";
+
+            this.txtTitulo.Size =
+                new System.Drawing.Size(350, 42);
+
+            // ============================================================
+            // DESCRIÇÃO
+            // ============================================================
+
+            this.lblDescricao.AutoSize = true;
+
+            this.lblDescricao.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblDescricao.ForeColor =
+                System.Drawing.Color.FromArgb(72, 52, 45);
+
+            this.lblDescricao.Location =
+                new System.Drawing.Point(2, 78);
+
+            this.lblDescricao.Text =
+                "Descrição";
+
+            this.txtDescricao.BorderColor =
+                System.Drawing.Color.FromArgb(220, 208, 201);
+
+            this.txtDescricao.BorderRadius = 8;
+
+            this.txtDescricao.Cursor =
+                System.Windows.Forms.Cursors.IBeam;
+
+            this.txtDescricao.DefaultText =
+                "";
+
+            this.txtDescricao.FillColor =
+                System.Drawing.Color.WhiteSmoke;
+
+            this.txtDescricao.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9.5F);
+
+            this.txtDescricao.Location =
+                new System.Drawing.Point(0, 100);
+
+            this.txtDescricao.Multiline = true;
+
+            this.txtDescricao.Name =
+                "txtDescricao";
+
+            this.txtDescricao.PlaceholderText =
+                "Conte um pouco sobre esse doce...";
+
+            this.txtDescricao.ScrollBars =
+                System.Windows.Forms.ScrollBars.Vertical;
+
+            this.txtDescricao.SelectedText =
+                "";
+
+            this.txtDescricao.Size =
+                new System.Drawing.Size(350, 100);
+
+            // ============================================================
+            // PREÇO
+            // ============================================================
+
+            this.lblPreco.AutoSize = true;
+
+            this.lblPreco.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblPreco.ForeColor =
+                System.Drawing.Color.FromArgb(72, 52, 45);
+
+            this.lblPreco.Location =
+                new System.Drawing.Point(2, 215);
+
+            this.lblPreco.Text =
+                "Preço";
+
+            this.nudPreco.BackColor =
+                System.Drawing.Color.Transparent;
+
+            this.nudPreco.BorderColor =
+                System.Drawing.Color.FromArgb(220, 208, 201);
+
+            this.nudPreco.BorderRadius = 8;
+
+            this.nudPreco.Cursor =
+                System.Windows.Forms.Cursors.IBeam;
+
+            this.nudPreco.DecimalPlaces = 2;
+
+            this.nudPreco.FillColor =
+                System.Drawing.Color.WhiteSmoke;
+
+            this.nudPreco.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9.5F);
+
+            this.nudPreco.Location =
+                new System.Drawing.Point(0, 237);
+
+            this.nudPreco.Maximum =
+                999999M;
+
+            this.nudPreco.Minimum =
+                0M;
+
+            this.nudPreco.Name =
+                "nudPreco";
+
+            this.nudPreco.Size =
+                new System.Drawing.Size(350, 42);
+
+            this.nudPreco.ThousandsSeparator = true;
+
+            // ============================================================
+            // ESTOQUE
+            // ============================================================
+
+            this.lblEstoque.AutoSize = true;
+
+            this.lblEstoque.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblEstoque.ForeColor =
+                System.Drawing.Color.FromArgb(72, 52, 45);
+
+            this.lblEstoque.Location =
+                new System.Drawing.Point(2, 292);
+
+            this.lblEstoque.Text =
+                "Estoque";
+
+            this.nudEstoque.BackColor =
+                System.Drawing.Color.Transparent;
+
+            this.nudEstoque.BorderColor =
+                System.Drawing.Color.FromArgb(220, 208, 201);
+
+            this.nudEstoque.BorderRadius = 8;
+
+            this.nudEstoque.Cursor =
+                System.Windows.Forms.Cursors.IBeam;
+
+            this.nudEstoque.DecimalPlaces = 0;
+
+            this.nudEstoque.FillColor =
+                System.Drawing.Color.WhiteSmoke;
+
+            this.nudEstoque.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9.5F);
+
+            this.nudEstoque.Location =
+                new System.Drawing.Point(0, 314);
+
+            this.nudEstoque.Maximum =
+                999999M;
+
+            this.nudEstoque.Minimum =
+                0M;
+
+            this.nudEstoque.Name =
+                "nudEstoque";
+
+            this.nudEstoque.Size =
+                new System.Drawing.Size(350, 42);
+
+            // ============================================================
+            // CATEGORIA
+            // ============================================================
+
+            this.lblCategoria.AutoSize = true;
+
+            this.lblCategoria.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblCategoria.ForeColor =
+                System.Drawing.Color.FromArgb(72, 52, 45);
+
+            this.lblCategoria.Location =
+                new System.Drawing.Point(2, 369);
+
+            this.lblCategoria.Text =
+                "Categoria";
+
+            this.cmbCategoria.BackColor =
+                System.Drawing.Color.Transparent;
+
+            this.cmbCategoria.BorderColor =
+                System.Drawing.Color.FromArgb(220, 208, 201);
+
+            this.cmbCategoria.BorderRadius = 8;
+
+            this.cmbCategoria.DrawMode =
+                System.Windows.Forms.DrawMode.OwnerDrawFixed;
+
+            this.cmbCategoria.DropDownStyle =
+                System.Windows.Forms.ComboBoxStyle.DropDownList;
+
+            this.cmbCategoria.FillColor =
+                System.Drawing.Color.WhiteSmoke;
+
+            this.cmbCategoria.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9.5F);
+
+            this.cmbCategoria.ForeColor =
+                System.Drawing.Color.FromArgb(60, 45, 40);
+
+            this.cmbCategoria.ItemHeight = 30;
+
+            this.cmbCategoria.Location =
+                new System.Drawing.Point(0, 391);
+
+            this.cmbCategoria.Name =
                 "cmbCategoria";
 
-            cmbCategoria.Size =
-                new Size(480, 25);
+            this.cmbCategoria.Size =
+                new System.Drawing.Size(350, 36);
 
-            cmbCategoria.TabIndex = 12;
+            // ============================================================
+            // PAINEL DE IMAGEM
+            // ============================================================
 
-            // =========================================================
-            // chkDestaque
-            // =========================================================
+            this.pnlImagem.BackColor =
+                System.Drawing.Color.Transparent;
 
-            chkDestaque.CheckedState.BorderColor =
-                Color.FromArgb(212, 112, 74);
+            this.pnlImagem.BorderColor =
+                System.Drawing.Color.FromArgb(235, 226, 221);
 
-            chkDestaque.CheckedState.BorderRadius = 2;
+            this.pnlImagem.BorderRadius = 10;
+            this.pnlImagem.BorderThickness = 1;
 
-            chkDestaque.CheckedState.BorderThickness = 0;
+            this.pnlImagem.Controls.Add(this.lblImagemTitulo);
+            this.pnlImagem.Controls.Add(this.lblImagemUrl);
+            this.pnlImagem.Controls.Add(this.txtUrl);
+            this.pnlImagem.Controls.Add(this.lblImagemArquivo);
+            this.pnlImagem.Controls.Add(this.btnSelecionarImagem);
+            this.pnlImagem.Controls.Add(this.lblArquivoSelecionado);
+            this.pnlImagem.Controls.Add(this.btnLimparImagem);
+            this.pnlImagem.Controls.Add(this.lblPreview);
+            this.pnlImagem.Controls.Add(this.picturePreview);
 
-            chkDestaque.CheckedState.FillColor =
-                Color.FromArgb(212, 112, 74);
+            this.pnlImagem.FillColor =
+                System.Drawing.Color.FromArgb(250, 247, 244);
 
-            chkDestaque.CustomizableEdges =
-                edges11;
+            this.pnlImagem.Location =
+                new System.Drawing.Point(410, 98);
 
-            chkDestaque.Location =
-                new Point(24, 486);
+            this.pnlImagem.Name =
+                "pnlImagem";
 
-            chkDestaque.Name =
+            this.pnlImagem.Size =
+                new System.Drawing.Size(360, 405);
+
+            // ============================================================
+            // TÍTULO IMAGEM
+            // ============================================================
+
+            this.lblImagemTitulo.AutoSize = true;
+
+            this.lblImagemTitulo.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    11F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblImagemTitulo.ForeColor =
+                System.Drawing.Color.FromArgb(72, 52, 45);
+
+            this.lblImagemTitulo.Location =
+                new System.Drawing.Point(18, 16);
+
+            this.lblImagemTitulo.Text =
+                "Imagem do produto";
+
+            // ============================================================
+            // URL
+            // ============================================================
+
+            this.lblImagemUrl.AutoSize = true;
+
+            this.lblImagemUrl.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblImagemUrl.ForeColor =
+                System.Drawing.Color.FromArgb(95, 73, 65);
+
+            this.lblImagemUrl.Location =
+                new System.Drawing.Point(18, 51);
+
+            this.lblImagemUrl.Text =
+                "Imagem (URL)";
+
+            this.txtUrl.BorderColor =
+                System.Drawing.Color.FromArgb(220, 208, 201);
+
+            this.txtUrl.BorderRadius = 8;
+
+            this.txtUrl.Cursor =
+                System.Windows.Forms.Cursors.IBeam;
+
+            this.txtUrl.DefaultText =
+                "";
+
+            this.txtUrl.FillColor =
+                System.Drawing.Color.White;
+
+            this.txtUrl.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F);
+
+            this.txtUrl.ForeColor =
+                System.Drawing.Color.FromArgb(60, 45, 40);
+
+            this.txtUrl.Location =
+                new System.Drawing.Point(18, 74);
+
+            this.txtUrl.Name =
+                "txtUrl";
+
+            this.txtUrl.PlaceholderText =
+                "https://exemplo.com/imagem.jpg";
+
+            this.txtUrl.SelectedText =
+                "";
+
+            this.txtUrl.Size =
+                new System.Drawing.Size(324, 40);
+
+            // ============================================================
+            // ARQUIVO
+            // ============================================================
+
+            this.lblImagemArquivo.AutoSize = true;
+
+            this.lblImagemArquivo.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblImagemArquivo.ForeColor =
+                System.Drawing.Color.FromArgb(95, 73, 65);
+
+            this.lblImagemArquivo.Location =
+                new System.Drawing.Point(18, 127);
+
+            this.lblImagemArquivo.Text =
+                "Imagem (arquivo local)";
+
+            // ============================================================
+            // BOTÃO ESCOLHER ARQUIVO
+            // ============================================================
+
+            this.btnSelecionarImagem.BorderRadius = 7;
+
+            this.btnSelecionarImagem.FillColor =
+                System.Drawing.Color.FromArgb(198, 124, 99);
+
+            this.btnSelecionarImagem.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.btnSelecionarImagem.ForeColor =
+                System.Drawing.Color.White;
+
+            this.btnSelecionarImagem.Location =
+                new System.Drawing.Point(18, 151);
+
+            this.btnSelecionarImagem.Name =
+                "btnSelecionarImagem";
+
+            this.btnSelecionarImagem.Size =
+                new System.Drawing.Size(145, 38);
+
+            this.btnSelecionarImagem.Text =
+                "📁 Escolher arquivo";
+
+            // ============================================================
+            // ARQUIVO SELECIONADO
+            // ============================================================
+
+            this.lblArquivoSelecionado.AutoEllipsis = true;
+
+            this.lblArquivoSelecionado.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    8.5F);
+
+            this.lblArquivoSelecionado.ForeColor =
+                System.Drawing.Color.FromArgb(125, 105, 95);
+
+            this.lblArquivoSelecionado.Location =
+                new System.Drawing.Point(18, 195);
+
+            this.lblArquivoSelecionado.Name =
+                "lblArquivoSelecionado";
+
+            this.lblArquivoSelecionado.Size =
+                new System.Drawing.Size(260, 35);
+
+            this.lblArquivoSelecionado.Text =
+                "Nenhum arquivo selecionado";
+
+            // ============================================================
+            // LIMPAR IMAGEM
+            // ============================================================
+
+            this.btnLimparImagem.BorderRadius = 7;
+
+            this.btnLimparImagem.FillColor =
+                System.Drawing.Color.FromArgb(230, 223, 219);
+
+            this.btnLimparImagem.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    8.5F);
+
+            this.btnLimparImagem.ForeColor =
+                System.Drawing.Color.FromArgb(90, 70, 62);
+
+            this.btnLimparImagem.Location =
+                new System.Drawing.Point(238, 151);
+
+            this.btnLimparImagem.Name =
+                "btnLimparImagem";
+
+            this.btnLimparImagem.Size =
+                new System.Drawing.Size(104, 38);
+
+            this.btnLimparImagem.Text =
+                "Limpar";
+
+            // ============================================================
+            // PREVIEW
+            // ============================================================
+
+            this.lblPreview.AutoSize = true;
+
+            this.lblPreview.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.lblPreview.ForeColor =
+                System.Drawing.Color.FromArgb(95, 73, 65);
+
+            this.lblPreview.Location =
+                new System.Drawing.Point(18, 237);
+
+            this.lblPreview.Text =
+                "Pré-visualização";
+
+            this.picturePreview.BackColor =
+                System.Drawing.Color.FromArgb(239, 233, 229);
+
+            this.picturePreview.BorderStyle =
+                System.Windows.Forms.BorderStyle.FixedSingle;
+
+            this.picturePreview.Location =
+                new System.Drawing.Point(18, 263);
+
+            this.picturePreview.Name =
+                "picturePreview";
+
+            this.picturePreview.Size =
+                new System.Drawing.Size(145, 120);
+
+            this.picturePreview.SizeMode =
+                System.Windows.Forms.PictureBoxSizeMode.Zoom;
+
+            // ============================================================
+            // OPÇÕES
+            // ============================================================
+
+            this.pnlOpcoes.BackColor =
+                System.Drawing.Color.Transparent;
+
+            this.pnlOpcoes.BorderRadius = 9;
+
+            this.pnlOpcoes.Controls.Add(this.chkDestaque);
+            this.pnlOpcoes.Controls.Add(this.chkRecomendado);
+
+            this.pnlOpcoes.FillColor =
+                System.Drawing.Color.FromArgb(250, 247, 244);
+
+            this.pnlOpcoes.Location =
+                new System.Drawing.Point(28, 520);
+
+            this.pnlOpcoes.Name =
+                "pnlOpcoes";
+
+            this.pnlOpcoes.Size =
+                new System.Drawing.Size(742, 70);
+
+            // ============================================================
+            // DESTAQUE
+            // ============================================================
+
+            this.chkDestaque.AutoSize = true;
+
+            this.chkDestaque.CheckedState.BorderColor =
+                System.Drawing.Color.FromArgb(198, 124, 99);
+
+            this.chkDestaque.CheckedState.FillColor =
+                System.Drawing.Color.FromArgb(198, 124, 99);
+
+            this.chkDestaque.Font =
+                new System.Drawing.Font(
+                    "Segoe UI",
+                    9F,
+                    System.Drawing.FontStyle.Bold);
+
+            this.chkDestaque.ForeColor =
+                System.Drawing.Color.FromArgb(75, 55, 48);
+
+            this.chkDestaque.Location =
+                new System.Drawing.Point(20, 23);
+
+            this.chkDestaque.Name =
                 "chkDestaque";
 
-            chkDestaque.ShadowDecoration.CustomizableEdges =
-                edges12;
+            this.chkDestaque.Text =
+                "⭐ Destacar este doce na loja";
 
-            chkDestaque.Size =
-                new Size(22, 20);
+            // ============================================================
+            // RECOMENDADO
+            // ============================================================
 
-            chkDestaque.TabIndex = 13;
+            this.chkRecomendado.AutoSize = true;
 
-            chkDestaque.UncheckedState.BorderColor =
-                Color.FromArgb(168, 150, 135);
+            this.chkRecomendado.CheckedState.BorderColor =
+                System.Drawing.Color.FromArgb(198, 124, 99);
 
-            chkDestaque.UncheckedState.BorderRadius = 2;
+            this.chkRecomendado.CheckedState.FillColor =
+                System.Drawing.Color.FromArgb(198, 124, 99);
 
-            chkDestaque.UncheckedState.BorderThickness = 0;
-
-            chkDestaque.UncheckedState.FillColor =
-                Color.FromArgb(168, 150, 135);
-
-            // =========================================================
-            // lblDestaque
-            // =========================================================
-
-            lblDestaque.AutoSize = true;
-
-            lblDestaque.Font =
-                new Font(
+            this.chkRecomendado.Font =
+                new System.Drawing.Font(
                     "Segoe UI",
-                    9.75F,
-                    FontStyle.Bold,
-                    GraphicsUnit.Point);
+                    9F,
+                    System.Drawing.FontStyle.Bold);
 
-            lblDestaque.ForeColor =
-                Color.FromArgb(44, 24, 16);
+            this.chkRecomendado.ForeColor =
+                System.Drawing.Color.FromArgb(75, 55, 48);
 
-            lblDestaque.Location =
-                new Point(54, 486);
+            this.chkRecomendado.Location =
+                new System.Drawing.Point(370, 23);
 
-            lblDestaque.Name =
-                "lblDestaque";
+            this.chkRecomendado.Name =
+                "chkRecomendado";
 
-            lblDestaque.Size =
-                new Size(160, 17);
+            this.chkRecomendado.Text =
+                "👍 Marcar como recomendado";
 
-            lblDestaque.TabIndex = 14;
+            // ============================================================
+            // BOTÃO SALVAR
+            // ============================================================
 
-            lblDestaque.Text =
-                "Marcar como destaque";
+            this.btnSalvar.BorderRadius = 8;
 
-            // =========================================================
-            // btnSalvar
-            // =========================================================
+            this.btnSalvar.FillColor =
+                System.Drawing.Color.FromArgb(198, 124, 99);
 
-            btnSalvar.BorderRadius = 10;
-
-            btnSalvar.CustomizableEdges =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
-
-            btnSalvar.DisabledState.BorderColor =
-                Color.DarkGray;
-
-            btnSalvar.DisabledState.CustomBorderColor =
-                Color.DarkGray;
-
-            btnSalvar.DisabledState.FillColor =
-                Color.FromArgb(196, 184, 174);
-
-            btnSalvar.DisabledState.ForeColor =
-                Color.FromArgb(158, 143, 132);
-
-            btnSalvar.FillColor =
-                Color.FromArgb(92, 46, 14);
-
-            btnSalvar.Font =
-                new Font(
+            this.btnSalvar.Font =
+                new System.Drawing.Font(
                     "Segoe UI",
-                    12F,
-                    FontStyle.Bold);
+                    9.5F,
+                    System.Drawing.FontStyle.Bold);
 
-            btnSalvar.ForeColor =
-                Color.White;
+            this.btnSalvar.ForeColor =
+                System.Drawing.Color.White;
 
-            btnSalvar.HoverState.FillColor =
-                Color.FromArgb(212, 112, 74);
+            this.btnSalvar.Location =
+                new System.Drawing.Point(28, 615);
 
-            btnSalvar.Location =
-                new Point(24, 535);
-
-            btnSalvar.Name =
+            this.btnSalvar.Name =
                 "btnSalvar";
 
-            btnSalvar.Size =
-                new Size(225, 48);
+            this.btnSalvar.Size =
+                new System.Drawing.Size(350, 48);
 
-            btnSalvar.TabIndex = 15;
+            this.btnSalvar.Text =
+                "✓  Salvar Doce";
 
-            btnSalvar.Text =
-                "💾  Salvar";
+            this.btnSalvar.Click +=
+                new System.EventHandler(
+                    this.btnSalvar_Click);
 
-            btnSalvar.Click +=
-                btnSalvar_Click;
+            // ============================================================
+            // BOTÃO CANCELAR
+            // ============================================================
 
-            // =========================================================
-            // btnCancelar
-            // =========================================================
+            this.btnCancelar.BorderColor =
+                System.Drawing.Color.FromArgb(215, 200, 192);
 
-            btnCancelar.BorderRadius = 10;
+            this.btnCancelar.BorderRadius = 8;
+            this.btnCancelar.BorderThickness = 1;
 
-            btnCancelar.CustomizableEdges =
-                new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            this.btnCancelar.FillColor =
+                System.Drawing.Color.White;
 
-            btnCancelar.DisabledState.BorderColor =
-                Color.DarkGray;
-
-            btnCancelar.DisabledState.CustomBorderColor =
-                Color.DarkGray;
-
-            btnCancelar.DisabledState.FillColor =
-                Color.FromArgb(196, 184, 174);
-
-            btnCancelar.DisabledState.ForeColor =
-                Color.FromArgb(158, 143, 132);
-
-            btnCancelar.FillColor =
-                Color.FromArgb(237, 224, 212);
-
-            btnCancelar.Font =
-                new Font(
+            this.btnCancelar.Font =
+                new System.Drawing.Font(
                     "Segoe UI",
-                    12F);
+                    9.5F,
+                    System.Drawing.FontStyle.Bold);
 
-            btnCancelar.ForeColor =
-                Color.FromArgb(92, 46, 14);
+            this.btnCancelar.ForeColor =
+                System.Drawing.Color.FromArgb(100, 75, 65);
 
-            btnCancelar.HoverState.FillColor =
-                Color.FromArgb(232, 221, 210);
+            this.btnCancelar.Location =
+                new System.Drawing.Point(420, 615);
 
-            btnCancelar.Location =
-                new Point(279, 535);
-
-            btnCancelar.Name =
+            this.btnCancelar.Name =
                 "btnCancelar";
 
-            btnCancelar.Size =
-                new Size(225, 48);
+            this.btnCancelar.Size =
+                new System.Drawing.Size(350, 48);
 
-            btnCancelar.TabIndex = 16;
+            this.btnCancelar.Text =
+                "←  Voltar";
 
-            btnCancelar.Text =
-                "Cancelar";
+            this.btnCancelar.Click +=
+                new System.EventHandler(
+                    this.btnCancelar_Click);
 
-            btnCancelar.Click +=
-                btnCancelar_Click;
+            // ============================================================
+            // OPEN FILE DIALOG
+            // ============================================================
 
-            // =========================================================
-            // FORM
-            // =========================================================
+            this.openFileDialogImagem.Filter =
+                "Imagens|*.jpg;*.jpeg;*.png;*.webp;*.bmp";
 
-            AutoScaleDimensions =
-                new SizeF(7F, 15F);
+            this.openFileDialogImagem.Title =
+                "Selecionar imagem do doce";
 
-            AutoScaleMode =
-                AutoScaleMode.Font;
+            this.openFileDialogImagem.Multiselect =
+                false;
 
-            BackColor =
-                Color.FromArgb(253, 246, 237);
+            // ============================================================
+            // ADICIONAR AO FORM
+            // ============================================================
 
-            ClientSize =
-                new Size(528, 610);
+            this.pnlPrincipal.Controls.Add(
+                this.pnlCabecalho);
 
-            Controls.Add(btnCancelar);
-            Controls.Add(btnSalvar);
+            this.pnlPrincipal.Controls.Add(
+                this.pnlConteudo);
 
-            Controls.Add(lblDestaque);
-            Controls.Add(chkDestaque);
+            this.pnlPrincipal.Controls.Add(
+                this.pnlImagem);
 
-            Controls.Add(cmbCategoria);
-            Controls.Add(lblCategoria);
+            this.pnlPrincipal.Controls.Add(
+                this.pnlOpcoes);
 
-            Controls.Add(nudEstoque);
-            Controls.Add(lblEstoque);
+            this.pnlPrincipal.Controls.Add(
+                this.btnSalvar);
 
-            Controls.Add(nudPreco);
-            Controls.Add(lblPreco);
+            this.pnlPrincipal.Controls.Add(
+                this.btnCancelar);
 
-            Controls.Add(txtUrl);
-            Controls.Add(lblUrl);
+            this.Controls.Add(
+                this.pnlPrincipal);
 
-            Controls.Add(txtDescricao);
-            Controls.Add(lblDescricao);
-
-            Controls.Add(txtTitulo);
-            Controls.Add(lblTitulo);
-
-            Controls.Add(lblTituloJanela);
-
-            FormBorderStyle =
-                FormBorderStyle.None;
-
-            Name =
+            this.Name =
                 "DoceFormDialog";
 
-            StartPosition =
-                FormStartPosition.CenterScreen;
-
-            Text =
-                "Novo Doce";
-
-            Load +=
-                DoceFormDialog_Load;
-
-            ResumeLayout(false);
-            PerformLayout();
+            this.ResumeLayout(false);
         }
-
-        #endregion
-
-        private Label lblTituloJanela;
-        private Label lblTitulo;
-
-        private Label lblNome;
-        private Guna.UI2.WinForms.Guna2TextBox txtTitulo;
-
-        private Label lblDescricao;
-        private Guna.UI2.WinForms.Guna2TextBox txtDescricao;
-
-        private Label lblUrl;
-        private Guna.UI2.WinForms.Guna2TextBox txtUrl;
-
-        private Label lblPreco;
-        private Guna.UI2.WinForms.Guna2NumericUpDown nudPreco;
-
-        private Label lblEstoque;
-        private Guna.UI2.WinForms.Guna2NumericUpDown nudEstoque;
-
-        private Label lblCategoria;
-        private ComboBox cmbCategoria;
-
-        private Guna.UI2.WinForms.Guna2CustomCheckBox chkDestaque;
-        private Label lblDestaque;
-
-        private Guna.UI2.WinForms.Guna2Button btnSalvar;
-        private Guna.UI2.WinForms.Guna2Button btnCancelar;
     }
 }
