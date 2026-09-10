@@ -69,7 +69,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<ICheckoutProfileService, CheckoutProfileService>();
 builder.Services.AddScoped<IShippingService, ShippingService>();
-
+builder.Services.AddScoped<EmailService>();
 // ========================================================================
 // MVC - Adiciona suporte para controladores e views (páginas HTML) | Razor
 // ========================================================================
