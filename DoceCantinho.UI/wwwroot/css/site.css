@@ -2564,7 +2564,7 @@ footer {
 
 /* ─── Responsive ─── */
 
-@media (max-width: 768px) {
+     (max-width: 768px) {
 
     .nav-links, .btn-login {
         display: none;
@@ -2650,7 +2650,7 @@ footer {
     }
 }
 
-@media (max-width: 480px) {
+     (max-width: 480px) {
 
     .products-grid {
         grid-template-columns: 1fr;
@@ -3166,11 +3166,24 @@ a.admin-logout-btn {
         margin-top: .2rem;
         accent-color: var(--accent);
     }
-
 .review-submit {
-    width: 100%;
-    justify-content: center;
+    padding: .6rem 1.5rem;
+    font-size: .85rem;
+    align-self: flex-start;
 }
+
+.review-locked {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+}
+
+    .review-locked .review-submit {
+        align-self: auto;
+    }
+
 
 .review-success {
     display: none;

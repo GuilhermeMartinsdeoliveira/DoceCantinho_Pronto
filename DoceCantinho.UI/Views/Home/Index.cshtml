@@ -310,89 +310,83 @@
                     </article>
                 </div>
 
-                <form class="review-form" id="review-form">
-                    <div class="review-form-header">
-                        <p class="section-eyebrow">Deixe seu depoimento</p>
-                        <h3>Como foi sua experiência?</h3>
-                        <p>Conte o que achou dos doces e da experiência de navegar pelo site.</p>
-                    </div>
-
-                    <div class="form-grid2">
-                        <div class="review-field">
-                            <label for="review-name">Seu nome</label>
-                            <input id="review-name" name="name" type="text" maxlength="60" placeholder="Ex.: Juliana Souza" required>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <form class="review-form" id="review-form">
+                        <div class="review-form-header">
+                            <p class="section-eyebrow">Deixe seu depoimento</p>
+                            <h3>Como foi sua experiência?</h3>
+                            <p>Conte o que achou dos doces e da experiência de navegar pelo site.</p>
                         </div>
-                        <div class="review-field">
-                            <label for="review-email">E-mail</label>
-                            <input id="review-email" name="email" type="email" placeholder="seu@email.com" required>
+
+                        <div class="form-grid2">
+                            <div class="review-field">
+                                <label for="review-name">Seu nome</label>
+                                <input id="review-name" name="name" type="text" maxlength="60" placeholder="Ex.: Juliana Souza" required>
+                            </div>
+                            <div class="review-field">
+                                <label for="review-email">E-mail</label>
+                                <input id="review-email" name="email" type="email" placeholder="seu@email.com" required>
+                            </div>
                         </div>
+
+                        <div class="review-rating-grid">
+                            <fieldset class="rating-fieldset">
+                                <legend>Avaliação dos doces</legend>
+                                <div class="star-picker" data-rating="sweet">
+                                    <button type="button" data-value="1">★</button>
+                                    <button type="button" data-value="2">★</button>
+                                    <button type="button" data-value="3">★</button>
+                                    <button type="button" data-value="4">★</button>
+                                    <button type="button" data-value="5">★</button>
+                                </div>
+                                <input type="hidden" name="sweetRating" id="sweet-rating" value="5">
+                            </fieldset>
+
+                            <fieldset class="rating-fieldset">
+                                <legend>Avaliação do site</legend>
+                                <div class="star-picker" data-rating="site">
+                                    <button type="button" data-value="1">★</button>
+                                    <button type="button" data-value="2">★</button>
+                                    <button type="button" data-value="3">★</button>
+                                    <button type="button" data-value="4">★</button>
+                                    <button type="button" data-value="5">★</button>
+                                </div>
+                                <input type="hidden" name="siteRating" id="site-rating" value="5">
+                            </fieldset>
+                        </div>
+
+                        <div class="review-field">
+                            <label for="review-message">Seu depoimento</label>
+                            <textarea id="review-message" name="message" rows="4" maxlength="500" required></textarea>
+                            <small class="field-hint">Até 500 caracteres.</small>
+                        </div>
+
+                        <label class="review-check">
+                            <input type="checkbox" name="permission" required>
+                            <span>Autorizo a exibição deste depoimento no site.</span>
+                        </label>
+
+                        <button type="submit" class="btn btn-accent review-submit">
+                            Enviar
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                        <p class="review-success" id="review-success">Obrigado! Sua avaliação foi registrada neste navegador.</p>
+                    </form>
+                }
+                else
+                {
+                    <div class="review-form review-locked">
+                        <div class="review-form-header">
+                            <p class="section-eyebrow">Deixe seu depoimento</p>
+                            <h3>Como foi sua experiência?</h3>
+                            <p>Você precisa estar logado para enviar uma avaliação.</p>
+                        </div>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-accent review-submit">
+                            <i class="bi bi-box-arrow-in-right"></i> Entrar para avaliar
+                        </a>
                     </div>
-
-                    <div class="review-rating-grid">
-                        <fieldset class="rating-fieldset">
-                            <legend>Avaliação dos doces</legend>
-                            <div class="star-picker" data-rating="sweet">
-                                <button type="button" data-value="1" aria-label="1 estrela">★</button>
-                                <button type="button" data-value="2" aria-label="2 estrelas">★</button>
-                                <button type="button" data-value="3" aria-label="3 estrelas">★</button>
-                                <button type="button" data-value="4" aria-label="4 estrelas">★</button>
-                                <button type="button" data-value="5" aria-label="5 estrelas">★</button>
-                            </div>
-                            <input type="hidden" name="sweetRating" id="sweet-rating" value="5">
-                        </fieldset>
-
-                        <fieldset class="rating-fieldset">
-                            <legend>Avaliação do site</legend>
-                            <div class="star-picker" data-rating="site">
-                                <button type="button" data-value="1" aria-label="1 estrela">★</button>
-                                <button type="button" data-value="2" aria-label="2 estrelas">★</button>
-                                <button type="button" data-value="3" aria-label="3 estrelas">★</button>
-                                <button type="button" data-value="4" aria-label="4 estrelas">★</button>
-                                <button type="button" data-value="5" aria-label="5 estrelas">★</button>
-                            </div>
-                            <input type="hidden" name="siteRating" id="site-rating" value="5">
-                        </fieldset>
-                    </div>
-
-                    <div class="review-field">
-                        <label for="review-message">Seu depoimento</label>
-                        <textarea id="review-message" name="message" rows="4" maxlength="500" placeholder="O que você mais gostou? Conte para a gente..." required></textarea>
-                        <small class="field-hint">Até 500 caracteres.</small>
-                    </div>
-
-                    <label class="review-check">
-                        <input type="checkbox" name="permission" required>
-                        <span>Autorizo a exibição deste depoimento no site.</span>
-                    </label>
-
-                    <button type="submit" class="btn btn-accent review-submit">
-                        Enviar avaliação
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
-                    <p class="review-success" id="review-success" role="status" aria-live="polite">
-                        Obrigado! Sua avaliação foi registrada neste navegador.
-                    </p>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- ─── CTA ─── -->
-    <section class="section-cta">
-        <div class="container">
-            <div class="cta-box">
-                <p class="section-eyebrow" style="color:var(--accent)">Pronto para adoçar?</p>
-                <h2 class="section-title serif" style="margin-bottom:1rem">Faça seu pedido hoje</h2>
-                <p style="color:var(--muted-fg);margin-bottom:2rem">Encomende com antecedência e garanta seu doce especial.</p>
-                <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-                    <a asp-controller="Doces" asp-action="Index" class="btn btn-primary">Ver produtos</a>
-                    <a href="#avaliacoes" class="btn btn-outline">Avaliar experiência</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-</div>
+                }
