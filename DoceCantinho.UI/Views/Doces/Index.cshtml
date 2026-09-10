@@ -97,25 +97,63 @@
 
 
                             <!-- PREÇO E BOTÕES -->
+                            ```cshtml
+                            <div class="product-body">
 
-                            <div class="doce-card-bottom">
+                                @if (!string.IsNullOrEmpty(doce.CategoryName))
+                                {
+                                    <p class="product-cat">
+                                        @doce.CategoryName
+                                    </p>
+                                }
 
-                                <span class="doce-card-price">
-                                    @doce.Preco.ToString("C")
-                                </span>
+                                <h3 class="product-name">
+                                    @doce.Title
+                                </h3>
 
+                                <p class="product-desc">
+                                    @doce.Description
+                                </p>
 
-                                <div class="doce-card-buttons">
+                                <!-- PREÇO E BOTÕES -->
+                                <div class="product-footer">
 
-                                    <!-- VER DETALHES -->
+                                    <span class="product-price">
+                                        @doce.Preco.ToString("C")
+                                    </span>
 
                                     <a asp-action="Details"
                                        asp-route-id="@doce.Id"
-                                       class="doce-btn-dois">
-
+                                       class="btn btn-accent btn-sm">
                                         Ver detalhes
-
                                     </a>
+
+                                    <form asp-controller="Carrinho"
+                                          asp-action="Adicionar"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@doce.Id" />
+
+                                        <input type="hidden"
+                                               name="quantidade"
+                                               value="1" />
+
+                                        <button type="submit"
+                                                class="btn btn-outline btn-sm">
+                                            Adicionar
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+                            ```
+
 
 
                                     <!-- ADICIONAR AO CARRINHO -->
@@ -147,9 +185,6 @@
 
                             </div>
 
-                        </div>
-
-                    </div>
                 }
 
             </div>
