@@ -369,15 +369,56 @@ namespace DoceCantinho.Desktop.Helpers
         {
             try
             {
-                var doc = JsonDocument.Parse(json);
-                if (doc.RootElement.TryGetProperty("message", out var msg))
-                    return msg.GetString() ?? "Erro desconhecido.";
-                if (doc.RootElement.TryGetProperty("title", out var title))
-                    return title.GetString() ?? "Erro desconhecido.";
-            }
-            catch { }
+                if (string.IsNullOrWhiteSpace(json))
+                    return "Erro desconhecido.";
 
-            return string.IsNullOrEmpty(json) ? "Erro desconhecido." : json;
+                var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+
+                string mensagem = "";
+
+                if (root.TryGetProperty("message", out var msg))
+                {
+                    mensagem = msg.GetString() ?? "";
+                }
+
+                // ============================================================
+                // ERROS DO ASP.NET IDENTITY
+                // ============================================================
+
+                if (root.TryGetProperty("errors", out var errors) &&
+                    errors.ValueKind == JsonValueKind.Array)
+                {
+                    var listaErros = errors
+                        .EnumerateArray()
+                        .Select(e => e.GetString())
+                        .Where(e => !string.IsNullOrWhiteSpace(e))
+                        .ToList();
+
+                    if (listaErros.Count > 0)
+                    {
+                        return string.IsNullOrWhiteSpace(mensagem)
+                            ? string.Join("\n", listaErros)
+                            : mensagem + "\n\n" + string.Join("\n", listaErros);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(mensagem))
+                    return mensagem;
+
+                if (root.TryGetProperty("title", out var title))
+                {
+                    return title.GetString() ?? "Erro desconhecido.";
+                }
+            }
+            catch
+            {
+                // Se não for JSON válido, retorna o conteúdo original.
+            }
+
+            return string.IsNullOrWhiteSpace(json)
+                ? "Erro desconhecido."
+                : json;
         }
 
         /// <summary>

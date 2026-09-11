@@ -71,6 +71,8 @@ namespace DoceCantinho.Desktop.UserControls
 
                 ConfigurarGrid();
 
+
+
                 ConfigurarPermissoes();
 
                 await CarregarDadosAsync();
@@ -110,45 +112,218 @@ namespace DoceCantinho.Desktop.UserControls
         }
 
         // ============================================================
-        // CONFIGURAR GRID
+        // CLIQUE NAS CÉLULAS DO GRID
+        // ============================================================
+
+        private async void gridBanco_CellContentClick(
+            object? sender,
+            DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            try
+            {
+                // Verifica se a linha realmente existe
+                if (e.RowIndex >= gridBanco.Rows.Count)
+                    return;
+
+                DataGridViewRow linha =
+                    gridBanco.Rows[e.RowIndex];
+
+                // ========================================================
+                // SELECIONA A LINHA CLICADA
+                // ========================================================
+
+                gridBanco.ClearSelection();
+
+                linha.Selected = true;
+
+                gridBanco.CurrentCell =
+                    linha.Cells[e.ColumnIndex];
+
+                // ========================================================
+                // DESCOBRE QUAL COLUNA FOI CLICADA
+                // ========================================================
+
+                string nomeColuna =
+                    gridBanco.Columns[e.ColumnIndex].Name;
+
+                // ========================================================
+                // EDITAR
+                // ========================================================
+
+                if (nomeColuna == "colEditar")
+                {
+                    await EditarDoceAsync();
+
+                    return;
+                }
+
+                // ========================================================
+                // EXCLUIR
+                // ========================================================
+
+                if (nomeColuna == "colExcluir")
+                {
+                    await ExcluirDoceAsync();
+
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MostrarAvisoDoce(
+                    $"Erro ao processar a ação: {ex.Message}",
+                    TipoAvisoDoce.Erro);
+            }
+        }
+        // ============================================================
+        // CONFIGURAÇÃO DO GRID
         // ============================================================
 
         private void ConfigurarGrid()
         {
-            gridBanco.AutoGenerateColumns =
-                false;
+            gridBanco.AutoGenerateColumns = false;
 
             gridBanco.SelectionMode =
                 DataGridViewSelectionMode.FullRowSelect;
 
-            gridBanco.MultiSelect =
-                false;
+            gridBanco.MultiSelect = false;
 
-            gridBanco.ReadOnly =
-                true;
+            gridBanco.ReadOnly = true;
 
-            gridBanco.AllowUserToAddRows =
-                false;
+            gridBanco.AllowUserToAddRows = false;
 
-            gridBanco.AllowUserToDeleteRows =
-                false;
+            gridBanco.AllowUserToDeleteRows = false;
 
-            gridBanco.AllowUserToResizeRows =
-                false;
+            gridBanco.AllowUserToResizeRows = false;
 
-            gridBanco.RowTemplate.Height =
-                65;
+            gridBanco.RowTemplate.Height = 65;
+
+            // ============================================================
+            // EVENTO DE FORMATAÇÃO
+            // ============================================================
+
+            gridBanco.CellFormatting -= gridBanco_CellFormatting;
+
+            gridBanco.CellFormatting += gridBanco_CellFormatting;
+
+            // ============================================================
+            // TEMA DO GRID
+            // ============================================================
 
             try
             {
-                DoceTheme.AplicarEstiloGrid(
-                    gridBanco);
+                DoceTheme.AplicarEstiloGrid(gridBanco);
             }
             catch
             {
-                // Mantém o grid funcionando
-                // mesmo se houver incompatibilidade
-                // no tema.
+                // Mantém o grid funcionando mesmo
+                // se houver incompatibilidade no tema.
+            }
+        }
+        // ============================================================
+        // FORMATAÇÃO VISUAL - STATUS E ESTOQUE
+        // ============================================================
+
+        private void gridBanco_CellFormatting(
+            object? sender,
+            DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            string nomeColuna =
+                gridBanco.Columns[e.ColumnIndex].Name;
+
+            // ============================================================
+            // STATUS
+            // ============================================================
+
+            if (nomeColuna == "colStatus")
+            {
+                string status =
+                    e.Value?.ToString() ?? string.Empty;
+
+                e.CellStyle.Alignment =
+                    DataGridViewContentAlignment.MiddleCenter;
+
+                e.CellStyle.Font =
+                    new Font(
+                        "Segoe UI",
+                        9F,
+                        FontStyle.Bold);
+
+                // ATIVO = VERDE
+                if (status.Equals(
+                        "Ativo",
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor =
+                        Color.FromArgb(35, 145, 75);
+
+                    e.CellStyle.BackColor =
+                        Color.FromArgb(232, 247, 238);
+                }
+
+                // INATIVO = CINZA
+                else if (status.Equals(
+                             "Inativo",
+                             StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor =
+                        Color.FromArgb(100, 100, 100);
+
+                    e.CellStyle.BackColor =
+                        Color.FromArgb(235, 235, 235);
+                }
+            }
+
+            // ============================================================
+            // ESTOQUE
+            // ============================================================
+
+            if (nomeColuna == "colEstoque")
+            {
+                if (!int.TryParse(
+                        e.Value?.ToString(),
+                        out int estoque))
+                {
+                    return;
+                }
+
+                e.CellStyle.Alignment =
+                    DataGridViewContentAlignment.MiddleCenter;
+
+                e.CellStyle.Font =
+                    new Font(
+                        "Segoe UI",
+                        9F,
+                        FontStyle.Bold);
+
+                // ESTOQUE = 0
+                if (estoque == 0)
+                {
+                    e.Value = "Sem estoque";
+
+                    e.CellStyle.ForeColor =
+                        Color.FromArgb(200, 55, 55);
+
+                    e.CellStyle.BackColor =
+                        Color.FromArgb(250, 235, 235);
+                }
+                // ESTOQUE > 0 = ESTOQUE BAIXO
+                else
+                {
+                    e.Value = $"{estoque} baixo";
+
+                    e.CellStyle.ForeColor =
+                        Color.FromArgb(200, 55, 55);
+
+                    e.CellStyle.BackColor =
+                        Color.FromArgb(250, 235, 235);
+                }
             }
         }
 
@@ -324,19 +499,15 @@ namespace DoceCantinho.Desktop.UserControls
         // DEFINIR STATUS
         // ============================================================
 
-        private string ObterStatus(
-            DoceResponseDto doce)
+        private string ObterStatus(DoceResponseDto doce)
         {
-            if (!doce.IsAtivo)
-                return "Inativo";
+            // STATUS depende SOMENTE de IsAtivo.
+            // Estoque não interfere no status.
 
-            if (doce.IsFeatured)
-                return "Destaque";
+            if (doce.IsAtivo)
+                return "Ativo";
 
-            if (doce.QuantidadeEstoque <= 0)
-                return "Sem estoque";
-
-            return "Ativo";
+            return "Inativo";
         }
 
         // ============================================================
@@ -1480,71 +1651,11 @@ namespace DoceCantinho.Desktop.UserControls
         }
 
         // ============================================================
-        // CLIQUE NO GRID
+        // FORMATAÇÃO VISUAL - STATUS E ESTOQUE
         // ============================================================
 
-        private async void gridBanco_CellContentClick(
-            object sender,
-            DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0)
-                return;
-
-            if (e.RowIndex >=
-                gridBanco.Rows.Count)
-            {
-                return;
-            }
-
-            gridBanco.ClearSelection();
-
-            gridBanco.Rows[e.RowIndex]
-                .Selected =
-                true;
-
-            string nomeColuna =
-                gridBanco
-                    .Columns[e.ColumnIndex]
-                    .Name;
-
-            // --------------------------------------------------------
-            // EDITAR
-            // --------------------------------------------------------
-
-            if (nomeColuna ==
-                "colEditar")
-            {
-                if (!SessionManager.Instance.IsAdmin)
-                {
-                    MostrarAvisoDoce(
-                        "Seu perfil não possui permissão para editar doces.",
-                        TipoAvisoDoce.Aviso);
-
-                    return;
-                }
-
-                await EditarDoceAsync();
-            }
-
-            // --------------------------------------------------------
-            // EXCLUIR
-            // --------------------------------------------------------
-
-            else if (nomeColuna ==
-                     "colExcluir")
-            {
-                if (!SessionManager.Instance.IsAdmin)
-                {
-                    MostrarAvisoDoce(
-                        "Seu perfil não possui permissão para excluir doces.",
-                        TipoAvisoDoce.Aviso);
-
-                    return;
-                }
-
-                await ExcluirDoceAsync();
-            }
-        }
+     
+        
 
         // ============================================================
         // ATUALIZAR

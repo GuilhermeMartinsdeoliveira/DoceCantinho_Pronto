@@ -40,6 +40,24 @@
                     <input type="checkbox" id="remember" name="RememberMe" />
                     <label class="checkbox-label" for="remember">Lembrar de mim</label>
                 </div>
+                <div style="text-align: right; margin-top: -0.5rem; margin-bottom: 1rem;">
+                    <a asp-controller="Account"
+                       asp-action="ForgotPassword"
+                       style="
+                        color: var(--primary);
+                        text-decoration: none;
+                        font-size: .85rem;
+                        font-weight: 500;">
+                        Esqueci minha senha
+                    </a>
+                </div>
+                <div style="text-align:right; margin-top:-.5rem; margin-bottom:1rem;">
+                    <a asp-controller="Account"
+                       asp-action="ForgotPassword"
+                       style="color:var(--primary); text-decoration:none; font-size:.85rem;">
+                        Esqueci minha senha
+                    </a>
+                </div>
 
                 <button type="submit" class="form-submit">Entrar</button>
 

@@ -337,6 +337,54 @@ namespace DoceCantinho.Desktop1.Forms
                     return;
                 }
 
+                if (!senha.Any(char.IsUpper))
+                {
+                    MessageBox.Show(
+                        "A senha deve possuir pelo menos uma letra maiúscula.",
+                        "Validação",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    txtSenha.Focus();
+                    return;
+                }
+
+                if (!senha.Any(char.IsLower))
+                {
+                    MessageBox.Show(
+                        "A senha deve possuir pelo menos uma letra minúscula.",
+                        "Validação",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    txtSenha.Focus();
+                    return;
+                }
+
+                if (!senha.Any(char.IsDigit))
+                {
+                    MessageBox.Show(
+                        "A senha deve possuir pelo menos um número.",
+                        "Validação",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    txtSenha.Focus();
+                    return;
+                }
+
+                if (!senha.Any(ch => !char.IsLetterOrDigit(ch)))
+                {
+                    MessageBox.Show(
+                        "A senha deve possuir pelo menos um caractere especial, como @, # ou !.",
+                        "Validação",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    txtSenha.Focus();
+                    return;
+                }
+
                 if (senha != confirmar)
                 {
                     MessageBox.Show(
