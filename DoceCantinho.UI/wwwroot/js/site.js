@@ -1859,3 +1859,210 @@ document.addEventListener(
 
     }
 );
+/* =========================================================
+   CARROSSEL DOCE CANTINHO
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const carousel = document.querySelector(".dc-carousel");
+
+    if (!carousel) return;
+
+    const slides = Array.from(
+        carousel.querySelectorAll(".dc-carousel-slide")
+    );
+
+    const dots = Array.from(
+        carousel.querySelectorAll(".dc-carousel-dot")
+    );
+
+    const prev = carousel.querySelector(".dc-carousel-prev");
+    const next = carousel.querySelector(".dc-carousel-next");
+
+    let current = 0;
+    let timer = null;
+
+    function showSlide(index) {
+
+        if (index < 0) {
+            index = slides.length - 1;
+        }
+
+        if (index >= slides.length) {
+            index = 0;
+        }
+
+        current = index;
+
+        slides.forEach(function(slide, i) {
+            slide.classList.toggle("active", i === current);
+        });
+
+        dots.forEach(function(dot, i) {
+            dot.classList.toggle("active", i === current);
+        });
+
+        slides.forEach(function(slide) {
+
+            const video = slide.querySelector("video");
+
+            if (video) {
+                video.pause();
+            }
+
+        });
+
+        const currentVideo =
+            slides[current].querySelector("video");
+        if (currentVideo) {
+
+            currentVideo.currentTime = 0;
+
+            const playVideo = currentVideo.play();
+
+            if (playVideo !== undefined) {
+                playVideo.catch(function() {
+                    console.log("Clique no vídeo para iniciar.");
+                });
+            }
+        }
+
+    function nextSlide() {
+
+        showSlide(current + 1);
+
+        restartTimer();
+    }
+
+    function previousSlide() {
+
+        showSlide(current - 1);
+
+        restartTimer();
+    }
+
+    if (next) {
+        next.addEventListener("click", nextSlide);
+    }
+
+    if (prev) {
+        prev.addEventListener("click", previousSlide);
+    }
+
+    dots.forEach(function(dot, index) {
+
+        dot.addEventListener("click", function() {
+
+            showSlide(index);
+
+            restartTimer();
+
+        });
+
+    });
+
+    slides.forEach(function(slide) {
+
+        const video = slide.querySelector("video");
+
+        if (!video) return;
+
+        video.addEventListener("ended", function() {
+            nextSlide();
+        });
+
+        video.addEventListener("error", function() {
+
+            setTimeout(function() {
+                nextSlide();
+            }, 1000);
+
+        });
+
+    });
+
+    function startTimer() {
+
+        clearInterval(timer);
+
+        timer = setInterval(function() {
+
+            const video =
+                slides[current].querySelector("video");
+
+            /*
+             * Se o vídeo estiver rodando,
+             * deixa ele terminar antes de trocar.
+             */
+            if (video && !video.ended) {
+                return;
+            }
+
+            nextSlide();
+
+        }, 6000);
+    }
+
+    function restartTimer() {
+
+        clearInterval(timer);
+
+        startTimer();
+    }
+
+    carousel.addEventListener("mouseenter", function() {
+
+        clearInterval(timer);
+
+    });
+
+    carousel.addEventListener("mouseleave", function() {
+
+        startTimer();
+
+    });
+
+    let touchStart = 0;
+    let touchEnd = 0;
+
+    carousel.addEventListener(
+        "touchstart",
+        function(event) {
+
+            touchStart =
+                event.changedTouches[0].screenX;
+
+        },
+        { passive: true }
+    );
+
+    carousel.addEventListener(
+        "touchend",
+        function(event) {
+
+            touchEnd =
+                event.changedTouches[0].screenX;
+
+            const distance =
+                touchEnd - touchStart;
+
+            if (Math.abs(distance) < 50) {
+                return;
+            }
+
+            if (distance < 0) {
+                nextSlide();
+            } else {
+                previousSlide();
+            }
+
+        },
+        { passive: true }
+    );
+
+    showSlide(0);
+
+    startTimer();
+
+});
