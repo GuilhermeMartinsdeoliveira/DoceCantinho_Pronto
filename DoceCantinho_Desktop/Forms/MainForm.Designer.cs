@@ -36,6 +36,7 @@ namespace DoceCantinho.Desktop.Forms
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlPanel = new Panel();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            pnlLogoIcon = new PictureBox();
             lblSair = new Guna.UI2.WinForms.Guna2Button();
             pnlUsuario = new Guna.UI2.WinForms.Guna2Panel();
             lblSessao = new Label();
@@ -51,30 +52,28 @@ namespace DoceCantinho.Desktop.Forms
             lblMenu = new Label();
             lblLogoSub = new Label();
             lblLogo = new Label();
-            lblLogoIcon = new Label();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             guna2DragControl1 = new Guna.UI2.WinForms.Guna2DragControl(components);
             guna2ShadowForm1 = new Guna.UI2.WinForms.Guna2ShadowForm(components);
-            pnlLogoIcon = new PictureBox();
             guna2Panel1.SuspendLayout();
-            pnlUsuario.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pnlLogoIcon).BeginInit();
+            pnlUsuario.SuspendLayout();
             SuspendLayout();
             // 
             // pnlPanel
             // 
             pnlPanel.BackColor = Color.FromArgb(248, 245, 242);
             pnlPanel.Dock = DockStyle.Fill;
-            pnlPanel.Location = new Point(225, 0);
+            pnlPanel.Location = new Point(257, 0);
+            pnlPanel.Margin = new Padding(3, 4, 3, 4);
             pnlPanel.Name = "pnlPanel";
-            pnlPanel.Size = new Size(1075, 720);
+            pnlPanel.Size = new Size(1229, 960);
             pnlPanel.TabIndex = 0;
             // 
             // guna2Panel1
             // 
             guna2Panel1.BackColor = Color.FromArgb(47, 34, 30);
             guna2Panel1.Controls.Add(pnlLogoIcon);
-            guna2Panel1.Controls.Add(lblLogoIcon);
             guna2Panel1.Controls.Add(lblSair);
             guna2Panel1.Controls.Add(pnlUsuario);
             guna2Panel1.Controls.Add(lblSeparador);
@@ -90,10 +89,22 @@ namespace DoceCantinho.Desktop.Forms
             guna2Panel1.Dock = DockStyle.Left;
             guna2Panel1.FillColor = Color.FromArgb(47, 34, 30);
             guna2Panel1.Location = new Point(0, 0);
+            guna2Panel1.Margin = new Padding(3, 4, 3, 4);
             guna2Panel1.Name = "guna2Panel1";
             guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            guna2Panel1.Size = new Size(225, 720);
+            guna2Panel1.Size = new Size(257, 960);
             guna2Panel1.TabIndex = 1;
+            // 
+            // pnlLogoIcon
+            // 
+            pnlLogoIcon.Image = Desktop1.Properties.Resources.doce;
+            pnlLogoIcon.Location = new Point(16, 16);
+            pnlLogoIcon.Margin = new Padding(3, 4, 3, 4);
+            pnlLogoIcon.Name = "pnlLogoIcon";
+            pnlLogoIcon.Size = new Size(62, 63);
+            pnlLogoIcon.SizeMode = PictureBoxSizeMode.Zoom;
+            pnlLogoIcon.TabIndex = 0;
+            pnlLogoIcon.TabStop = false;
             // 
             // lblSair
             // 
@@ -105,11 +116,12 @@ namespace DoceCantinho.Desktop.Forms
             lblSair.ForeColor = Color.FromArgb(205, 187, 178);
             lblSair.HoverState.FillColor = Color.FromArgb(84, 59, 51);
             lblSair.HoverState.ForeColor = Color.White;
-            lblSair.Location = new Point(14, 677);
+            lblSair.Location = new Point(16, 903);
+            lblSair.Margin = new Padding(3, 4, 3, 4);
             lblSair.Name = "lblSair";
-            lblSair.Padding = new Padding(10, 0, 0, 0);
+            lblSair.Padding = new Padding(11, 0, 0, 0);
             lblSair.ShadowDecoration.CustomizableEdges = customizableEdges1;
-            lblSair.Size = new Size(197, 34);
+            lblSair.Size = new Size(225, 45);
             lblSair.TabIndex = 10;
             lblSair.Text = "↪   Sair";
             lblSair.TextAlign = HorizontalAlignment.Left;
@@ -126,10 +138,11 @@ namespace DoceCantinho.Desktop.Forms
             pnlUsuario.Controls.Add(lblAvatar);
             pnlUsuario.CustomizableEdges = customizableEdges2;
             pnlUsuario.FillColor = Color.FromArgb(58, 42, 37);
-            pnlUsuario.Location = new Point(14, 593);
+            pnlUsuario.Location = new Point(16, 791);
+            pnlUsuario.Margin = new Padding(3, 4, 3, 4);
             pnlUsuario.Name = "pnlUsuario";
             pnlUsuario.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlUsuario.Size = new Size(197, 78);
+            pnlUsuario.Size = new Size(225, 104);
             pnlUsuario.TabIndex = 9;
             pnlUsuario.Click += pnlUsuario_Click;
             // 
@@ -139,9 +152,9 @@ namespace DoceCantinho.Desktop.Forms
             lblSessao.BackColor = Color.Transparent;
             lblSessao.Font = new Font("Segoe UI", 7F);
             lblSessao.ForeColor = Color.FromArgb(151, 128, 117);
-            lblSessao.Location = new Point(58, 48);
+            lblSessao.Location = new Point(66, 64);
             lblSessao.Name = "lblSessao";
-            lblSessao.Size = new Size(125, 13);
+            lblSessao.Size = new Size(143, 17);
             lblSessao.TabIndex = 3;
             lblSessao.Text = "● conectado";
             // 
@@ -151,9 +164,9 @@ namespace DoceCantinho.Desktop.Forms
             lblPerfil.BackColor = Color.Transparent;
             lblPerfil.Font = new Font("Segoe UI", 7.5F);
             lblPerfil.ForeColor = Color.FromArgb(214, 126, 91);
-            lblPerfil.Location = new Point(58, 29);
+            lblPerfil.Location = new Point(66, 39);
             lblPerfil.Name = "lblPerfil";
-            lblPerfil.Size = new Size(66, 12);
+            lblPerfil.Size = new Size(91, 17);
             lblPerfil.TabIndex = 2;
             lblPerfil.Text = "Administrador";
             // 
@@ -163,9 +176,9 @@ namespace DoceCantinho.Desktop.Forms
             lblUsuario.BackColor = Color.Transparent;
             lblUsuario.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lblUsuario.ForeColor = Color.White;
-            lblUsuario.Location = new Point(58, 10);
+            lblUsuario.Location = new Point(66, 13);
             lblUsuario.Name = "lblUsuario";
-            lblUsuario.Size = new Size(83, 15);
+            lblUsuario.Size = new Size(107, 20);
             lblUsuario.TabIndex = 1;
             lblUsuario.Text = "Administrador";
             // 
@@ -178,19 +191,20 @@ namespace DoceCantinho.Desktop.Forms
             lblAvatar.FillColor = Color.FromArgb(214, 126, 91);
             lblAvatar.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
             lblAvatar.ForeColor = Color.White;
-            lblAvatar.Location = new Point(11, 14);
+            lblAvatar.Location = new Point(13, 19);
+            lblAvatar.Margin = new Padding(3, 4, 3, 4);
             lblAvatar.Name = "lblAvatar";
             lblAvatar.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            lblAvatar.Size = new Size(39, 39);
+            lblAvatar.Size = new Size(45, 52);
             lblAvatar.TabIndex = 0;
             lblAvatar.Text = "A";
             // 
             // lblSeparador
             // 
             lblSeparador.BackColor = Color.FromArgb(78, 57, 50);
-            lblSeparador.Location = new Point(22, 366);
+            lblSeparador.Location = new Point(25, 488);
             lblSeparador.Name = "lblSeparador";
-            lblSeparador.Size = new Size(180, 1);
+            lblSeparador.Size = new Size(206, 1);
             lblSeparador.TabIndex = 11;
             // 
             // btnUsuario
@@ -203,11 +217,12 @@ namespace DoceCantinho.Desktop.Forms
             btnUsuario.ForeColor = Color.FromArgb(224, 211, 204);
             btnUsuario.HoverState.FillColor = Color.FromArgb(84, 59, 51);
             btnUsuario.HoverState.ForeColor = Color.White;
-            btnUsuario.Location = new Point(14, 302);
+            btnUsuario.Location = new Point(16, 403);
+            btnUsuario.Margin = new Padding(3, 4, 3, 4);
             btnUsuario.Name = "btnUsuario";
-            btnUsuario.Padding = new Padding(10, 0, 0, 0);
+            btnUsuario.Padding = new Padding(11, 0, 0, 0);
             btnUsuario.ShadowDecoration.CustomizableEdges = customizableEdges3;
-            btnUsuario.Size = new Size(197, 42);
+            btnUsuario.Size = new Size(225, 56);
             btnUsuario.TabIndex = 8;
             btnUsuario.Text = "♙   Usuários";
             btnUsuario.TextAlign = HorizontalAlignment.Left;
@@ -223,11 +238,12 @@ namespace DoceCantinho.Desktop.Forms
             btnPedidos.ForeColor = Color.FromArgb(224, 211, 204);
             btnPedidos.HoverState.FillColor = Color.FromArgb(84, 59, 51);
             btnPedidos.HoverState.ForeColor = Color.White;
-            btnPedidos.Location = new Point(14, 255);
+            btnPedidos.Location = new Point(16, 340);
+            btnPedidos.Margin = new Padding(3, 4, 3, 4);
             btnPedidos.Name = "btnPedidos";
-            btnPedidos.Padding = new Padding(10, 0, 0, 0);
+            btnPedidos.Padding = new Padding(11, 0, 0, 0);
             btnPedidos.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            btnPedidos.Size = new Size(197, 42);
+            btnPedidos.Size = new Size(225, 56);
             btnPedidos.TabIndex = 7;
             btnPedidos.Text = "▤   Pedidos";
             btnPedidos.TextAlign = HorizontalAlignment.Left;
@@ -243,11 +259,12 @@ namespace DoceCantinho.Desktop.Forms
             btnCategoria.ForeColor = Color.FromArgb(224, 211, 204);
             btnCategoria.HoverState.FillColor = Color.FromArgb(84, 59, 51);
             btnCategoria.HoverState.ForeColor = Color.White;
-            btnCategoria.Location = new Point(14, 208);
+            btnCategoria.Location = new Point(16, 277);
+            btnCategoria.Margin = new Padding(3, 4, 3, 4);
             btnCategoria.Name = "btnCategoria";
-            btnCategoria.Padding = new Padding(10, 0, 0, 0);
+            btnCategoria.Padding = new Padding(11, 0, 0, 0);
             btnCategoria.ShadowDecoration.CustomizableEdges = customizableEdges5;
-            btnCategoria.Size = new Size(197, 42);
+            btnCategoria.Size = new Size(225, 56);
             btnCategoria.TabIndex = 6;
             btnCategoria.Text = "◇   Categorias";
             btnCategoria.TextAlign = HorizontalAlignment.Left;
@@ -263,11 +280,12 @@ namespace DoceCantinho.Desktop.Forms
             btnDoce.ForeColor = Color.FromArgb(224, 211, 204);
             btnDoce.HoverState.FillColor = Color.FromArgb(84, 59, 51);
             btnDoce.HoverState.ForeColor = Color.White;
-            btnDoce.Location = new Point(14, 161);
+            btnDoce.Location = new Point(16, 215);
+            btnDoce.Margin = new Padding(3, 4, 3, 4);
             btnDoce.Name = "btnDoce";
-            btnDoce.Padding = new Padding(10, 0, 0, 0);
+            btnDoce.Padding = new Padding(11, 0, 0, 0);
             btnDoce.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            btnDoce.Size = new Size(197, 42);
+            btnDoce.Size = new Size(225, 56);
             btnDoce.TabIndex = 5;
             btnDoce.Text = "▣   Doces";
             btnDoce.TextAlign = HorizontalAlignment.Left;
@@ -290,11 +308,12 @@ namespace DoceCantinho.Desktop.Forms
             btnDashboard.HoverState.FillColor = Color.FromArgb(84, 59, 51);
             btnDashboard.HoverState.ForeColor = Color.White;
             btnDashboard.ImageAlign = HorizontalAlignment.Left;
-            btnDashboard.Location = new Point(14, 114);
+            btnDashboard.Location = new Point(16, 152);
+            btnDashboard.Margin = new Padding(3, 4, 3, 4);
             btnDashboard.Name = "btnDashboard";
-            btnDashboard.Padding = new Padding(10, 0, 0, 0);
+            btnDashboard.Padding = new Padding(11, 0, 0, 0);
             btnDashboard.ShadowDecoration.CustomizableEdges = customizableEdges7;
-            btnDashboard.Size = new Size(197, 42);
+            btnDashboard.Size = new Size(225, 56);
             btnDashboard.TabIndex = 4;
             btnDashboard.Text = "▦   Dashboard";
             btnDashboard.TextAlign = HorizontalAlignment.Left;
@@ -306,9 +325,9 @@ namespace DoceCantinho.Desktop.Forms
             lblMenu.BackColor = Color.Transparent;
             lblMenu.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
             lblMenu.ForeColor = Color.FromArgb(151, 128, 117);
-            lblMenu.Location = new Point(23, 91);
+            lblMenu.Location = new Point(26, 121);
             lblMenu.Name = "lblMenu";
-            lblMenu.Size = new Size(35, 12);
+            lblMenu.Size = new Size(46, 17);
             lblMenu.TabIndex = 3;
             lblMenu.Text = "MENU";
             // 
@@ -318,9 +337,9 @@ namespace DoceCantinho.Desktop.Forms
             lblLogoSub.BackColor = Color.Transparent;
             lblLogoSub.Font = new Font("Segoe UI", 7.5F);
             lblLogoSub.ForeColor = Color.FromArgb(181, 159, 149);
-            lblLogoSub.Location = new Point(69, 43);
+            lblLogoSub.Location = new Point(79, 57);
             lblLogoSub.Name = "lblLogoSub";
-            lblLogoSub.Size = new Size(82, 12);
+            lblLogoSub.Size = new Size(109, 17);
             lblLogoSub.TabIndex = 2;
             lblLogoSub.Text = "ADMINISTRAÇÃO";
             // 
@@ -330,23 +349,11 @@ namespace DoceCantinho.Desktop.Forms
             lblLogo.BackColor = Color.Transparent;
             lblLogo.Font = new Font("Georgia", 13F, FontStyle.Bold);
             lblLogo.ForeColor = Color.White;
-            lblLogo.Location = new Point(68, 20);
+            lblLogo.Location = new Point(78, 27);
             lblLogo.Name = "lblLogo";
-            lblLogo.Size = new Size(143, 21);
+            lblLogo.Size = new Size(174, 27);
             lblLogo.TabIndex = 1;
             lblLogo.Text = "DoceCantinho";
-            // 
-            // lblLogoIcon
-            // 
-            lblLogoIcon.AutoSize = true;
-            lblLogoIcon.BackColor = Color.Transparent;
-            lblLogoIcon.Font = new Font("Segoe UI Emoji", 17F);
-            lblLogoIcon.ForeColor = Color.White;
-            lblLogoIcon.Location = new Point(177, 43);
-            lblLogoIcon.Name = "lblLogoIcon";
-            lblLogoIcon.Size = new Size(34, 31);
-            lblLogoIcon.TabIndex = 0;
-            lblLogoIcon.Text = "✿";
             // 
             // guna2BorderlessForm1
             // 
@@ -364,36 +371,27 @@ namespace DoceCantinho.Desktop.Forms
             // 
             guna2ShadowForm1.TargetForm = this;
             // 
-            // pnlLogoIcon
-            // 
-            pnlLogoIcon.Image = Desktop1.Properties.Resources.doce;
-            pnlLogoIcon.Location = new Point(14, 12);
-            pnlLogoIcon.Name = "pnlLogoIcon";
-            pnlLogoIcon.Size = new Size(54, 47);
-            pnlLogoIcon.SizeMode = PictureBoxSizeMode.Zoom;
-            pnlLogoIcon.TabIndex = 0;
-            pnlLogoIcon.TabStop = false;
-            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 245, 242);
-            ClientSize = new Size(1300, 720);
+            ClientSize = new Size(1486, 960);
             Controls.Add(pnlPanel);
             Controls.Add(guna2Panel1);
             Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.None;
-            MinimumSize = new Size(1100, 650);
+            Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(1257, 867);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Doce Cantinho";
             Load += MainForm_Load;
             guna2Panel1.ResumeLayout(false);
             guna2Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pnlLogoIcon).EndInit();
             pnlUsuario.ResumeLayout(false);
             pnlUsuario.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pnlLogoIcon).EndInit();
             ResumeLayout(false);
         }
 
@@ -428,7 +426,6 @@ namespace DoceCantinho.Desktop.Forms
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
         private Guna.UI2.WinForms.Guna2DragControl guna2DragControl1;
         private Guna.UI2.WinForms.Guna2ShadowForm guna2ShadowForm1;
-        private Label lblLogoIcon;
         private PictureBox pnlLogoIcon;
     }
 }
