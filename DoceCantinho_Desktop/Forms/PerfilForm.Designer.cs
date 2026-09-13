@@ -92,6 +92,12 @@ namespace DoceCantinho.Desktop.Forms
 
         private void InitializeComponent()
         {
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlPrincipal = new Panel();
@@ -126,6 +132,9 @@ namespace DoceCantinho.Desktop.Forms
             btnFechar = new Guna.UI2.WinForms.Guna2Button();
             lblSubtitulo = new Label();
             lblTitulo = new Label();
+            btnMostrarSenha = new Guna.UI2.WinForms.Guna2Button();
+            btnMostarNovaSenha = new Guna.UI2.WinForms.Guna2Button();
+            btnMostarConfiSenha = new Guna.UI2.WinForms.Guna2Button();
             pnlPrincipal.SuspendLayout();
             pnlSeguranca.SuspendLayout();
             pnlInformacoes.SuspendLayout();
@@ -189,6 +198,9 @@ namespace DoceCantinho.Desktop.Forms
             // 
             pnlSeguranca.BackColor = Color.White;
             pnlSeguranca.BorderStyle = BorderStyle.FixedSingle;
+            pnlSeguranca.Controls.Add(btnMostarConfiSenha);
+            pnlSeguranca.Controls.Add(btnMostarNovaSenha);
+            pnlSeguranca.Controls.Add(btnMostrarSenha);
             pnlSeguranca.Controls.Add(lblTituloSeguranca);
             pnlSeguranca.Controls.Add(lblSenhaAtual);
             pnlSeguranca.Controls.Add(txtSenhaAtual);
@@ -512,7 +524,7 @@ namespace DoceCantinho.Desktop.Forms
             // 
             // btnFechar
             // 
-            btnFechar.CustomizableEdges = customizableEdges1;
+            btnFechar.CustomizableEdges = customizableEdges7;
             btnFechar.DisabledState.BorderColor = Color.DarkGray;
             btnFechar.DisabledState.CustomBorderColor = Color.DarkGray;
             btnFechar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -522,7 +534,7 @@ namespace DoceCantinho.Desktop.Forms
             btnFechar.ForeColor = Color.White;
             btnFechar.Location = new Point(760, 3);
             btnFechar.Name = "btnFechar";
-            btnFechar.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnFechar.ShadowDecoration.CustomizableEdges = customizableEdges8;
             btnFechar.Size = new Size(42, 38);
             btnFechar.TabIndex = 6;
             btnFechar.Text = "X";
@@ -549,6 +561,60 @@ namespace DoceCantinho.Desktop.Forms
             lblTitulo.Size = new Size(208, 41);
             lblTitulo.TabIndex = 1;
             lblTitulo.Text = "Meu Perfil";
+            // 
+            // btnMostrarSenha
+            // 
+            btnMostrarSenha.BackColor = Color.Transparent;
+            btnMostrarSenha.CustomizableEdges = customizableEdges5;
+            btnMostrarSenha.DisabledState.BorderColor = Color.DarkGray;
+            btnMostrarSenha.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnMostrarSenha.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnMostrarSenha.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnMostrarSenha.FillColor = Color.Transparent;
+            btnMostrarSenha.Font = new Font("Segoe UI", 9F);
+            btnMostrarSenha.ForeColor = Color.Black;
+            btnMostrarSenha.Location = new Point(218, 56);
+            btnMostrarSenha.Name = "btnMostrarSenha";
+            btnMostrarSenha.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnMostrarSenha.Size = new Size(41, 30);
+            btnMostrarSenha.TabIndex = 33;
+            btnMostrarSenha.Text = "👁";
+            // 
+            // btnMostarNovaSenha
+            // 
+            btnMostarNovaSenha.BackColor = Color.Transparent;
+            btnMostarNovaSenha.CustomizableEdges = customizableEdges3;
+            btnMostarNovaSenha.DisabledState.BorderColor = Color.DarkGray;
+            btnMostarNovaSenha.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnMostarNovaSenha.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnMostarNovaSenha.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnMostarNovaSenha.FillColor = Color.Transparent;
+            btnMostarNovaSenha.Font = new Font("Segoe UI", 9F);
+            btnMostarNovaSenha.ForeColor = Color.Black;
+            btnMostarNovaSenha.Location = new Point(473, 56);
+            btnMostarNovaSenha.Name = "btnMostarNovaSenha";
+            btnMostarNovaSenha.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnMostarNovaSenha.Size = new Size(41, 30);
+            btnMostarNovaSenha.TabIndex = 33;
+            btnMostarNovaSenha.Text = "👁";
+            // 
+            // btnMostarConfiSenha
+            // 
+            btnMostarConfiSenha.BackColor = Color.Transparent;
+            btnMostarConfiSenha.CustomizableEdges = customizableEdges1;
+            btnMostarConfiSenha.DisabledState.BorderColor = Color.DarkGray;
+            btnMostarConfiSenha.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnMostarConfiSenha.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnMostarConfiSenha.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnMostarConfiSenha.FillColor = Color.Transparent;
+            btnMostarConfiSenha.Font = new Font("Segoe UI", 9F);
+            btnMostarConfiSenha.ForeColor = Color.Black;
+            btnMostarConfiSenha.Location = new Point(736, 56);
+            btnMostarConfiSenha.Name = "btnMostarConfiSenha";
+            btnMostarConfiSenha.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnMostarConfiSenha.Size = new Size(41, 30);
+            btnMostarConfiSenha.TabIndex = 33;
+            btnMostarConfiSenha.Text = "👁";
             // 
             // PerfilForm
             // 
@@ -580,5 +646,8 @@ namespace DoceCantinho.Desktop.Forms
         private Label lblPerfilValor;
         private Label lblAvisoPerfil;
         private Guna.UI2.WinForms.Guna2Button btnFechar;
+        private Guna.UI2.WinForms.Guna2Button btnMostarConfiSenha;
+        private Guna.UI2.WinForms.Guna2Button btnMostarNovaSenha;
+        private Guna.UI2.WinForms.Guna2Button btnMostrarSenha;
     }
 }

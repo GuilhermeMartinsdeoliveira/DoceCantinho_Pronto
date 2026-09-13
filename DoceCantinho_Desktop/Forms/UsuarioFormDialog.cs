@@ -17,6 +17,10 @@ namespace DoceCantinho.Desktop1.Forms
         private bool _formatandoTelefone = false;
         private bool _buscandoCep = false;
 
+        // Controle de visibilidade das senhas
+        private bool _senhaVisivel = false;
+        private bool _confirmarSenhaVisivel = false;
+
         // ============================================================
         // CONSTRUTOR - NOVO USUÁRIO
         // ============================================================
@@ -28,6 +32,7 @@ namespace DoceCantinho.Desktop1.Forms
             _modoEdicao = false;
 
             ConfigurarFormulario();
+            ConfigurarMostrarSenha();
 
             txtCep.TextChanged += txtCep_TextChanged;
             txtTelefone.TextChanged += txtTelefone_TextChanged;
@@ -50,6 +55,7 @@ namespace DoceCantinho.Desktop1.Forms
             _modoEdicao = true;
 
             ConfigurarFormulario();
+            ConfigurarMostrarSenha();
 
             txtCep.TextChanged += txtCep_TextChanged;
             txtTelefone.TextChanged += txtTelefone_TextChanged;
@@ -156,6 +162,94 @@ namespace DoceCantinho.Desktop1.Forms
             CancelButton = btnCancelar;
 
             ActiveControl = txtNome;
+
+            // Garante que as senhas iniciem ocultas
+            txtSenha.UseSystemPasswordChar = true;
+            txtConfirmar.UseSystemPasswordChar = true;
+
+            _senhaVisivel = false;
+            _confirmarSenhaVisivel = false;
+        }
+
+        // ============================================================
+        // CONFIGURAR BOTÕES MOSTRAR SENHA
+        // ============================================================
+
+        private void ConfigurarMostrarSenha()
+        {
+            // Remove possíveis eventos duplicados
+            btnMostrarSenha.Click -= btnMostrarSenha_Click;
+            btnMostrarConfirSenha.Click -= btnMostrarConfirSenha_Click;
+
+            // Adiciona os eventos
+            btnMostrarSenha.Click += btnMostrarSenha_Click;
+            btnMostrarConfirSenha.Click += btnMostrarConfirSenha_Click;
+
+            // Estado inicial
+            _senhaVisivel = false;
+            _confirmarSenhaVisivel = false;
+
+            txtSenha.UseSystemPasswordChar = true;
+            txtConfirmar.UseSystemPasswordChar = true;
+
+            btnMostrarSenha.Text = "👁";
+            btnMostrarConfirSenha.Text = "👁";
+
+            btnMostrarSenha.Cursor = Cursors.Hand;
+            btnMostrarConfirSenha.Cursor = Cursors.Hand;
+
+            btnMostrarSenha.TabStop = false;
+            btnMostrarConfirSenha.TabStop = false;
+
+            btnMostrarSenha.BringToFront();
+            btnMostrarConfirSenha.BringToFront();
+        }
+
+        // ============================================================
+        // MOSTRAR / OCULTAR SENHA
+        // ============================================================
+
+        private void btnMostrarSenha_Click(
+            object? sender,
+            EventArgs e)
+        {
+            _senhaVisivel = !_senhaVisivel;
+
+            txtSenha.UseSystemPasswordChar =
+                !_senhaVisivel;
+
+            btnMostrarSenha.Text =
+                _senhaVisivel ? "🙈" : "👁";
+
+            // Mantém o cursor no campo
+            txtSenha.Focus();
+
+            txtSenha.SelectionStart =
+                txtSenha.Text.Length;
+        }
+
+        // ============================================================
+        // MOSTRAR / OCULTAR CONFIRMAÇÃO
+        // ============================================================
+
+        private void btnMostrarConfirSenha_Click(
+            object? sender,
+            EventArgs e)
+        {
+            _confirmarSenhaVisivel =
+                !_confirmarSenhaVisivel;
+
+            txtConfirmar.UseSystemPasswordChar =
+                !_confirmarSenhaVisivel;
+
+            btnMostrarConfirSenha.Text =
+                _confirmarSenhaVisivel ? "🙈" : "👁";
+
+            // Mantém o cursor no campo
+            txtConfirmar.Focus();
+
+            txtConfirmar.SelectionStart =
+                txtConfirmar.Text.Length;
         }
 
         // ============================================================
@@ -936,8 +1030,17 @@ namespace DoceCantinho.Desktop1.Forms
             public bool Erro { get; set; }
         }
 
-        private void btnFechar_Click(object sender, EventArgs e)
+        // ============================================================
+        // FECHAR
+        // ============================================================
+
+        private void btnFechar_Click(
+            object? sender,
+            EventArgs e)
         {
+            DialogResult =
+                DialogResult.Cancel;
+
             Close();
         }
     }

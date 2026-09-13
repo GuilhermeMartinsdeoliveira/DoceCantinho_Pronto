@@ -51,6 +51,10 @@
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnSalvar;
 
+        private Guna.UI2.WinForms.Guna2Button btnFechar;
+        private Guna.UI2.WinForms.Guna2Button btnMostrarSenha;
+        private Guna.UI2.WinForms.Guna2Button btnMostrarConfirSenha;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -63,6 +67,10 @@
         {
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             lblTitulo = new Label();
             lblSubtitulo = new Label();
             lblNome = new Label();
@@ -95,6 +103,8 @@
             btnCancelar = new Button();
             btnSalvar = new Button();
             btnFechar = new Guna.UI2.WinForms.Guna2Button();
+            btnMostrarSenha = new Guna.UI2.WinForms.Guna2Button();
+            btnMostrarConfirSenha = new Guna.UI2.WinForms.Guna2Button();
             SuspendLayout();
             // 
             // lblTitulo
@@ -137,7 +147,6 @@
             txtNome.Font = new Font("Segoe UI", 10F);
             txtNome.ForeColor = Color.FromArgb(50, 40, 37);
             txtNome.Location = new Point(51, 171);
-            txtNome.Margin = new Padding(3, 4, 3, 4);
             txtNome.Name = "txtNome";
             txtNome.Size = new Size(491, 30);
             txtNome.TabIndex = 3;
@@ -160,7 +169,6 @@
             txtTelefone.Font = new Font("Segoe UI", 10F);
             txtTelefone.ForeColor = Color.FromArgb(50, 40, 37);
             txtTelefone.Location = new Point(563, 171);
-            txtTelefone.Margin = new Padding(3, 4, 3, 4);
             txtTelefone.Name = "txtTelefone";
             txtTelefone.Size = new Size(251, 30);
             txtTelefone.TabIndex = 5;
@@ -183,7 +191,6 @@
             txtEmail.Font = new Font("Segoe UI", 10F);
             txtEmail.ForeColor = Color.FromArgb(50, 40, 37);
             txtEmail.Location = new Point(51, 268);
-            txtEmail.Margin = new Padding(3, 4, 3, 4);
             txtEmail.Name = "txtEmail";
             txtEmail.Size = new Size(491, 30);
             txtEmail.TabIndex = 7;
@@ -206,7 +213,6 @@
             txtSenha.Font = new Font("Segoe UI", 10F);
             txtSenha.ForeColor = Color.FromArgb(50, 40, 37);
             txtSenha.Location = new Point(51, 365);
-            txtSenha.Margin = new Padding(3, 4, 3, 4);
             txtSenha.Name = "txtSenha";
             txtSenha.Size = new Size(360, 30);
             txtSenha.TabIndex = 9;
@@ -230,9 +236,8 @@
             txtConfirmar.Font = new Font("Segoe UI", 10F);
             txtConfirmar.ForeColor = Color.FromArgb(50, 40, 37);
             txtConfirmar.Location = new Point(440, 365);
-            txtConfirmar.Margin = new Padding(3, 4, 3, 4);
             txtConfirmar.Name = "txtConfirmar";
-            txtConfirmar.Size = new Size(375, 30);
+            txtConfirmar.Size = new Size(335, 30);
             txtConfirmar.TabIndex = 11;
             txtConfirmar.UseSystemPasswordChar = true;
             // 
@@ -264,7 +269,6 @@
             txtLogradouro.BorderStyle = BorderStyle.FixedSingle;
             txtLogradouro.Font = new Font("Segoe UI", 10F);
             txtLogradouro.Location = new Point(304, 507);
-            txtLogradouro.Margin = new Padding(3, 4, 3, 4);
             txtLogradouro.Name = "txtLogradouro";
             txtLogradouro.Size = new Size(511, 30);
             txtLogradouro.TabIndex = 14;
@@ -286,7 +290,6 @@
             txtNumero.BorderStyle = BorderStyle.FixedSingle;
             txtNumero.Font = new Font("Segoe UI", 10F);
             txtNumero.Location = new Point(605, 697);
-            txtNumero.Margin = new Padding(3, 4, 3, 4);
             txtNumero.Name = "txtNumero";
             txtNumero.Size = new Size(194, 30);
             txtNumero.TabIndex = 16;
@@ -308,7 +311,6 @@
             txtComplemento.BorderStyle = BorderStyle.FixedSingle;
             txtComplemento.Font = new Font("Segoe UI", 10F);
             txtComplemento.Location = new Point(51, 601);
-            txtComplemento.Margin = new Padding(3, 4, 3, 4);
             txtComplemento.Name = "txtComplemento";
             txtComplemento.Size = new Size(360, 30);
             txtComplemento.TabIndex = 18;
@@ -330,7 +332,6 @@
             txtBairro.BorderStyle = BorderStyle.FixedSingle;
             txtBairro.Font = new Font("Segoe UI", 10F);
             txtBairro.Location = new Point(440, 601);
-            txtBairro.Margin = new Padding(3, 4, 3, 4);
             txtBairro.Name = "txtBairro";
             txtBairro.Size = new Size(375, 30);
             txtBairro.TabIndex = 20;
@@ -352,7 +353,6 @@
             txtCidade.BorderStyle = BorderStyle.FixedSingle;
             txtCidade.Font = new Font("Segoe UI", 10F);
             txtCidade.Location = new Point(51, 697);
-            txtCidade.Margin = new Padding(3, 4, 3, 4);
             txtCidade.Name = "txtCidade";
             txtCidade.Size = new Size(360, 30);
             txtCidade.TabIndex = 22;
@@ -376,7 +376,6 @@
             cmbEstado.FormattingEnabled = true;
             cmbEstado.Items.AddRange(new object[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" });
             cmbEstado.Location = new Point(440, 696);
-            cmbEstado.Margin = new Padding(3, 4, 3, 4);
             cmbEstado.Name = "cmbEstado";
             cmbEstado.Size = new Size(114, 31);
             cmbEstado.TabIndex = 24;
@@ -398,7 +397,6 @@
             txtCep.BorderStyle = BorderStyle.FixedSingle;
             txtCep.Font = new Font("Segoe UI", 10F);
             txtCep.Location = new Point(51, 507);
-            txtCep.Margin = new Padding(3, 4, 3, 4);
             txtCep.Name = "txtCep";
             txtCep.Size = new Size(240, 30);
             txtCep.TabIndex = 26;
@@ -421,7 +419,6 @@
             cmbPerfil.Font = new Font("Segoe UI", 10F);
             cmbPerfil.FormattingEnabled = true;
             cmbPerfil.Location = new Point(563, 267);
-            cmbPerfil.Margin = new Padding(3, 4, 3, 4);
             cmbPerfil.Name = "cmbPerfil";
             cmbPerfil.Size = new Size(251, 31);
             cmbPerfil.TabIndex = 28;
@@ -434,7 +431,6 @@
             btnCancelar.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnCancelar.ForeColor = Color.FromArgb(80, 65, 60);
             btnCancelar.Location = new Point(491, 819);
-            btnCancelar.Margin = new Padding(3, 4, 3, 4);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.Size = new Size(154, 60);
             btnCancelar.TabIndex = 29;
@@ -450,7 +446,6 @@
             btnSalvar.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnSalvar.ForeColor = Color.White;
             btnSalvar.Location = new Point(657, 819);
-            btnSalvar.Margin = new Padding(3, 4, 3, 4);
             btnSalvar.Name = "btnSalvar";
             btnSalvar.Size = new Size(158, 60);
             btnSalvar.TabIndex = 30;
@@ -466,7 +461,7 @@
             btnFechar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             btnFechar.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnFechar.FillColor = Color.FromArgb(201, 130, 107);
-            btnFechar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnFechar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnFechar.ForeColor = Color.White;
             btnFechar.Location = new Point(795, 21);
             btnFechar.Name = "btnFechar";
@@ -476,6 +471,36 @@
             btnFechar.Text = "X";
             btnFechar.Click += btnFechar_Click;
             // 
+            // btnMostrarSenha
+            // 
+            btnMostrarSenha.BackColor = Color.White;
+            btnMostrarSenha.CustomizableEdges = customizableEdges3;
+            btnMostrarSenha.FillColor = Color.White;
+            btnMostrarSenha.Font = new Font("Segoe UI Emoji", 10F);
+            btnMostrarSenha.ForeColor = Color.FromArgb(92, 46, 14);
+            btnMostrarSenha.HoverState.FillColor = Color.FromArgb(250, 244, 239);
+            btnMostrarSenha.Location = new Point(370, 323);
+            btnMostrarSenha.Name = "btnMostrarSenha";
+            btnMostrarSenha.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnMostrarSenha.Size = new Size(41, 36);
+            btnMostrarSenha.TabIndex = 32;
+            btnMostrarSenha.Text = "👁";
+            // 
+            // btnMostrarConfirSenha
+            // 
+            btnMostrarConfirSenha.BackColor = Color.White;
+            btnMostrarConfirSenha.CustomizableEdges = customizableEdges5;
+            btnMostrarConfirSenha.FillColor = Color.White;
+            btnMostrarConfirSenha.Font = new Font("Segoe UI Emoji", 10F);
+            btnMostrarConfirSenha.ForeColor = Color.FromArgb(92, 46, 14);
+            btnMostrarConfirSenha.HoverState.FillColor = Color.FromArgb(250, 244, 239);
+            btnMostrarConfirSenha.Location = new Point(733, 319);
+            btnMostrarConfirSenha.Name = "btnMostrarConfirSenha";
+            btnMostrarConfirSenha.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnMostrarConfirSenha.Size = new Size(42, 36);
+            btnMostrarConfirSenha.TabIndex = 33;
+            btnMostrarConfirSenha.Text = "👁";
+            // 
             // UsuarioFormDialog
             // 
             AcceptButton = btnSalvar;
@@ -484,6 +509,8 @@
             BackColor = Color.FromArgb(248, 245, 242);
             CancelButton = btnCancelar;
             ClientSize = new Size(869, 907);
+            Controls.Add(btnMostrarConfirSenha);
+            Controls.Add(btnMostrarSenha);
             Controls.Add(btnFechar);
             Controls.Add(lblTitulo);
             Controls.Add(lblSubtitulo);
@@ -498,10 +525,10 @@
             Controls.Add(lblConfirmar);
             Controls.Add(txtConfirmar);
             Controls.Add(lblEnderecoTitulo);
+            Controls.Add(lblCep);
+            Controls.Add(txtCep);
             Controls.Add(lblLogradouro);
             Controls.Add(txtLogradouro);
-            Controls.Add(lblNumero);
-            Controls.Add(txtNumero);
             Controls.Add(lblComplemento);
             Controls.Add(txtComplemento);
             Controls.Add(lblBairro);
@@ -510,14 +537,13 @@
             Controls.Add(txtCidade);
             Controls.Add(lblEstado);
             Controls.Add(cmbEstado);
-            Controls.Add(lblCep);
-            Controls.Add(txtCep);
+            Controls.Add(lblNumero);
+            Controls.Add(txtNumero);
             Controls.Add(lblPerfil);
             Controls.Add(cmbPerfil);
             Controls.Add(btnCancelar);
             Controls.Add(btnSalvar);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "UsuarioFormDialog";
@@ -526,7 +552,5 @@
             ResumeLayout(false);
             PerformLayout();
         }
-
-        private Guna.UI2.WinForms.Guna2Button btnFechar;
     }
 }

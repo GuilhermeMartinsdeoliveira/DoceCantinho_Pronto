@@ -19,6 +19,8 @@ namespace DoceCantinho.Desktop.Forms
         // ============================================================
 
         private Guna2Button? _btnFechar;
+        private bool _senhaVisivel = false;
+
 
         // ============================================================
         // CONSTRUTOR
@@ -450,8 +452,12 @@ namespace DoceCantinho.Desktop.Forms
             txtSenha.Text =
                 "Admin@123";
 
-            txtSenha.UseSystemPasswordChar =
-                true;
+            _senhaVisivel = false;
+
+            txtSenha.UseSystemPasswordChar = true;
+            txtSenha.PasswordChar = '●';
+
+            btnMostrarSenha.Text = "👁";
 
             // --------------------------------------------------------
             // ESTADOS INICIAIS
@@ -616,6 +622,37 @@ namespace DoceCantinho.Desktop.Forms
             // --------------------------------------------------------
 
             base.OnFormClosed(e);
+        }
+
+        private void btnMostrarSenha_Click(
+            object sender,
+            EventArgs e)
+        {
+            _senhaVisivel = !_senhaVisivel;
+
+            if (_senhaVisivel)
+            {
+                // MOSTRAR SENHA
+                txtSenha.UseSystemPasswordChar = false;
+                txtSenha.PasswordChar = '\0';
+
+                btnMostrarSenha.Text = "🙈";
+            }
+            else
+            {
+                // ESCONDER SENHA
+                txtSenha.UseSystemPasswordChar = true;
+
+                btnMostrarSenha.Text = "👁";
+            }
+
+            // Mantém o cursor no final da senha
+            txtSenha.Focus();
+
+            txtSenha.SelectionStart =
+                txtSenha.Text.Length;
+
+            txtSenha.SelectionLength = 0;
         }
     }
 }
