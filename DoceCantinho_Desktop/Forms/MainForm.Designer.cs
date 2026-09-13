@@ -26,14 +26,15 @@ namespace DoceCantinho.Desktop.Forms
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlPanel = new Panel();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             pnlLogoIcon = new PictureBox();
@@ -55,6 +56,7 @@ namespace DoceCantinho.Desktop.Forms
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             guna2DragControl1 = new Guna.UI2.WinForms.Guna2DragControl(components);
             guna2ShadowForm1 = new Guna.UI2.WinForms.Guna2ShadowForm(components);
+            btnBlog = new Guna.UI2.WinForms.Guna2Button();
             guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pnlLogoIcon).BeginInit();
             pnlUsuario.SuspendLayout();
@@ -77,6 +79,7 @@ namespace DoceCantinho.Desktop.Forms
             guna2Panel1.Controls.Add(lblSair);
             guna2Panel1.Controls.Add(pnlUsuario);
             guna2Panel1.Controls.Add(lblSeparador);
+            guna2Panel1.Controls.Add(btnBlog);
             guna2Panel1.Controls.Add(btnUsuario);
             guna2Panel1.Controls.Add(btnPedidos);
             guna2Panel1.Controls.Add(btnCategoria);
@@ -85,13 +88,13 @@ namespace DoceCantinho.Desktop.Forms
             guna2Panel1.Controls.Add(lblMenu);
             guna2Panel1.Controls.Add(lblLogoSub);
             guna2Panel1.Controls.Add(lblLogo);
-            guna2Panel1.CustomizableEdges = customizableEdges8;
+            guna2Panel1.CustomizableEdges = customizableEdges9;
             guna2Panel1.Dock = DockStyle.Left;
             guna2Panel1.FillColor = Color.FromArgb(47, 34, 30);
             guna2Panel1.Location = new Point(0, 0);
             guna2Panel1.Margin = new Padding(3, 4, 3, 4);
             guna2Panel1.Name = "guna2Panel1";
-            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges9;
             guna2Panel1.Size = new Size(257, 960);
             guna2Panel1.TabIndex = 1;
             // 
@@ -202,7 +205,7 @@ namespace DoceCantinho.Desktop.Forms
             // lblSeparador
             // 
             lblSeparador.BackColor = Color.FromArgb(78, 57, 50);
-            lblSeparador.Location = new Point(25, 488);
+            lblSeparador.Location = new Point(26, 542);
             lblSeparador.Name = "lblSeparador";
             lblSeparador.Size = new Size(206, 1);
             lblSeparador.TabIndex = 11;
@@ -211,7 +214,7 @@ namespace DoceCantinho.Desktop.Forms
             // 
             btnUsuario.BorderRadius = 9;
             btnUsuario.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
-            btnUsuario.CustomizableEdges = customizableEdges3;
+            btnUsuario.CustomizableEdges = customizableEdges4;
             btnUsuario.FillColor = Color.Transparent;
             btnUsuario.Font = new Font("Segoe UI", 9.5F);
             btnUsuario.ForeColor = Color.FromArgb(224, 211, 204);
@@ -221,7 +224,7 @@ namespace DoceCantinho.Desktop.Forms
             btnUsuario.Margin = new Padding(3, 4, 3, 4);
             btnUsuario.Name = "btnUsuario";
             btnUsuario.Padding = new Padding(11, 0, 0, 0);
-            btnUsuario.ShadowDecoration.CustomizableEdges = customizableEdges3;
+            btnUsuario.ShadowDecoration.CustomizableEdges = customizableEdges4;
             btnUsuario.Size = new Size(225, 56);
             btnUsuario.TabIndex = 8;
             btnUsuario.Text = "♙   Usuários";
@@ -232,7 +235,7 @@ namespace DoceCantinho.Desktop.Forms
             // 
             btnPedidos.BorderRadius = 9;
             btnPedidos.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
-            btnPedidos.CustomizableEdges = customizableEdges4;
+            btnPedidos.CustomizableEdges = customizableEdges5;
             btnPedidos.FillColor = Color.Transparent;
             btnPedidos.Font = new Font("Segoe UI", 9.5F);
             btnPedidos.ForeColor = Color.FromArgb(224, 211, 204);
@@ -242,7 +245,7 @@ namespace DoceCantinho.Desktop.Forms
             btnPedidos.Margin = new Padding(3, 4, 3, 4);
             btnPedidos.Name = "btnPedidos";
             btnPedidos.Padding = new Padding(11, 0, 0, 0);
-            btnPedidos.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnPedidos.ShadowDecoration.CustomizableEdges = customizableEdges5;
             btnPedidos.Size = new Size(225, 56);
             btnPedidos.TabIndex = 7;
             btnPedidos.Text = "▤   Pedidos";
@@ -253,7 +256,7 @@ namespace DoceCantinho.Desktop.Forms
             // 
             btnCategoria.BorderRadius = 9;
             btnCategoria.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
-            btnCategoria.CustomizableEdges = customizableEdges5;
+            btnCategoria.CustomizableEdges = customizableEdges6;
             btnCategoria.FillColor = Color.Transparent;
             btnCategoria.Font = new Font("Segoe UI", 9.5F);
             btnCategoria.ForeColor = Color.FromArgb(224, 211, 204);
@@ -263,7 +266,7 @@ namespace DoceCantinho.Desktop.Forms
             btnCategoria.Margin = new Padding(3, 4, 3, 4);
             btnCategoria.Name = "btnCategoria";
             btnCategoria.Padding = new Padding(11, 0, 0, 0);
-            btnCategoria.ShadowDecoration.CustomizableEdges = customizableEdges5;
+            btnCategoria.ShadowDecoration.CustomizableEdges = customizableEdges6;
             btnCategoria.Size = new Size(225, 56);
             btnCategoria.TabIndex = 6;
             btnCategoria.Text = "◇   Categorias";
@@ -274,7 +277,7 @@ namespace DoceCantinho.Desktop.Forms
             // 
             btnDoce.BorderRadius = 9;
             btnDoce.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
-            btnDoce.CustomizableEdges = customizableEdges6;
+            btnDoce.CustomizableEdges = customizableEdges7;
             btnDoce.FillColor = Color.Transparent;
             btnDoce.Font = new Font("Segoe UI", 9.5F);
             btnDoce.ForeColor = Color.FromArgb(224, 211, 204);
@@ -284,7 +287,7 @@ namespace DoceCantinho.Desktop.Forms
             btnDoce.Margin = new Padding(3, 4, 3, 4);
             btnDoce.Name = "btnDoce";
             btnDoce.Padding = new Padding(11, 0, 0, 0);
-            btnDoce.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnDoce.ShadowDecoration.CustomizableEdges = customizableEdges7;
             btnDoce.Size = new Size(225, 56);
             btnDoce.TabIndex = 5;
             btnDoce.Text = "▣   Doces";
@@ -298,7 +301,7 @@ namespace DoceCantinho.Desktop.Forms
             btnDashboard.Checked = true;
             btnDashboard.CheckedState.FillColor = Color.FromArgb(214, 126, 91);
             btnDashboard.CheckedState.ForeColor = Color.White;
-            btnDashboard.CustomizableEdges = customizableEdges7;
+            btnDashboard.CustomizableEdges = customizableEdges8;
             btnDashboard.DisabledState.BorderColor = Color.Transparent;
             btnDashboard.DisabledState.FillColor = Color.Transparent;
             btnDashboard.DisabledState.ForeColor = Color.FromArgb(130, 110, 101);
@@ -312,7 +315,7 @@ namespace DoceCantinho.Desktop.Forms
             btnDashboard.Margin = new Padding(3, 4, 3, 4);
             btnDashboard.Name = "btnDashboard";
             btnDashboard.Padding = new Padding(11, 0, 0, 0);
-            btnDashboard.ShadowDecoration.CustomizableEdges = customizableEdges7;
+            btnDashboard.ShadowDecoration.CustomizableEdges = customizableEdges8;
             btnDashboard.Size = new Size(225, 56);
             btnDashboard.TabIndex = 4;
             btnDashboard.Text = "▦   Dashboard";
@@ -361,6 +364,7 @@ namespace DoceCantinho.Desktop.Forms
             guna2BorderlessForm1.ContainerControl = this;
             guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
             guna2BorderlessForm1.TransparentWhileDrag = true;
+            guna2BorderlessForm1.ResizeForm = true;
             // 
             // guna2DragControl1
             // 
@@ -370,6 +374,26 @@ namespace DoceCantinho.Desktop.Forms
             // guna2ShadowForm1
             // 
             guna2ShadowForm1.TargetForm = this;
+            // 
+            // btnBlog
+            // 
+            btnBlog.BorderRadius = 9;
+            btnBlog.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
+            btnBlog.CustomizableEdges = customizableEdges3;
+            btnBlog.FillColor = Color.Transparent;
+            btnBlog.Font = new Font("Segoe UI", 9.5F);
+            btnBlog.ForeColor = Color.FromArgb(224, 211, 204);
+            btnBlog.HoverState.FillColor = Color.FromArgb(84, 59, 51);
+            btnBlog.HoverState.ForeColor = Color.White;
+            btnBlog.Location = new Point(12, 467);
+            btnBlog.Margin = new Padding(3, 4, 3, 4);
+            btnBlog.Name = "btnBlog";
+            btnBlog.Padding = new Padding(11, 0, 0, 0);
+            btnBlog.ShadowDecoration.CustomizableEdges = customizableEdges3;
+            btnBlog.Size = new Size(225, 56);
+            btnBlog.TabIndex = 8;
+            btnBlog.Text = "🖨️   Blog";
+            btnBlog.TextAlign = HorizontalAlignment.Left;
             // 
             // MainForm
             // 
@@ -382,7 +406,7 @@ namespace DoceCantinho.Desktop.Forms
             Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);
-            MinimumSize = new Size(1257, 867);
+            MinimumSize = new Size(1000, 650);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Doce Cantinho";
@@ -427,5 +451,6 @@ namespace DoceCantinho.Desktop.Forms
         private Guna.UI2.WinForms.Guna2DragControl guna2DragControl1;
         private Guna.UI2.WinForms.Guna2ShadowForm guna2ShadowForm1;
         private PictureBox pnlLogoIcon;
+        private Guna.UI2.WinForms.Guna2Button btnBlog;
     }
 }
