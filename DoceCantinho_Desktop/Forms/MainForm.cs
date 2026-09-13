@@ -92,85 +92,76 @@ namespace DoceCantinho.Desktop.Forms
             _btnFechar = new Guna2Button();
 
             _btnFechar.Name = "btnFecharMain";
-            _btnFechar.Text = "×";
+            _btnFechar.Text = "✕";
 
-            _btnFechar.Size = new Size(42, 34);
+            // Tamanho um pouco maior para evitar corte
+            _btnFechar.Size = new Size(40, 40);
 
-            // Fica no canto superior direito
-            _btnFechar.Anchor =
-                AnchorStyles.Top |
-                AnchorStyles.Right;
+            // Fica sempre no canto superior direito
+            _btnFechar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
-            _btnFechar.Location =
-                new Point(
-                    ClientSize.Width - 48,
-                    8
-                );
+            // Posicionamento
+            _btnFechar.Location = new Point(
+                ClientSize.Width - _btnFechar.Width - 8,
+                6
+            );
 
             _btnFechar.BorderRadius = 8;
 
-            _btnFechar.FillColor =
-                Color.Transparent;
+            // Fundo normal
+            _btnFechar.FillColor = Color.Transparent;
 
-            _btnFechar.ForeColor =
-                Color.FromArgb(
-                    224,
-                    211,
-                    204
-                );
+            // Cor do X
+            _btnFechar.ForeColor = Color.FromArgb(224, 211, 204);
 
-            _btnFechar.Font =
-                new Font(
-                    "Segoe UI",
-                    18F,
-                    FontStyle.Regular
-                );
+            // Fonte menor para não cortar
+            _btnFechar.Font = new Font(
+                "Segoe UI",
+                13F,
+                FontStyle.Regular
+            );
 
+            // IMPORTANTE:
+            // não deixar padding deslocar o X
+            _btnFechar.Padding = new Padding(0);
+
+            // Hover
             _btnFechar.HoverState.FillColor =
-                Color.FromArgb(
-                    170,
-                    65,
-                    65
-                );
+                Color.FromArgb(170, 65, 65);
 
             _btnFechar.HoverState.ForeColor =
                 Color.White;
 
-            _btnFechar.Cursor =
-                Cursors.Hand;
+            _btnFechar.Cursor = Cursors.Hand;
 
-            _btnFechar.Padding =
-                new Padding(0, 0, 0, 4);
-
-            _btnFechar.Click +=
-                BtnFechar_Click;
-
+            // Adiciona ao formulário
             Controls.Add(_btnFechar);
 
+            // Fica por cima de todos os controles
             _btnFechar.BringToFront();
 
-            // Reposiciona automaticamente caso
-            // o tamanho da janela mude.
+            // Clique
+            _btnFechar.Click += BtnFechar_Click;
+
+            // Reposiciona quando a janela mudar de tamanho
+            Resize -= MainForm_Resize;
             Resize += MainForm_Resize;
         }
 
         // ==========================================
         // POSIÇÃO DO X
         // ==========================================
-        private void MainForm_Resize(
-            object? sender,
-            EventArgs e)
+        private void MainForm_Resize(object? sender, EventArgs e)
         {
             if (_btnFechar == null)
                 return;
 
-            _btnFechar.Location =
-                new Point(
-                    ClientSize.Width -
-                    _btnFechar.Width -
-                    8,
-                    8
-                );
+            _btnFechar.Location = new Point(
+                ClientSize.Width - _btnFechar.Width - 8,
+                6
+            );
+
+            _btnFechar.BringToFront();
         }
 
         // ==========================================

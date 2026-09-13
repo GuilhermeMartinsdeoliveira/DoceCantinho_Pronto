@@ -25,11 +25,6 @@ namespace DoceCantinho.Desktop.Forms
         private bool _fotoFoiAlterada;
 
         // ==========================================
-        // BOTÃO X
-        // ==========================================
-        private Button? _btnFechar;
-
-        // ==========================================
         // ARRASTAR FORM SEM BORDA
         // ==========================================
         private const int WM_NCLBUTTONDOWN = 0xA1;
@@ -51,7 +46,6 @@ namespace DoceCantinho.Desktop.Forms
 
             ConfigurarFormulario();
             ConfigurarEventos();
-            CriarBotaoFechar();
             CarregarPerfil();
         }
 
@@ -99,77 +93,6 @@ namespace DoceCantinho.Desktop.Forms
 
             lblAvatar.Click -= pictureFoto_Click;
             lblAvatar.Click += pictureFoto_Click;
-        }
-
-        // ==========================================
-        // BOTÃO X
-        // ==========================================
-        private void CriarBotaoFechar()
-        {
-            if (_btnFechar != null)
-                return;
-
-            _btnFechar = new Button
-            {
-                Name = "btnFecharPerfil",
-                Text = "×",
-                Size = new Size(40, 34),
-                Location = new Point(ClientSize.Width - 48, 8),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.Transparent,
-                ForeColor = Color.FromArgb(105, 80, 70),
-                Font = new Font(
-                    "Segoe UI",
-                    18F,
-                    FontStyle.Regular
-                ),
-                Cursor = Cursors.Hand,
-                TabStop = false
-            };
-
-            _btnFechar.FlatAppearance.BorderSize = 0;
-
-            _btnFechar.FlatAppearance.MouseOverBackColor =
-                Color.FromArgb(235, 205, 194);
-
-            _btnFechar.FlatAppearance.MouseDownBackColor =
-                Color.FromArgb(220, 180, 165);
-
-            _btnFechar.Click += BtnFechar_Click;
-
-            Controls.Add(_btnFechar);
-
-            _btnFechar.BringToFront();
-
-            Resize += PerfilForm_Resize;
-        }
-
-        // ==========================================
-        // POSIÇÃO DO X
-        // ==========================================
-        private void PerfilForm_Resize(
-            object? sender,
-            EventArgs e)
-        {
-            if (_btnFechar == null)
-                return;
-
-            _btnFechar.Location =
-                new Point(
-                    ClientSize.Width - _btnFechar.Width - 8,
-                    8
-                );
-        }
-
-        // ==========================================
-        // CLIQUE NO X
-        // ==========================================
-        private void BtnFechar_Click(
-            object? sender,
-            EventArgs e)
-        {
-            Close();
         }
 
         // ==========================================
@@ -842,16 +765,12 @@ namespace DoceCantinho.Desktop.Forms
             _fotoAtual?.Dispose();
             _fotoAtual = null;
 
-            if (_btnFechar != null)
-            {
-                _btnFechar.Click -=
-                    BtnFechar_Click;
-
-                _btnFechar.Dispose();
-                _btnFechar = null;
-            }
-
             base.OnFormClosed(e);
+        }
+
+        private void btnFechar_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

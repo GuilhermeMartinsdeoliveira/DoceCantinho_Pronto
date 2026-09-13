@@ -147,7 +147,7 @@ namespace DoceCantinho.Desktop1.Forms
                 FormStartPosition.CenterParent;
 
             FormBorderStyle =
-                FormBorderStyle.FixedDialog;
+                FormBorderStyle.None;
 
             MaximizeBox = false;
             MinimizeBox = false;
@@ -934,6 +934,11 @@ namespace DoceCantinho.Desktop1.Forms
             public string? Uf { get; set; }
 
             public bool Erro { get; set; }
+        }
+
+        private void btnFechar_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

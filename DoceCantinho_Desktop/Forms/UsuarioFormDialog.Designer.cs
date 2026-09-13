@@ -61,6 +61,8 @@
 
         private void InitializeComponent()
         {
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             lblTitulo = new Label();
             lblSubtitulo = new Label();
             lblNome = new Label();
@@ -92,6 +94,7 @@
             cmbPerfil = new ComboBox();
             btnCancelar = new Button();
             btnSalvar = new Button();
+            btnFechar = new Guna.UI2.WinForms.Guna2Button();
             SuspendLayout();
             // 
             // lblTitulo
@@ -455,6 +458,24 @@
             btnSalvar.UseVisualStyleBackColor = false;
             btnSalvar.Click += btnSalvar_Click;
             // 
+            // btnFechar
+            // 
+            btnFechar.CustomizableEdges = customizableEdges1;
+            btnFechar.DisabledState.BorderColor = Color.DarkGray;
+            btnFechar.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnFechar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnFechar.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnFechar.FillColor = Color.FromArgb(201, 130, 107);
+            btnFechar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnFechar.ForeColor = Color.White;
+            btnFechar.Location = new Point(795, 21);
+            btnFechar.Name = "btnFechar";
+            btnFechar.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnFechar.Size = new Size(43, 43);
+            btnFechar.TabIndex = 31;
+            btnFechar.Text = "X";
+            btnFechar.Click += btnFechar_Click;
+            // 
             // UsuarioFormDialog
             // 
             AcceptButton = btnSalvar;
@@ -463,6 +484,7 @@
             BackColor = Color.FromArgb(248, 245, 242);
             CancelButton = btnCancelar;
             ClientSize = new Size(869, 907);
+            Controls.Add(btnFechar);
             Controls.Add(lblTitulo);
             Controls.Add(lblSubtitulo);
             Controls.Add(lblNome);
@@ -494,7 +516,7 @@
             Controls.Add(cmbPerfil);
             Controls.Add(btnCancelar);
             Controls.Add(btnSalvar);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
+            FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             MinimizeBox = false;
@@ -504,5 +526,7 @@
             ResumeLayout(false);
             PerformLayout();
         }
+
+        private Guna.UI2.WinForms.Guna2Button btnFechar;
     }
 }

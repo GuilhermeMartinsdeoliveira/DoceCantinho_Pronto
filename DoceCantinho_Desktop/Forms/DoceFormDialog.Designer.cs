@@ -42,6 +42,8 @@ namespace DoceCantinho.Desktop.Forms
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             lblTituloJanela = new Label();
             lblTitulo = new Label();
             lblNome = new Label();
@@ -66,6 +68,7 @@ namespace DoceCantinho.Desktop.Forms
             lblDestaque = new Label();
             btnSalvar = new Guna.UI2.WinForms.Guna2Button();
             btnCancelar = new Guna.UI2.WinForms.Guna2Button();
+            btnFechar = new Guna.UI2.WinForms.Guna2Button();
             ((System.ComponentModel.ISupportInitialize)pictureImagem).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudPreco).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudEstoque).BeginInit();
@@ -426,12 +429,32 @@ namespace DoceCantinho.Desktop.Forms
             btnCancelar.Text = "Cancelar";
             btnCancelar.Click += btnCancelar_Click;
             // 
+            // btnFechar
+            // 
+            btnFechar.BorderRadius = 10;
+            btnFechar.CustomizableEdges = customizableEdges23;
+            btnFechar.DisabledState.BorderColor = Color.DarkGray;
+            btnFechar.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnFechar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnFechar.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnFechar.FillColor = Color.FromArgb(92, 46, 14);
+            btnFechar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnFechar.ForeColor = Color.White;
+            btnFechar.Location = new Point(959, 12);
+            btnFechar.Name = "btnFechar";
+            btnFechar.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            btnFechar.Size = new Size(49, 40);
+            btnFechar.TabIndex = 23;
+            btnFechar.Text = "X";
+            btnFechar.Click += btnFechar_Click;
+            // 
             // DoceFormDialog
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(253, 246, 237);
             ClientSize = new Size(1029, 933);
+            Controls.Add(btnFechar);
             Controls.Add(btnCancelar);
             Controls.Add(btnSalvar);
             Controls.Add(lblDestaque);
@@ -506,5 +529,6 @@ namespace DoceCantinho.Desktop.Forms
 
         private Guna.UI2.WinForms.Guna2Button btnSalvar;
         private Guna.UI2.WinForms.Guna2Button btnCancelar;
+        private Guna.UI2.WinForms.Guna2Button btnFechar;
     }
 }

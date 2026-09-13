@@ -996,5 +996,10 @@ namespace DoceCantinho.Desktop.Forms
 
             base.OnFormClosed(e);
         }
+
+        private void btnFechar_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
