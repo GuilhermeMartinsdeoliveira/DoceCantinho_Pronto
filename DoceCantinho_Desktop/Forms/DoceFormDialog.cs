@@ -102,50 +102,25 @@ namespace DoceCantinho.Desktop.Forms
         // LOAD
         // ============================================================
 
-        private void DoceFormDialog_Load(
-<<<<<<< HEAD
-     object sender,
-     EventArgs e)
-=======
-            object? sender,
-            EventArgs e)
->>>>>>> 22b1971931936c1a7cfa10fb5dc83a4e39f91250
+        private void DoceFormDialog_Load(object? sender, EventArgs e)
         {
             if (DesignMode)
                 return;
 
-<<<<<<< HEAD
-            bool editando =
-                _doceExistente != null;
-=======
             bool editando = _doceExistente != null;
->>>>>>> 22b1971931936c1a7cfa10fb5dc83a4e39f91250
 
-            Text = editando
-                ? "Editar Doce"
-                : "Novo Doce";
+            Text = editando ? "Editar Doce" : "Novo Doce";
 
-            lblTitulo.Text = editando
-                ? "✏️ Editar Doce"
-                : "➕ Novo Doce";
+            lblTitulo.Text = editando ? "✏️ Editar Doce" : "➕ Novo Doce";
 
-<<<<<<< HEAD
             lblSubtitulo.Text = editando
                 ? "Edite as informações deste doce"
                 : "Cadastre um novo produto no DoceCantinho";
 
-            btnSalvar.Text = editando
-                ? "✓  Salvar Alterações"
-=======
-            btnSalvar.Text = editando
-                ? "✓  Salvar alterações"
->>>>>>> 22b1971931936c1a7cfa10fb5dc83a4e39f91250
-                : "✓  Salvar Doce";
+            btnSalvar.Text = editando ? "✓  Salvar alterações" : "✓  Salvar Doce";
 
             ConfigurarCampos();
-
             CarregarCategorias();
-
             PreencherCampos();
         }
         // ============================================================
@@ -641,29 +616,17 @@ namespace DoceCantinho.Desktop.Forms
                         dados);
 
                 using MemoryStream stream =
-                new MemoryStream(bytes);
+                    new MemoryStream(bytes);
 
                 using Image original =
                     Image.FromStream(stream);
 
-<<<<<<< HEAD
-                picturePreview.Image =
-                    new Bitmap(imagemOriginal);
-=======
-                Image novaImagem =
-                    new Bitmap(original);
+                Image? antiga = picturePreview.Image;
 
-                Image? imagemAntiga =
-                    pictureImagem.Image;
+                picturePreview.Image = new Bitmap(original);
+                picturePreview.SizeMode = PictureBoxSizeMode.Zoom;
 
-                pictureImagem.Image =
-                    novaImagem;
->>>>>>> 22b1971931936c1a7cfa10fb5dc83a4e39f91250
-
-                picturePreview.SizeMode =
-                    PictureBoxSizeMode.Zoom;
-
-                imagemAntiga?.Dispose();
+                antiga?.Dispose();
             }
             catch
             {
