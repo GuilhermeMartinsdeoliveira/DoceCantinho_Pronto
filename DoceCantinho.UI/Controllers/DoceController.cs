@@ -8,6 +8,8 @@
 using DoceCantinho.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using DoceCantinho.Application.ViewModels;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DoceCantinho.UI.Controllers
 {
@@ -38,17 +40,23 @@ namespace DoceCantinho.UI.Controllers
                 SelectedCategoryId = categoryId
             };
 
-            // Se uma categoria foi selecionada, filtra os games
+            // Se uma categoria foi selecionada, filtra os doces
             if (categoryId.HasValue)
             {
-                viewModel.Doces = await _doceService.GetByCategoryAsync(categoryId.Value);
+                var doces = await _doceService.GetByCategoryAsync(categoryId.Value);
+
+                // Mostra somente os doces ativos no site
+                viewModel.Doces = doces.Where(d => d.IsAtivo);
             }
             else
             {
-                viewModel.Doces = await _doceService.GetAllAsync();
+                var doces = await _doceService.GetAllAsync();
+
+                // Mostra somente os doces ativos no site
+                viewModel.Doces = doces.Where(d => d.IsAtivo);
             }
 
-            return View("~/Views/Doces/Index.cshtml", viewModel);
+            return View(viewModel);
         }
 
         /// <summary>
@@ -59,7 +67,7 @@ namespace DoceCantinho.UI.Controllers
         {
             var doce = await _doceService.GetByIdAsync(id);
 
-            if (doce == null)
+            if (doce == null || !doce.IsAtivo)
                 return NotFound();
 
             // Busca games relacionados (mesma categoria)
@@ -68,7 +76,9 @@ namespace DoceCantinho.UI.Controllers
             var viewModel = new DoceDetailsViewModel
             {
                 Doce = doce,
-                RelatedDoce= relatedDoces.Where(g => g.Id != doce.Id).Take(4)
+                RelatedDoce = relatedDoces
+                .Where(g => g.Id != doce.Id && g.IsAtivo)
+                .Take(4)
             };
 
             return View(viewModel);
