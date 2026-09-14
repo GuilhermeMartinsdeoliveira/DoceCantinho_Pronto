@@ -3,6 +3,8 @@
     ViewData["Title"] = "Home";
 }
 
+<link rel="stylesheet" href="~/css/categorias.css" />
+
 <div class="page active" id="page-home">
 
     <!-- ─── Hero ─── -->
@@ -69,7 +71,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="5" y1="12" x2="19" y2="12" />
                         <polyline points="12 5 19 12 12 19" />
-  sem gastar                  </svg>
+                    </svg>
                 </a>
             </div>
 
@@ -96,16 +98,15 @@
                                 }
                             </div>
                             <div class="product-body">
-                                @if (!string.IsNullOrEmpty(doce.CategoryName))
-                                {
-                                    <p class="product-cat">@doce.CategoryName</p>
-                                }
                                 <h3 class="product-name">@doce.Title</h3>
-                                <p class="product-desc">@doce.Description</p>
                                 <div class="product-footer">
                                     <span class="product-price">@doce.Preco.ToString("C")</span>
-                                    <a asp-controller="Doces" asp-action="Details" asp-route-id="@doce.Id"
-                                       class="btn btn-accent btn-sm">Ver</a>
+                                    <button type="button"
+                                            class="btn btn-accent btn-sm sweet-view-btn"
+                                            data-title="@doce.Title"
+                                            data-description="@doce.Description">
+                                        Ver
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -136,16 +137,15 @@
                                 }
                             </div>
                             <div class="product-body">
-                                @if (!string.IsNullOrEmpty(doce.CategoryName))
-                                {
-                                    <p class="product-cat">@doce.CategoryName</p>
-                                }
                                 <h3 class="product-name">@doce.Title</h3>
-                                <p class="product-desc">@doce.Description</p>
                                 <div class="product-footer">
                                     <span class="product-price">@doce.Preco.ToString("C")</span>
-                                    <a asp-controller="Doces" asp-action="Details" asp-route-id="@doce.Id"
-                                       class="btn btn-accent btn-sm">Ver</a>
+                                    <button type="button"
+                                            class="btn btn-accent btn-sm sweet-view-btn"
+                                            data-title="@doce.Title"
+                                            data-description="@doce.Description">
+                                        Ver
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -165,24 +165,43 @@
     <!-- ─── Categorias ─── -->
     @if (Model.Categories.Any())
     {
-        <section class="section-services">
+        <section class="categories-modern">
             <div class="container">
-                <div style="text-align:center;margin-bottom:2.5rem">
+                <div class="categories-heading">
                     <p class="section-eyebrow">Explore</p>
                     <h2 class="section-title">Nossas Categorias</h2>
+                    <p class="categories-subtitle">
+                        Encontre o doce perfeito para cada momento.
+                    </p>
                 </div>
-                <div class="services-grid">
+
+                <div class="categories-modern-grid">
                     @foreach (var cat in Model.Categories)
                     {
-                        <a asp-controller="Doces" asp-action="Index" asp-route-categoryId="@cat.Id"
-                           class="service-card" style="text-decoration:none;cursor:pointer">
-                            <div class="service-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">
+                        <a asp-controller="Doces"
+                           asp-action="Index"
+                           asp-route-categoryId="@cat.Id"
+                           class="category-modern-card">
+
+                            <div class="category-modern-icon">
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.6"
+                                     width="25"
+                                     height="25"
+                                     aria-hidden="true">
                                     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                                 </svg>
                             </div>
-                            <h3 class="service-name">@cat.Name</h3>
-                            <p class="service-desc">@cat.DoceCount produto@(cat.DoceCount != 1 ? "s" : "")</p>
+
+                            <div class="category-modern-info">
+                                <h3>@cat.Name</h3>
+                                <span>
+                                    @cat.DoceCount produto@(cat.DoceCount != 1 ? "s" : "")
+                                </span>
+                            </div>
+
                         </a>
                     }
                 </div>
@@ -190,70 +209,391 @@
         </section>
     }
 
-    <!-- ─── Carrossel Dinâmico (imagens + vídeo) ─── -->
+    <!-- ─── Carrossel ─── -->
     <section class="section-carousel">
         <div class="container">
-            <div style="text-align:center;margin-bottom:2.5rem">
+            <div class="carousel-heading">
                 <p class="section-eyebrow">Bastidores</p>
                 <h2 class="section-title">Nosso Cantinho em Imagens e Vídeo</h2>
+                <p class="carousel-subtitle">Conheça um pouco do carinho que colocamos em cada doce.</p>
             </div>
 
-            <!--
-                Carrossel dinâmico: os slides abaixo (imagens e vídeo) são lidos
-                a partir do JSON no bloco <script> logo abaixo e desenhados
-                automaticamente pelo carousel.js (wwwroot/js/carousel.js).
+            <div class="dc-carousel" aria-roledescription="carrossel" aria-label="Bastidores do Doce Cantinho">
+                <div class="dc-carousel-viewport">
+                    <div class="dc-carousel-track">
 
-                Para adicionar um novo vídeo, basta incluir mais um objeto no
-                array com "type": "video" e o caminho do arquivo (por exemplo,
-                um arquivo salvo em wwwroot/videos/seu-video.mp4). Veja os
-                comentários dentro de carousel.js para o passo a passo completo.
-            -->
-            <div class="mm-carousel" data-autoplay="6000" aria-roledescription="carrossel" aria-label="Bastidores do Doce Cantinho">
-                <div class="mm-carousel-viewport">
-                    <div class="mm-carousel-track"></div>
+                        <div class="dc-carousel-slide active">
+                            <video class="dc-carousel-media"
+                                   muted
+                                   playsinline
+                                   controls
+                                   preload="auto"
+                                   poster="https://images.pexels.com/videos/8477942/pictures/preview-0.jpg">
+                                <source src="/videos/bolo.mp4" type="video/mp4">
+                                Seu navegador não suporta vídeos.
+                            </video>
+                            <div class="dc-carousel-gradient"></div>
+                            <div class="dc-carousel-caption">
+                                <h3>Direto da nossa cozinha</h3>
+                                <p>Cada detalhe é preparado com carinho para deixar seus momentos ainda mais doces.</p>
+                            </div>
+                        </div>
 
-                    <button type="button" class="mm-carousel-prev" aria-label="Slide anterior">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+                        <div class="dc-carousel-slide">
+                            <img class="dc-carousel-media"
+                                 src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&h=900&fit=crop&auto=format"
+                                 alt="Confeitaria artesanal" loading="lazy">
+                            <div class="dc-carousel-gradient"></div>
+                            <div class="dc-carousel-caption">
+                                <h3>Confeitaria artesanal, feita à mão</h3>
+                                <p>Cada doce é preparado com ingredientes selecionados e muito carinho.</p>
+                            </div>
+                        </div>
+
+                        <div class="dc-carousel-slide">
+                            <img class="dc-carousel-media"
+                                 src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=1600&h=900&fit=crop&auto=format"
+                                 alt="Decoração de doces" loading="lazy">
+                            <div class="dc-carousel-gradient"></div>
+                            <div class="dc-carousel-caption">
+                                <h3>Decoração cuidadosamente pensada</h3>
+                                <p>Detalhes que fazem toda a diferença em cada encomenda.</p>
+                            </div>
+                        </div>
+
+                        <div class="dc-carousel-slide">
+                            <img class="dc-carousel-media"
+                                 src="https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?w=1600&h=900&fit=crop&auto=format"
+                                 alt="Equipe da confeitaria" loading="lazy">
+                            <div class="dc-carousel-gradient"></div>
+                            <div class="dc-carousel-caption">
+                                <h3>Nossa equipe em ação</h3>
+                                <p>Confeiteiros apaixonados, trabalhando desde cedo para você.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button type="button" class="dc-carousel-prev" aria-label="Slide anterior">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
                     </button>
-                    <button type="button" class="mm-carousel-next" aria-label="Próximo slide">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+
+                    <button type="button" class="dc-carousel-next" aria-label="Próximo slide">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
                     </button>
 
-                    <div class="mm-carousel-dots"></div>
+                    <div class="dc-carousel-dots">
+                        <button type="button" class="dc-carousel-dot active" aria-label="Slide 1"></button>
+                        <button type="button" class="dc-carousel-dot" aria-label="Slide 2"></button>
+                        <button type="button" class="dc-carousel-dot" aria-label="Slide 3"></button>
+                        <button type="button" class="dc-carousel-dot" aria-label="Slide 4"></button>
+                    </div>
                 </div>
-
-                <script type="application/json" data-carousel-json>
-                [
-                    {
-                        "type": "video",
-                        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                        "poster": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
-                        "title": "Direto da nossa cozinha",
-                        "caption": "Vídeo de demonstração — substitua por um vídeo real da produção em wwwroot/videos/."
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&h=900&fit=crop&auto=format",
-                        "title": "Confeitaria artesanal, feita à mão",
-                        "caption": "Cada doce é preparado com ingredientes selecionados e muito carinho."
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=1600&h=900&fit=crop&auto=format",
-                        "title": "Decoração cuidadosamente pensada",
-                        "caption": "Detalhes que fazem toda a diferença em cada encomenda."
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?w=1600&h=900&fit=crop&auto=format",
-                        "title": "Nossa equipe em ação",
-                        "caption": "Confeiteiros apaixonados, trabalhando desde cedo para você."
-                    }
-                ]
-                </script>
             </div>
         </div>
     </section>
+
+    <style>
+            .carousel-heading {
+                text-align: center;
+                margin-bottom: 2.5rem;
+            }
+
+            .carousel-subtitle {
+                margin: 0.6rem auto 0;
+                max-width: 680px;
+                color: var(--muted-fg);
+                line-height: 1.7;
+            }
+
+            .dc-carousel {
+                width: 100%;
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+
+            .dc-carousel-viewport {
+                position: relative;
+                width: 100%;
+                height: 520px;
+                overflow: hidden;
+                border-radius: 24px;
+                background: #171311;
+                box-shadow: 0 25px 70px rgba(0,0,0,.16);
+            }
+
+            .dc-carousel-track {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+
+            .dc-carousel-slide {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transition: opacity .55s ease;
+            }
+
+                .dc-carousel-slide.active {
+                    opacity: 1;
+                    visibility: visible;
+                    pointer-events: auto;
+                }
+
+            .dc-carousel-media {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                background: #171311;
+            }
+
+            .dc-carousel-gradient {
+                position: absolute;
+                inset: 0;
+                z-index: 2;
+                pointer-events: none;
+                background: linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,0) 75%);
+            }
+
+            .dc-carousel-caption {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 4;
+                padding: 40px 70px 58px;
+                color: white;
+            }
+
+                .dc-carousel-caption h3 {
+                    margin: 0 0 8px;
+                    font-family: 'Playfair Display',serif;
+                    font-size: 2rem;
+                    font-weight: 700;
+                }
+
+                .dc-carousel-caption p {
+                    max-width: 680px;
+                    margin: 0;
+                    color: rgba(255,255,255,.9);
+                    font-size: .98rem;
+                    line-height: 1.7;
+                }
+
+            .dc-carousel-prev, .dc-carousel-next {
+                position: absolute;
+                top: 50%;
+                z-index: 10;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 50px;
+                height: 50px;
+                padding: 0;
+                border: 1px solid rgba(255,255,255,.35);
+                border-radius: 50%;
+                background: rgba(0,0,0,.38);
+                color: white;
+                cursor: pointer;
+                transform: translateY(-50%);
+                backdrop-filter: blur(8px);
+                transition: .25s ease;
+            }
+
+            .dc-carousel-prev {
+                left: 20px;
+            }
+
+            .dc-carousel-next {
+                right: 20px;
+            }
+
+                .dc-carousel-prev:hover, .dc-carousel-next:hover {
+                    background: rgba(0,0,0,.65);
+                    transform: translateY(-50%) scale(1.08);
+                }
+
+                .dc-carousel-prev svg, .dc-carousel-next svg {
+                    width: 23px;
+                    height: 23px;
+                }
+
+            .dc-carousel-dots {
+                position: absolute;
+                left: 50%;
+                bottom: 20px;
+                z-index: 12;
+                display: flex;
+                gap: 8px;
+                transform: translateX(-50%);
+            }
+
+            .dc-carousel-dot {
+                width: 9px;
+                height: 9px;
+                padding: 0;
+                border: 0;
+                border-radius: 50%;
+                background: rgba(255,255,255,.45);
+                cursor: pointer;
+                transition: .25s ease;
+            }
+
+                .dc-carousel-dot.active {
+                    width: 27px;
+                    border-radius: 10px;
+                    background: white;
+                }
+            @@media(max-width:800px) {
+                .dc-carousel-viewport {
+                    height: 430px;
+                }
+
+                .dc-carousel-caption {
+                    padding: 30px 55px 55px;
+                }
+
+                    .dc-carousel-caption h3 {
+                        font-size: 1.55rem;
+                    }
+
+                    .dc-carousel-caption p {
+                        font-size: .9rem;
+                    }
+            }
+            @@media(max-width:600px) {
+                .dc-carousel-viewport {
+                    height: 380px;
+                    border-radius: 18px;
+                }
+
+                .dc-carousel-caption {
+                    padding: 25px 25px 50px;
+                }
+
+                    .dc-carousel-caption h3 {
+                        font-size: 1.3rem;
+                    }
+
+                    .dc-carousel-caption p {
+                        font-size: .84rem;
+                        line-height: 1.5;
+                    }
+
+                .dc-carousel-prev, .dc-carousel-next {
+                    width: 40px;
+                    height: 40px;
+                }
+
+                .dc-carousel-prev {
+                    left: 10px;
+                }
+
+                .dc-carousel-next {
+                    right: 10px;
+                }
+            }
+    </style>
+
+    <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const carousel = document.querySelector(".dc-carousel");
+                if (!carousel) return;
+
+                const slides = Array.from(carousel.querySelectorAll(".dc-carousel-slide"));
+                const dots = Array.from(carousel.querySelectorAll(".dc-carousel-dot"));
+                const prev = carousel.querySelector(".dc-carousel-prev");
+                const next = carousel.querySelector(".dc-carousel-next");
+                let current = 0;
+                let timer = null;
+
+                function showSlide(index) {
+                    if (index < 0) index = slides.length - 1;
+                    if (index >= slides.length) index = 0;
+                    current = index;
+
+                    slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+                    dots.forEach((dot, i) => dot.classList.toggle("active", i === current));
+
+                    slides.forEach(slide => {
+                        const video = slide.querySelector("video");
+                        if (video) video.pause();
+                    });
+
+                    const currentVideo = slides[current].querySelector("video");
+                    if (currentVideo) {
+                        currentVideo.currentTime = 0;
+                        currentVideo.play().catch(() => { });
+                    }
+                }
+
+                function nextSlide() { showSlide(current + 1); restartTimer(); }
+                function previousSlide() { showSlide(current - 1); restartTimer(); }
+
+                next?.addEventListener("click", nextSlide);
+                prev?.addEventListener("click", previousSlide);
+
+                dots.forEach((dot, index) => {
+                    dot.addEventListener("click", () => {
+                        showSlide(index);
+                        restartTimer();
+                    });
+                });
+
+                slides.forEach(slide => {
+                    const video = slide.querySelector("video");
+                    if (video) {
+                        video.addEventListener("ended", nextSlide);
+                        video.addEventListener("error", () => setTimeout(nextSlide, 1000));
+                    }
+                });
+
+                function startTimer() {
+                    clearInterval(timer);
+                    timer = setInterval(() => {
+                        const video = slides[current].querySelector("video");
+                        if (video && !video.ended) return;
+                        nextSlide();
+                    }, 6000);
+                }
+
+                function restartTimer() {
+                    clearInterval(timer);
+                    startTimer();
+                }
+
+                carousel.addEventListener("mouseenter", () => clearInterval(timer));
+                carousel.addEventListener("mouseleave", startTimer);
+
+                let touchStart = 0;
+                let touchEnd = 0;
+
+                carousel.addEventListener("touchstart", e => {
+                    touchStart = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                carousel.addEventListener("touchend", e => {
+                    touchEnd = e.changedTouches[0].screenX;
+                    const distance = touchEnd - touchStart;
+                    if (Math.abs(distance) < 50) return;
+                    if (distance < 0) nextSlide();
+                    else previousSlide();
+                }, { passive: true });
+
+                showSlide(0);
+                startTimer();
+            });
+    </script>
 
     <!-- ─── Avaliações e Depoimentos ─── -->
     <section class="section-testimonials" id="avaliacoes">
@@ -390,3 +730,104 @@
                         </a>
                     </div>
                 }
+
+                <!-- =========================================================
+     MODAL - DESCRIÇÃO DO DOCE
+     ========================================================= -->
+
+                <div id="sweet-description-modal" class="sweet-modal" aria-hidden="true">
+
+                    <div class="sweet-modal-content" role="dialog" aria-modal="true" aria-labelledby="sweet-modal-title">
+
+                        <button type="button"
+                                class="sweet-modal-close"
+                                id="sweet-modal-close"
+                                aria-label="Fechar">
+                            &times;
+                        </button>
+
+                        <span class="sweet-modal-label">DOCE CANTINHO</span>
+
+                        <h2 id="sweet-modal-title"></h2>
+
+                        <p id="sweet-modal-description"></p>
+
+                        <button type="button"
+                                class="btn btn-accent"
+                                id="sweet-modal-close-bottom">
+                            Fechar
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+
+                                        const modal = document.getElementById("sweet-description-modal");
+                                        const title = document.getElementById("sweet-modal-title");
+                                        const description = document.getElementById("sweet-modal-description");
+                                        const closeTop = document.getElementById("sweet-modal-close");
+                                        const closeBottom = document.getElementById("sweet-modal-close-bottom");
+
+                                        if (!modal || !title || !description) {
+                                            return;
+                                        }
+
+                                        function openSweetModal(button) {
+
+                                            title.textContent = button.dataset.title || "Doce";
+                                            description.textContent = button.dataset.description || "";
+
+                                            modal.classList.add("show");
+                                            modal.setAttribute("aria-hidden", "false");
+                                            document.body.style.overflow = "hidden";
+                                        }
+
+                                        function closeSweetModal() {
+
+                                            modal.classList.remove("show");
+                                            modal.setAttribute("aria-hidden", "true");
+                                            document.body.style.overflow = "";
+                                        }
+
+                                        document.querySelectorAll(".sweet-view-btn").forEach(function(button) {
+
+                                            button.addEventListener("click", function() {
+                                                openSweetModal(button);
+                                            });
+
+                                        });
+
+                                        if (closeTop) {
+                                            closeTop.addEventListener("click", closeSweetModal);
+                                        }
+
+                                        if (closeBottom) {
+                                            closeBottom.addEventListener("click", closeSweetModal);
+                                        }
+
+                                        modal.addEventListener("click", function(event) {
+
+                                            if (event.target === modal) {
+                                                closeSweetModal();
+                                            }
+
+                                        });
+
+                                        document.addEventListener("keydown", function(event) {
+
+                                            if (event.key === "Escape" && modal.classList.contains("show")) {
+                                                closeSweetModal();
+                                            }
+
+                                        });
+
+                                    });
+                </script>
+
+
+            </div>
