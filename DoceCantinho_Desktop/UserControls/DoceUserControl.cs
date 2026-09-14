@@ -314,15 +314,21 @@ namespace DoceCantinho.Desktop.UserControls
                         Color.FromArgb(250, 235, 235);
                 }
                 // ESTOQUE > 0 = ESTOQUE BAIXO
-                else
+
+                else if(estoque > 0 && estoque <= 10)
                 {
-                    e.Value = $"{estoque} baixo";
+                    e.Value = $"{estoque} estoque baixo";
 
                     e.CellStyle.ForeColor =
                         Color.FromArgb(200, 55, 55);
 
                     e.CellStyle.BackColor =
                         Color.FromArgb(250, 235, 235);
+
+                }
+                else
+                {
+                    e.Value = estoque.ToString();
                 }
             }
         }

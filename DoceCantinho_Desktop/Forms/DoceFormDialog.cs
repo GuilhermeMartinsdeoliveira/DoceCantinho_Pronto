@@ -43,24 +43,38 @@ namespace DoceCantinho.Desktop.Forms
         // LOAD
         // ============================================================
 
-        private void DoceFormDialog_Load(object sender, EventArgs e)
+        private void DoceFormDialog_Load(
+     object sender,
+     EventArgs e)
         {
             if (DesignMode)
                 return;
 
-            Text = _doceExistente == null
-                ? "Novo Doce"
-                : "Editar Doce";
+            bool editando =
+                _doceExistente != null;
 
-            lblTitulo.Text = _doceExistente == null
-                ? "➕ Novo Doce"
-                : "✏️ Editar Doce";
+            Text = editando
+                ? "Editar Doce"
+                : "Novo Doce";
+
+            lblTitulo.Text = editando
+                ? "✏️ Editar Doce"
+                : "➕ Novo Doce";
+
+            lblSubtitulo.Text = editando
+                ? "Edite as informações deste doce"
+                : "Cadastre um novo produto no DoceCantinho";
+
+            btnSalvar.Text = editando
+                ? "✓  Salvar Alterações"
+                : "✓  Salvar Doce";
 
             ConfigurarCampos();
+
             CarregarCategorias();
+
             PreencherCampos();
         }
-
         // ============================================================
         // CONFIGURAÇÕES
         // ============================================================
@@ -388,15 +402,15 @@ namespace DoceCantinho.Desktop.Forms
                     Convert.FromBase64String(dados);
 
                 using MemoryStream stream =
-                    new MemoryStream(bytes);
+                new MemoryStream(bytes);
 
                 using Image imagemOriginal =
                     Image.FromStream(stream);
 
-                pictureImagem.Image =
+                picturePreview.Image =
                     new Bitmap(imagemOriginal);
 
-                pictureImagem.SizeMode =
+                picturePreview.SizeMode =
                     PictureBoxSizeMode.Zoom;
             }
             catch
