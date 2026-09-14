@@ -74,6 +74,8 @@ namespace DoceCantinho.Desktop.DTOs
 
         public string? Endereco { get; set; }
 
+        public string Status { get; set; } = "Pendente";
+
         public List<AtualizarPedidoItemDto> Items { get; set; } = new();
     }
 

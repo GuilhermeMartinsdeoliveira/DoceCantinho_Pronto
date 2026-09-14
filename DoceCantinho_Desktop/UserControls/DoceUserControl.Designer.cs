@@ -1,34 +1,12 @@
-﻿namespace DoceCantinho.Desktop.UserControls
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+ 
+namespace DoceCantinho.Desktop.UserControls
 {
     partial class DoceUserControl
     {
         private System.ComponentModel.IContainer components = null;
-
-        private System.Windows.Forms.Label lblTitulo;
-        private System.Windows.Forms.Label lblQuantidade;
-
-        private System.Windows.Forms.Panel pnlConteudo;
-        private System.Windows.Forms.Panel pnlPesquisa;
-
-        private System.Windows.Forms.TextBox txtPesquisa;
-        private System.Windows.Forms.Button btnPesquisar;
-        private System.Windows.Forms.Button btnNovo;
-        private System.Windows.Forms.Button btnAtualizar;
-
-        private System.Windows.Forms.DataGridView gridBanco;
-
-        private System.Windows.Forms.Label lblResultados;
-
-        private System.Windows.Forms.DataGridViewImageColumn colImagem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colProduto;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colCategoria;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colPreco;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colEstoque;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
-
-        private System.Windows.Forms.DataGridViewButtonColumn colEditar;
-        private System.Windows.Forms.DataGridViewButtonColumn colExcluir;
 
         protected override void Dispose(bool disposing)
         {
@@ -40,600 +18,945 @@
             base.Dispose(disposing);
         }
 
-        #region Component Designer generated code
-
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.pnlPrincipal = new Guna.UI2.WinForms.Guna2Panel();
+            this.lblTitulo = new Label();
+            this.lblSubtitulo = new Label();
 
-            lblTitulo = new System.Windows.Forms.Label();
-            lblQuantidade = new System.Windows.Forms.Label();
+            this.btnNovo = new Guna.UI2.WinForms.Guna2Button();
+            this.btnAtualizar = new Guna.UI2.WinForms.Guna2Button();
 
-            pnlConteudo = new System.Windows.Forms.Panel();
-            pnlPesquisa = new System.Windows.Forms.Panel();
+            this.pnlFiltros = new Guna.UI2.WinForms.Guna2Panel();
+            this.txtPesquisa = new Guna.UI2.WinForms.Guna2TextBox();
+            this.btnPesquisar = new Guna.UI2.WinForms.Guna2Button();
 
-            txtPesquisa = new System.Windows.Forms.TextBox();
-            btnPesquisar = new System.Windows.Forms.Button();
-            btnNovo = new System.Windows.Forms.Button();
-            btnAtualizar = new System.Windows.Forms.Button();
+            this.btnEditar = new Guna.UI2.WinForms.Guna2Button();
+            this.btnExcluir = new Guna.UI2.WinForms.Guna2Button();
 
-            gridBanco = new System.Windows.Forms.DataGridView();
+            this.pnlTabela = new Guna.UI2.WinForms.Guna2Panel();
+            this.gridBanco = new DataGridView();
 
-            lblResultados = new System.Windows.Forms.Label();
+            this.colId = new DataGridViewTextBoxColumn();
+            this.colTitle = new DataGridViewTextBoxColumn();
+            this.colCategoryId = new DataGridViewTextBoxColumn();
+            this.colPreco = new DataGridViewTextBoxColumn();
+            this.colEstoque = new DataGridViewTextBoxColumn();
+            this.colStatus = new DataGridViewTextBoxColumn();
+            this.colIsFeatured = new DataGridViewTextBoxColumn();
+            this.colData = new DataGridViewTextBoxColumn();
 
-            colImagem =
-                new System.Windows.Forms.DataGridViewImageColumn();
+            this.lblResultados = new Label();
 
-            colId =
-                new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pnlPrincipal.SuspendLayout();
+            this.pnlFiltros.SuspendLayout();
+            this.pnlTabela.SuspendLayout();
 
-            colProduto =
-                new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.gridBanco)).BeginInit();
 
-            colCategoria =
-                new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SuspendLayout();
 
-            colPreco =
-                new System.Windows.Forms.DataGridViewTextBoxColumn();
+            // ============================================================
+            // pnlPrincipal
+            // ============================================================
 
-            colEstoque =
-                new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pnlPrincipal.BackColor = Color.FromArgb(247, 243, 240);
+            this.pnlPrincipal.FillColor = Color.FromArgb(247, 243, 240);
+            this.pnlPrincipal.Dock = DockStyle.Fill;
+            this.pnlPrincipal.Location = new Point(0, 0);
+            this.pnlPrincipal.Name = "pnlPrincipal";
+            this.pnlPrincipal.Size = new Size(1075, 720);
+            this.pnlPrincipal.TabIndex = 0;
 
-            colStatus =
-                new System.Windows.Forms.DataGridViewTextBoxColumn();
+            // ============================================================
+            // lblTitulo
+            // ============================================================
 
-            colEditar =
-                new System.Windows.Forms.DataGridViewButtonColumn();
+            this.lblTitulo.AutoSize = true;
+            this.lblTitulo.BackColor = Color.Transparent;
+            this.lblTitulo.Font = new Font(
+                "Georgia",
+                22F,
+                FontStyle.Bold);
 
-            colExcluir =
-                new System.Windows.Forms.DataGridViewButtonColumn();
+            this.lblTitulo.ForeColor =
+                Color.FromArgb(53, 39, 33);
 
+            this.lblTitulo.Location =
+                new Point(28, 22);
 
-            ((System.ComponentModel.ISupportInitialize)(gridBanco))
-                .BeginInit();
+            this.lblTitulo.Name =
+                "lblTitulo";
 
-            pnlConteudo.SuspendLayout();
-            pnlPesquisa.SuspendLayout();
+            this.lblTitulo.Size =
+                new Size(88, 35);
 
-            SuspendLayout();
+            this.lblTitulo.TabIndex =
+                0;
 
-            // =====================================================
-            // TÍTULO
-            // =====================================================
+            this.lblTitulo.Text =
+                "Doces";
 
-            lblTitulo.AutoSize = true;
-            lblTitulo.Font =
-                new System.Drawing.Font(
-                    "Georgia",
-                    20F,
-                    System.Drawing.FontStyle.Bold);
+            // ============================================================
+            // lblSubtitulo
+            // ============================================================
 
-            lblTitulo.ForeColor =
-                System.Drawing.Color.FromArgb(61, 43, 35);
+            this.lblSubtitulo.AutoSize = true;
+            this.lblSubtitulo.BackColor = Color.Transparent;
 
-            lblTitulo.Location =
-                new System.Drawing.Point(28, 20);
-
-            lblTitulo.Name = "lblTitulo";
-
-            lblTitulo.Size =
-                new System.Drawing.Size(80, 31);
-
-            lblTitulo.Text = "Doces";
-
-
-            // =====================================================
-            // QUANTIDADE
-            // =====================================================
-
-            lblQuantidade.AutoSize = true;
-
-            lblQuantidade.Font =
-                new System.Drawing.Font(
+            this.lblSubtitulo.Font =
+                new Font(
                     "Segoe UI",
-                    9F);
+                    9F,
+                    FontStyle.Regular);
 
-            lblQuantidade.ForeColor =
-                System.Drawing.Color.FromArgb(110, 100, 95);
+            this.lblSubtitulo.ForeColor =
+                Color.FromArgb(154, 137, 128);
 
-            lblQuantidade.Location =
-                new System.Drawing.Point(30, 60);
+            this.lblSubtitulo.Location =
+                new Point(30, 62);
 
-            lblQuantidade.Name = "lblQuantidade";
+            this.lblSubtitulo.Name =
+                "lblSubtitulo";
 
-            lblQuantidade.Text =
-                "0 produtos cadastrados";
+            this.lblSubtitulo.Size =
+                new Size(130, 15);
 
+            this.lblSubtitulo.TabIndex =
+                1;
 
-            // =====================================================
-            // PAINEL PRINCIPAL
-            // =====================================================
+            this.lblSubtitulo.Text =
+                "Carregando produtos...";
 
-            pnlConteudo.Anchor =
-                System.Windows.Forms.AnchorStyles.Top |
-                System.Windows.Forms.AnchorStyles.Bottom |
-                System.Windows.Forms.AnchorStyles.Left |
-                System.Windows.Forms.AnchorStyles.Right;
+            // ============================================================
+            // btnNovo
+            // ============================================================
 
-            pnlConteudo.BackColor =
-                System.Drawing.Color.White;
+            this.btnNovo.Anchor =
+                AnchorStyles.Top | AnchorStyles.Right;
 
-            pnlConteudo.Location =
-                new System.Drawing.Point(22, 100);
+            this.btnNovo.Animated = true;
 
-            pnlConteudo.Name =
-                "pnlConteudo";
+            this.btnNovo.BorderRadius = 7;
 
-            pnlConteudo.Size =
-                new System.Drawing.Size(1050, 580);
+            this.btnNovo.FillColor =
+                Color.FromArgb(198, 124, 99);
 
+            this.btnNovo.Font =
+                new Font(
+                    "Segoe UI Semibold",
+                    9F,
+                    FontStyle.Bold);
 
-            // =====================================================
-            // PAINEL PESQUISA
-            // =====================================================
+            this.btnNovo.ForeColor =
+                Color.White;
 
-            pnlPesquisa.Anchor =
-                System.Windows.Forms.AnchorStyles.Top |
-                System.Windows.Forms.AnchorStyles.Left |
-                System.Windows.Forms.AnchorStyles.Right;
+            this.btnNovo.HoverState.FillColor =
+                Color.FromArgb(178, 105, 83);
 
-            pnlPesquisa.BackColor =
-                System.Drawing.Color.FromArgb(248, 247, 246);
+            this.btnNovo.Location =
+                new Point(930, 28);
 
-            pnlPesquisa.Location =
-                new System.Drawing.Point(8, 8);
-
-            pnlPesquisa.Name =
-                "pnlPesquisa";
-
-            pnlPesquisa.Size =
-                new System.Drawing.Size(1034, 75);
-
-
-            // =====================================================
-            // TEXTBOX PESQUISA
-            // =====================================================
-
-            txtPesquisa.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    10F);
-
-            txtPesquisa.Location =
-                new System.Drawing.Point(10, 20);
-
-            txtPesquisa.Name =
-                "txtPesquisa";
-
-            txtPesquisa.PlaceholderText =
-                "Buscar doce...";
-
-            txtPesquisa.Size =
-                new System.Drawing.Size(400, 25);
-
-            txtPesquisa.TextChanged +=
-                new System.EventHandler(
-                    txtPesquisa_TextChanged);
-
-
-            // =====================================================
-            // BOTÃO PESQUISAR
-            // =====================================================
-
-            btnPesquisar.BackColor =
-                System.Drawing.Color.FromArgb(180, 108, 75);
-
-            btnPesquisar.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            btnPesquisar.ForeColor =
-                System.Drawing.Color.White;
-
-            btnPesquisar.Location =
-                new System.Drawing.Point(420, 18);
-
-            btnPesquisar.Name =
-                "btnPesquisar";
-
-            btnPesquisar.Size =
-                new System.Drawing.Size(90, 30);
-
-            btnPesquisar.Text =
-                "Buscar";
-
-            btnPesquisar.UseVisualStyleBackColor =
-                false;
-
-            btnPesquisar.Click +=
-                new System.EventHandler(
-                    btnPesquisar_Click);
-
-
-            // =====================================================
-            // BOTÃO ATUALIZAR
-            // =====================================================
-
-            btnAtualizar.Anchor =
-                System.Windows.Forms.AnchorStyles.Top |
-                System.Windows.Forms.AnchorStyles.Right;
-
-            btnAtualizar.BackColor =
-                System.Drawing.Color.FromArgb(100, 100, 100);
-
-            btnAtualizar.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            btnAtualizar.ForeColor =
-                System.Drawing.Color.White;
-
-            btnAtualizar.Location =
-                new System.Drawing.Point(800, 18);
-
-            btnAtualizar.Name =
-                "btnAtualizar";
-
-            btnAtualizar.Size =
-                new System.Drawing.Size(100, 30);
-
-            btnAtualizar.Text =
-                "Atualizar";
-
-            btnAtualizar.UseVisualStyleBackColor =
-                false;
-
-            btnAtualizar.Click +=
-                new System.EventHandler(
-                    btnAtualizar_Click);
-
-
-            // =====================================================
-            // BOTÃO NOVO
-            // =====================================================
-
-            btnNovo.Anchor =
-                System.Windows.Forms.AnchorStyles.Top |
-                System.Windows.Forms.AnchorStyles.Right;
-
-            btnNovo.BackColor =
-                System.Drawing.Color.FromArgb(180, 108, 75);
-
-            btnNovo.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            btnNovo.ForeColor =
-                System.Drawing.Color.White;
-
-            btnNovo.Location =
-                new System.Drawing.Point(910, 18);
-
-            btnNovo.Name =
+            this.btnNovo.Name =
                 "btnNovo";
 
-            btnNovo.Size =
-                new System.Drawing.Size(110, 30);
+            this.btnNovo.Size =
+                new Size(117, 38);
 
-            btnNovo.Text =
-                "+ Novo Doce";
+            this.btnNovo.TabIndex =
+                2;
 
-            btnNovo.UseVisualStyleBackColor =
+            this.btnNovo.Text =
+                "+  Novo Doce";
+
+            this.btnNovo.UseTransparentBackground =
                 false;
 
-            btnNovo.Click +=
-                new System.EventHandler(
-                    btnNovo_Click);
+            this.btnNovo.Click +=
+                new EventHandler(this.btnNovo_Click);
 
+            // ============================================================
+            // btnAtualizar
+            // ============================================================
 
-            // Adiciona controles da pesquisa
+            this.btnAtualizar.Anchor =
+                AnchorStyles.Top | AnchorStyles.Right;
 
-            pnlPesquisa.Controls.Add(txtPesquisa);
-            pnlPesquisa.Controls.Add(btnPesquisar);
-            pnlPesquisa.Controls.Add(btnAtualizar);
-            pnlPesquisa.Controls.Add(btnNovo);
+            this.btnAtualizar.Animated = true;
 
+            this.btnAtualizar.BorderRadius = 7;
 
-            // =====================================================
-            // GRID
-            // =====================================================
+            this.btnAtualizar.FillColor =
+                Color.FromArgb(101, 97, 94);
 
-            gridBanco.AllowUserToAddRows = false;
+            this.btnAtualizar.Font =
+                new Font(
+                    "Segoe UI Semibold",
+                    8.5F,
+                    FontStyle.Bold);
 
-            gridBanco.AllowUserToDeleteRows = false;
+            this.btnAtualizar.ForeColor =
+                Color.White;
 
-            gridBanco.AllowUserToResizeRows = false;
+            this.btnAtualizar.HoverState.FillColor =
+                Color.FromArgb(81, 77, 74);
 
-            gridBanco.Anchor =
-                System.Windows.Forms.AnchorStyles.Top |
-                System.Windows.Forms.AnchorStyles.Bottom |
-                System.Windows.Forms.AnchorStyles.Left |
-                System.Windows.Forms.AnchorStyles.Right;
+            this.btnAtualizar.Location =
+                new Point(806, 28);
 
-            gridBanco.AutoSizeColumnsMode =
-                System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.btnAtualizar.Name =
+                "btnAtualizar";
 
-            gridBanco.BackgroundColor =
-                System.Drawing.Color.White;
+            this.btnAtualizar.Size =
+                new Size(112, 38);
 
-            gridBanco.BorderStyle =
-                System.Windows.Forms.BorderStyle.None;
+            this.btnAtualizar.TabIndex =
+                3;
 
-            gridBanco.ColumnHeadersHeight = 40;
+            this.btnAtualizar.Text =
+                "↻  Atualizar";
 
-            gridBanco.ColumnHeadersHeightSizeMode =
-                System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.btnAtualizar.Click +=
+                new EventHandler(this.btnAtualizar_Click);
 
-            gridBanco.EnableHeadersVisualStyles = false;
+            // ============================================================
+            // pnlFiltros
+            // ============================================================
 
-            gridBanco.GridColor =
-                System.Drawing.Color.FromArgb(230, 225, 220);
+            this.pnlFiltros.BackColor =
+                Color.White;
 
-            gridBanco.Location =
-                new System.Drawing.Point(8, 90);
+            this.pnlFiltros.BorderColor =
+                Color.FromArgb(235, 227, 222);
 
-            gridBanco.MultiSelect = false;
+            this.pnlFiltros.BorderRadius =
+                10;
 
-            gridBanco.Name =
-                "gridBanco";
+            this.pnlFiltros.FillColor =
+                Color.White;
 
-            gridBanco.ReadOnly = true;
+            this.pnlFiltros.Location =
+                new Point(28, 92);
 
-            gridBanco.RowHeadersVisible = false;
+            this.pnlFiltros.Name =
+                "pnlFiltros";
 
-            gridBanco.RowTemplate.Height = 65;
+            this.pnlFiltros.Size =
+                new Size(1019, 60);
 
-            gridBanco.SelectionMode =
-                System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.pnlFiltros.TabIndex =
+                4;
 
-            gridBanco.Size =
-                new System.Drawing.Size(1034, 440);
+            // ============================================================
+            // txtPesquisa
+            // ============================================================
 
+            this.txtPesquisa.BorderColor =
+                Color.FromArgb(224, 214, 208);
 
-            // =====================================================
-            // COLUNA IMAGEM
-            // =====================================================
+            this.txtPesquisa.BorderRadius =
+                7;
 
-            colImagem.HeaderText = "";
+            this.txtPesquisa.Cursor =
+                Cursors.IBeam;
 
-            colImagem.ImageLayout =
-                System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.txtPesquisa.DefaultText =
+                "";
 
-            colImagem.Name =
-                "colImagem";
+            this.txtPesquisa.DisabledState.BorderColor =
+                Color.FromArgb(208, 208, 208);
 
-            colImagem.ReadOnly = true;
+            this.txtPesquisa.DisabledState.FillColor =
+                Color.FromArgb(226, 226, 226);
 
-            colImagem.FillWeight = 40;
+            this.txtPesquisa.DisabledState.ForeColor =
+                Color.FromArgb(138, 138, 138);
 
+            this.txtPesquisa.DisabledState.PlaceholderForeColor =
+                Color.FromArgb(138, 138, 138);
 
-            // =====================================================
-            // ID
-            // =====================================================
+            this.txtPesquisa.FillColor =
+                Color.FromArgb(250, 248, 246);
 
-            colId.HeaderText = "ID";
+            this.txtPesquisa.FocusedState.BorderColor =
+                Color.FromArgb(198, 124, 99);
 
-            colId.Name =
-                "colId";
-
-            colId.Visible = false;
-
-
-            // =====================================================
-            // PRODUTO
-            // =====================================================
-
-            colProduto.HeaderText =
-                "PRODUTO";
-
-            colProduto.Name =
-                "colProduto";
-
-            colProduto.ReadOnly = true;
-
-            colProduto.FillWeight = 140;
-
-
-            // =====================================================
-            // CATEGORIA
-            // =====================================================
-
-            colCategoria.HeaderText =
-                "CATEGORIA";
-
-            colCategoria.Name =
-                "colCategoria";
-
-            colCategoria.ReadOnly = true;
-
-            colCategoria.FillWeight = 100;
-
-
-            // =====================================================
-            // PREÇO
-            // =====================================================
-
-            colPreco.HeaderText =
-                "PREÇO";
-
-            colPreco.Name =
-                "colPreco";
-
-            colPreco.ReadOnly = true;
-
-            colPreco.FillWeight = 70;
-
-
-            // =====================================================
-            // ESTOQUE
-            // =====================================================
-
-            colEstoque.HeaderText =
-                "ESTOQUE";
-
-            colEstoque.Name =
-                "colEstoque";
-
-            colEstoque.ReadOnly = true;
-
-            colEstoque.FillWeight = 70;
-
-
-            // =====================================================
-            // STATUS
-            // =====================================================
-
-            colStatus.HeaderText =
-                "STATUS";
-
-            colStatus.Name =
-                "colStatus";
-
-            colStatus.ReadOnly = true;
-
-            colStatus.FillWeight = 80;
-
-
-            // =====================================================
-            // EDITAR
-            // =====================================================
-
-            colEditar.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            colEditar.HeaderText =
-                "EDITAR";
-
-            colEditar.Name =
-                "colEditar";
-
-            colEditar.ReadOnly = true;
-
-            colEditar.Text =
-                "Editar";
-
-            colEditar.UseColumnTextForButtonValue =
-                true;
-
-            colEditar.FillWeight = 65;
-
-
-            // =====================================================
-            // EXCLUIR
-            // =====================================================
-
-            colExcluir.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            colExcluir.HeaderText =
-                "EXCLUIR";
-
-            colExcluir.Name =
-                "colExcluir";
-
-            colExcluir.ReadOnly = true;
-
-            colExcluir.Text =
-                "Excluir";
-
-            colExcluir.UseColumnTextForButtonValue =
-                true;
-
-            colExcluir.FillWeight = 65;
-
-
-            // =====================================================
-            // ADICIONAR COLUNAS
-            // =====================================================
-
-            gridBanco.Columns.AddRange(
-                new System.Windows.Forms.DataGridViewColumn[]
-                {
-                    colImagem,
-                    colId,
-                    colProduto,
-                    colCategoria,
-                    colPreco,
-                    colEstoque,
-                    colStatus,
-                    colEditar,
-                    colExcluir
-                });
-
-
-            gridBanco.CellContentClick +=
-                new System.Windows.Forms.DataGridViewCellEventHandler(
-                    gridBanco_CellContentClick);
-
-
-            // =====================================================
-            // RESULTADOS
-            // =====================================================
-
-            lblResultados.Anchor =
-                System.Windows.Forms.AnchorStyles.Bottom |
-                System.Windows.Forms.AnchorStyles.Left;
-
-            lblResultados.AutoSize = true;
-
-            lblResultados.Font =
-                new System.Drawing.Font(
+            this.txtPesquisa.Font =
+                new Font(
                     "Segoe UI",
                     9F);
 
-            lblResultados.ForeColor =
-                System.Drawing.Color.Gray;
+            this.txtPesquisa.ForeColor =
+                Color.FromArgb(72, 57, 49);
 
-            lblResultados.Location =
-                new System.Drawing.Point(10, 545);
+            this.txtPesquisa.HoverState.BorderColor =
+                Color.FromArgb(210, 170, 156);
 
-            lblResultados.Name =
+            this.txtPesquisa.Location =
+                new Point(12, 11);
+
+            this.txtPesquisa.Margin =
+                new Padding(3, 4, 3, 4);
+
+            this.txtPesquisa.Name =
+                "txtPesquisa";
+
+            this.txtPesquisa.PlaceholderText =
+                "Buscar por nome ou categoria...";
+
+            this.txtPesquisa.SelectedText =
+                "";
+
+            this.txtPesquisa.Size =
+                new Size(720, 38);
+
+            this.txtPesquisa.TabIndex =
+                5;
+
+            this.txtPesquisa.TextChanged +=
+                new EventHandler(this.txtPesquisa_TextChanged);
+
+            // ============================================================
+            // btnPesquisar
+            // ============================================================
+
+            this.btnPesquisar.Animated =
+                true;
+
+            this.btnPesquisar.BorderRadius =
+                7;
+
+            this.btnPesquisar.FillColor =
+                Color.FromArgb(198, 124, 99);
+
+            this.btnPesquisar.Font =
+                new Font(
+                    "Segoe UI Semibold",
+                    8.5F,
+                    FontStyle.Bold);
+
+            this.btnPesquisar.ForeColor =
+                Color.White;
+
+            this.btnPesquisar.HoverState.FillColor =
+                Color.FromArgb(178, 105, 83);
+
+            this.btnPesquisar.Location =
+                new Point(744, 11);
+
+            this.btnPesquisar.Name =
+                "btnPesquisar";
+
+            this.btnPesquisar.Size =
+                new Size(110, 38);
+
+            this.btnPesquisar.TabIndex =
+                6;
+
+            this.btnPesquisar.Text =
+                "Buscar";
+
+            this.btnPesquisar.Click +=
+                new EventHandler(this.btnPesquisar_Click);
+
+            // ============================================================
+            // btnEditar
+            // ============================================================
+
+            this.btnEditar.Anchor =
+                AnchorStyles.Top | AnchorStyles.Left;
+
+            this.btnEditar.Animated =
+                true;
+
+            this.btnEditar.BorderRadius =
+                7;
+
+            this.btnEditar.FillColor =
+                Color.FromArgb(198, 124, 99);
+
+            this.btnEditar.Font =
+                new Font(
+                    "Segoe UI Semibold",
+                    8.5F,
+                    FontStyle.Bold);
+
+            this.btnEditar.ForeColor =
+                Color.White;
+
+            this.btnEditar.HoverState.FillColor =
+                Color.FromArgb(178, 105, 83);
+
+            this.btnEditar.Location =
+                new Point(28, 119);
+
+            this.btnEditar.Name =
+                "btnEditar";
+
+            this.btnEditar.Size =
+                new Size(105, 36);
+
+            this.btnEditar.TabIndex =
+                7;
+
+            this.btnEditar.Text =
+                "✎  Editar";
+
+            this.btnEditar.Click +=
+                new EventHandler(this.btnEditar_Click);
+
+            // ============================================================
+            // btnExcluir
+            // ============================================================
+
+            this.btnExcluir.Anchor =
+                AnchorStyles.Top | AnchorStyles.Left;
+
+            this.btnExcluir.Animated =
+                true;
+
+            this.btnExcluir.BorderRadius =
+                7;
+
+            this.btnExcluir.FillColor =
+                Color.FromArgb(229, 219, 213);
+
+            this.btnExcluir.Font =
+                new Font(
+                    "Segoe UI Semibold",
+                    8.5F,
+                    FontStyle.Bold);
+
+            this.btnExcluir.ForeColor =
+                Color.FromArgb(126, 72, 56);
+
+            this.btnExcluir.HoverState.FillColor =
+                Color.FromArgb(216, 203, 196);
+
+            this.btnExcluir.Location =
+                new Point(141, 119);
+
+            this.btnExcluir.Name =
+                "btnExcluir";
+
+            this.btnExcluir.Size =
+                new Size(105, 36);
+
+            this.btnExcluir.TabIndex =
+                8;
+
+            this.btnExcluir.Text =
+                "⌫  Excluir";
+
+            this.btnExcluir.Click +=
+                new EventHandler(this.btnExcluir_Click);
+
+            // ============================================================
+            // lblResultados
+            // ============================================================
+
+            this.lblResultados.AutoSize =
+                true;
+
+            this.lblResultados.BackColor =
+                Color.Transparent;
+
+            this.lblResultados.Font =
+                new Font(
+                    "Segoe UI",
+                    8.5F);
+
+            this.lblResultados.ForeColor =
+                Color.FromArgb(150, 134, 125);
+
+            this.lblResultados.Location =
+                new Point(258, 130);
+
+            this.lblResultados.Name =
                 "lblResultados";
 
-            lblResultados.Text =
+            this.lblResultados.Size =
+                new Size(62, 15);
+
+            this.lblResultados.TabIndex =
+                9;
+
+            this.lblResultados.Text =
                 "0 resultados";
 
+            // ============================================================
+            // pnlTabela
+            // ============================================================
 
-            // =====================================================
-            // ADICIONAR AO PAINEL
-            // =====================================================
+            this.pnlTabela.BackColor =
+                Color.White;
 
-            pnlConteudo.Controls.Add(pnlPesquisa);
-            pnlConteudo.Controls.Add(gridBanco);
-            pnlConteudo.Controls.Add(lblResultados);
+            this.pnlTabela.BorderRadius =
+                10;
 
+            this.pnlTabela.FillColor =
+                Color.White;
 
-            // =====================================================
-            // USER CONTROL
-            // =====================================================
+            this.pnlTabela.Location =
+                new Point(28, 166);
 
-            AutoScaleMode =
-                System.Windows.Forms.AutoScaleMode.Font;
+            this.pnlTabela.Name =
+                "pnlTabela";
 
-            BackColor =
-                System.Drawing.Color.FromArgb(245, 243, 241);
+            this.pnlTabela.Size =
+                new Size(1019, 515);
 
-            Controls.Add(lblTitulo);
-            Controls.Add(lblQuantidade);
-            Controls.Add(pnlConteudo);
+            this.pnlTabela.TabIndex =
+                10;
 
-            Name =
+            // ============================================================
+            // gridBanco
+            // ============================================================
+
+            this.gridBanco.AllowUserToAddRows =
+                false;
+
+            this.gridBanco.AllowUserToDeleteRows =
+                false;
+
+            this.gridBanco.AllowUserToResizeRows =
+                false;
+
+            this.gridBanco.AutoGenerateColumns =
+                false;
+
+            this.gridBanco.AutoSizeColumnsMode =
+                DataGridViewAutoSizeColumnsMode.Fill;
+
+            this.gridBanco.BackgroundColor =
+                Color.White;
+
+            this.gridBanco.BorderStyle =
+                BorderStyle.None;
+
+            this.gridBanco.CellBorderStyle =
+                DataGridViewCellBorderStyle.SingleHorizontal;
+
+            this.gridBanco.ColumnHeadersBorderStyle =
+                DataGridViewHeaderBorderStyle.None;
+
+            this.gridBanco.ColumnHeadersHeight =
+                42;
+
+            this.gridBanco.EnableHeadersVisualStyles =
+                false;
+
+            this.gridBanco.GridColor =
+                Color.FromArgb(236, 228, 223);
+
+            this.gridBanco.Location =
+                new Point(8, 8);
+
+            this.gridBanco.MultiSelect =
+                false;
+
+            this.gridBanco.Name =
+                "gridBanco";
+
+            this.gridBanco.ReadOnly =
+                true;
+
+            this.gridBanco.RowHeadersVisible =
+                false;
+
+            this.gridBanco.RowTemplate.Height =
+                48;
+
+            this.gridBanco.SelectionMode =
+                DataGridViewSelectionMode.FullRowSelect;
+
+            this.gridBanco.Size =
+                new Size(1003, 499);
+
+            this.gridBanco.TabIndex =
+                11;
+
+            // ============================================================
+            // ESTILO CABEÇALHO
+            // ============================================================
+
+            DataGridViewCellStyle headerStyle =
+                new DataGridViewCellStyle();
+
+            headerStyle.Alignment =
+                DataGridViewContentAlignment.MiddleLeft;
+
+            headerStyle.BackColor =
+                Color.FromArgb(250, 247, 245);
+
+            headerStyle.Font =
+                new Font(
+                    "Segoe UI Semibold",
+                    8.5F,
+                    FontStyle.Bold);
+
+            headerStyle.ForeColor =
+                Color.FromArgb(110, 92, 82);
+
+            headerStyle.SelectionBackColor =
+                Color.FromArgb(250, 247, 245);
+
+            headerStyle.SelectionForeColor =
+                Color.FromArgb(110, 92, 82);
+
+            headerStyle.Padding =
+                new Padding(10, 0, 6, 0);
+
+            this.gridBanco.ColumnHeadersDefaultCellStyle =
+                headerStyle;
+
+            // ============================================================
+            // ESTILO DAS LINHAS
+            // ============================================================
+
+            DataGridViewCellStyle rowStyle =
+                new DataGridViewCellStyle();
+
+            rowStyle.Alignment =
+                DataGridViewContentAlignment.MiddleLeft;
+
+            rowStyle.BackColor =
+                Color.White;
+
+            rowStyle.Font =
+                new Font(
+                    "Segoe UI",
+                    8.5F);
+
+            rowStyle.ForeColor =
+                Color.FromArgb(65, 50, 43);
+
+            rowStyle.SelectionBackColor =
+                Color.FromArgb(249, 235, 229);
+
+            rowStyle.SelectionForeColor =
+                Color.FromArgb(65, 50, 43);
+
+            rowStyle.Padding =
+                new Padding(10, 0, 6, 0);
+
+            this.gridBanco.DefaultCellStyle =
+                rowStyle;
+
+            // ============================================================
+            // LINHAS ALTERNADAS
+            // ============================================================
+
+            DataGridViewCellStyle alternateStyle =
+                new DataGridViewCellStyle();
+
+            alternateStyle.BackColor =
+                Color.FromArgb(253, 250, 248);
+
+            alternateStyle.SelectionBackColor =
+                Color.FromArgb(249, 235, 229);
+
+            alternateStyle.SelectionForeColor =
+                Color.FromArgb(65, 50, 43);
+
+            this.gridBanco.AlternatingRowsDefaultCellStyle =
+                alternateStyle;
+
+            // ============================================================
+            // COLUNA ID
+            // ============================================================
+
+            this.colId.HeaderText =
+                "ID";
+
+            this.colId.Name =
+                "colId";
+
+            this.colId.ReadOnly =
+                true;
+
+            this.colId.FillWeight =
+                42;
+
+            this.colId.MinimumWidth =
+                45;
+
+            // ============================================================
+            // COLUNA PRODUTO
+            // ============================================================
+
+            this.colTitle.HeaderText =
+                "PRODUTO";
+
+            this.colTitle.Name =
+                "colTitle";
+
+            this.colTitle.ReadOnly =
+                true;
+
+            this.colTitle.FillWeight =
+                150;
+
+            this.colTitle.MinimumWidth =
+                140;
+
+            // ============================================================
+            // COLUNA CATEGORIA
+            // ============================================================
+
+            this.colCategoryId.HeaderText =
+                "CATEGORIA";
+
+            this.colCategoryId.Name =
+                "colCategoryId";
+
+            this.colCategoryId.ReadOnly =
+                true;
+
+            this.colCategoryId.FillWeight =
+                105;
+
+            this.colCategoryId.MinimumWidth =
+                100;
+
+            // ============================================================
+            // COLUNA PREÇO
+            // ============================================================
+
+            this.colPreco.HeaderText =
+                "PREÇO";
+
+            this.colPreco.Name =
+                "colPreco";
+
+            this.colPreco.ReadOnly =
+                true;
+
+            this.colPreco.FillWeight =
+                75;
+
+            this.colPreco.MinimumWidth =
+                80;
+
+            // ============================================================
+            // COLUNA ESTOQUE
+            // ============================================================
+
+            this.colEstoque.HeaderText =
+                "ESTOQUE";
+
+            this.colEstoque.Name =
+                "colEstoque";
+
+            this.colEstoque.ReadOnly =
+                true;
+
+            this.colEstoque.FillWeight =
+                85;
+
+            this.colEstoque.MinimumWidth =
+                90;
+
+            // ============================================================
+            // COLUNA STATUS
+            // ============================================================
+
+            this.colStatus.HeaderText =
+                "STATUS";
+
+            this.colStatus.Name =
+                "colStatus";
+
+            this.colStatus.ReadOnly =
+                true;
+
+            this.colStatus.FillWeight =
+                75;
+
+            this.colStatus.MinimumWidth =
+                80;
+
+            // ============================================================
+            // COLUNA DESTAQUE
+            // ============================================================
+
+            this.colIsFeatured.HeaderText =
+                "DESTAQUE";
+
+            this.colIsFeatured.Name =
+                "colIsFeatured";
+
+            this.colIsFeatured.ReadOnly =
+                true;
+
+            this.colIsFeatured.FillWeight =
+                75;
+
+            this.colIsFeatured.MinimumWidth =
+                80;
+
+            // ============================================================
+            // COLUNA DATA
+            // ============================================================
+
+            this.colData.HeaderText =
+                "CADASTRO";
+
+            this.colData.Name =
+                "colData";
+
+            this.colData.ReadOnly =
+                true;
+
+            this.colData.FillWeight =
+                85;
+
+            this.colData.MinimumWidth =
+                90;
+
+            // ============================================================
+            // ADICIONAR COLUNAS
+            // ============================================================
+
+            this.gridBanco.Columns.AddRange(
+                new DataGridViewColumn[]
+                {
+                    this.colId,
+                    this.colTitle,
+                    this.colCategoryId,
+                    this.colPreco,
+                    this.colEstoque,
+                    this.colStatus,
+                    this.colIsFeatured,
+                    this.colData
+                });
+
+            // ============================================================
+            // ADICIONAR CONTROLES AO PAINEL PRINCIPAL
+            // ============================================================
+
+            this.pnlTabela.Controls.Add(
+                this.gridBanco);
+
+            this.pnlFiltros.Controls.Add(
+                this.txtPesquisa);
+
+            this.pnlFiltros.Controls.Add(
+                this.btnPesquisar);
+
+            this.pnlPrincipal.Controls.Add(
+                this.pnlTabela);
+
+            this.pnlPrincipal.Controls.Add(
+                this.lblResultados);
+
+            this.pnlPrincipal.Controls.Add(
+                this.pnlFiltros);
+
+            this.pnlPrincipal.Controls.Add(
+                this.btnExcluir);
+
+            this.pnlPrincipal.Controls.Add(
+                this.btnEditar);
+
+            this.pnlPrincipal.Controls.Add(
+                this.btnAtualizar);
+
+            this.pnlPrincipal.Controls.Add(
+                this.btnNovo);
+
+            this.pnlPrincipal.Controls.Add(
+                this.lblSubtitulo);
+
+            this.pnlPrincipal.Controls.Add(
+                this.lblTitulo);
+
+            // ============================================================
+            // DOCE USER CONTROL
+            // ============================================================
+
+            this.AutoScaleDimensions =
+                new SizeF(7F, 15F);
+
+            this.AutoScaleMode =
+                AutoScaleMode.Font;
+
+            this.BackColor =
+                Color.FromArgb(247, 243, 240);
+
+            this.Controls.Add(
+                this.pnlPrincipal);
+
+            this.Name =
                 "DoceUserControl";
 
-            Size =
-                new System.Drawing.Size(1100, 710);
+            this.Size =
+                new Size(1075, 720);
 
+            this.Load +=
+                new EventHandler(this.DoceUserControl_Load);
 
-            pnlConteudo.ResumeLayout(false);
-            pnlConteudo.PerformLayout();
+            // ============================================================
+            // FINALIZAÇÃO
+            // ============================================================
 
-            pnlPesquisa.ResumeLayout(false);
-            pnlPesquisa.PerformLayout();
+            this.pnlTabela.ResumeLayout(false);
+            this.pnlFiltros.ResumeLayout(false);
 
-            ((System.ComponentModel.ISupportInitialize)(gridBanco))
-                .EndInit();
+            ((System.ComponentModel.ISupportInitialize)
+                (this.gridBanco)).EndInit();
 
-            ResumeLayout(false);
-            PerformLayout();
+            this.pnlPrincipal.ResumeLayout(false);
+            this.pnlPrincipal.PerformLayout();
+
+            this.ResumeLayout(false);
         }
 
-        #endregion
+        // ================================================================
+        // CONTROLES
+        // ================================================================
+
+        private Guna.UI2.WinForms.Guna2Panel pnlPrincipal;
+
+        private Guna.UI2.WinForms.Guna2Panel pnlFiltros;
+
+        private Guna.UI2.WinForms.Guna2Panel pnlTabela;
+
+        private Label lblTitulo;
+
+        private Label lblSubtitulo;
+
+        private Label lblResultados;
+
+        private Guna.UI2.WinForms.Guna2TextBox txtPesquisa;
+
+        private Guna.UI2.WinForms.Guna2Button btnPesquisar;
+
+        private Guna.UI2.WinForms.Guna2Button btnNovo;
+
+        private Guna.UI2.WinForms.Guna2Button btnAtualizar;
+
+        private Guna.UI2.WinForms.Guna2Button btnEditar;
+
+        private Guna.UI2.WinForms.Guna2Button btnExcluir;
+
+        private DataGridView gridBanco;
+
+        private DataGridViewTextBoxColumn colId;
+
+        private DataGridViewTextBoxColumn colTitle;
+
+        private DataGridViewTextBoxColumn colCategoryId;
+
+        private DataGridViewTextBoxColumn colPreco;
+
+        private DataGridViewTextBoxColumn colEstoque;
+
+        private DataGridViewTextBoxColumn colStatus;
+
+        private DataGridViewTextBoxColumn colIsFeatured;
+
+        private DataGridViewTextBoxColumn colData;
     }
 }
+

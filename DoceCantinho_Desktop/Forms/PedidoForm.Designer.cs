@@ -38,6 +38,9 @@
         private System.Windows.Forms.Label lblTotalTexto;
         private System.Windows.Forms.Label lblTotal;
 
+        private System.Windows.Forms.Label lblStatusPedido;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbStatusPedido;
+
         private Guna.UI2.WinForms.Guna2Button btnCancelar;
         private Guna.UI2.WinForms.Guna2Button btnSalvar;
 
@@ -112,6 +115,8 @@
             pnlResumo = new Guna.UI2.WinForms.Guna2Panel();
             lblTotalTexto = new Label();
             lblTotal = new Label();
+            lblStatusPedido = new Label();
+            cmbStatusPedido = new Guna.UI2.WinForms.Guna2ComboBox();
             btnCancelar = new Guna.UI2.WinForms.Guna2Button();
             btnSalvar = new Guna.UI2.WinForms.Guna2Button();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
@@ -156,7 +161,7 @@
             BtnFechar.Size = new Size(55, 38);
             BtnFechar.TabIndex = 4;
             BtnFechar.Text = "X";
-            BtnFechar.Click += BtnFechar_Click_1;
+            BtnFechar.Click += BtnFechar_Click;
             // 
             // lblTitulo
             // 
@@ -523,6 +528,8 @@
             pnlResumo.BorderRadius = 18;
             pnlResumo.Controls.Add(lblTotalTexto);
             pnlResumo.Controls.Add(lblTotal);
+            pnlResumo.Controls.Add(lblStatusPedido);
+            pnlResumo.Controls.Add(cmbStatusPedido);
             pnlResumo.Controls.Add(btnCancelar);
             pnlResumo.Controls.Add(btnSalvar);
             pnlResumo.CustomizableEdges = customizableEdges29;
@@ -555,6 +562,36 @@
             lblTotal.Size = new Size(120, 41);
             lblTotal.TabIndex = 1;
             lblTotal.Text = "R$ 0,00";
+            // 
+            // lblStatusPedido
+            // 
+            lblStatusPedido.AutoSize = true;
+            lblStatusPedido.Font = new Font("Segoe UI Semibold", 8.5F, FontStyle.Bold);
+            lblStatusPedido.ForeColor = Color.FromArgb(100, 85, 80);
+            lblStatusPedido.Location = new Point(390, 16);
+            lblStatusPedido.Name = "lblStatusPedido";
+            lblStatusPedido.Size = new Size(96, 19);
+            lblStatusPedido.TabIndex = 2;
+            lblStatusPedido.Text = "Status do pedido";
+
+            // 
+            // cmbStatusPedido
+            // 
+            cmbStatusPedido.BackColor = Color.Transparent;
+            cmbStatusPedido.BorderColor = Color.FromArgb(224, 213, 207);
+            cmbStatusPedido.BorderRadius = 9;
+            cmbStatusPedido.DrawMode = DrawMode.OwnerDrawFixed;
+            cmbStatusPedido.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbStatusPedido.FocusedColor = Color.FromArgb(201, 130, 107);
+            cmbStatusPedido.FocusedState.BorderColor = Color.FromArgb(201, 130, 107);
+            cmbStatusPedido.Font = new Font("Segoe UI", 9F);
+            cmbStatusPedido.ForeColor = Color.FromArgb(65, 50, 45);
+            cmbStatusPedido.ItemHeight = 28;
+            cmbStatusPedido.Location = new Point(387, 38);
+            cmbStatusPedido.Name = "cmbStatusPedido";
+            cmbStatusPedido.Size = new Size(190, 36);
+            cmbStatusPedido.TabIndex = 3;
+
             // 
             // btnCancelar
             // 

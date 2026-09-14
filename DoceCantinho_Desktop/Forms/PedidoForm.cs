@@ -4,6 +4,7 @@ using DoceCantinho.Desktop.Services;
 using Guna.UI2.WinForms;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -114,6 +115,18 @@ namespace DoceCantinho.Desktop1.Forms
             dgvItens.MultiSelect = false;
             dgvItens.SelectionMode =
                 DataGridViewSelectionMode.FullRowSelect;
+
+            cmbStatusPedido.Items.Clear();
+            cmbStatusPedido.Items.AddRange(new object[]
+            {
+                "Pendente",
+                "Pronto",
+                "Entregue",
+                "Cancelado"
+            });
+
+            cmbStatusPedido.SelectedIndex = 0;
+            cmbStatusPedido.Cursor = Cursors.Hand;
         }
 
 
@@ -309,7 +322,9 @@ namespace DoceCantinho.Desktop1.Forms
                 $"Editar Pedido #{pedido.Id}";
 
             lblSubtitulo.Text =
-                "Atualize o cliente e os produtos deste pedido.";
+                "Atualize o cliente, os produtos e o status deste pedido.";
+
+            SelecionarStatus(pedido.Status);
 
             // ==========================================
             // LIMPAR GRID
@@ -807,6 +822,30 @@ namespace DoceCantinho.Desktop1.Forms
         }
 
         // ==========================================
+        // STATUS
+        // ==========================================
+        private void SelecionarStatus(string? status)
+        {
+            string valor = (status ?? "Pendente").Trim();
+
+            int index = -1;
+
+            for (int i = 0; i < cmbStatusPedido.Items.Count; i++)
+            {
+                if (string.Equals(
+                    cmbStatusPedido.Items[i]?.ToString(),
+                    valor,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            cmbStatusPedido.SelectedIndex = index >= 0 ? index : 0;
+        }
+
+        // ==========================================
         // SALVAR PEDIDO
         // ==========================================
         private async void btnSalvar_Click(
@@ -859,7 +898,11 @@ namespace DoceCantinho.Desktop1.Forms
                                 txtTelefone.Text.Trim(),
 
                             Endereco =
-                                txtEndereco.Text.Trim()
+                                txtEndereco.Text.Trim(),
+
+                            Status =
+                                cmbStatusPedido.SelectedItem?.ToString()
+                                ?? "Pendente"
                         };
 
                     foreach (DataGridViewRow row
@@ -959,6 +1002,10 @@ namespace DoceCantinho.Desktop1.Forms
 
                         Endereco =
                             txtEndereco.Text.Trim(),
+
+                        Status =
+                            cmbStatusPedido.SelectedItem?.ToString()
+                            ?? "Pendente",
 
                         Items =
                             new List<OrderItemRequest>()
@@ -1108,6 +1155,7 @@ namespace DoceCantinho.Desktop1.Forms
             public string NomeCliente { get; set; } = "";
             public string Telefone { get; set; } = "";
             public string Endereco { get; set; } = "";
+            public string Status { get; set; } = "Pendente";
             public List<OrderItemRequest> Items { get; set; } = new();
         }
 
@@ -1119,9 +1167,5 @@ namespace DoceCantinho.Desktop1.Forms
             public int Quantidade { get; set; }
         }
 
-        private void BtnFechar_Click_1(object sender, EventArgs e)
-        {
-            Close();
-        }
     }
 }

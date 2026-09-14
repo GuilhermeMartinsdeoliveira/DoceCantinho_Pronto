@@ -42,9 +42,7 @@
 
   <!-- Associação explícita dos recursos dos Forms -->
   <ItemGroup>
-    <Compile Update="Forms\PedidoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="Forms\PedidoForm.cs" />
 
     <Compile Update="Forms\PedidoForm.Designer.cs">
       <DependentUpon>PedidoForm.cs</DependentUpon>

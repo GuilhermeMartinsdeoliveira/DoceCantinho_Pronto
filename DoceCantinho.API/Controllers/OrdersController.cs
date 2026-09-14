@@ -33,6 +33,8 @@ namespace DoceCantinho.API.Controllers
 
             public string? Endereco { get; set; }
 
+            public string Status { get; set; } = "Pendente";
+
             public List<UpdateOrderItemDto> Items { get; set; } = new();
         }
 
@@ -74,7 +76,9 @@ namespace DoceCantinho.API.Controllers
 
             public string? Endereco { get; set; }
 
-            public List<OrderItemDto> Items { get; set; } = new();
+            public string Status { get; set; } = "Pendente";
+
+            public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
         }
 
         // ============================================================
@@ -114,7 +118,7 @@ namespace DoceCantinho.API.Controllers
                     Endereco = string.IsNullOrWhiteSpace(dto.Endereco)
                         ? null
                         : dto.Endereco.Trim(),
-                    Status = "Pendente",
+                    Status = NormalizarStatusPedido(dto.Status),
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -321,6 +325,7 @@ namespace DoceCantinho.API.Controllers
                     string.IsNullOrWhiteSpace(dto.Endereco)
                         ? null
                         : dto.Endereco.Trim();
+                pedido.Status = NormalizarStatusPedido(dto.Status);
 
                 // --------------------------------------------------------
                 // REMOVER ITENS ANTIGOS
@@ -643,6 +648,28 @@ namespace DoceCantinho.API.Controllers
                     message =
                         $"{pedidos.Count} pedidos atualizados com sucesso."
                 });
+        }
+
+        private static string NormalizarStatusPedido(string? status)
+        {
+            if (string.IsNullOrWhiteSpace(status))
+                return "Pendente";
+
+            string valor = status.Trim();
+
+            if (valor.Equals("Pendente", StringComparison.OrdinalIgnoreCase))
+                return "Pendente";
+
+            if (valor.Equals("Pronto", StringComparison.OrdinalIgnoreCase))
+                return "Pronto";
+
+            if (valor.Equals("Entregue", StringComparison.OrdinalIgnoreCase))
+                return "Entregue";
+
+            if (valor.Equals("Cancelado", StringComparison.OrdinalIgnoreCase))
+                return "Cancelado";
+
+            return "Pendente";
         }
     }
 }
