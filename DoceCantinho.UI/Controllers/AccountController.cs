@@ -11,14 +11,18 @@ namespace DoceCantinho.UI.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly EmailService _emailService;
+        private readonly IConfiguration _configuration;
+
         public AccountController(
-     UserManager<ApplicationUser> userManager,
-     SignInManager<ApplicationUser> signInManager,
-     EmailService emailService)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            EmailService emailService,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
+            _configuration = configuration;
         }
 
         // =====================================================
@@ -192,10 +196,9 @@ namespace DoceCantinho.UI.Controllers
             return View(dto);
         }
 
-
-        //=============================================
+        // =====================================================
         // ESQUECI MINHA SENHA
-        //=============================================
+        // =====================================================
 
         [HttpGet]
         public IActionResult ForgotPassword()
@@ -213,7 +216,8 @@ namespace DoceCantinho.UI.Controllers
                 return View();
             }
 
-            var user = await _userManager.FindByEmailAsync(email);
+            var user =
+                await _userManager.FindByEmailAsync(email);
 
             // Por segurança, não informamos se o e-mail existe ou não.
             if (user == null)
@@ -224,43 +228,54 @@ namespace DoceCantinho.UI.Controllers
                 return View();
             }
 
+            // =====================================================
+            // GERA O TOKEN DE RECUPERAÇÃO
+            // =====================================================
+
             var token =
-       await _userManager.GeneratePasswordResetTokenAsync(user);
+                await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // =====================================================
+            // PEGA O ENDEREÇO DO APPSETTINGS.JSON
+            // =====================================================
+
+            var appUrl =
+                _configuration["AppUrl"]?.TrimEnd('/');
+
+            if (string.IsNullOrWhiteSpace(appUrl))
+            {
+                ViewBag.Erro =
+                    "O endereço da aplicação não foi configurado.";
+
+                return View();
+            }
+
+            // =====================================================
+            // CRIA O LINK QUE SERÁ ENVIADO POR E-MAIL
+            // =====================================================
 
             var resetLink =
-                Url.Action(
-                    nameof(ResetPassword),
-                    "Account",
-                    new
-                    {
-                        email = user.Email,
-                        token = token
-                    },
-                    Request.Scheme);
+                $"{appUrl}/Account/ResetPassword" +
+                $"?email={Uri.EscapeDataString(user.Email!)}" +
+                $"&token={Uri.EscapeDataString(token)}";
+
+            // =====================================================
+            // ENVIA O E-MAIL
+            // =====================================================
 
             await _emailService.EnviarRecuperacaoSenhaAsync(
                 user.Email!,
-                resetLink!);
+                resetLink);
 
             ViewBag.Mensagem =
                 "Se existir uma conta com esse e-mail, enviaremos um link para redefinição da senha.";
 
             return View();
-
-            // TEMPORÁRIO:
-            // Aqui vamos chamar o serviço de e-mail.
-            // Não devemos colocar o token diretamente na tela em produção.
-
-            ViewBag.Mensagem =
-                "O link de recuperação foi gerado. Agora vamos configurar o envio por e-mail.";
-
-            return View();
         }
 
-
-        //=============================================
+        // =====================================================
         // REDEFINIR SENHA
-        //=============================================
+        // =====================================================
 
         [HttpGet]
         public IActionResult ResetPassword(
@@ -326,7 +341,7 @@ namespace DoceCantinho.UI.Controllers
             return View(dto);
         }
 
-        //=============================================
+        // =====================================================
         // LOGOUT
         // =====================================================
 

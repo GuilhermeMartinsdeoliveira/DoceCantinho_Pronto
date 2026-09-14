@@ -2065,4 +2065,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
     startTimer();
 
-});
+    }
+);

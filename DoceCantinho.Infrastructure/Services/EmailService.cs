@@ -17,10 +17,12 @@ namespace DoceCantinho.Infrastructure.Services
             string emailDestino,
             string linkRecuperacao)
         {
-            var host = _configuration["EmailSettings:Host"];
+            var host =
+                _configuration["EmailSettings:Host"];
 
-            var port = int.Parse(
-                _configuration["EmailSettings:Port"] ?? "587");
+            var port =
+                int.Parse(
+                    _configuration["EmailSettings:Port"] ?? "587");
 
             var usuario =
                 _configuration["EmailSettings:UserName"];
@@ -68,6 +70,10 @@ namespace DoceCantinho.Infrastructure.Services
         private string CriarEmailHtml(
             string linkRecuperacao)
         {
+            // Protege o endereço para ser usado dentro do HTML
+            var linkHtml =
+                WebUtility.HtmlEncode(linkRecuperacao);
+
             return $@"
 <!DOCTYPE html>
 
@@ -75,6 +81,8 @@ namespace DoceCantinho.Infrastructure.Services
 
 <head>
     <meta charset='UTF-8'>
+    <meta name='viewport'
+          content='width=device-width, initial-scale=1.0'>
 </head>
 
 <body style='
@@ -148,11 +156,12 @@ namespace DoceCantinho.Infrastructure.Services
 
         <div style='margin:30px 0;'>
 
-            <a href='{linkRecuperacao}'
+            <a href='{linkHtml}'
+               target='_blank'
                style='
                     display:inline-block;
                     background:#dda078;
-                    color:white;
+                    color:#ffffff;
                     text-decoration:none;
                     padding:15px 30px;
                     border-radius:8px;
@@ -163,6 +172,23 @@ namespace DoceCantinho.Infrastructure.Services
             </a>
 
         </div>
+
+        <p style='
+            color:#888;
+            font-size:13px;
+            line-height:1.5;
+        '>
+            Se o botão não funcionar, copie o endereço
+            abaixo e cole no navegador:
+        </p>
+
+        <p style='
+            color:#777;
+            font-size:12px;
+            word-break:break-all;
+        '>
+            {linkHtml}
+        </p>
 
         <p style='
             color:#888;
