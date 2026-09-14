@@ -3,40 +3,99 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DoceCantinho.Desktop.Forms
 {
     public partial class DoceFormDialog : Form
     {
+        // ============================================================
+        // PROPRIEDADES
+        // ============================================================
+
         public CreateDoceDto? DoceDto { get; private set; }
+
         public UpdateDoceDto? UpdateDto { get; private set; }
 
-        // Caminho da imagem selecionada no computador
         public string? ImagemArquivoPath { get; private set; }
 
-        // Imagem convertida para Base64
+        // ============================================================
+        // CAMPOS
+        // ============================================================
+
         private string? _imagemBase64;
 
         private bool _preenchendoCampos;
 
-        private List<CategoriaResponseDto> _categorias = new();
-        private DoceResponseDto? _doceExistente;
+        private readonly List<CategoriaResponseDto> _categorias;
+
+        private readonly DoceResponseDto? _doceExistente;
+
+        // ============================================================
+        // CONSTRUTOR - NOVO
+        // ============================================================
 
         public DoceFormDialog()
         {
+            _categorias = new List<CategoriaResponseDto>();
+            _doceExistente = null;
+
             InitializeComponent();
+
+            InicializarEventos();
         }
+
+        // ============================================================
+        // CONSTRUTOR - NOVO / EDITAR
+        // ============================================================
 
         public DoceFormDialog(
             List<CategoriaResponseDto> categorias,
-            DoceResponseDto? doce)
+            DoceResponseDto? doce = null)
         {
             _categorias = categorias ?? new List<CategoriaResponseDto>();
             _doceExistente = doce;
 
             InitializeComponent();
+
+            InicializarEventos();
+        }
+
+        // ============================================================
+        // EVENTOS
+        // ============================================================
+
+        private void InicializarEventos()
+        {
+            // LOAD
+            Load -= DoceFormDialog_Load;
+            Load += DoceFormDialog_Load;
+
+            // SELECIONAR IMAGEM DO COMPUTADOR
+            btnSelecionarImagem.Click -= btnSelecionarImagem_Click;
+            btnSelecionarImagem.Click += btnSelecionarImagem_Click;
+
+            // REMOVER IMAGEM
+            btnRemoverImagem.Click -= btnRemoverImagem_Click;
+            btnRemoverImagem.Click += btnRemoverImagem_Click;
+
+            // ADICIONAR IMAGEM POR URL
+            btnAdicionarImagemUrl.Click -= btnAdicionarImagemUrl_Click;
+            btnAdicionarImagemUrl.Click += btnAdicionarImagemUrl_Click;
+
+            // SALVAR
+            btnSalvar.Click -= btnSalvar_Click;
+            btnSalvar.Click += btnSalvar_Click;
+
+            // CANCELAR
+            btnCancelar.Click -= btnCancelar_Click;
+            btnCancelar.Click += btnCancelar_Click;
+
+            // URL
+            txtUrl.TextChanged -= TxtUrl_TextChanged;
+            txtUrl.TextChanged += TxtUrl_TextChanged;
         }
 
         // ============================================================
@@ -44,14 +103,23 @@ namespace DoceCantinho.Desktop.Forms
         // ============================================================
 
         private void DoceFormDialog_Load(
+<<<<<<< HEAD
      object sender,
      EventArgs e)
+=======
+            object? sender,
+            EventArgs e)
+>>>>>>> 22b1971931936c1a7cfa10fb5dc83a4e39f91250
         {
             if (DesignMode)
                 return;
 
+<<<<<<< HEAD
             bool editando =
                 _doceExistente != null;
+=======
+            bool editando = _doceExistente != null;
+>>>>>>> 22b1971931936c1a7cfa10fb5dc83a4e39f91250
 
             Text = editando
                 ? "Editar Doce"
@@ -61,12 +129,17 @@ namespace DoceCantinho.Desktop.Forms
                 ? "✏️ Editar Doce"
                 : "➕ Novo Doce";
 
+<<<<<<< HEAD
             lblSubtitulo.Text = editando
                 ? "Edite as informações deste doce"
                 : "Cadastre um novo produto no DoceCantinho";
 
             btnSalvar.Text = editando
                 ? "✓  Salvar Alterações"
+=======
+            btnSalvar.Text = editando
+                ? "✓  Salvar alterações"
+>>>>>>> 22b1971931936c1a7cfa10fb5dc83a4e39f91250
                 : "✓  Salvar Doce";
 
             ConfigurarCampos();
@@ -76,32 +149,34 @@ namespace DoceCantinho.Desktop.Forms
             PreencherCampos();
         }
         // ============================================================
-        // CONFIGURAÇÕES
+        // CONFIGURAÇÃO
         // ============================================================
 
         private void ConfigurarCampos()
         {
+            // PREÇO
             nudPreco.Minimum = 0;
             nudPreco.Maximum = 999999;
             nudPreco.DecimalPlaces = 2;
             nudPreco.Increment = 0.50M;
             nudPreco.ThousandsSeparator = true;
 
+            // ESTOQUE
             nudEstoque.Minimum = 0;
             nudEstoque.Maximum = 999999;
+            nudEstoque.DecimalPlaces = 0;
             nudEstoque.Increment = 1;
 
+            // CURSORES
             btnSalvar.Cursor = Cursors.Hand;
             btnCancelar.Cursor = Cursors.Hand;
+            btnSelecionarImagem.Cursor = Cursors.Hand;
+            btnRemoverImagem.Cursor = Cursors.Hand;
+            cmbCategoria.Cursor = Cursors.Hand;
 
-            if (btnSelecionarImagem != null)
-                btnSelecionarImagem.Cursor = Cursors.Hand;
-
-            if (btnRemoverImagem != null)
-                btnRemoverImagem.Cursor = Cursors.Hand;
-
-            if (txtUrl != null)
-                txtUrl.TextChanged += TxtUrl_TextChanged;
+            // PREVIEW
+            pictureImagem.SizeMode =
+                PictureBoxSizeMode.Zoom;
         }
 
         // ============================================================
@@ -112,11 +187,13 @@ namespace DoceCantinho.Desktop.Forms
         {
             cmbCategoria.Items.Clear();
 
-            cmbCategoria.Items.Add("Selecione uma categoria...");
+            cmbCategoria.Items.Add(
+                "Selecione uma categoria...");
 
-            foreach (var categoria in _categorias)
+            foreach (CategoriaResponseDto categoria in _categorias)
             {
-                cmbCategoria.Items.Add(categoria.Name);
+                cmbCategoria.Items.Add(
+                    categoria.Name);
             }
 
             cmbCategoria.SelectedIndex = 0;
@@ -132,45 +209,47 @@ namespace DoceCantinho.Desktop.Forms
 
             try
             {
+                // ====================================================
+                // NOVO
+                // ====================================================
+
                 if (_doceExistente == null)
                 {
+                    txtTitulo.Clear();
+                    txtDescricao.Clear();
+
                     nudPreco.Value = 0;
                     nudEstoque.Value = 0;
+
                     chkDestaque.Checked = false;
+
+                    cmbCategoria.SelectedIndex =
+                        _categorias.Count > 0
+                            ? 0
+                            : -1;
+
+                    _imagemBase64 = null;
+                    ImagemArquivoPath = null;
+
+                    txtUrl.Clear();
+
+                    lblArquivoImagem.Text =
+                        "Nenhum arquivo selecionado";
 
                     LimparPreview();
 
                     return;
                 }
 
+                // ====================================================
+                // EDIÇÃO
+                // ====================================================
+
                 txtTitulo.Text =
                     _doceExistente.Title ?? string.Empty;
 
                 txtDescricao.Text =
                     _doceExistente.Description ?? string.Empty;
-
-                string imagem =
-                    _doceExistente.CoverImageUrl ?? string.Empty;
-
-                // ====================================================
-                // IMAGEM
-                // ====================================================
-
-                if (EhImagemBase64(imagem))
-                {
-                    _imagemBase64 = imagem;
-
-                    txtUrl.Text = string.Empty;
-
-                    CarregarPreviewBase64(imagem);
-                }
-                else
-                {
-                    txtUrl.Text = imagem;
-
-                    if (!string.IsNullOrWhiteSpace(imagem))
-                        _ = CarregarPreviewUrlAsync(imagem);
-                }
 
                 // ====================================================
                 // PREÇO
@@ -201,7 +280,8 @@ namespace DoceCantinho.Desktop.Forms
                 // ====================================================
 
                 decimal estoque =
-                    _doceExistente.QuantidadeEstoque;
+                    Convert.ToDecimal(
+                        _doceExistente.QuantidadeEstoque);
 
                 if (estoque < nudEstoque.Minimum)
                     estoque = nudEstoque.Minimum;
@@ -222,14 +302,58 @@ namespace DoceCantinho.Desktop.Forms
                 // CATEGORIA
                 // ====================================================
 
+                cmbCategoria.SelectedIndex = 0;
+
                 int categoriaIndex =
                     _categorias.FindIndex(
-                        c => c.Id == _doceExistente.CategoryId);
+                        c => c.Id ==
+                             _doceExistente.CategoryId);
 
                 if (categoriaIndex >= 0)
                 {
                     cmbCategoria.SelectedIndex =
                         categoriaIndex + 1;
+                }
+
+                // ====================================================
+                // IMAGEM
+                // ====================================================
+
+                string imagem =
+                    _doceExistente.CoverImageUrl ??
+                    string.Empty;
+
+                if (EhImagemBase64(imagem))
+                {
+                    _imagemBase64 = imagem;
+
+                    txtUrl.Clear();
+
+                    lblArquivoImagem.Text =
+                        "Imagem armazenada no produto";
+
+                    CarregarPreviewBase64(imagem);
+                }
+                else
+                {
+                    _imagemBase64 = null;
+
+                    txtUrl.Text = imagem;
+
+                    lblArquivoImagem.Text =
+                        string.IsNullOrWhiteSpace(imagem)
+                            ? "Nenhum arquivo selecionado"
+                            : "Imagem por URL";
+
+                    if (!string.IsNullOrWhiteSpace(imagem))
+                    {
+                        _ = CarregarPreviewUrlAsync(
+                            imagem);
+                    }
+                    else
+                    {
+                        LimparPreview();
+                    }
                 }
             }
             finally
@@ -249,20 +373,63 @@ namespace DoceCantinho.Desktop.Forms
             if (_preenchendoCampos)
                 return;
 
-            // Se o usuário começou a usar URL,
-            // remove a imagem local selecionada.
-            if (!string.IsNullOrWhiteSpace(txtUrl.Text))
+            string url =
+                txtUrl.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(url))
+                return;
+
+            _imagemBase64 = null;
+            ImagemArquivoPath = null;
+
+            lblArquivoImagem.Text =
+                "Imagem por URL";
+
+            _ = CarregarPreviewUrlAsync(url);
+        }
+
+        private void btnAdicionarImagemUrl_Click(
+    object? sender,
+    EventArgs e)
+        {
+            string url = txtUrl.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(url))
             {
-                _imagemBase64 = null;
-                ImagemArquivoPath = null;
+                MessageBox.Show(
+                    "Digite a URL da imagem.",
+                    "Imagem por URL",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
 
-                if (lblArquivoImagem != null)
-                    lblArquivoImagem.Text =
-                        "Nenhum arquivo selecionado";
-
-                _ = CarregarPreviewUrlAsync(
-                    txtUrl.Text.Trim());
+                txtUrl.Focus();
+                return;
             }
+
+            if (!Uri.TryCreate(
+                url,
+                UriKind.Absolute,
+                out Uri? uri) ||
+                (uri.Scheme != Uri.UriSchemeHttp &&
+                 uri.Scheme != Uri.UriSchemeHttps))
+            {
+                MessageBox.Show(
+                    "Informe uma URL válida da imagem.",
+                    "URL inválida",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                txtUrl.Focus();
+                return;
+            }
+
+            _imagemBase64 = null;
+            ImagemArquivoPath = null;
+
+            lblArquivoImagem.Text =
+                "Imagem adicionada por URL";
+
+            _ = CarregarPreviewUrlAsync(url);
         }
 
         // ============================================================
@@ -270,91 +437,143 @@ namespace DoceCantinho.Desktop.Forms
         // ============================================================
 
         private void btnSelecionarImagem_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
-            using OpenFileDialog dialog =
-                new OpenFileDialog();
-
-            dialog.Title =
-                "Selecionar imagem do doce";
-
-            dialog.Filter =
-                "Imagens|*.jpg;*.jpeg;*.png;*.webp;*.bmp|Todos os arquivos|*.*";
-
-            dialog.Multiselect = false;
-
-            if (dialog.ShowDialog(this) != DialogResult.OK)
-                return;
-
-            FileInfo arquivo =
-                new FileInfo(dialog.FileName);
-
-            // Limite de 5 MB
-            if (arquivo.Length > 5 * 1024 * 1024)
-            {
-                MessageBox.Show(
-                    "A imagem não pode ter mais de 5 MB.",
-                    "Imagem muito grande",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-
-                return;
-            }
-
             try
             {
+                using OpenFileDialog dialog =
+                    new OpenFileDialog();
+
+                dialog.Multiselect = false;
+
+                dialog.Filter =
+                    "Imagens|*.jpg;*.jpeg;*.png;*.webp;*.bmp|" +
+                    "JPEG|*.jpg;*.jpeg|" +
+                    "PNG|*.png|" +
+                    "WEBP|*.webp|" +
+                    "BMP|*.bmp";
+
+                dialog.Title =
+                    "Selecionar imagem do doce";
+
+                if (dialog.ShowDialog(this) !=
+                    DialogResult.OK)
+                {
+                    return;
+                }
+
+                string caminho =
+                    dialog.FileName;
+
+                if (string.IsNullOrWhiteSpace(caminho))
+                    return;
+
+                if (!File.Exists(caminho))
+                {
+                    MessageBox.Show(
+                        "O arquivo selecionado não existe.",
+                        "Arquivo inválido",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                FileInfo arquivo =
+                    new FileInfo(caminho);
+
+                // ====================================================
+                // LIMITE DE 5 MB
+                // ====================================================
+
+                if (arquivo.Length >
+                    5 * 1024 * 1024)
+                {
+                    MessageBox.Show(
+                        "A imagem não pode ter mais de 5 MB.",
+                        "Imagem muito grande",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                // ====================================================
+                // LER ARQUIVO
+                // ====================================================
+
                 byte[] bytes =
-                    File.ReadAllBytes(dialog.FileName);
+                    File.ReadAllBytes(caminho);
 
                 string extensao =
-                    Path.GetExtension(
-                        dialog.FileName)
-                    .ToLowerInvariant();
+                    Path.GetExtension(caminho)
+                        .ToLowerInvariant();
 
                 string mimeType =
                     extensao switch
                     {
-                        ".jpg" => "image/jpeg",
-                        ".jpeg" => "image/jpeg",
-                        ".png" => "image/png",
-                        ".webp" => "image/webp",
-                        ".bmp" => "image/bmp",
-                        _ => "application/octet-stream"
+                        ".jpg" =>
+                            "image/jpeg",
+
+                        ".jpeg" =>
+                            "image/jpeg",
+
+                        ".png" =>
+                            "image/png",
+
+                        ".webp" =>
+                            "image/webp",
+
+                        ".bmp" =>
+                            "image/bmp",
+
+                        _ =>
+                            "application/octet-stream"
                     };
 
                 _imagemBase64 =
-                    $"data:{mimeType};base64,{Convert.ToBase64String(bytes)}";
+                    $"data:{mimeType};base64," +
+                    Convert.ToBase64String(bytes);
 
                 ImagemArquivoPath =
-                    dialog.FileName;
+                    caminho;
 
-                // Limpa a URL porque o arquivo terá prioridade.
+                // ====================================================
+                // LIMPAR URL
+                // ====================================================
+
                 _preenchendoCampos = true;
 
                 try
                 {
-                    txtUrl.Text = string.Empty;
+                    txtUrl.Clear();
                 }
                 finally
                 {
                     _preenchendoCampos = false;
                 }
 
-                if (lblArquivoImagem != null)
-                {
-                    lblArquivoImagem.Text =
-                        Path.GetFileName(dialog.FileName);
-                }
+                // ====================================================
+                // NOME DO ARQUIVO
+                // ====================================================
 
-                CarregarPreviewBase64(_imagemBase64);
+                lblArquivoImagem.Text =
+                    Path.GetFileName(caminho);
+
+                // ====================================================
+                // PREVIEW
+                // ====================================================
+
+                CarregarPreviewBase64(
+                    _imagemBase64);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Não foi possível carregar a imagem.\n\n" +
+                    "Não foi possível selecionar a imagem.\n\n" +
                     ex.Message,
-                    "Erro",
+                    "Erro ao carregar imagem",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -365,17 +584,26 @@ namespace DoceCantinho.Desktop.Forms
         // ============================================================
 
         private void btnRemoverImagem_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             _imagemBase64 = null;
+
             ImagemArquivoPath = null;
 
-            txtUrl.Text = string.Empty;
+            _preenchendoCampos = true;
 
-            if (lblArquivoImagem != null)
-                lblArquivoImagem.Text =
-                    "Nenhum arquivo selecionado";
+            try
+            {
+                txtUrl.Clear();
+            }
+            finally
+            {
+                _preenchendoCampos = false;
+            }
+
+            lblArquivoImagem.Text =
+                "Nenhum arquivo selecionado";
 
             LimparPreview();
         }
@@ -389,29 +617,53 @@ namespace DoceCantinho.Desktop.Forms
         {
             try
             {
-                string dados = base64;
+                if (string.IsNullOrWhiteSpace(base64))
+                {
+                    LimparPreview();
+                    return;
+                }
+
+                string dados =
+                    base64;
 
                 int virgula =
                     dados.IndexOf(',');
 
                 if (virgula >= 0)
+                {
                     dados =
-                        dados.Substring(virgula + 1);
+                        dados.Substring(
+                            virgula + 1);
+                }
 
                 byte[] bytes =
-                    Convert.FromBase64String(dados);
+                    Convert.FromBase64String(
+                        dados);
 
                 using MemoryStream stream =
                 new MemoryStream(bytes);
 
-                using Image imagemOriginal =
+                using Image original =
                     Image.FromStream(stream);
 
+<<<<<<< HEAD
                 picturePreview.Image =
                     new Bitmap(imagemOriginal);
+=======
+                Image novaImagem =
+                    new Bitmap(original);
+
+                Image? imagemAntiga =
+                    pictureImagem.Image;
+
+                pictureImagem.Image =
+                    novaImagem;
+>>>>>>> 22b1971931936c1a7cfa10fb5dc83a4e39f91250
 
                 picturePreview.SizeMode =
                     PictureBoxSizeMode.Zoom;
+
+                imagemAntiga?.Dispose();
             }
             catch
             {
@@ -419,12 +671,15 @@ namespace DoceCantinho.Desktop.Forms
             }
         }
 
+
+
         // ============================================================
         // PREVIEW URL
         // ============================================================
 
-        private async System.Threading.Tasks.Task
-            CarregarPreviewUrlAsync(string url)
+        private async Task
+            CarregarPreviewUrlAsync(
+                string url)
         {
             if (string.IsNullOrWhiteSpace(url))
                 return;
@@ -443,15 +698,15 @@ namespace DoceCantinho.Desktop.Forms
                 using MemoryStream stream =
                     new MemoryStream(bytes);
 
-                using Image imagemOriginal =
+                using Image original =
                     Image.FromStream(stream);
 
-                Image imagem =
-                    new Bitmap(imagemOriginal);
+                Image novaImagem =
+                    new Bitmap(original);
 
-                if (IsDisposed)
+                if (IsDisposed || Disposing)
                 {
-                    imagem.Dispose();
+                    novaImagem.Dispose();
                     return;
                 }
 
@@ -459,22 +714,41 @@ namespace DoceCantinho.Desktop.Forms
                 {
                     BeginInvoke(new Action(() =>
                     {
-                        pictureImagem.Image = imagem;
+                        if (IsDisposed || Disposing)
+                        {
+                            novaImagem.Dispose();
+                            return;
+                        }
+
+                        Image? antiga =
+                            pictureImagem.Image;
+
+                        pictureImagem.Image =
+                            novaImagem;
+
                         pictureImagem.SizeMode =
                             PictureBoxSizeMode.Zoom;
+
+                        antiga?.Dispose();
                     }));
                 }
                 else
                 {
-                    pictureImagem.Image = imagem;
+                    Image? antiga =
+                        pictureImagem.Image;
+
+                    pictureImagem.Image =
+                        novaImagem;
+
                     pictureImagem.SizeMode =
                         PictureBoxSizeMode.Zoom;
+
+                    antiga?.Dispose();
                 }
             }
             catch
             {
-                // URL inválida ou inacessível.
-                // Não interrompe o cadastro.
+                // O preview não impede o cadastro.
             }
         }
 
@@ -499,15 +773,14 @@ namespace DoceCantinho.Desktop.Forms
         // VERIFICAR BASE64
         // ============================================================
 
-        private bool EhImagemBase64(
+        private static bool EhImagemBase64(
             string? valor)
         {
-            if (string.IsNullOrWhiteSpace(valor))
-                return false;
-
-            return valor.StartsWith(
-                       "data:image/",
-                       StringComparison.OrdinalIgnoreCase);
+            return
+                !string.IsNullOrWhiteSpace(valor) &&
+                valor.StartsWith(
+                    "data:image/",
+                    StringComparison.OrdinalIgnoreCase);
         }
 
         // ============================================================
@@ -515,11 +788,15 @@ namespace DoceCantinho.Desktop.Forms
         // ============================================================
 
         private void btnSalvar_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             if (!ValidarCampos())
                 return;
+
+            // ========================================================
+            // CATEGORIA
+            // ========================================================
 
             int categoriaIndex =
                 cmbCategoria.SelectedIndex - 1;
@@ -533,37 +810,37 @@ namespace DoceCantinho.Desktop.Forms
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
+                cmbCategoria.Focus();
+
                 return;
             }
 
             int categoriaId =
                 _categorias[categoriaIndex].Id;
 
+            // ========================================================
+            // VALORES
+            // ========================================================
+
             decimal preco =
                 nudPreco.Value;
 
             int estoque =
-                (int)nudEstoque.Value;
+                Convert.ToInt32(
+                    nudEstoque.Value);
 
             // ========================================================
             // IMAGEM
             // ========================================================
 
-            string imagem;
-
-            if (!string.IsNullOrWhiteSpace(_imagemBase64))
-            {
-                // Upload local
-                imagem = _imagemBase64;
-            }
-            else
-            {
-                // URL
-                imagem = txtUrl.Text.Trim();
-            }
+            string imagem =
+                !string.IsNullOrWhiteSpace(
+                    _imagemBase64)
+                    ? _imagemBase64
+                    : txtUrl.Text.Trim();
 
             // ========================================================
-            // NOVO
+            // NOVO DOCE
             // ========================================================
 
             if (_doceExistente == null)
@@ -595,13 +872,14 @@ namespace DoceCantinho.Desktop.Forms
                         IsFeatured =
                             chkDestaque.Checked
                     };
+
+                UpdateDto = null;
             }
+            // ========================================================
+            // EDITAR DOCE
+            // ========================================================
             else
             {
-                // ====================================================
-                // EDITAR
-                // ====================================================
-
                 UpdateDto =
                     new UpdateDoceDto
                     {
@@ -629,6 +907,8 @@ namespace DoceCantinho.Desktop.Forms
                         IsFeatured =
                             chkDestaque.Checked
                     };
+
+                DoceDto = null;
             }
 
             DialogResult =
@@ -643,15 +923,28 @@ namespace DoceCantinho.Desktop.Forms
 
         private bool ValidarCampos()
         {
-            if (string.IsNullOrWhiteSpace(txtTitulo.Text))
+            if (string.IsNullOrWhiteSpace(
+                txtTitulo.Text))
             {
                 MessageBox.Show(
-                    "Informe o título do doce.",
+                    "Informe o nome do doce.",
                     "Validação",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
                 txtTitulo.Focus();
+
+                return false;
+            }
+
+            if (_categorias.Count == 0)
+            {
+                MessageBox.Show(
+                    "Nenhuma categoria foi carregada.\n\n" +
+                    "Cadastre uma categoria ou verifique a conexão com a API.",
+                    "Categorias",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
 
                 return false;
             }
@@ -703,7 +996,7 @@ namespace DoceCantinho.Desktop.Forms
         // ============================================================
 
         private void btnCancelar_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             DoceDto = null;
@@ -722,13 +1015,14 @@ namespace DoceCantinho.Desktop.Forms
         protected override void OnFormClosed(
             FormClosedEventArgs e)
         {
-            if (pictureImagem?.Image != null)
-            {
-                pictureImagem.Image.Dispose();
-                pictureImagem.Image = null;
-            }
+            LimparPreview();
 
             base.OnFormClosed(e);
+        }
+
+        private void btnFechar_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

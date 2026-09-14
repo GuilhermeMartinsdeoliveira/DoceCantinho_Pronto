@@ -51,6 +51,10 @@
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnSalvar;
 
+        private Guna.UI2.WinForms.Guna2Button btnFechar;
+        private Guna.UI2.WinForms.Guna2Button btnMostrarSenha;
+        private Guna.UI2.WinForms.Guna2Button btnMostrarConfirSenha;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -61,751 +65,492 @@
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-
-            this.lblTitulo = new System.Windows.Forms.Label();
-            this.lblSubtitulo = new System.Windows.Forms.Label();
-
-            this.lblNome = new System.Windows.Forms.Label();
-            this.txtNome = new System.Windows.Forms.TextBox();
-
-            this.lblTelefone = new System.Windows.Forms.Label();
-            this.txtTelefone = new System.Windows.Forms.TextBox();
-
-            this.lblEmail = new System.Windows.Forms.Label();
-            this.txtEmail = new System.Windows.Forms.TextBox();
-
-            this.lblSenha = new System.Windows.Forms.Label();
-            this.txtSenha = new System.Windows.Forms.TextBox();
-
-            this.lblConfirmar = new System.Windows.Forms.Label();
-            this.txtConfirmar = new System.Windows.Forms.TextBox();
-
-            this.lblEnderecoTitulo = new System.Windows.Forms.Label();
-
-            this.lblLogradouro = new System.Windows.Forms.Label();
-            this.txtLogradouro = new System.Windows.Forms.TextBox();
-
-            this.lblNumero = new System.Windows.Forms.Label();
-            this.txtNumero = new System.Windows.Forms.TextBox();
-
-            this.lblComplemento = new System.Windows.Forms.Label();
-            this.txtComplemento = new System.Windows.Forms.TextBox();
-
-            this.lblBairro = new System.Windows.Forms.Label();
-            this.txtBairro = new System.Windows.Forms.TextBox();
-
-            this.lblCidade = new System.Windows.Forms.Label();
-            this.txtCidade = new System.Windows.Forms.TextBox();
-
-            this.lblEstado = new System.Windows.Forms.Label();
-            this.cmbEstado = new System.Windows.Forms.ComboBox();
-
-            this.lblCep = new System.Windows.Forms.Label();
-            this.txtCep = new System.Windows.Forms.TextBox();
-
-            this.lblPerfil = new System.Windows.Forms.Label();
-            this.cmbPerfil = new System.Windows.Forms.ComboBox();
-
-            this.btnCancelar = new System.Windows.Forms.Button();
-            this.btnSalvar = new System.Windows.Forms.Button();
-
-            this.SuspendLayout();
-
-            // =========================================================
-            // FORM
-            // =========================================================
-
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-
-            this.BackColor = System.Drawing.Color.FromArgb(248, 245, 242);
-
-            this.ClientSize = new System.Drawing.Size(760, 680);
-
-            this.Controls.Add(this.lblTitulo);
-            this.Controls.Add(this.lblSubtitulo);
-
-            this.Controls.Add(this.lblNome);
-            this.Controls.Add(this.txtNome);
-
-            this.Controls.Add(this.lblTelefone);
-            this.Controls.Add(this.txtTelefone);
-
-            this.Controls.Add(this.lblEmail);
-            this.Controls.Add(this.txtEmail);
-
-            this.Controls.Add(this.lblSenha);
-            this.Controls.Add(this.txtSenha);
-
-            this.Controls.Add(this.lblConfirmar);
-            this.Controls.Add(this.txtConfirmar);
-
-            this.Controls.Add(this.lblEnderecoTitulo);
-
-            this.Controls.Add(this.lblLogradouro);
-            this.Controls.Add(this.txtLogradouro);
-
-            this.Controls.Add(this.lblNumero);
-            this.Controls.Add(this.txtNumero);
-
-            this.Controls.Add(this.lblComplemento);
-            this.Controls.Add(this.txtComplemento);
-
-            this.Controls.Add(this.lblBairro);
-            this.Controls.Add(this.txtBairro);
-
-            this.Controls.Add(this.lblCidade);
-            this.Controls.Add(this.txtCidade);
-
-            this.Controls.Add(this.lblEstado);
-            this.Controls.Add(this.cmbEstado);
-
-            this.Controls.Add(this.lblCep);
-            this.Controls.Add(this.txtCep);
-
-            this.Controls.Add(this.lblPerfil);
-            this.Controls.Add(this.cmbPerfil);
-
-            this.Controls.Add(this.btnCancelar);
-            this.Controls.Add(this.btnSalvar);
-
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "UsuarioFormDialog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Usuário";
-
-            // =========================================================
-            // TÍTULO
-            // =========================================================
-
-            this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Font = new System.Drawing.Font(
-                "Segoe UI",
-                20F,
-                System.Drawing.FontStyle.Bold);
-
-            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(43, 29, 26);
-
-            this.lblTitulo.Location =
-                new System.Drawing.Point(45, 25);
-
-            this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Text = "Novo usuário";
-
-            // =========================================================
-            // SUBTÍTULO
-            // =========================================================
-
-            this.lblSubtitulo.AutoSize = true;
-            this.lblSubtitulo.Font = new System.Drawing.Font(
-                "Segoe UI",
-                9.5F);
-
-            this.lblSubtitulo.ForeColor =
-                System.Drawing.Color.FromArgb(120, 105, 100);
-
-            this.lblSubtitulo.Location =
-                new System.Drawing.Point(47, 68);
-
-            this.lblSubtitulo.Name = "lblSubtitulo";
-            this.lblSubtitulo.Text =
-                "Cadastre os dados de acesso e informações do usuário.";
-
-            // =========================================================
-            // NOME
-            // =========================================================
-
-            this.lblNome.AutoSize = true;
-            this.lblNome.Font = new System.Drawing.Font(
-                "Segoe UI Semibold",
-                9F,
-                System.Drawing.FontStyle.Bold);
-
-            this.lblNome.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblNome.Location =
-                new System.Drawing.Point(47, 105);
-
-            this.lblNome.Text = "NOME";
-
-            this.txtNome.BackColor = System.Drawing.Color.White;
-            this.txtNome.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtNome.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtNome.ForeColor =
-                System.Drawing.Color.FromArgb(50, 40, 37);
-
-            this.txtNome.Location =
-                new System.Drawing.Point(45, 128);
-
-            this.txtNome.Name = "txtNome";
-
-            this.txtNome.Size =
-                new System.Drawing.Size(430, 30);
-
-            // =========================================================
-            // TELEFONE
-            // =========================================================
-
-            this.lblTelefone.AutoSize = true;
-            this.lblTelefone.Font = new System.Drawing.Font(
-                "Segoe UI Semibold",
-                9F,
-                System.Drawing.FontStyle.Bold);
-
-            this.lblTelefone.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblTelefone.Location =
-                new System.Drawing.Point(495, 105);
-
-            this.lblTelefone.Text = "TELEFONE";
-
-            this.txtTelefone.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtTelefone.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtTelefone.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtTelefone.ForeColor =
-                System.Drawing.Color.FromArgb(50, 40, 37);
-
-            this.txtTelefone.Location =
-                new System.Drawing.Point(493, 128);
-
-            this.txtTelefone.Name = "txtTelefone";
-
-            this.txtTelefone.Size =
-                new System.Drawing.Size(220, 30);
-
-            // =========================================================
-            // EMAIL
-            // =========================================================
-
-            this.lblEmail.AutoSize = true;
-            this.lblEmail.Font = new System.Drawing.Font(
-                "Segoe UI Semibold",
-                9F,
-                System.Drawing.FontStyle.Bold);
-
-            this.lblEmail.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblEmail.Location =
-                new System.Drawing.Point(47, 178);
-
-            this.lblEmail.Text = "E-MAIL";
-
-            this.txtEmail.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtEmail.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtEmail.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtEmail.ForeColor =
-                System.Drawing.Color.FromArgb(50, 40, 37);
-
-            this.txtEmail.Location =
-                new System.Drawing.Point(45, 201);
-
-            this.txtEmail.Name = "txtEmail";
-
-            this.txtEmail.Size =
-                new System.Drawing.Size(430, 30);
-
-            // =========================================================
-            // PERFIL
-            // =========================================================
-
-            this.lblPerfil.AutoSize = true;
-            this.lblPerfil.Font = new System.Drawing.Font(
-                "Segoe UI Semibold",
-                9F,
-                System.Drawing.FontStyle.Bold);
-
-            this.lblPerfil.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblPerfil.Location =
-                new System.Drawing.Point(495, 178);
-
-            this.lblPerfil.Text = "PERFIL";
-
-            this.cmbPerfil.BackColor =
-                System.Drawing.Color.White;
-
-            this.cmbPerfil.DropDownStyle =
-                System.Windows.Forms.ComboBoxStyle.DropDownList;
-
-            this.cmbPerfil.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.cmbPerfil.FormattingEnabled = true;
-
-            this.cmbPerfil.Location =
-                new System.Drawing.Point(493, 200);
-
-            this.cmbPerfil.Name = "cmbPerfil";
-
-            this.cmbPerfil.Size =
-                new System.Drawing.Size(220, 31);
-
-            // =========================================================
-            // SENHA
-            // =========================================================
-
-            this.lblSenha.AutoSize = true;
-            this.lblSenha.Font = new System.Drawing.Font(
-                "Segoe UI Semibold",
-                9F,
-                System.Drawing.FontStyle.Bold);
-
-            this.lblSenha.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblSenha.Location =
-                new System.Drawing.Point(47, 251);
-
-            this.lblSenha.Text = "SENHA";
-
-            this.txtSenha.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtSenha.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtSenha.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtSenha.ForeColor =
-                System.Drawing.Color.FromArgb(50, 40, 37);
-
-            this.txtSenha.Location =
-                new System.Drawing.Point(45, 274);
-
-            this.txtSenha.Name = "txtSenha";
-
-            this.txtSenha.Size =
-                new System.Drawing.Size(315, 30);
-
-            this.txtSenha.UseSystemPasswordChar = true;
-
-            // =========================================================
-            // CONFIRMAR SENHA
-            // =========================================================
-
-            this.lblConfirmar.AutoSize = true;
-            this.lblConfirmar.Font = new System.Drawing.Font(
-                "Segoe UI Semibold",
-                9F,
-                System.Drawing.FontStyle.Bold);
-
-            this.lblConfirmar.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblConfirmar.Location =
-                new System.Drawing.Point(387, 251);
-
-            this.lblConfirmar.Text = "CONFIRMAR SENHA";
-
-            this.txtConfirmar.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtConfirmar.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtConfirmar.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtConfirmar.ForeColor =
-                System.Drawing.Color.FromArgb(50, 40, 37);
-
-            this.txtConfirmar.Location =
-                new System.Drawing.Point(385, 274);
-
-            this.txtConfirmar.Name = "txtConfirmar";
-
-            this.txtConfirmar.Size =
-                new System.Drawing.Size(328, 30);
-
-            this.txtConfirmar.UseSystemPasswordChar = true;
-
-            // =========================================================
-            // ENDEREÇO
-            // =========================================================
-
-            this.lblEnderecoTitulo.AutoSize = true;
-            this.lblEnderecoTitulo.Font =
-                new System.Drawing.Font(
-                    "Segoe UI",
-                    11F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.lblEnderecoTitulo.ForeColor =
-                System.Drawing.Color.FromArgb(201, 130, 107);
-
-            this.lblEnderecoTitulo.Location =
-                new System.Drawing.Point(45, 326);
-
-            this.lblEnderecoTitulo.Text =
-                "ENDEREÇO";
-
-            // =========================================================
-            // LOGRADOURO
-            // =========================================================
-
-            this.lblLogradouro.AutoSize = true;
-            this.lblLogradouro.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    9F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.lblLogradouro.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblLogradouro.Location =
-                new System.Drawing.Point(47, 356);
-
-            this.lblLogradouro.Text = "LOGRADOURO";
-
-            this.txtLogradouro.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtLogradouro.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtLogradouro.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtLogradouro.Location =
-                new System.Drawing.Point(45, 379);
-
-            this.txtLogradouro.Name = "txtLogradouro";
-
-            this.txtLogradouro.Size =
-                new System.Drawing.Size(480, 30);
-
-            // =========================================================
-            // NÚMERO
-            // =========================================================
-
-            this.lblNumero.AutoSize = true;
-            this.lblNumero.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    9F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.lblNumero.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblNumero.Location =
-                new System.Drawing.Point(545, 356);
-
-            this.lblNumero.Text = "NÚMERO";
-
-            this.txtNumero.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtNumero.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtNumero.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtNumero.Location =
-                new System.Drawing.Point(543, 379);
-
-            this.txtNumero.Name = "txtNumero";
-
-            this.txtNumero.Size =
-                new System.Drawing.Size(170, 30);
-
-            // =========================================================
-            // COMPLEMENTO
-            // =========================================================
-
-            this.lblComplemento.AutoSize = true;
-            this.lblComplemento.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    9F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.lblComplemento.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblComplemento.Location =
-                new System.Drawing.Point(47, 428);
-
-            this.lblComplemento.Text = "COMPLEMENTO";
-
-            this.txtComplemento.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtComplemento.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtComplemento.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtComplemento.Location =
-                new System.Drawing.Point(45, 451);
-
-            this.txtComplemento.Name = "txtComplemento";
-
-            this.txtComplemento.Size =
-                new System.Drawing.Size(315, 30);
-
-            // =========================================================
-            // BAIRRO
-            // =========================================================
-
-            this.lblBairro.AutoSize = true;
-            this.lblBairro.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    9F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.lblBairro.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblBairro.Location =
-                new System.Drawing.Point(387, 428);
-
-            this.lblBairro.Text = "BAIRRO";
-
-            this.txtBairro.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtBairro.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtBairro.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtBairro.Location =
-                new System.Drawing.Point(385, 451);
-
-            this.txtBairro.Name = "txtBairro";
-
-            this.txtBairro.Size =
-                new System.Drawing.Size(328, 30);
-
-            // =========================================================
-            // CIDADE
-            // =========================================================
-
-            this.lblCidade.AutoSize = true;
-            this.lblCidade.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    9F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.lblCidade.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblCidade.Location =
-                new System.Drawing.Point(47, 500);
-
-            this.lblCidade.Text = "CIDADE";
-
-            this.txtCidade.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtCidade.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtCidade.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtCidade.Location =
-                new System.Drawing.Point(45, 523);
-
-            this.txtCidade.Name = "txtCidade";
-
-            this.txtCidade.Size =
-                new System.Drawing.Size(315, 30);
-
-            // =========================================================
-            // ESTADO
-            // =========================================================
-
-            this.lblEstado.AutoSize = true;
-            this.lblEstado.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    9F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.lblEstado.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblEstado.Location =
-                new System.Drawing.Point(387, 500);
-
-            this.lblEstado.Text = "ESTADO";
-
-            this.cmbEstado.BackColor =
-                System.Drawing.Color.White;
-
-            this.cmbEstado.DropDownStyle =
-                System.Windows.Forms.ComboBoxStyle.DropDownList;
-
-            this.cmbEstado.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.cmbEstado.FormattingEnabled = true;
-
-            this.cmbEstado.Location =
-                new System.Drawing.Point(385, 522);
-
-            this.cmbEstado.Name = "cmbEstado";
-
-            this.cmbEstado.Size =
-                new System.Drawing.Size(100, 31);
-
-            this.cmbEstado.Items.AddRange(new object[]
-            {
-                "AC", "AL", "AP", "AM", "BA",
-                "CE", "DF", "ES", "GO", "MA",
-                "MT", "MS", "MG", "PA", "PB",
-                "PR", "PE", "PI", "RJ", "RN",
-                "RS", "RO", "RR", "SC", "SP",
-                "SE", "TO"
-            });
-
-            // =========================================================
-            // CEP
-            // =========================================================
-
-            this.lblCep.AutoSize = true;
-            this.lblCep.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    9F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.lblCep.ForeColor =
-                System.Drawing.Color.FromArgb(70, 55, 50);
-
-            this.lblCep.Location =
-                new System.Drawing.Point(505, 500);
-
-            this.lblCep.Text = "CEP";
-
-            this.txtCep.BackColor =
-                System.Drawing.Color.White;
-
-            this.txtCep.BorderStyle =
-                System.Windows.Forms.BorderStyle.FixedSingle;
-
-            this.txtCep.Font =
-                new System.Drawing.Font("Segoe UI", 10F);
-
-            this.txtCep.Location =
-                new System.Drawing.Point(503, 522);
-
-            this.txtCep.Name = "txtCep";
-
-            this.txtCep.Size =
-                new System.Drawing.Size(210, 30);
-
-            // =========================================================
-            // BOTÃO CANCELAR
-            // =========================================================
-
-            this.btnCancelar.BackColor =
-                System.Drawing.Color.FromArgb(235, 229, 225);
-
-            this.btnCancelar.FlatAppearance.BorderSize = 0;
-
-            this.btnCancelar.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnCancelar.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    10F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.btnCancelar.ForeColor =
-                System.Drawing.Color.FromArgb(80, 65, 60);
-
-            this.btnCancelar.Location =
-                new System.Drawing.Point(430, 614);
-
-            this.btnCancelar.Name = "btnCancelar";
-
-            this.btnCancelar.Size =
-                new System.Drawing.Size(135, 45);
-
-            this.btnCancelar.Text = "Cancelar";
-
-            this.btnCancelar.UseVisualStyleBackColor = false;
-
-            this.btnCancelar.Click +=
-                new System.EventHandler(this.btnCancelar_Click);
-
-            // =========================================================
-            // BOTÃO SALVAR
-            // =========================================================
-
-            this.btnSalvar.BackColor =
-                System.Drawing.Color.FromArgb(201, 130, 107);
-
-            this.btnSalvar.FlatAppearance.BorderSize = 0;
-
-            this.btnSalvar.FlatStyle =
-                System.Windows.Forms.FlatStyle.Flat;
-
-            this.btnSalvar.Font =
-                new System.Drawing.Font(
-                    "Segoe UI Semibold",
-                    10F,
-                    System.Drawing.FontStyle.Bold);
-
-            this.btnSalvar.ForeColor =
-                System.Drawing.Color.White;
-
-            this.btnSalvar.Location =
-                new System.Drawing.Point(575, 614);
-
-            this.btnSalvar.Name = "btnSalvar";
-
-            this.btnSalvar.Size =
-                new System.Drawing.Size(138, 45);
-
-            this.btnSalvar.Text = "Salvar";
-
-            this.btnSalvar.UseVisualStyleBackColor = false;
-
-            this.btnSalvar.Click +=
-                new System.EventHandler(this.btnSalvar_Click);
-
-            // =========================================================
-
-            this.AcceptButton = this.btnSalvar;
-            this.CancelButton = this.btnCancelar;
-
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            lblTitulo = new Label();
+            lblSubtitulo = new Label();
+            lblNome = new Label();
+            txtNome = new TextBox();
+            lblTelefone = new Label();
+            txtTelefone = new TextBox();
+            lblEmail = new Label();
+            txtEmail = new TextBox();
+            lblSenha = new Label();
+            txtSenha = new TextBox();
+            lblConfirmar = new Label();
+            txtConfirmar = new TextBox();
+            lblEnderecoTitulo = new Label();
+            lblLogradouro = new Label();
+            txtLogradouro = new TextBox();
+            lblNumero = new Label();
+            txtNumero = new TextBox();
+            lblComplemento = new Label();
+            txtComplemento = new TextBox();
+            lblBairro = new Label();
+            txtBairro = new TextBox();
+            lblCidade = new Label();
+            txtCidade = new TextBox();
+            lblEstado = new Label();
+            cmbEstado = new ComboBox();
+            lblCep = new Label();
+            txtCep = new TextBox();
+            lblPerfil = new Label();
+            cmbPerfil = new ComboBox();
+            btnCancelar = new Button();
+            btnSalvar = new Button();
+            btnFechar = new Guna.UI2.WinForms.Guna2Button();
+            btnMostrarSenha = new Guna.UI2.WinForms.Guna2Button();
+            btnMostrarConfirSenha = new Guna.UI2.WinForms.Guna2Button();
+            SuspendLayout();
+            // 
+            // lblTitulo
+            // 
+            lblTitulo.AutoSize = true;
+            lblTitulo.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            lblTitulo.ForeColor = Color.FromArgb(43, 29, 26);
+            lblTitulo.Location = new Point(51, 33);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(236, 46);
+            lblTitulo.TabIndex = 0;
+            lblTitulo.Text = "Novo usuário";
+            // 
+            // lblSubtitulo
+            // 
+            lblSubtitulo.AutoSize = true;
+            lblSubtitulo.Font = new Font("Segoe UI", 9.5F);
+            lblSubtitulo.ForeColor = Color.FromArgb(120, 105, 100);
+            lblSubtitulo.Location = new Point(54, 91);
+            lblSubtitulo.Name = "lblSubtitulo";
+            lblSubtitulo.Size = new Size(391, 21);
+            lblSubtitulo.TabIndex = 1;
+            lblSubtitulo.Text = "Cadastre os dados de acesso e informações do usuário.";
+            // 
+            // lblNome
+            // 
+            lblNome.AutoSize = true;
+            lblNome.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblNome.ForeColor = Color.FromArgb(70, 55, 50);
+            lblNome.Location = new Point(54, 140);
+            lblNome.Name = "lblNome";
+            lblNome.Size = new Size(54, 20);
+            lblNome.TabIndex = 2;
+            lblNome.Text = "NOME";
+            // 
+            // txtNome
+            // 
+            txtNome.BackColor = Color.White;
+            txtNome.BorderStyle = BorderStyle.FixedSingle;
+            txtNome.Font = new Font("Segoe UI", 10F);
+            txtNome.ForeColor = Color.FromArgb(50, 40, 37);
+            txtNome.Location = new Point(51, 171);
+            txtNome.Name = "txtNome";
+            txtNome.Size = new Size(491, 30);
+            txtNome.TabIndex = 3;
+            // 
+            // lblTelefone
+            // 
+            lblTelefone.AutoSize = true;
+            lblTelefone.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblTelefone.ForeColor = Color.FromArgb(70, 55, 50);
+            lblTelefone.Location = new Point(566, 140);
+            lblTelefone.Name = "lblTelefone";
+            lblTelefone.Size = new Size(79, 20);
+            lblTelefone.TabIndex = 4;
+            lblTelefone.Text = "TELEFONE";
+            // 
+            // txtTelefone
+            // 
+            txtTelefone.BackColor = Color.White;
+            txtTelefone.BorderStyle = BorderStyle.FixedSingle;
+            txtTelefone.Font = new Font("Segoe UI", 10F);
+            txtTelefone.ForeColor = Color.FromArgb(50, 40, 37);
+            txtTelefone.Location = new Point(563, 171);
+            txtTelefone.Name = "txtTelefone";
+            txtTelefone.Size = new Size(251, 30);
+            txtTelefone.TabIndex = 5;
+            // 
+            // lblEmail
+            // 
+            lblEmail.AutoSize = true;
+            lblEmail.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblEmail.ForeColor = Color.FromArgb(70, 55, 50);
+            lblEmail.Location = new Point(54, 237);
+            lblEmail.Name = "lblEmail";
+            lblEmail.Size = new Size(58, 20);
+            lblEmail.TabIndex = 6;
+            lblEmail.Text = "E-MAIL";
+            // 
+            // txtEmail
+            // 
+            txtEmail.BackColor = Color.White;
+            txtEmail.BorderStyle = BorderStyle.FixedSingle;
+            txtEmail.Font = new Font("Segoe UI", 10F);
+            txtEmail.ForeColor = Color.FromArgb(50, 40, 37);
+            txtEmail.Location = new Point(51, 268);
+            txtEmail.Name = "txtEmail";
+            txtEmail.Size = new Size(491, 30);
+            txtEmail.TabIndex = 7;
+            // 
+            // lblSenha
+            // 
+            lblSenha.AutoSize = true;
+            lblSenha.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblSenha.ForeColor = Color.FromArgb(70, 55, 50);
+            lblSenha.Location = new Point(54, 335);
+            lblSenha.Name = "lblSenha";
+            lblSenha.Size = new Size(58, 20);
+            lblSenha.TabIndex = 8;
+            lblSenha.Text = "SENHA";
+            // 
+            // txtSenha
+            // 
+            txtSenha.BackColor = Color.White;
+            txtSenha.BorderStyle = BorderStyle.FixedSingle;
+            txtSenha.Font = new Font("Segoe UI", 10F);
+            txtSenha.ForeColor = Color.FromArgb(50, 40, 37);
+            txtSenha.Location = new Point(51, 365);
+            txtSenha.Name = "txtSenha";
+            txtSenha.Size = new Size(360, 30);
+            txtSenha.TabIndex = 9;
+            txtSenha.UseSystemPasswordChar = true;
+            // 
+            // lblConfirmar
+            // 
+            lblConfirmar.AutoSize = true;
+            lblConfirmar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblConfirmar.ForeColor = Color.FromArgb(70, 55, 50);
+            lblConfirmar.Location = new Point(442, 335);
+            lblConfirmar.Name = "lblConfirmar";
+            lblConfirmar.Size = new Size(148, 20);
+            lblConfirmar.TabIndex = 10;
+            lblConfirmar.Text = "CONFIRMAR SENHA";
+            // 
+            // txtConfirmar
+            // 
+            txtConfirmar.BackColor = Color.White;
+            txtConfirmar.BorderStyle = BorderStyle.FixedSingle;
+            txtConfirmar.Font = new Font("Segoe UI", 10F);
+            txtConfirmar.ForeColor = Color.FromArgb(50, 40, 37);
+            txtConfirmar.Location = new Point(440, 365);
+            txtConfirmar.Name = "txtConfirmar";
+            txtConfirmar.Size = new Size(335, 30);
+            txtConfirmar.TabIndex = 11;
+            txtConfirmar.UseSystemPasswordChar = true;
+            // 
+            // lblEnderecoTitulo
+            // 
+            lblEnderecoTitulo.AutoSize = true;
+            lblEnderecoTitulo.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lblEnderecoTitulo.ForeColor = Color.FromArgb(201, 130, 107);
+            lblEnderecoTitulo.Location = new Point(51, 435);
+            lblEnderecoTitulo.Name = "lblEnderecoTitulo";
+            lblEnderecoTitulo.Size = new Size(109, 25);
+            lblEnderecoTitulo.TabIndex = 12;
+            lblEnderecoTitulo.Text = "ENDEREÇO";
+            // 
+            // lblLogradouro
+            // 
+            lblLogradouro.AutoSize = true;
+            lblLogradouro.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblLogradouro.ForeColor = Color.FromArgb(70, 55, 50);
+            lblLogradouro.Location = new Point(304, 472);
+            lblLogradouro.Name = "lblLogradouro";
+            lblLogradouro.Size = new Size(109, 20);
+            lblLogradouro.TabIndex = 13;
+            lblLogradouro.Text = "LOGRADOURO";
+            // 
+            // txtLogradouro
+            // 
+            txtLogradouro.BackColor = Color.White;
+            txtLogradouro.BorderStyle = BorderStyle.FixedSingle;
+            txtLogradouro.Font = new Font("Segoe UI", 10F);
+            txtLogradouro.Location = new Point(304, 507);
+            txtLogradouro.Name = "txtLogradouro";
+            txtLogradouro.Size = new Size(511, 30);
+            txtLogradouro.TabIndex = 14;
+            // 
+            // lblNumero
+            // 
+            lblNumero.AutoSize = true;
+            lblNumero.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblNumero.ForeColor = Color.FromArgb(70, 55, 50);
+            lblNumero.Location = new Point(605, 667);
+            lblNumero.Name = "lblNumero";
+            lblNumero.Size = new Size(74, 20);
+            lblNumero.TabIndex = 15;
+            lblNumero.Text = "NÚMERO";
+            // 
+            // txtNumero
+            // 
+            txtNumero.BackColor = Color.White;
+            txtNumero.BorderStyle = BorderStyle.FixedSingle;
+            txtNumero.Font = new Font("Segoe UI", 10F);
+            txtNumero.Location = new Point(605, 697);
+            txtNumero.Name = "txtNumero";
+            txtNumero.Size = new Size(194, 30);
+            txtNumero.TabIndex = 16;
+            // 
+            // lblComplemento
+            // 
+            lblComplemento.AutoSize = true;
+            lblComplemento.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblComplemento.ForeColor = Color.FromArgb(70, 55, 50);
+            lblComplemento.Location = new Point(54, 571);
+            lblComplemento.Name = "lblComplemento";
+            lblComplemento.Size = new Size(119, 20);
+            lblComplemento.TabIndex = 17;
+            lblComplemento.Text = "COMPLEMENTO";
+            // 
+            // txtComplemento
+            // 
+            txtComplemento.BackColor = Color.White;
+            txtComplemento.BorderStyle = BorderStyle.FixedSingle;
+            txtComplemento.Font = new Font("Segoe UI", 10F);
+            txtComplemento.Location = new Point(51, 601);
+            txtComplemento.Name = "txtComplemento";
+            txtComplemento.Size = new Size(360, 30);
+            txtComplemento.TabIndex = 18;
+            // 
+            // lblBairro
+            // 
+            lblBairro.AutoSize = true;
+            lblBairro.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblBairro.ForeColor = Color.FromArgb(70, 55, 50);
+            lblBairro.Location = new Point(442, 571);
+            lblBairro.Name = "lblBairro";
+            lblBairro.Size = new Size(61, 20);
+            lblBairro.TabIndex = 19;
+            lblBairro.Text = "BAIRRO";
+            // 
+            // txtBairro
+            // 
+            txtBairro.BackColor = Color.White;
+            txtBairro.BorderStyle = BorderStyle.FixedSingle;
+            txtBairro.Font = new Font("Segoe UI", 10F);
+            txtBairro.Location = new Point(440, 601);
+            txtBairro.Name = "txtBairro";
+            txtBairro.Size = new Size(375, 30);
+            txtBairro.TabIndex = 20;
+            // 
+            // lblCidade
+            // 
+            lblCidade.AutoSize = true;
+            lblCidade.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblCidade.ForeColor = Color.FromArgb(70, 55, 50);
+            lblCidade.Location = new Point(54, 667);
+            lblCidade.Name = "lblCidade";
+            lblCidade.Size = new Size(62, 20);
+            lblCidade.TabIndex = 21;
+            lblCidade.Text = "CIDADE";
+            // 
+            // txtCidade
+            // 
+            txtCidade.BackColor = Color.White;
+            txtCidade.BorderStyle = BorderStyle.FixedSingle;
+            txtCidade.Font = new Font("Segoe UI", 10F);
+            txtCidade.Location = new Point(51, 697);
+            txtCidade.Name = "txtCidade";
+            txtCidade.Size = new Size(360, 30);
+            txtCidade.TabIndex = 22;
+            // 
+            // lblEstado
+            // 
+            lblEstado.AutoSize = true;
+            lblEstado.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblEstado.ForeColor = Color.FromArgb(70, 55, 50);
+            lblEstado.Location = new Point(442, 667);
+            lblEstado.Name = "lblEstado";
+            lblEstado.Size = new Size(64, 20);
+            lblEstado.TabIndex = 23;
+            lblEstado.Text = "ESTADO";
+            // 
+            // cmbEstado
+            // 
+            cmbEstado.BackColor = Color.White;
+            cmbEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbEstado.Font = new Font("Segoe UI", 10F);
+            cmbEstado.FormattingEnabled = true;
+            cmbEstado.Items.AddRange(new object[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" });
+            cmbEstado.Location = new Point(440, 696);
+            cmbEstado.Name = "cmbEstado";
+            cmbEstado.Size = new Size(114, 31);
+            cmbEstado.TabIndex = 24;
+            // 
+            // lblCep
+            // 
+            lblCep.AutoSize = true;
+            lblCep.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblCep.ForeColor = Color.FromArgb(70, 55, 50);
+            lblCep.Location = new Point(54, 472);
+            lblCep.Name = "lblCep";
+            lblCep.Size = new Size(35, 20);
+            lblCep.TabIndex = 25;
+            lblCep.Text = "CEP";
+            // 
+            // txtCep
+            // 
+            txtCep.BackColor = Color.White;
+            txtCep.BorderStyle = BorderStyle.FixedSingle;
+            txtCep.Font = new Font("Segoe UI", 10F);
+            txtCep.Location = new Point(51, 507);
+            txtCep.Name = "txtCep";
+            txtCep.Size = new Size(240, 30);
+            txtCep.TabIndex = 26;
+            // 
+            // lblPerfil
+            // 
+            lblPerfil.AutoSize = true;
+            lblPerfil.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblPerfil.ForeColor = Color.FromArgb(70, 55, 50);
+            lblPerfil.Location = new Point(566, 237);
+            lblPerfil.Name = "lblPerfil";
+            lblPerfil.Size = new Size(54, 20);
+            lblPerfil.TabIndex = 27;
+            lblPerfil.Text = "PERFIL";
+            // 
+            // cmbPerfil
+            // 
+            cmbPerfil.BackColor = Color.White;
+            cmbPerfil.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbPerfil.Font = new Font("Segoe UI", 10F);
+            cmbPerfil.FormattingEnabled = true;
+            cmbPerfil.Location = new Point(563, 267);
+            cmbPerfil.Name = "cmbPerfil";
+            cmbPerfil.Size = new Size(251, 31);
+            cmbPerfil.TabIndex = 28;
+            // 
+            // btnCancelar
+            // 
+            btnCancelar.BackColor = Color.FromArgb(235, 229, 225);
+            btnCancelar.FlatAppearance.BorderSize = 0;
+            btnCancelar.FlatStyle = FlatStyle.Flat;
+            btnCancelar.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnCancelar.ForeColor = Color.FromArgb(80, 65, 60);
+            btnCancelar.Location = new Point(491, 819);
+            btnCancelar.Name = "btnCancelar";
+            btnCancelar.Size = new Size(154, 60);
+            btnCancelar.TabIndex = 29;
+            btnCancelar.Text = "Cancelar";
+            btnCancelar.UseVisualStyleBackColor = false;
+            btnCancelar.Click += btnCancelar_Click;
+            // 
+            // btnSalvar
+            // 
+            btnSalvar.BackColor = Color.FromArgb(201, 130, 107);
+            btnSalvar.FlatAppearance.BorderSize = 0;
+            btnSalvar.FlatStyle = FlatStyle.Flat;
+            btnSalvar.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnSalvar.ForeColor = Color.White;
+            btnSalvar.Location = new Point(657, 819);
+            btnSalvar.Name = "btnSalvar";
+            btnSalvar.Size = new Size(158, 60);
+            btnSalvar.TabIndex = 30;
+            btnSalvar.Text = "Salvar";
+            btnSalvar.UseVisualStyleBackColor = false;
+            btnSalvar.Click += btnSalvar_Click;
+            // 
+            // btnFechar
+            // 
+            btnFechar.CustomizableEdges = customizableEdges1;
+            btnFechar.DisabledState.BorderColor = Color.DarkGray;
+            btnFechar.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnFechar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnFechar.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnFechar.FillColor = Color.FromArgb(201, 130, 107);
+            btnFechar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnFechar.ForeColor = Color.White;
+            btnFechar.Location = new Point(795, 21);
+            btnFechar.Name = "btnFechar";
+            btnFechar.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnFechar.Size = new Size(43, 43);
+            btnFechar.TabIndex = 31;
+            btnFechar.Text = "X";
+            btnFechar.Click += btnFechar_Click;
+            // 
+            // btnMostrarSenha
+            // 
+            btnMostrarSenha.BackColor = Color.White;
+            btnMostrarSenha.CustomizableEdges = customizableEdges3;
+            btnMostrarSenha.FillColor = Color.White;
+            btnMostrarSenha.Font = new Font("Segoe UI Emoji", 10F);
+            btnMostrarSenha.ForeColor = Color.FromArgb(92, 46, 14);
+            btnMostrarSenha.HoverState.FillColor = Color.FromArgb(250, 244, 239);
+            btnMostrarSenha.Location = new Point(370, 323);
+            btnMostrarSenha.Name = "btnMostrarSenha";
+            btnMostrarSenha.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnMostrarSenha.Size = new Size(41, 36);
+            btnMostrarSenha.TabIndex = 32;
+            btnMostrarSenha.Text = "👁";
+            // 
+            // btnMostrarConfirSenha
+            // 
+            btnMostrarConfirSenha.BackColor = Color.White;
+            btnMostrarConfirSenha.CustomizableEdges = customizableEdges5;
+            btnMostrarConfirSenha.FillColor = Color.White;
+            btnMostrarConfirSenha.Font = new Font("Segoe UI Emoji", 10F);
+            btnMostrarConfirSenha.ForeColor = Color.FromArgb(92, 46, 14);
+            btnMostrarConfirSenha.HoverState.FillColor = Color.FromArgb(250, 244, 239);
+            btnMostrarConfirSenha.Location = new Point(733, 319);
+            btnMostrarConfirSenha.Name = "btnMostrarConfirSenha";
+            btnMostrarConfirSenha.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnMostrarConfirSenha.Size = new Size(42, 36);
+            btnMostrarConfirSenha.TabIndex = 33;
+            btnMostrarConfirSenha.Text = "👁";
+            // 
+            // UsuarioFormDialog
+            // 
+            AcceptButton = btnSalvar;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(248, 245, 242);
+            CancelButton = btnCancelar;
+            ClientSize = new Size(869, 907);
+            Controls.Add(btnMostrarConfirSenha);
+            Controls.Add(btnMostrarSenha);
+            Controls.Add(btnFechar);
+            Controls.Add(lblTitulo);
+            Controls.Add(lblSubtitulo);
+            Controls.Add(lblNome);
+            Controls.Add(txtNome);
+            Controls.Add(lblTelefone);
+            Controls.Add(txtTelefone);
+            Controls.Add(lblEmail);
+            Controls.Add(txtEmail);
+            Controls.Add(lblSenha);
+            Controls.Add(txtSenha);
+            Controls.Add(lblConfirmar);
+            Controls.Add(txtConfirmar);
+            Controls.Add(lblEnderecoTitulo);
+            Controls.Add(lblCep);
+            Controls.Add(txtCep);
+            Controls.Add(lblLogradouro);
+            Controls.Add(txtLogradouro);
+            Controls.Add(lblComplemento);
+            Controls.Add(txtComplemento);
+            Controls.Add(lblBairro);
+            Controls.Add(txtBairro);
+            Controls.Add(lblCidade);
+            Controls.Add(txtCidade);
+            Controls.Add(lblEstado);
+            Controls.Add(cmbEstado);
+            Controls.Add(lblNumero);
+            Controls.Add(txtNumero);
+            Controls.Add(lblPerfil);
+            Controls.Add(cmbPerfil);
+            Controls.Add(btnCancelar);
+            Controls.Add(btnSalvar);
+            FormBorderStyle = FormBorderStyle.None;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "UsuarioFormDialog";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Usuário";
+            ResumeLayout(false);
+            PerformLayout();
         }
     }
 }

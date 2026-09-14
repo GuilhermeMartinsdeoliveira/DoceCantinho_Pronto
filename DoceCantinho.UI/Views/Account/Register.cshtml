@@ -12,8 +12,12 @@
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                     </svg>
                 </div>
+
                 <h1 class="auth-title">Criar Conta</h1>
-                <p class="auth-sub">Junte-se ao DoceCantinho e aproveite vantagens exclusivas</p>
+
+                <p class="auth-sub">
+                    Junte-se ao DoceCantinho e aproveite vantagens exclusivas
+                </p>
             </div>
 
             @if (!string.IsNullOrEmpty(ViewBag.Erro as string))
@@ -23,126 +27,331 @@
                 </div>
             }
 
-            <form class="auth-form" asp-controller="Account" asp-action="Register" method="post">
+            <form class="auth-form"
+                  asp-controller="Account"
+                  asp-action="Register"
+                  method="post">
+
                 @Html.AntiForgeryToken()
+
+                <!-- IMPORTANTE:
+                     mantém o usuário voltando para o carrinho
+                     depois que terminar o cadastro -->
+                <input type="hidden"
+                       name="returnUrl"
+                       value="@ViewData["ReturnUrl"]" />
 
                 <div class="form-grid2">
                     <div class="form-group">
                         <label class="form-label">Nome</label>
-                        <input class="form-input" type="text" name="Nome" required placeholder="Maria" />
+                        <input class="form-input"
+                               type="text"
+                               name="Nome"
+                               required
+                               placeholder="Maria" />
                     </div>
+
                     <div class="form-group">
                         <label class="form-label">Sobrenome</label>
-                        <input class="form-input" type="text" name="Sobrenome" placeholder="Silva" />
+                        <input class="form-input"
+                               type="text"
+                               name="Sobrenome"
+                               placeholder="Silva" />
                     </div>
                 </div>
 
                 <div class="form-grid2">
                     <div class="form-group">
                         <label class="form-label">E-mail</label>
-                        <input class="form-input" type="email" name="Email" required placeholder="seu@email.com" />
+                        <input class="form-input"
+                               type="email"
+                               name="Email"
+                               required
+                               placeholder="seu@email.com" />
                     </div>
+
                     <div class="form-group">
                         <label class="form-label">CPF</label>
-                        <input class="form-input" type="text" name="Cpf" id="Cpf" required placeholder="000.000.000-00" maxlength="14" />
+                        <input class="form-input"
+                               type="text"
+                               name="Cpf"
+                               id="Cpf"
+                               required
+                               placeholder="000.000.000-00"
+                               maxlength="14" />
                     </div>
                 </div>
 
-                <hr style="border:0; border-top: 1px solid var(--border); margin: 1.5rem 0;" />
-                <h3 style="font-size:1.1rem; margin-bottom: 1rem; color: var(--fg)">Endereço de Entrega</h3>
+                <hr style="border:0;border-top:1px solid var(--border);margin:1.5rem 0;" />
+
+                <h3 style="font-size:1.1rem;margin-bottom:1rem;color:var(--fg)">
+                    Endereço de Entrega
+                </h3>
 
                 <div class="form-grid2">
                     <div class="form-group">
                         <label class="form-label">CEP</label>
-                        <input class="form-input" type="text" name="Cep" id="Cep" required placeholder="00000-000" maxlength="9" />
-                        <small id="cep-error" style="color: red; display: none;">CEP não encontrado ou inválido</small>
+
+                        <input class="form-input"
+                               type="text"
+                               name="Cep"
+                               id="Cep"
+                               required
+                               placeholder="00000-000"
+                               maxlength="9" />
+
+                        <small id="cep-error"
+                               style="color:red;display:none;">
+                            CEP não encontrado ou inválido
+                        </small>
                     </div>
+
                     <div class="form-group">
                         <label class="form-label">Estado (UF)</label>
-                        <input class="form-input" type="text" name="Estado" id="Estado" required placeholder="SP" maxlength="2" />
+
+                        <input class="form-input"
+                               type="text"
+                               name="Estado"
+                               id="Estado"
+                               required
+                               placeholder="SP"
+                               maxlength="2" />
                     </div>
                 </div>
 
                 <div class="form-grid2">
-                    <div class="form-group" style="grid-column: span 2">
-                        <label class="form-label">Logradouro / Rua</label>
-                        <input class="form-input" type="text" name="Logradouro" id="Logradouro" required placeholder="Av. Paulista" />
+                    <div class="form-group" style="grid-column:span 2">
+                        <label class="form-label">
+                            Logradouro / Rua
+                        </label>
+
+                        <input class="form-input"
+                               type="text"
+                               name="Logradouro"
+                               id="Logradouro"
+                               required
+                               placeholder="Av. Paulista" />
                     </div>
                 </div>
 
                 <div class="form-grid2">
                     <div class="form-group">
                         <label class="form-label">Número</label>
-                        <input class="form-input" type="text" name="Numero" id="Numero" required placeholder="1000" />
+
+                        <input class="form-input"
+                               type="text"
+                               name="Numero"
+                               id="Numero"
+                               required
+                               placeholder="1000" />
                     </div>
+
                     <div class="form-group">
                         <label class="form-label">Bairro</label>
-                        <input class="form-input" type="text" name="Bairro" id="Bairro" required placeholder="Bela Vista" />
+
+                        <input class="form-input"
+                               type="text"
+                               name="Bairro"
+                               id="Bairro"
+                               required
+                               placeholder="Bela Vista" />
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Cidade</label>
-                    <input class="form-input" type="text" name="Cidade" id="Cidade" required placeholder="São Paulo" />
+
+                    <input class="form-input"
+                           type="text"
+                           name="Cidade"
+                           id="Cidade"
+                           required
+                           placeholder="São Paulo" />
                 </div>
 
-                <hr style="border:0; border-top: 1px solid var(--border); margin: 1.5rem 0;" />
+                <hr style="border:0;border-top:1px solid var(--border);margin:1.5rem 0;" />
 
                 <div class="form-group">
                     <label class="form-label">Senha</label>
-                    <input class="form-input" type="password" name="Password" required placeholder="••••••••" />
+
+                    <input class="form-input"
+                           type="password"
+                           name="Password"
+                           required
+                           placeholder="••••••••" />
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Confirmar Senha</label>
-                    <input class="form-input" type="password" name="ConfirmPassword" required placeholder="••••••••" />
+
+                    <input class="form-input"
+                           type="password"
+                           name="ConfirmPassword"
+                           required
+                           placeholder="••••••••" />
                 </div>
 
-                <button type="submit" class="form-submit">Criar conta</button>
+                <button type="submit" class="form-submit">
+                    Criar conta
+                </button>
 
                 <div class="auth-divider">
-                    <div class="line"></div><span>ou</span><div class="line"></div>
+                    <div class="line"></div>
+                    <span>ou</span>
+                    <div class="line"></div>
                 </div>
 
                 <p class="auth-footer">
-                    Já tem conta? <a asp-controller="Account" asp-action="Login">Fazer login</a>
+                    Já tem conta?
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       asp-route-returnUrl="@ViewData["ReturnUrl"]">
+                        Fazer login
+                    </a>
                 </p>
+
             </form>
 
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
+
+                    // =====================================================
+                    // CEP
+                    // =====================================================
+
                     const cepInput = document.getElementById('Cep');
                     const cepError = document.getElementById('cep-error');
-                    
-                    cepInput.addEventListener('keyup', function () {
-                        let cep = cepInput.value.replace(/\D/g, '');
-                        if (cep.length === 8) {
-                            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.erro) {
-                                        cepError.style.display = 'block';
-                                    } else {
-                                        cepError.style.display = 'none';
-                                        document.getElementById('Logradouro').value = data.logradouro;
-                                        document.getElementById('Bairro').value = data.bairro;
-                                        document.getElementById('Cidade').value = data.localidade;
-                                        document.getElementById('Estado').value = data.uf;
-                                        document.getElementById('Numero').focus();
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Erro ao buscar CEP:', error);
-                                });
-                        }
-                    });
 
-                    // Simple CPF mask
+                    if (cepInput) {
+                        cepInput.addEventListener('keyup', function () {
+
+                            let cep = cepInput.value.replace(/\D/g, '');
+
+                            if (cep.length === 8) {
+
+                                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                                    .then(response => response.json())
+                                    .then(data => {
+
+                                        if (data.erro) {
+
+                                            cepError.style.display = 'block';
+
+                                        } else {
+
+                                            cepError.style.display = 'none';
+
+                                            document.getElementById('Logradouro').value =
+                                                data.logradouro || '';
+
+                                            document.getElementById('Bairro').value =
+                                                data.bairro || '';
+
+                                            document.getElementById('Cidade').value =
+                                                data.localidade || '';
+
+                                            document.getElementById('Estado').value =
+                                                data.uf || '';
+
+                                            document.getElementById('Numero').focus();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error(
+                                            'Erro ao buscar CEP:',
+                                            error
+                                        );
+                                    });
+                            }
+                        });
+                    }
+
+                    // =====================================================
+                    // MÁSCARA CPF
+                    // =====================================================
+
                     const cpfInput = document.getElementById('Cpf');
-                    cpfInput.addEventListener('input', function (e) {
-                        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,3})(\d{0,2})/);
-                        e.target.value = !x[2] ? x[1] : x[1] + '.' + x[2] + (x[3] ? '.' + x[3] : '') + (x[4] ? '-' + x[4] : '');
-                    });
+
+                    if (cpfInput) {
+
+                        cpfInput.addEventListener('input', function (e) {
+
+                            let value =
+                                e.target.value.replace(/\D/g, '');
+
+                            value = value.substring(0, 11);
+
+                            if (value.length > 9) {
+
+                                value =
+                                    value.replace(
+                                        /(\d{3})(\d{3})(\d{3})(\d{1,2})/,
+                                        '$1.$2.$3-$4'
+                                    );
+
+                            } else if (value.length > 6) {
+
+                                value =
+                                    value.replace(
+                                        /(\d{3})(\d{3})(\d{1,3})/,
+                                        '$1.$2.$3'
+                                    );
+
+                            } else if (value.length > 3) {
+
+                                value =
+                                    value.replace(
+                                        /(\d{3})(\d{1,3})/,
+                                        '$1.$2'
+                                    );
+                            }
+
+                            e.target.value = value;
+                        });
+                    }
+
+                    // =====================================================
+                    // MÁSCARA CEP
+                    // =====================================================
+
+                    if (cepInput) {
+
+                        cepInput.addEventListener('input', function (e) {
+
+                            let value =
+                                e.target.value.replace(/\D/g, '');
+
+                            value = value.substring(0, 8);
+
+                            if (value.length > 5) {
+                                value =
+                                    value.substring(0, 5) +
+                                    '-' +
+                                    value.substring(5);
+                            }
+
+                            e.target.value = value;
+                        });
+                    }
+
+                    // =====================================================
+                    // ESTADO
+                    // =====================================================
+
+                    const estadoInput =
+                        document.getElementById('Estado');
+
+                    if (estadoInput) {
+
+                        estadoInput.addEventListener('input', function () {
+
+                            this.value =
+                                this.value
+                                    .replace(/[^a-zA-Z]/g, '')
+                                    .toUpperCase()
+                                    .substring(0, 2);
+                        });
+                    }
                 });
             </script>
 

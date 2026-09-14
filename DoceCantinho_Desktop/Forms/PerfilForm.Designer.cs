@@ -92,6 +92,14 @@ namespace DoceCantinho.Desktop.Forms
 
         private void InitializeComponent()
         {
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlPrincipal = new Panel();
             btnCancelar = new Button();
             btnSalvar = new Button();
@@ -121,8 +129,12 @@ namespace DoceCantinho.Desktop.Forms
             lblEmail = new Label();
             lblPerfil = new Label();
             pnlCabecalho = new Panel();
+            btnFechar = new Guna.UI2.WinForms.Guna2Button();
             lblSubtitulo = new Label();
             lblTitulo = new Label();
+            btnMostrarSenha = new Guna.UI2.WinForms.Guna2Button();
+            btnMostarNovaSenha = new Guna.UI2.WinForms.Guna2Button();
+            btnMostarConfiSenha = new Guna.UI2.WinForms.Guna2Button();
             pnlPrincipal.SuspendLayout();
             pnlSeguranca.SuspendLayout();
             pnlInformacoes.SuspendLayout();
@@ -142,9 +154,10 @@ namespace DoceCantinho.Desktop.Forms
             pnlPrincipal.Controls.Add(pnlCabecalho);
             pnlPrincipal.Dock = DockStyle.Fill;
             pnlPrincipal.Location = new Point(0, 0);
+            pnlPrincipal.Margin = new Padding(3, 4, 3, 4);
             pnlPrincipal.Name = "pnlPrincipal";
-            pnlPrincipal.Padding = new Padding(28, 22, 28, 20);
-            pnlPrincipal.Size = new Size(760, 680);
+            pnlPrincipal.Padding = new Padding(32, 29, 32, 27);
+            pnlPrincipal.Size = new Size(869, 907);
             pnlPrincipal.TabIndex = 0;
             // 
             // btnCancelar
@@ -155,9 +168,10 @@ namespace DoceCantinho.Desktop.Forms
             btnCancelar.FlatStyle = FlatStyle.Flat;
             btnCancelar.Font = new Font("Segoe UI Semibold", 8.5F, FontStyle.Bold);
             btnCancelar.ForeColor = Color.FromArgb(100, 80, 70);
-            btnCancelar.Location = new Point(502, 625);
+            btnCancelar.Location = new Point(574, 833);
+            btnCancelar.Margin = new Padding(3, 4, 3, 4);
             btnCancelar.Name = "btnCancelar";
-            btnCancelar.Size = new Size(100, 34);
+            btnCancelar.Size = new Size(114, 45);
             btnCancelar.TabIndex = 0;
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = false;
@@ -171,9 +185,10 @@ namespace DoceCantinho.Desktop.Forms
             btnSalvar.FlatStyle = FlatStyle.Flat;
             btnSalvar.Font = new Font("Segoe UI Semibold", 8.5F, FontStyle.Bold);
             btnSalvar.ForeColor = Color.White;
-            btnSalvar.Location = new Point(610, 625);
+            btnSalvar.Location = new Point(697, 833);
+            btnSalvar.Margin = new Padding(3, 4, 3, 4);
             btnSalvar.Name = "btnSalvar";
-            btnSalvar.Size = new Size(122, 34);
+            btnSalvar.Size = new Size(139, 45);
             btnSalvar.TabIndex = 1;
             btnSalvar.Text = "Salvar alterações";
             btnSalvar.UseVisualStyleBackColor = false;
@@ -183,6 +198,9 @@ namespace DoceCantinho.Desktop.Forms
             // 
             pnlSeguranca.BackColor = Color.White;
             pnlSeguranca.BorderStyle = BorderStyle.FixedSingle;
+            pnlSeguranca.Controls.Add(btnMostarConfiSenha);
+            pnlSeguranca.Controls.Add(btnMostarNovaSenha);
+            pnlSeguranca.Controls.Add(btnMostrarSenha);
             pnlSeguranca.Controls.Add(lblTituloSeguranca);
             pnlSeguranca.Controls.Add(lblSenhaAtual);
             pnlSeguranca.Controls.Add(txtSenhaAtual);
@@ -191,9 +209,10 @@ namespace DoceCantinho.Desktop.Forms
             pnlSeguranca.Controls.Add(lblConfirmarSenha);
             pnlSeguranca.Controls.Add(txtConfirmarSenha);
             pnlSeguranca.Controls.Add(chkMostrarSenha);
-            pnlSeguranca.Location = new Point(28, 459);
+            pnlSeguranca.Location = new Point(32, 612);
+            pnlSeguranca.Margin = new Padding(3, 4, 3, 4);
             pnlSeguranca.Name = "pnlSeguranca";
-            pnlSeguranca.Size = new Size(704, 150);
+            pnlSeguranca.Size = new Size(804, 199);
             pnlSeguranca.TabIndex = 2;
             // 
             // lblTituloSeguranca
@@ -201,9 +220,9 @@ namespace DoceCantinho.Desktop.Forms
             lblTituloSeguranca.AutoSize = true;
             lblTituloSeguranca.Font = new Font("Georgia", 12F, FontStyle.Bold);
             lblTituloSeguranca.ForeColor = Color.FromArgb(55, 37, 31);
-            lblTituloSeguranca.Location = new Point(22, 16);
+            lblTituloSeguranca.Location = new Point(25, 21);
             lblTituloSeguranca.Name = "lblTituloSeguranca";
-            lblTituloSeguranca.Size = new Size(95, 18);
+            lblTituloSeguranca.Size = new Size(119, 24);
             lblTituloSeguranca.TabIndex = 0;
             lblTituloSeguranca.Text = "Segurança";
             // 
@@ -212,9 +231,9 @@ namespace DoceCantinho.Desktop.Forms
             lblSenhaAtual.AutoSize = true;
             lblSenhaAtual.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             lblSenhaAtual.ForeColor = Color.FromArgb(90, 70, 60);
-            lblSenhaAtual.Location = new Point(22, 50);
+            lblSenhaAtual.Location = new Point(25, 67);
             lblSenhaAtual.Name = "lblSenhaAtual";
-            lblSenhaAtual.Size = new Size(65, 13);
+            lblSenhaAtual.Size = new Size(82, 19);
             lblSenhaAtual.TabIndex = 1;
             lblSenhaAtual.Text = "Senha atual";
             // 
@@ -223,9 +242,10 @@ namespace DoceCantinho.Desktop.Forms
             txtSenhaAtual.BackColor = Color.FromArgb(250, 248, 246);
             txtSenhaAtual.BorderStyle = BorderStyle.FixedSingle;
             txtSenhaAtual.Font = new Font("Segoe UI", 9F);
-            txtSenhaAtual.Location = new Point(22, 70);
+            txtSenhaAtual.Location = new Point(25, 93);
+            txtSenhaAtual.Margin = new Padding(3, 4, 3, 4);
             txtSenhaAtual.Name = "txtSenhaAtual";
-            txtSenhaAtual.Size = new Size(205, 23);
+            txtSenhaAtual.Size = new Size(234, 27);
             txtSenhaAtual.TabIndex = 0;
             txtSenhaAtual.UseSystemPasswordChar = true;
             // 
@@ -234,9 +254,9 @@ namespace DoceCantinho.Desktop.Forms
             lblNovaSenha.AutoSize = true;
             lblNovaSenha.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             lblNovaSenha.ForeColor = Color.FromArgb(90, 70, 60);
-            lblNovaSenha.Location = new Point(245, 50);
+            lblNovaSenha.Location = new Point(280, 67);
             lblNovaSenha.Name = "lblNovaSenha";
-            lblNovaSenha.Size = new Size(66, 13);
+            lblNovaSenha.Size = new Size(82, 19);
             lblNovaSenha.TabIndex = 2;
             lblNovaSenha.Text = "Nova senha";
             // 
@@ -245,9 +265,10 @@ namespace DoceCantinho.Desktop.Forms
             txtNovaSenha.BackColor = Color.FromArgb(250, 248, 246);
             txtNovaSenha.BorderStyle = BorderStyle.FixedSingle;
             txtNovaSenha.Font = new Font("Segoe UI", 9F);
-            txtNovaSenha.Location = new Point(245, 70);
+            txtNovaSenha.Location = new Point(280, 93);
+            txtNovaSenha.Margin = new Padding(3, 4, 3, 4);
             txtNovaSenha.Name = "txtNovaSenha";
-            txtNovaSenha.Size = new Size(205, 23);
+            txtNovaSenha.Size = new Size(234, 27);
             txtNovaSenha.TabIndex = 1;
             txtNovaSenha.UseSystemPasswordChar = true;
             // 
@@ -256,9 +277,9 @@ namespace DoceCantinho.Desktop.Forms
             lblConfirmarSenha.AutoSize = true;
             lblConfirmarSenha.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             lblConfirmarSenha.ForeColor = Color.FromArgb(90, 70, 60);
-            lblConfirmarSenha.Location = new Point(468, 50);
+            lblConfirmarSenha.Location = new Point(535, 67);
             lblConfirmarSenha.Name = "lblConfirmarSenha";
-            lblConfirmarSenha.Size = new Size(118, 13);
+            lblConfirmarSenha.Size = new Size(146, 19);
             lblConfirmarSenha.TabIndex = 3;
             lblConfirmarSenha.Text = "Confirmar nova senha";
             // 
@@ -267,9 +288,10 @@ namespace DoceCantinho.Desktop.Forms
             txtConfirmarSenha.BackColor = Color.FromArgb(250, 248, 246);
             txtConfirmarSenha.BorderStyle = BorderStyle.FixedSingle;
             txtConfirmarSenha.Font = new Font("Segoe UI", 9F);
-            txtConfirmarSenha.Location = new Point(468, 70);
+            txtConfirmarSenha.Location = new Point(535, 93);
+            txtConfirmarSenha.Margin = new Padding(3, 4, 3, 4);
             txtConfirmarSenha.Name = "txtConfirmarSenha";
-            txtConfirmarSenha.Size = new Size(212, 23);
+            txtConfirmarSenha.Size = new Size(242, 27);
             txtConfirmarSenha.TabIndex = 2;
             txtConfirmarSenha.UseSystemPasswordChar = true;
             // 
@@ -278,9 +300,10 @@ namespace DoceCantinho.Desktop.Forms
             chkMostrarSenha.AutoSize = true;
             chkMostrarSenha.Font = new Font("Segoe UI", 8F);
             chkMostrarSenha.ForeColor = Color.FromArgb(110, 90, 80);
-            chkMostrarSenha.Location = new Point(22, 108);
+            chkMostrarSenha.Location = new Point(25, 144);
+            chkMostrarSenha.Margin = new Padding(3, 4, 3, 4);
             chkMostrarSenha.Name = "chkMostrarSenha";
-            chkMostrarSenha.Size = new Size(105, 17);
+            chkMostrarSenha.Size = new Size(126, 23);
             chkMostrarSenha.TabIndex = 3;
             chkMostrarSenha.Text = "Mostrar senhas";
             chkMostrarSenha.UseVisualStyleBackColor = true;
@@ -298,9 +321,10 @@ namespace DoceCantinho.Desktop.Forms
             pnlInformacoes.Controls.Add(lblPerfilCampo);
             pnlInformacoes.Controls.Add(lblPerfilValor);
             pnlInformacoes.Controls.Add(lblAvisoPerfil);
-            pnlInformacoes.Location = new Point(28, 266);
+            pnlInformacoes.Location = new Point(32, 355);
+            pnlInformacoes.Margin = new Padding(3, 4, 3, 4);
             pnlInformacoes.Name = "pnlInformacoes";
-            pnlInformacoes.Size = new Size(704, 175);
+            pnlInformacoes.Size = new Size(804, 233);
             pnlInformacoes.TabIndex = 3;
             // 
             // lblTituloInformacoes
@@ -308,9 +332,9 @@ namespace DoceCantinho.Desktop.Forms
             lblTituloInformacoes.AutoSize = true;
             lblTituloInformacoes.Font = new Font("Georgia", 12F, FontStyle.Bold);
             lblTituloInformacoes.ForeColor = Color.FromArgb(55, 37, 31);
-            lblTituloInformacoes.Location = new Point(22, 17);
+            lblTituloInformacoes.Location = new Point(25, 23);
             lblTituloInformacoes.Name = "lblTituloInformacoes";
-            lblTituloInformacoes.Size = new Size(189, 18);
+            lblTituloInformacoes.Size = new Size(234, 24);
             lblTituloInformacoes.TabIndex = 0;
             lblTituloInformacoes.Text = "Informações da conta";
             // 
@@ -319,9 +343,9 @@ namespace DoceCantinho.Desktop.Forms
             lblNome.AutoSize = true;
             lblNome.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             lblNome.ForeColor = Color.FromArgb(90, 70, 60);
-            lblNome.Location = new Point(22, 55);
+            lblNome.Location = new Point(25, 73);
             lblNome.Name = "lblNome";
-            lblNome.Size = new Size(100, 13);
+            lblNome.Size = new Size(122, 19);
             lblNome.TabIndex = 1;
             lblNome.Text = "Nome de exibição";
             // 
@@ -331,9 +355,10 @@ namespace DoceCantinho.Desktop.Forms
             txtNome.BorderStyle = BorderStyle.FixedSingle;
             txtNome.Font = new Font("Segoe UI", 9F);
             txtNome.ForeColor = Color.FromArgb(65, 50, 43);
-            txtNome.Location = new Point(22, 75);
+            txtNome.Location = new Point(25, 100);
+            txtNome.Margin = new Padding(3, 4, 3, 4);
             txtNome.Name = "txtNome";
-            txtNome.Size = new Size(315, 23);
+            txtNome.Size = new Size(360, 27);
             txtNome.TabIndex = 0;
             // 
             // lblEmailCampo
@@ -341,9 +366,9 @@ namespace DoceCantinho.Desktop.Forms
             lblEmailCampo.AutoSize = true;
             lblEmailCampo.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             lblEmailCampo.ForeColor = Color.FromArgb(90, 70, 60);
-            lblEmailCampo.Location = new Point(355, 55);
+            lblEmailCampo.Location = new Point(406, 73);
             lblEmailCampo.Name = "lblEmailCampo";
-            lblEmailCampo.Size = new Size(39, 13);
+            lblEmailCampo.Size = new Size(49, 19);
             lblEmailCampo.TabIndex = 2;
             lblEmailCampo.Text = "E-mail";
             // 
@@ -353,9 +378,10 @@ namespace DoceCantinho.Desktop.Forms
             txtEmail.BorderStyle = BorderStyle.FixedSingle;
             txtEmail.Font = new Font("Segoe UI", 9F);
             txtEmail.ForeColor = Color.FromArgb(65, 50, 43);
-            txtEmail.Location = new Point(355, 75);
+            txtEmail.Location = new Point(406, 100);
+            txtEmail.Margin = new Padding(3, 4, 3, 4);
             txtEmail.Name = "txtEmail";
-            txtEmail.Size = new Size(325, 23);
+            txtEmail.Size = new Size(371, 27);
             txtEmail.TabIndex = 1;
             // 
             // lblPerfilCampo
@@ -363,9 +389,9 @@ namespace DoceCantinho.Desktop.Forms
             lblPerfilCampo.AutoSize = true;
             lblPerfilCampo.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             lblPerfilCampo.ForeColor = Color.FromArgb(90, 70, 60);
-            lblPerfilCampo.Location = new Point(22, 115);
+            lblPerfilCampo.Location = new Point(25, 153);
             lblPerfilCampo.Name = "lblPerfilCampo";
-            lblPerfilCampo.Size = new Size(86, 13);
+            lblPerfilCampo.Size = new Size(106, 19);
             lblPerfilCampo.TabIndex = 3;
             lblPerfilCampo.Text = "Perfil de acesso";
             // 
@@ -375,9 +401,9 @@ namespace DoceCantinho.Desktop.Forms
             lblPerfilValor.BorderStyle = BorderStyle.FixedSingle;
             lblPerfilValor.Font = new Font("Segoe UI", 9F);
             lblPerfilValor.ForeColor = Color.FromArgb(120, 100, 90);
-            lblPerfilValor.Location = new Point(22, 135);
+            lblPerfilValor.Location = new Point(25, 180);
             lblPerfilValor.Name = "lblPerfilValor";
-            lblPerfilValor.Size = new Size(315, 27);
+            lblPerfilValor.Size = new Size(360, 35);
             lblPerfilValor.TabIndex = 4;
             lblPerfilValor.Text = "Definido pelo administrador";
             lblPerfilValor.TextAlign = ContentAlignment.MiddleLeft;
@@ -386,9 +412,9 @@ namespace DoceCantinho.Desktop.Forms
             // 
             lblAvisoPerfil.Font = new Font("Segoe UI", 7.5F);
             lblAvisoPerfil.ForeColor = Color.FromArgb(145, 125, 115);
-            lblAvisoPerfil.Location = new Point(355, 115);
+            lblAvisoPerfil.Location = new Point(406, 153);
             lblAvisoPerfil.Name = "lblAvisoPerfil";
-            lblAvisoPerfil.Size = new Size(325, 42);
+            lblAvisoPerfil.Size = new Size(371, 56);
             lblAvisoPerfil.TabIndex = 5;
             lblAvisoPerfil.Text = "O perfil de acesso é definido pelo administrador do sistema e não pode ser alterado aqui.";
             // 
@@ -402,9 +428,10 @@ namespace DoceCantinho.Desktop.Forms
             pnlPerfil.Controls.Add(lblNomeUsuario);
             pnlPerfil.Controls.Add(lblEmail);
             pnlPerfil.Controls.Add(lblPerfil);
-            pnlPerfil.Location = new Point(28, 98);
+            pnlPerfil.Location = new Point(32, 131);
+            pnlPerfil.Margin = new Padding(3, 4, 3, 4);
             pnlPerfil.Name = "pnlPerfil";
-            pnlPerfil.Size = new Size(704, 150);
+            pnlPerfil.Size = new Size(804, 199);
             pnlPerfil.TabIndex = 4;
             // 
             // lblAvatar
@@ -412,9 +439,9 @@ namespace DoceCantinho.Desktop.Forms
             lblAvatar.BackColor = Color.FromArgb(207, 132, 106);
             lblAvatar.Font = new Font("Georgia", 24F, FontStyle.Bold);
             lblAvatar.ForeColor = Color.White;
-            lblAvatar.Location = new Point(25, 10);
+            lblAvatar.Location = new Point(29, 13);
             lblAvatar.Name = "lblAvatar";
-            lblAvatar.Size = new Size(100, 100);
+            lblAvatar.Size = new Size(114, 133);
             lblAvatar.TabIndex = 0;
             lblAvatar.Text = "JS";
             lblAvatar.TextAlign = ContentAlignment.MiddleCenter;
@@ -423,9 +450,10 @@ namespace DoceCantinho.Desktop.Forms
             // 
             pictureFoto.BackColor = Color.FromArgb(247, 242, 239);
             pictureFoto.BorderStyle = BorderStyle.FixedSingle;
-            pictureFoto.Location = new Point(25, 10);
+            pictureFoto.Location = new Point(29, 13);
+            pictureFoto.Margin = new Padding(3, 4, 3, 4);
             pictureFoto.Name = "pictureFoto";
-            pictureFoto.Size = new Size(100, 100);
+            pictureFoto.Size = new Size(114, 133);
             pictureFoto.SizeMode = PictureBoxSizeMode.Zoom;
             pictureFoto.TabIndex = 1;
             pictureFoto.TabStop = false;
@@ -439,9 +467,10 @@ namespace DoceCantinho.Desktop.Forms
             btnAlterarFoto.FlatStyle = FlatStyle.Flat;
             btnAlterarFoto.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
             btnAlterarFoto.ForeColor = Color.FromArgb(105, 80, 70);
-            btnAlterarFoto.Location = new Point(20, 116);
+            btnAlterarFoto.Location = new Point(23, 155);
+            btnAlterarFoto.Margin = new Padding(3, 4, 3, 4);
             btnAlterarFoto.Name = "btnAlterarFoto";
-            btnAlterarFoto.Size = new Size(110, 24);
+            btnAlterarFoto.Size = new Size(126, 32);
             btnAlterarFoto.TabIndex = 0;
             btnAlterarFoto.Text = "Alterar foto";
             btnAlterarFoto.UseVisualStyleBackColor = false;
@@ -452,9 +481,9 @@ namespace DoceCantinho.Desktop.Forms
             lblNomeUsuario.AutoSize = true;
             lblNomeUsuario.Font = new Font("Georgia", 14F, FontStyle.Bold);
             lblNomeUsuario.ForeColor = Color.FromArgb(55, 37, 31);
-            lblNomeUsuario.Location = new Point(155, 32);
+            lblNomeUsuario.Location = new Point(177, 43);
             lblNomeUsuario.Name = "lblNomeUsuario";
-            lblNomeUsuario.Size = new Size(136, 23);
+            lblNomeUsuario.Size = new Size(170, 29);
             lblNomeUsuario.TabIndex = 2;
             lblNomeUsuario.Text = "José da Silva";
             // 
@@ -463,9 +492,9 @@ namespace DoceCantinho.Desktop.Forms
             lblEmail.AutoSize = true;
             lblEmail.Font = new Font("Segoe UI", 8.5F);
             lblEmail.ForeColor = Color.FromArgb(130, 108, 98);
-            lblEmail.Location = new Point(156, 61);
+            lblEmail.Location = new Point(178, 81);
             lblEmail.Name = "lblEmail";
-            lblEmail.Size = new Size(113, 15);
+            lblEmail.Size = new Size(140, 20);
             lblEmail.TabIndex = 3;
             lblEmail.Text = "usuario@email.com";
             // 
@@ -474,9 +503,9 @@ namespace DoceCantinho.Desktop.Forms
             lblPerfil.BackColor = Color.FromArgb(250, 242, 238);
             lblPerfil.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             lblPerfil.ForeColor = Color.FromArgb(198, 124, 99);
-            lblPerfil.Location = new Point(155, 87);
+            lblPerfil.Location = new Point(177, 116);
             lblPerfil.Name = "lblPerfil";
-            lblPerfil.Size = new Size(130, 25);
+            lblPerfil.Size = new Size(149, 33);
             lblPerfil.TabIndex = 4;
             lblPerfil.Text = "Administrador";
             lblPerfil.TextAlign = ContentAlignment.MiddleCenter;
@@ -484,21 +513,41 @@ namespace DoceCantinho.Desktop.Forms
             // pnlCabecalho
             // 
             pnlCabecalho.BackColor = Color.Transparent;
+            pnlCabecalho.Controls.Add(btnFechar);
             pnlCabecalho.Controls.Add(lblSubtitulo);
             pnlCabecalho.Controls.Add(lblTitulo);
-            pnlCabecalho.Location = new Point(28, 22);
+            pnlCabecalho.Location = new Point(32, 29);
+            pnlCabecalho.Margin = new Padding(3, 4, 3, 4);
             pnlCabecalho.Name = "pnlCabecalho";
-            pnlCabecalho.Size = new Size(704, 62);
+            pnlCabecalho.Size = new Size(805, 83);
             pnlCabecalho.TabIndex = 5;
+            // 
+            // btnFechar
+            // 
+            btnFechar.CustomizableEdges = customizableEdges7;
+            btnFechar.DisabledState.BorderColor = Color.DarkGray;
+            btnFechar.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnFechar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnFechar.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnFechar.FillColor = Color.FromArgb(207, 132, 106);
+            btnFechar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnFechar.ForeColor = Color.White;
+            btnFechar.Location = new Point(760, 3);
+            btnFechar.Name = "btnFechar";
+            btnFechar.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnFechar.Size = new Size(42, 38);
+            btnFechar.TabIndex = 6;
+            btnFechar.Text = "X";
+            btnFechar.Click += btnFechar_Click;
             // 
             // lblSubtitulo
             // 
             lblSubtitulo.AutoSize = true;
             lblSubtitulo.Font = new Font("Segoe UI", 9F);
             lblSubtitulo.ForeColor = Color.FromArgb(130, 108, 98);
-            lblSubtitulo.Location = new Point(2, 37);
+            lblSubtitulo.Location = new Point(2, 49);
             lblSubtitulo.Name = "lblSubtitulo";
-            lblSubtitulo.Size = new Size(242, 15);
+            lblSubtitulo.Size = new Size(305, 20);
             lblSubtitulo.TabIndex = 0;
             lblSubtitulo.Text = "Gerencie suas informações pessoais e acesso";
             // 
@@ -509,18 +558,73 @@ namespace DoceCantinho.Desktop.Forms
             lblTitulo.ForeColor = Color.FromArgb(55, 37, 31);
             lblTitulo.Location = new Point(0, 0);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(167, 32);
+            lblTitulo.Size = new Size(208, 41);
             lblTitulo.TabIndex = 1;
             lblTitulo.Text = "Meu Perfil";
             // 
+            // btnMostrarSenha
+            // 
+            btnMostrarSenha.BackColor = Color.Transparent;
+            btnMostrarSenha.CustomizableEdges = customizableEdges5;
+            btnMostrarSenha.DisabledState.BorderColor = Color.DarkGray;
+            btnMostrarSenha.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnMostrarSenha.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnMostrarSenha.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnMostrarSenha.FillColor = Color.Transparent;
+            btnMostrarSenha.Font = new Font("Segoe UI", 9F);
+            btnMostrarSenha.ForeColor = Color.Black;
+            btnMostrarSenha.Location = new Point(218, 56);
+            btnMostrarSenha.Name = "btnMostrarSenha";
+            btnMostrarSenha.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnMostrarSenha.Size = new Size(41, 30);
+            btnMostrarSenha.TabIndex = 33;
+            btnMostrarSenha.Text = "👁";
+            // 
+            // btnMostarNovaSenha
+            // 
+            btnMostarNovaSenha.BackColor = Color.Transparent;
+            btnMostarNovaSenha.CustomizableEdges = customizableEdges3;
+            btnMostarNovaSenha.DisabledState.BorderColor = Color.DarkGray;
+            btnMostarNovaSenha.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnMostarNovaSenha.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnMostarNovaSenha.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnMostarNovaSenha.FillColor = Color.Transparent;
+            btnMostarNovaSenha.Font = new Font("Segoe UI", 9F);
+            btnMostarNovaSenha.ForeColor = Color.Black;
+            btnMostarNovaSenha.Location = new Point(473, 56);
+            btnMostarNovaSenha.Name = "btnMostarNovaSenha";
+            btnMostarNovaSenha.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnMostarNovaSenha.Size = new Size(41, 30);
+            btnMostarNovaSenha.TabIndex = 33;
+            btnMostarNovaSenha.Text = "👁";
+            // 
+            // btnMostarConfiSenha
+            // 
+            btnMostarConfiSenha.BackColor = Color.Transparent;
+            btnMostarConfiSenha.CustomizableEdges = customizableEdges1;
+            btnMostarConfiSenha.DisabledState.BorderColor = Color.DarkGray;
+            btnMostarConfiSenha.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnMostarConfiSenha.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnMostarConfiSenha.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnMostarConfiSenha.FillColor = Color.Transparent;
+            btnMostarConfiSenha.Font = new Font("Segoe UI", 9F);
+            btnMostarConfiSenha.ForeColor = Color.Black;
+            btnMostarConfiSenha.Location = new Point(736, 56);
+            btnMostarConfiSenha.Name = "btnMostarConfiSenha";
+            btnMostarConfiSenha.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnMostarConfiSenha.Size = new Size(41, 30);
+            btnMostarConfiSenha.TabIndex = 33;
+            btnMostarConfiSenha.Text = "👁";
+            // 
             // PerfilForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 245, 242);
-            ClientSize = new Size(760, 680);
+            ClientSize = new Size(869, 907);
             Controls.Add(pnlPrincipal);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "PerfilForm";
@@ -541,5 +645,9 @@ namespace DoceCantinho.Desktop.Forms
 
         private Label lblPerfilValor;
         private Label lblAvisoPerfil;
+        private Guna.UI2.WinForms.Guna2Button btnFechar;
+        private Guna.UI2.WinForms.Guna2Button btnMostarConfiSenha;
+        private Guna.UI2.WinForms.Guna2Button btnMostarNovaSenha;
+        private Guna.UI2.WinForms.Guna2Button btnMostrarSenha;
     }
 }

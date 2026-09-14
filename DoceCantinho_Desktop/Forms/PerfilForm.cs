@@ -13,27 +13,37 @@ namespace DoceCantinho.Desktop.Forms
 {
     public partial class PerfilForm : Form
     {
-        // ==========================================
+        // ============================================================
         // SERVIÇOS
-        // ==========================================
+        // ============================================================
+
         private readonly AuthApiService _authService;
 
-        // ==========================================
+        // ============================================================
         // FOTO
-        // ==========================================
+        // ============================================================
+
         private Image? _fotoAtual;
         private bool _fotoFoiAlterada;
 
-        // ==========================================
-        // BOTÃO X
-        // ==========================================
-        private Button? _btnFechar;
+        // ============================================================
+        // SENHAS
+        // ============================================================
 
-        // ==========================================
+        private bool _mostrarSenhaAtual;
+        private bool _mostrarNovaSenha;
+        private bool _mostrarConfirmarSenha;
+
+        // ============================================================
         // ARRASTAR FORM SEM BORDA
-        // ==========================================
+        // ============================================================
+
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HTCAPTION = 0x2;
+
+        // ============================================================
+        // CONSTRUTOR
+        // ============================================================
 
         public PerfilForm()
         {
@@ -41,49 +51,90 @@ namespace DoceCantinho.Desktop.Forms
 
             _authService = new AuthApiService();
 
-            // ==========================================
-            // FORMULÁRIO SEM BORDA
-            // ==========================================
+            // --------------------------------------------------------
+            // FORMULÁRIO
+            // --------------------------------------------------------
+
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.CenterParent;
             MaximizeBox = false;
             MinimizeBox = false;
+            ShowInTaskbar = false;
 
             ConfigurarFormulario();
             ConfigurarEventos();
-            CriarBotaoFechar();
             CarregarPerfil();
         }
 
-        // ==========================================
+        // ============================================================
         // CONFIGURAR FORMULÁRIO
-        // ==========================================
+        // ============================================================
+
         private void ConfigurarFormulario()
         {
-            pictureFoto.SizeMode =
-                PictureBoxSizeMode.Zoom;
+            // --------------------------------------------------------
+            // FOTO
+            // --------------------------------------------------------
 
+            pictureFoto.SizeMode = PictureBoxSizeMode.Zoom;
             pictureFoto.Visible = false;
+
+            // --------------------------------------------------------
+            // SENHAS
+            // --------------------------------------------------------
 
             txtSenhaAtual.UseSystemPasswordChar = true;
             txtNovaSenha.UseSystemPasswordChar = true;
             txtConfirmarSenha.UseSystemPasswordChar = true;
 
-            // ==========================================
-            // ARRASTAR PELO CABEÇALHO
-            // ==========================================
+            _mostrarSenhaAtual = false;
+            _mostrarNovaSenha = false;
+            _mostrarConfirmarSenha = false;
+
+            // --------------------------------------------------------
+            // CURSOR
+            // --------------------------------------------------------
+
+            btnAlterarFoto.Cursor = Cursors.Hand;
+            btnSalvar.Cursor = Cursors.Hand;
+            btnCancelar.Cursor = Cursors.Hand;
+            btnFechar.Cursor = Cursors.Hand;
+
+            btnMostrarSenha.Cursor = Cursors.Hand;
+            btnMostarNovaSenha.Cursor = Cursors.Hand;
+            btnMostarConfiSenha.Cursor = Cursors.Hand;
+
+            // --------------------------------------------------------
+            // ARRASTAR JANELA
+            // --------------------------------------------------------
+
             pnlCabecalho.MouseDown += PerfilForm_MouseDown;
             lblTitulo.MouseDown += PerfilForm_MouseDown;
             lblSubtitulo.MouseDown += PerfilForm_MouseDown;
         }
 
-        // ==========================================
-        // CONFIGURAR EVENTOS
-        // ==========================================
+        // ============================================================
+        // EVENTOS
+        // ============================================================
+
         private void ConfigurarEventos()
         {
+            // --------------------------------------------------------
+            // FOTO
+            // --------------------------------------------------------
+
             btnAlterarFoto.Click -= btnAlterarFoto_Click;
             btnAlterarFoto.Click += btnAlterarFoto_Click;
+
+            pictureFoto.Click -= pictureFoto_Click;
+            pictureFoto.Click += pictureFoto_Click;
+
+            lblAvatar.Click -= pictureFoto_Click;
+            lblAvatar.Click += pictureFoto_Click;
+
+            // --------------------------------------------------------
+            // BOTÕES
+            // --------------------------------------------------------
 
             btnSalvar.Click -= btnSalvar_Click;
             btnSalvar.Click += btnSalvar_Click;
@@ -91,94 +142,37 @@ namespace DoceCantinho.Desktop.Forms
             btnCancelar.Click -= btnCancelar_Click;
             btnCancelar.Click += btnCancelar_Click;
 
+            btnFechar.Click -= btnFechar_Click;
+            btnFechar.Click += btnFechar_Click;
+
+            // --------------------------------------------------------
+            // CHECKBOX
+            // --------------------------------------------------------
+
             chkMostrarSenha.CheckedChanged -= chkMostrarSenha_CheckedChanged;
             chkMostrarSenha.CheckedChanged += chkMostrarSenha_CheckedChanged;
 
-            pictureFoto.Click -= pictureFoto_Click;
-            pictureFoto.Click += pictureFoto_Click;
+            // --------------------------------------------------------
+            // OLHOS DAS SENHAS
+            // --------------------------------------------------------
 
-            lblAvatar.Click -= pictureFoto_Click;
-            lblAvatar.Click += pictureFoto_Click;
+            btnMostrarSenha.Click -= btnMostrarSenha_Click;
+            btnMostrarSenha.Click += btnMostrarSenha_Click;
+
+            btnMostarNovaSenha.Click -= btnMostarNovaSenha_Click;
+            btnMostarNovaSenha.Click += btnMostarNovaSenha_Click;
+
+            btnMostarConfiSenha.Click -= btnMostarConfiSenha_Click;
+            btnMostarConfiSenha.Click += btnMostarConfiSenha_Click;
         }
 
-        // ==========================================
-        // BOTÃO X
-        // ==========================================
-        private void CriarBotaoFechar()
-        {
-            if (_btnFechar != null)
-                return;
-
-            _btnFechar = new Button
-            {
-                Name = "btnFecharPerfil",
-                Text = "×",
-                Size = new Size(40, 34),
-                Location = new Point(ClientSize.Width - 48, 8),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.Transparent,
-                ForeColor = Color.FromArgb(105, 80, 70),
-                Font = new Font(
-                    "Segoe UI",
-                    18F,
-                    FontStyle.Regular
-                ),
-                Cursor = Cursors.Hand,
-                TabStop = false
-            };
-
-            _btnFechar.FlatAppearance.BorderSize = 0;
-
-            _btnFechar.FlatAppearance.MouseOverBackColor =
-                Color.FromArgb(235, 205, 194);
-
-            _btnFechar.FlatAppearance.MouseDownBackColor =
-                Color.FromArgb(220, 180, 165);
-
-            _btnFechar.Click += BtnFechar_Click;
-
-            Controls.Add(_btnFechar);
-
-            _btnFechar.BringToFront();
-
-            Resize += PerfilForm_Resize;
-        }
-
-        // ==========================================
-        // POSIÇÃO DO X
-        // ==========================================
-        private void PerfilForm_Resize(
-            object? sender,
-            EventArgs e)
-        {
-            if (_btnFechar == null)
-                return;
-
-            _btnFechar.Location =
-                new Point(
-                    ClientSize.Width - _btnFechar.Width - 8,
-                    8
-                );
-        }
-
-        // ==========================================
-        // CLIQUE NO X
-        // ==========================================
-        private void BtnFechar_Click(
-            object? sender,
-            EventArgs e)
-        {
-            Close();
-        }
-
-        // ==========================================
+        // ============================================================
         // CARREGAR PERFIL
-        // ==========================================
+        // ============================================================
+
         private void CarregarPerfil()
         {
-            var usuario =
-                SessionManager.Instance.CurrentUser;
+            var usuario = SessionManager.Instance.CurrentUser;
 
             if (usuario == null)
             {
@@ -186,18 +180,20 @@ namespace DoceCantinho.Desktop.Forms
                 return;
             }
 
-            // ==========================================
-            // DADOS DISPONÍVEIS NO DESIGNER ATUAL
-            // ==========================================
+            // --------------------------------------------------------
+            // DADOS DA CONTA
+            // --------------------------------------------------------
+
             txtNome.Text =
                 usuario.Nome ?? string.Empty;
 
             txtEmail.Text =
                 usuario.Email ?? string.Empty;
 
-            // ==========================================
+            // --------------------------------------------------------
             // CABEÇALHO
-            // ==========================================
+            // --------------------------------------------------------
+
             lblNomeUsuario.Text =
                 string.IsNullOrWhiteSpace(usuario.Nome)
                     ? "Usuário"
@@ -211,11 +207,16 @@ namespace DoceCantinho.Desktop.Forms
                     ? "Administrador"
                     : "Usuário Comum";
 
-            // ==========================================
+            lblPerfilValor.Text =
+                usuario.IsAdmin
+                    ? "Administrador"
+                    : "Usuário Comum";
+
+            // --------------------------------------------------------
             // FOTO
-            // ==========================================
-            if (!string.IsNullOrWhiteSpace(
-                usuario.FotoPerfil))
+            // --------------------------------------------------------
+
+            if (!string.IsNullOrWhiteSpace(usuario.FotoPerfil))
             {
                 try
                 {
@@ -226,14 +227,9 @@ namespace DoceCantinho.Desktop.Forms
 
                     _fotoAtual = imagem;
 
-                    pictureFoto.Image =
-                        imagem;
-
-                    pictureFoto.Visible =
-                        true;
-
-                    lblAvatar.Visible =
-                        false;
+                    pictureFoto.Image = imagem;
+                    pictureFoto.Visible = true;
+                    lblAvatar.Visible = false;
                 }
                 catch
                 {
@@ -246,9 +242,10 @@ namespace DoceCantinho.Desktop.Forms
             }
         }
 
-        // ==========================================
+        // ============================================================
         // AVATAR PADRÃO
-        // ==========================================
+        // ============================================================
+
         private void MostrarAvatarPadrao()
         {
             if (pictureFoto.Image != null)
@@ -275,9 +272,10 @@ namespace DoceCantinho.Desktop.Forms
                 Color.White;
         }
 
-        // ==========================================
+        // ============================================================
         // OBTER INICIAIS
-        // ==========================================
+        // ============================================================
+
         private string ObterIniciaisUsuario()
         {
             var usuario =
@@ -289,22 +287,38 @@ namespace DoceCantinho.Desktop.Forms
             string nome =
                 usuario.Nome?.Trim() ?? string.Empty;
 
+            // --------------------------------------------------------
+            // SEM NOME
+            // --------------------------------------------------------
+
             if (string.IsNullOrWhiteSpace(nome))
             {
                 string email =
                     usuario.Email?.Trim() ?? string.Empty;
 
                 if (!string.IsNullOrWhiteSpace(email))
-                    return email.Substring(0, 1).ToUpper();
+                {
+                    return email
+                        .Substring(0, 1)
+                        .ToUpper();
+                }
 
                 return "U";
             }
+
+            // --------------------------------------------------------
+            // SEPARAR NOME
+            // --------------------------------------------------------
 
             string[] partes =
                 nome.Split(
                     ' ',
                     StringSplitOptions.RemoveEmptyEntries
                 );
+
+            // --------------------------------------------------------
+            // APENAS UMA PALAVRA
+            // --------------------------------------------------------
 
             if (partes.Length == 1)
             {
@@ -313,20 +327,28 @@ namespace DoceCantinho.Desktop.Forms
                     .ToUpper();
             }
 
+            // --------------------------------------------------------
+            // PRIMEIRA + ÚLTIMA
+            // --------------------------------------------------------
+
             return (
                 partes[0].Substring(0, 1) +
                 partes[^1].Substring(0, 1)
             ).ToUpper();
         }
 
-        // ==========================================
+        // ============================================================
         // BASE64 → IMAGEM
-        // ==========================================
-        private Image ConverterBase64ParaImagem(
-            string base64)
+        // ============================================================
+
+        private Image ConverterBase64ParaImagem(string base64)
         {
             string valor =
                 base64.Trim();
+
+            // --------------------------------------------------------
+            // REMOVE DATA URI
+            // --------------------------------------------------------
 
             if (valor.Contains(","))
             {
@@ -345,12 +367,15 @@ namespace DoceCantinho.Desktop.Forms
             using var original =
                 Image.FromStream(ms);
 
+            // IMPORTANTE:
+            // cria uma cópia independente do MemoryStream.
             return new Bitmap(original);
         }
 
-        // ==========================================
+        // ============================================================
         // ALTERAR FOTO
-        // ==========================================
+        // ============================================================
+
         private void btnAlterarFoto_Click(
             object? sender,
             EventArgs e)
@@ -366,8 +391,7 @@ namespace DoceCantinho.Desktop.Forms
 
             dialog.Multiselect = false;
 
-            if (dialog.ShowDialog(this)
-                != DialogResult.OK)
+            if (dialog.ShowDialog(this) != DialogResult.OK)
             {
                 return;
             }
@@ -386,6 +410,10 @@ namespace DoceCantinho.Desktop.Forms
                         512
                     );
 
+                // ----------------------------------------------------
+                // DESCARTAR FOTO ANTERIOR
+                // ----------------------------------------------------
+
                 if (pictureFoto.Image != null)
                 {
                     pictureFoto.Image = null;
@@ -396,6 +424,10 @@ namespace DoceCantinho.Desktop.Forms
                     _fotoAtual.Dispose();
                     _fotoAtual = null;
                 }
+
+                // ----------------------------------------------------
+                // NOVA FOTO
+                // ----------------------------------------------------
 
                 _fotoAtual =
                     novaImagem;
@@ -409,7 +441,8 @@ namespace DoceCantinho.Desktop.Forms
                 lblAvatar.Visible =
                     false;
 
-                _fotoFoiAlterada = true;
+                _fotoFoiAlterada =
+                    true;
             }
             catch (Exception ex)
             {
@@ -422,9 +455,10 @@ namespace DoceCantinho.Desktop.Forms
             }
         }
 
-        // ==========================================
+        // ============================================================
         // CLIQUE NA FOTO
-        // ==========================================
+        // ============================================================
+
         private void pictureFoto_Click(
             object? sender,
             EventArgs e)
@@ -435,9 +469,10 @@ namespace DoceCantinho.Desktop.Forms
             );
         }
 
-        // ==========================================
+        // ============================================================
         // REDIMENSIONAR IMAGEM
-        // ==========================================
+        // ============================================================
+
         private Image RedimensionarImagem(
             Image imagem,
             int larguraMaxima,
@@ -509,9 +544,10 @@ namespace DoceCantinho.Desktop.Forms
             return novaImagem;
         }
 
-        // ==========================================
+        // ============================================================
         // IMAGEM → BASE64
-        // ==========================================
+        // ============================================================
+
         private string ConverterImagemParaBase64(
             Image imagem)
         {
@@ -531,15 +567,80 @@ namespace DoceCantinho.Desktop.Forms
             );
         }
 
-        // ==========================================
-        // MOSTRAR / OCULTAR SENHAS
-        // ==========================================
+        // ============================================================
+        // MOSTRAR / OCULTAR SENHA ATUAL
+        // ============================================================
+
+        private void btnMostrarSenha_Click(
+            object? sender,
+            EventArgs e)
+        {
+            _mostrarSenhaAtual =
+                !_mostrarSenhaAtual;
+
+            txtSenhaAtual.UseSystemPasswordChar =
+                !_mostrarSenhaAtual;
+
+            btnMostrarSenha.Text =
+                _mostrarSenhaAtual
+                    ? "◉"
+                    : "👁";
+        }
+
+        // ============================================================
+        // MOSTRAR / OCULTAR NOVA SENHA
+        // ============================================================
+
+        private void btnMostarNovaSenha_Click(
+            object? sender,
+            EventArgs e)
+        {
+            _mostrarNovaSenha =
+                !_mostrarNovaSenha;
+
+            txtNovaSenha.UseSystemPasswordChar =
+                !_mostrarNovaSenha;
+
+            btnMostarNovaSenha.Text =
+                _mostrarNovaSenha
+                    ? "◉"
+                    : "👁";
+        }
+
+        // ============================================================
+        // MOSTRAR / OCULTAR CONFIRMAÇÃO
+        // ============================================================
+
+        private void btnMostarConfiSenha_Click(
+            object? sender,
+            EventArgs e)
+        {
+            _mostrarConfirmarSenha =
+                !_mostrarConfirmarSenha;
+
+            txtConfirmarSenha.UseSystemPasswordChar =
+                !_mostrarConfirmarSenha;
+
+            btnMostarConfiSenha.Text =
+                _mostrarConfirmarSenha
+                    ? "◉"
+                    : "👁";
+        }
+
+        // ============================================================
+        // CHECKBOX - MOSTRAR TODAS
+        // ============================================================
+
         private void chkMostrarSenha_CheckedChanged(
             object? sender,
             EventArgs e)
         {
             bool mostrar =
                 chkMostrarSenha.Checked;
+
+            _mostrarSenhaAtual = mostrar;
+            _mostrarNovaSenha = mostrar;
+            _mostrarConfirmarSenha = mostrar;
 
             txtSenhaAtual.UseSystemPasswordChar =
                 !mostrar;
@@ -549,20 +650,30 @@ namespace DoceCantinho.Desktop.Forms
 
             txtConfirmarSenha.UseSystemPasswordChar =
                 !mostrar;
+
+            btnMostrarSenha.Text =
+                mostrar ? "◉" : "👁";
+
+            btnMostarNovaSenha.Text =
+                mostrar ? "◉" : "👁";
+
+            btnMostarConfiSenha.Text =
+                mostrar ? "◉" : "👁";
         }
 
-        // ==========================================
+        // ============================================================
         // SALVAR
-        // ==========================================
+        // ============================================================
+
         private async void btnSalvar_Click(
             object? sender,
             EventArgs e)
         {
-            // ==========================================
+            // --------------------------------------------------------
             // VALIDAR NOME
-            // ==========================================
-            if (string.IsNullOrWhiteSpace(
-                txtNome.Text))
+            // --------------------------------------------------------
+
+            if (string.IsNullOrWhiteSpace(txtNome.Text))
             {
                 MessageBox.Show(
                     "Informe o nome.",
@@ -575,13 +686,35 @@ namespace DoceCantinho.Desktop.Forms
                 return;
             }
 
-            // ==========================================
-            // VALIDAR SENHA
-            // ==========================================
+            // --------------------------------------------------------
+            // VALIDAR E-MAIL
+            // --------------------------------------------------------
+
+            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            {
+                MessageBox.Show(
+                    "Informe o e-mail.",
+                    "Validação",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
+                txtEmail.Focus();
+                return;
+            }
+
+            // --------------------------------------------------------
+            // VERIFICAR ALTERAÇÃO DE SENHA
+            // --------------------------------------------------------
+
             bool alterandoSenha =
                 !string.IsNullOrWhiteSpace(
                     txtNovaSenha.Text
                 );
+
+            // --------------------------------------------------------
+            // VALIDAR SENHA
+            // --------------------------------------------------------
 
             if (alterandoSenha)
             {
@@ -627,6 +760,10 @@ namespace DoceCantinho.Desktop.Forms
                 }
             }
 
+            // --------------------------------------------------------
+            // CARREGANDO
+            // --------------------------------------------------------
+
             SetCarregando(true);
 
             try
@@ -646,15 +783,17 @@ namespace DoceCantinho.Desktop.Forms
                     return;
                 }
 
-                // ==========================================
+                // ----------------------------------------------------
                 // FOTO ATUAL
-                // ==========================================
+                // ----------------------------------------------------
+
                 string? fotoBase64 =
                     usuario.FotoPerfil;
 
-                // ==========================================
+                // ----------------------------------------------------
                 // FOTO NOVA
-                // ==========================================
+                // ----------------------------------------------------
+
                 if (_fotoFoiAlterada &&
                     _fotoAtual != null)
                 {
@@ -664,20 +803,22 @@ namespace DoceCantinho.Desktop.Forms
                         );
                 }
 
-                // ==========================================
+                // ----------------------------------------------------
                 // DTO
                 //
-                // IMPORTANTE:
-                // O Designer atual não possui os campos
-                // de telefone/endereço, então preservamos
-                // os dados atuais do SessionManager.
-                // ==========================================
+                // Os campos de endereço e telefone não estão
+                // disponíveis nesta tela. Portanto, mantemos
+                // os valores existentes.
+                // ----------------------------------------------------
+
                 var dto =
                     new UpdateProfileRequestDto
                     {
                         Nome =
                             txtNome.Text.Trim(),
-                        Email = txtEmail.Text.Trim(),
+
+                        Email =
+                            txtEmail.Text.Trim(),
 
                         Telefone =
                             usuario.Telefone ?? string.Empty,
@@ -717,12 +858,17 @@ namespace DoceCantinho.Desktop.Forms
                                 : null
                     };
 
-                // ==========================================
-                // API
-                // ==========================================
+                // ----------------------------------------------------
+                // ENVIAR PARA API
+                // ----------------------------------------------------
+
                 var resultado =
                     await _authService
                         .UpdateProfileAsync(dto);
+
+                // ----------------------------------------------------
+                // ERRO DA API
+                // ----------------------------------------------------
 
                 if (!resultado.Success ||
                     resultado.User == null)
@@ -732,6 +878,7 @@ namespace DoceCantinho.Desktop.Forms
                             resultado.ErrorMessage)
                             ? "Não foi possível atualizar o perfil."
                             : resultado.ErrorMessage,
+
                         "Erro",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning
@@ -740,12 +887,17 @@ namespace DoceCantinho.Desktop.Forms
                     return;
                 }
 
-                // ==========================================
+                // ----------------------------------------------------
                 // ATUALIZAR SESSÃO
-                // ==========================================
+                // ----------------------------------------------------
+
                 SessionManager.Instance.SetUser(
                     resultado.User
                 );
+
+                // ----------------------------------------------------
+                // SUCESSO
+                // ----------------------------------------------------
 
                 DialogResult =
                     DialogResult.OK;
@@ -767,9 +919,10 @@ namespace DoceCantinho.Desktop.Forms
             }
         }
 
-        // ==========================================
+        // ============================================================
         // ESTADO DE CARREGAMENTO
-        // ==========================================
+        // ============================================================
+
         private void SetCarregando(
             bool carregando)
         {
@@ -782,25 +935,56 @@ namespace DoceCantinho.Desktop.Forms
             btnAlterarFoto.Enabled =
                 !carregando;
 
+            btnFechar.Enabled =
+                !carregando;
+
+            btnMostrarSenha.Enabled =
+                !carregando;
+
+            btnMostarNovaSenha.Enabled =
+                !carregando;
+
+            btnMostarConfiSenha.Enabled =
+                !carregando;
+
             Cursor =
                 carregando
                     ? Cursors.WaitCursor
                     : Cursors.Default;
         }
 
-        // ==========================================
+        // ============================================================
         // CANCELAR
-        // ==========================================
+        // ============================================================
+
         private void btnCancelar_Click(
             object? sender,
             EventArgs e)
         {
+            DialogResult =
+                DialogResult.Cancel;
+
             Close();
         }
 
-        // ==========================================
+        // ============================================================
+        // FECHAR
+        // ============================================================
+
+        private void btnFechar_Click(
+            object? sender,
+            EventArgs e)
+        {
+            DialogResult =
+                DialogResult.Cancel;
+
+            Close();
+        }
+
+        // ============================================================
         // ARRASTAR FORM SEM BORDA
-        // ==========================================
+        // ============================================================
+
         private void PerfilForm_MouseDown(
             object? sender,
             MouseEventArgs e)
@@ -828,9 +1012,10 @@ namespace DoceCantinho.Desktop.Forms
             int wParam,
             int lParam);
 
-        // ==========================================
+        // ============================================================
         // FECHAMENTO
-        // ==========================================
+        // ============================================================
+
         protected override void OnFormClosed(
             FormClosedEventArgs e)
         {
@@ -841,15 +1026,6 @@ namespace DoceCantinho.Desktop.Forms
 
             _fotoAtual?.Dispose();
             _fotoAtual = null;
-
-            if (_btnFechar != null)
-            {
-                _btnFechar.Click -=
-                    BtnFechar_Click;
-
-                _btnFechar.Dispose();
-                _btnFechar = null;
-            }
 
             base.OnFormClosed(e);
         }

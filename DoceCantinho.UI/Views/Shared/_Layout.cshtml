@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
     <title>@ViewData["Title"] - DoceCantinho</title>
+
+
+    <!-- =========================================================
+         TEMA DARK / LIGHT
+         ========================================================= -->
+
     <script>
+
             (function () {
-                const savedTheme = localStorage.getItem('docecantinho-theme');
+
+                const savedTheme =
+                    localStorage.getItem('docecantinho-theme');
 
                 const systemDark =
                     window.matchMedia &&
@@ -16,54 +30,804 @@
                     savedTheme ||
                     (systemDark ? 'dark' : 'light');
 
-                document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.setAttribute(
+                    'data-theme',
+                    theme
+                );
+
             })();
+
     </script>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/DoceCantinho.UI.styles.css" asp-append-version="true" />
+
+
+    <!-- =========================================================
+         FONTES
+         ========================================================= -->
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+          rel="stylesheet">
+
+
+    <!-- =========================================================
+         BOOTSTRAP ICONS
+         ========================================================= -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <!-- =========================================================
+         AOS - ANIMAÇÕES
+         ========================================================= -->
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+
+
+    <!-- =========================================================
+         CSS DO PROJETO
+         ========================================================= -->
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/DoceCantinho.UI.styles.css"
+          asp-append-version="true" />
+
+
+    <!-- =========================================================
+         CSS DO LAYOUT / RESPONSIVIDADE
+         ========================================================= -->
+
+    <style>
+
+            /* =========================================================
+                       ACESSIBILIDADE - TAMANHO DA FONTE
+                       ========================================================= */
+
+            .accessibility-font {
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                padding: 6px;
+                background: rgba(255, 250, 244, 0.96);
+                border: 1px solid #dfc7b5;
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(60, 35, 19, 0.15);
+                backdrop-filter: blur(8px);
+            }
+
+
+                .accessibility-font button {
+                    width: 38px;
+                    height: 38px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid #7b3f17;
+                    border-radius: 8px;
+                    background: #fffaf4;
+                    color: #5a2d14;
+                    font-family: 'Nunito', sans-serif;
+                    font-size: 15px;
+                    font-weight: 800;
+                    cursor: pointer;
+                    transition: background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+                }
+
+
+                    .accessibility-font button:hover {
+                        background: #7b3f17;
+                        color: white;
+                        transform: translateY(-2px);
+                        box-shadow: 0 5px 12px rgba(123, 63, 23, .2);
+                    }
+
+
+                    .accessibility-font button:active {
+                        transform: scale(.95);
+                    }
+
+
+                    .accessibility-font button:focus-visible {
+                        outline: 3px solid rgba(217, 106, 67, .4);
+                        outline-offset: 2px;
+                    }
+
+
+            /* =========================================================
+                       DARK MODE - ACESSIBILIDADE
+                       ========================================================= */
+
+            [data-theme="dark"] .accessibility-font {
+                background: rgba(45, 30, 23, .96);
+                border-color: #6f4a38;
+            }
+
+
+                [data-theme="dark"] .accessibility-font button {
+                    background: #35251e;
+                    color: #f8e8dc;
+                    border-color: #9a6345;
+                }
+
+
+                    [data-theme="dark"] .accessibility-font button:hover {
+                        background: #a85f3b;
+                        color: white;
+                    }
+
+
+            /* =========================================================
+                       TABLET
+                       ========================================================= */
+
+            @@media (max-width: 1100px) {
+
+                .container {
+                    width: 100%;
+                    max-width: 100%;
+                    padding-left: 24px;
+                    padding-right: 24px;
+                    box-sizing: border-box;
+                }
+
+
+                .nav-inner {
+                    gap: 12px;
+                }
+
+
+                .nav-links {
+                    gap: 5px;
+                }
+
+
+                .nav-link {
+                    padding: 8px 9px;
+                    font-size: .88rem;
+                }
+
+
+                .nav-logo-text {
+                    font-size: 1.15rem;
+                }
+
+
+                .nav-actions {
+                    gap: 7px;
+                }
+
+
+                .theme-toggle {
+                    padding: 8px 10px;
+                }
+
+
+                .btn-login {
+                    padding: 8px 11px;
+                }
+            }
+
+
+            /* =========================================================
+                       TABLET PEQUENO
+                       ========================================================= */
+
+            @@media (max-width: 900px) {
+
+                .nav-logo-text {
+                    font-size: 1rem;
+                }
+
+
+                .nav-links {
+                    display: none !important;
+                }
+
+
+                .hamburger {
+                    display: flex !important;
+                }
+
+
+                .nav-inner {
+                    min-height: 64px;
+                }
+
+
+                .theme-toggle span {
+                    display: none;
+                }
+
+
+                .theme-toggle {
+                    min-width: 42px;
+                    padding: 8px;
+                }
+            }
+
+
+            /* =========================================================
+                       CELULAR
+                       ========================================================= */
+
+            @@media (max-width: 768px) {
+                /* -----------------------------
+                           CONTAINER
+                           ----------------------------- */
+
+                .container {
+                    width: 100%;
+                    max-width: 100%;
+                    padding-left: 18px;
+                    padding-right: 18px;
+                    box-sizing: border-box;
+                }
+                /* -----------------------------
+                           NAVBAR
+                           ----------------------------- */
+
+                nav#nav {
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+
+
+                .nav-inner {
+                    min-height: 64px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 8px;
+                }
+                /* LOGO */
+
+                .nav-logo {
+                    min-width: 0;
+                    flex-shrink: 1;
+                    display: flex;
+                    align-items: center;
+                }
+
+
+                .nav-logo-icon {
+                    width: 34px;
+                    height: 34px;
+                    flex-shrink: 0;
+                }
+
+
+                .nav-logo-text {
+                    font-size: 1rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                /* MENU DESKTOP */
+
+                .nav-links {
+                    display: none !important;
+                }
+                /* AÇÕES */
+
+                .nav-actions {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    gap: 6px;
+                    margin-left: auto;
+                    flex-shrink: 0;
+                }
+                    /* CARRINHO */
+
+                    .nav-actions > * {
+                        flex-shrink: 0;
+                    }
+                /* TEMA */
+
+                .theme-toggle {
+                    width: 40px;
+                    min-width: 40px;
+                    height: 40px;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+
+                    .theme-toggle span {
+                        display: none;
+                    }
+
+
+                    .theme-toggle svg {
+                        width: 18px;
+                        height: 18px;
+                    }
+                /* LOGIN */
+
+                .btn-login {
+                    min-width: 40px;
+                    min-height: 40px;
+                    padding: 8px 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    white-space: nowrap;
+                }
+
+
+                    .btn-login svg {
+                        width: 17px;
+                        height: 17px;
+                        flex-shrink: 0;
+                    }
+                /* HAMBURGER */
+
+                .hamburger {
+                    display: flex !important;
+                    width: 40px;
+                    height: 40px;
+                    padding: 0;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                }
+
+
+                    .hamburger svg {
+                        width: 22px;
+                        height: 22px;
+                    }
+                /* -----------------------------
+                           MENU MOBILE
+                           ----------------------------- */
+
+                .mobile-menu {
+                    width: 100%;
+                    max-width: 100%;
+                    box-sizing: border-box;
+                    padding-left: 18px;
+                    padding-right: 18px;
+                }
+
+
+                .mobile-link {
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+                /* -----------------------------
+                           CONTEÚDO
+                           ----------------------------- */
+
+                main {
+                    width: 100%;
+                    max-width: 100%;
+                    overflow-x: hidden;
+                }
+                /* -----------------------------
+                           ACESSIBILIDADE
+                           ----------------------------- */
+
+                .accessibility-font {
+                    right: 12px;
+                    bottom: 12px;
+                    padding: 5px;
+                }
+
+
+                    .accessibility-font button {
+                        width: 34px;
+                        height: 34px;
+                        font-size: 14px;
+                    }
+                /* -----------------------------
+                           GRIDS DE PRODUTOS
+                           ----------------------------- */
+
+                .products-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    gap: 14px;
+                }
+                /* -----------------------------
+                           FOOTER
+                           ----------------------------- */
+
+                .footer-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    gap: 30px;
+                }
+            }
+
+
+            /* =========================================================
+                       CELULAR PEQUENO
+                       ========================================================= */
+
+            @@media (max-width: 500px) {
+
+                .container {
+                    padding-left: 14px;
+                    padding-right: 14px;
+                }
+                /* -----------------------------
+                           NAV
+                           ----------------------------- */
+
+                .nav-inner {
+                    gap: 5px;
+                }
+
+
+                .nav-logo-text {
+                    font-size: .92rem;
+                }
+
+
+                .nav-logo-icon {
+                    width: 31px;
+                    height: 31px;
+                }
+
+
+                .nav-actions {
+                    gap: 4px;
+                }
+                /* -----------------------------
+                           LOGIN
+                           ----------------------------- */
+
+                .btn-login {
+                    width: 40px;
+                    height: 40px;
+                    padding: 0;
+                    font-size: 0;
+                }
+
+
+                    .btn-login svg {
+                        width: 18px;
+                        height: 18px;
+                    }
+                /* -----------------------------
+                           PRODUTOS
+                           ----------------------------- */
+
+                .products-grid {
+                    grid-template-columns: 1fr !important;
+                    gap: 18px;
+                }
+
+
+                .product-card {
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+                /* -----------------------------
+                           LOJA
+                           ----------------------------- */
+
+                .loja-header {
+                    text-align: center;
+                }
+
+
+                .section-title {
+                    font-size: 2rem;
+                }
+
+
+                .loja-subtitle {
+                    font-size: .95rem;
+                }
+                /* -----------------------------
+                           BOTÕES DOS PRODUTOS
+                           ----------------------------- */
+
+                .loja-buttons {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                }
+
+
+                .loja-btn {
+                    font-size: .78rem;
+                    padding: 9px 12px;
+                }
+                /* -----------------------------
+                           FOOTER
+                           ----------------------------- */
+
+                .footer-grid {
+                    grid-template-columns: 1fr !important;
+                    gap: 30px;
+                    text-align: center;
+                }
+
+
+                .footer-brand {
+                    justify-content: center;
+                }
+
+
+                .footer-contact {
+                    justify-content: center;
+                }
+                /* -----------------------------
+                           ACESSIBILIDADE
+                           ----------------------------- */
+
+                .accessibility-font {
+                    right: 10px;
+                    bottom: 10px;
+                }
+
+
+                    .accessibility-font button {
+                        width: 32px;
+                        height: 32px;
+                        font-size: 13px;
+                    }
+            }
+
+
+            /* =========================================================
+                       CELULAR MUITO PEQUENO
+                       ========================================================= */
+
+            @@media (max-width: 360px) {
+
+                .nav-logo-text {
+                    font-size: .82rem;
+                }
+
+
+                .nav-logo-icon {
+                    width: 28px;
+                    height: 28px;
+                }
+
+
+                .theme-toggle {
+                    width: 37px;
+                    min-width: 37px;
+                    height: 37px;
+                }
+
+
+                .hamburger {
+                    width: 37px;
+                    height: 37px;
+                }
+
+
+                .btn-login {
+                    width: 37px;
+                    height: 37px;
+                }
+
+
+                .section-title {
+                    font-size: 1.7rem;
+                }
+            }
+
+
+            /* =========================================================
+                       REDUZIR ANIMAÇÕES
+                       ========================================================= */
+
+            @@media (prefers-reduced-motion: reduce) {
+
+                *,
+                *::before,
+                *::after {
+                    scroll-behavior: auto !important;
+                    animation-duration: .01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: .01ms !important;
+                }
+            }
+
+    </style>
+
 </head>
+
+
 <body>
 
-    <!-- ─── Nav ─── -->
+
+    <!-- =========================================================
+         ACESSIBILIDADE - TAMANHO DA FONTE
+         ========================================================= -->
+
+    <div class="accessibility-font"
+         role="group"
+         aria-label="Controles de tamanho da fonte">
+
+
+        <button type="button"
+                id="fontDecrease"
+                aria-label="Diminuir tamanho da fonte"
+                title="Diminuir fonte">
+
+            A−
+
+        </button>
+
+
+        <button type="button"
+                id="fontReset"
+                aria-label="Voltar ao tamanho normal da fonte"
+                title="Tamanho normal">
+
+            A
+
+        </button>
+
+
+        <button type="button"
+                id="fontIncrease"
+                aria-label="Aumentar tamanho da fonte"
+                title="Aumentar fonte">
+
+            A+
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         NAVBAR
+         ========================================================= -->
+
     <nav id="nav">
+
         <div class="container nav-inner">
 
-            <a class="nav-logo" asp-controller="Home" asp-action="Index">
+
+            <!-- LOGO -->
+
+            <a class="nav-logo"
+               asp-controller="Home"
+               asp-action="Index">
+
+
                 <div class="nav-logo-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
+
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+
                     </svg>
+
                 </div>
-                <span class="nav-logo-text">DoceCantinho</span>
+
+
+                <span class="nav-logo-text">
+                    DoceCantinho
+                </span>
+
             </a>
 
+
+
+            <!-- =================================================
+                 MENU DESKTOP
+                 ================================================= -->
+
             <div class="nav-links">
+
+
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                   asp-controller="Home" asp-action="Index">Home</a>
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    Home
+
+                </a>
+
+
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Doces" ? "active" : "")"
-                   asp-controller="Doces" asp-action="Index">Loja</a>
+                   asp-controller="Doces"
+                   asp-action="Index">
+
+                    Loja
+
+                </a>
+
+
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Servicos" ? "active" : "")"
-                   asp-controller="Home" asp-action="Servicos">Serviços</a>
+                   asp-controller="Home"
+                   asp-action="Servicos">
+
+                    Serviços
+
+                </a>
+
+
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Sobre" ? "active" : "")"
-                   asp-controller="Home" asp-action="Sobre">Sobre Nós</a>
+                   asp-controller="Home"
+                   asp-action="Sobre">
+
+                    Sobre Nós
+
+                </a>
+
+
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Blog" ? "active" : "")"
-                   asp-controller="Blog" asp-action="Index">Blog</a>
+                   asp-controller="Blog"
+                   asp-action="Index">
+
+                    Blog
+
+                </a>
+
+
                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Contato" ? "active" : "")"
-                   asp-controller="Home" asp-action="Contato">Contato</a>
-                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                   asp-controller="Home"
+                   asp-action="Contato">
+
+                    Contato
+
+                </a>
+
+
+                @if (User.Identity != null &&
+                     User.Identity.IsAuthenticated)
                 {
+
                     <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Pedidos" ? "active" : "")"
-                       asp-controller="Pedidos" asp-action="Index">Meus Pedidos</a>
+                       asp-controller="Pedidos"
+                       asp-action="Index">
+
+                        Meus Pedidos
+
+                    </a>
+
                 }
+
             </div>
 
+
+
+            <!-- =================================================
+                 AÇÕES
+                 ================================================= -->
+
             <div class="nav-actions">
+
+
+                <!-- CARRINHO -->
                 @await Component.InvokeAsync("Carrinho")
 
-                <!-- Botão Dark / Light Mode -->
+
+
+                <!-- =================================================
+                     DARK / LIGHT MODE
+                     ================================================= -->
+
                 <button type="button"
                         id="theme-toggle"
                         class="theme-toggle"
@@ -71,29 +835,43 @@
                         aria-label="Alternar tema"
                         title="Alternar tema">
 
-                    <!-- Sol -->
+
+                    <!-- SOL -->
+
                     <svg id="theme-icon-sun"
                          viewBox="0 0 24 24"
                          fill="none"
                          stroke="currentColor"
                          stroke-width="2">
 
-                        <circle cx="12" cy="12" r="4"></circle>
+                        <circle cx="12"
+                                cy="12"
+                                r="4">
+                        </circle>
+
 
                         <path d="M12 2v2"></path>
+
                         <path d="M12 20v2"></path>
 
                         <path d="M4.93 4.93l1.41 1.41"></path>
+
                         <path d="M17.66 17.66l1.41 1.41"></path>
 
                         <path d="M2 12h2"></path>
+
                         <path d="M20 12h2"></path>
 
                         <path d="M4.93 19.07l1.41-1.41"></path>
+
                         <path d="M17.66 6.34l1.41-1.41"></path>
+
                     </svg>
 
-                    <!-- Lua -->
+
+
+                    <!-- LUA -->
+
                     <svg id="theme-icon-moon"
                          viewBox="0 0 24 24"
                          fill="none"
@@ -106,170 +884,809 @@
 
                     </svg>
 
-                    <span id="theme-text">Escuro</span>
+
+                    <span id="theme-text">
+                        Escuro
+                    </span>
+
                 </button>
 
-                @if (User.Identity != null && User.Identity.IsAuthenticated)
+
+
+                <!-- =================================================
+                     USUÁRIO LOGADO
+                     ================================================= -->
+                @if (User.Identity != null &&
+                                     User.Identity.IsAuthenticated)
                 {
-                    <form asp-controller="Account" asp-action="Logout" method="post">
+
+                    <form asp-controller="Account"
+                          asp-action="Logout"
+                          method="post">
+
                         @Html.AntiForgeryToken()
 
-                        <button type="submit" class="btn-login">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                        <button type="submit"
+                                class="btn-login">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2">
+
                                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+
                                 <polyline points="16 17 21 12 16 7" />
-                                <line x1="21" y1="12" x2="9" y2="12" />
+
+                                <line x1="21"
+                                      y1="12"
+                                      x2="9"
+                                      y2="12" />
+
                             </svg>
+
                             Sair
+
                         </button>
+
                     </form>
+
+
                     @if (User.IsInRole("Admin"))
                     {
-                        <a class="btn-login" asp-controller="Admin" asp-action="Index" style="margin-left:.5rem">
+
+                        <a class="btn-login"
+                           asp-controller="Admin"
+                           asp-action="Index"
+                           style="margin-left:.5rem">
+
                             Admin
+
                         </a>
+
                     }
+
                 }
                 else
                 {
-                    <a class="btn-login" asp-controller="Account" asp-action="Login">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                    <!-- LOGIN -->
+
+                    <a class="btn-login"
+                       asp-controller="Account"
+                       asp-action="Login">
+
+
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2">
+
                             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+
                             <polyline points="10 17 15 12 10 7" />
-                            <line x1="15" y1="12" x2="3" y2="12" />
+
+                            <line x1="15"
+                                  y1="12"
+                                  x2="3"
+                                  y2="12" />
+
                         </svg>
+
+
                         Entrar
+
                     </a>
+
                 }
 
-                <button class="hamburger" id="hamburger" onclick="toggleMenu()">
-                    <svg id="ham-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="12" x2="21" y2="12" />
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <line x1="3" y1="18" x2="21" y2="18" />
+
+
+                <!-- =================================================
+                     HAMBURGER
+                     ================================================= -->
+
+                <button class="hamburger"
+                        id="hamburger"
+                        onclick="toggleMenu()"
+                        aria-label="Abrir menu">
+
+
+                    <svg id="ham-icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
+
+                        <line x1="3"
+                              y1="12"
+                              x2="21"
+                              y2="12" />
+
+                        <line x1="3"
+                              y1="6"
+                              x2="21"
+                              y2="6" />
+
+                        <line x1="3"
+                              y1="18"
+                              x2="21"
+                              y2="18" />
+
                     </svg>
+
                 </button>
+
             </div>
+
         </div>
 
-        <div class="mobile-menu container" id="mobile-menu">
-            <a class="mobile-link" asp-controller="Home" asp-action="Index">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+
+        <!-- =========================================================
+             MENU MOBILE
+             ========================================================= -->
+
+        <div class="mobile-menu container"
+             id="mobile-menu">
+
+
+            <a class="mobile-link"
+               asp-controller="Home"
+               asp-action="Index">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+
                     <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>Home
+
+                </svg>
+
+                Home
+
             </a>
-            <a class="mobile-link" asp-controller="Doces" asp-action="Index">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+
+            <a class="mobile-link"
+               asp-controller="Doces"
+               asp-action="Index">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
                     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                    <line x1="3" y1="6" x2="21" y2="6" />
+
+                    <line x1="3"
+                          y1="6"
+                          x2="21"
+                          y2="6" />
+
                     <path d="M16 10a4 4 0 0 1-8 0" />
-                </svg>Loja
+
+                </svg>
+
+                Loja
+
             </a>
-            <a class="mobile-link" asp-controller="Home" asp-action="Servicos">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3" />
+
+
+            <a class="mobile-link"
+               asp-controller="Home"
+               asp-action="Servicos">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <circle cx="12"
+                            cy="12"
+                            r="3" />
+
                     <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+
                     <path d="M4.93 4.93a10 10 0 0 0 0 14.14" />
-                </svg>Serviços
+
+                </svg>
+
+                Serviços
+
             </a>
-            <a class="mobile-link" asp-controller="Home" asp-action="Sobre">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>Sobre Nós
+
+
+            <a class="mobile-link"
+               asp-controller="Home"
+               asp-action="Sobre">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <circle cx="12"
+                            cy="12"
+                            r="10" />
+
+                    <line x1="12"
+                          y1="8"
+                          x2="12"
+                          y2="12" />
+
+                    <line x1="12"
+                          y1="16"
+                          x2="12.01"
+                          y2="16" />
+
+                </svg>
+
+                Sobre Nós
+
             </a>
-            <a class="mobile-link" asp-controller="Blog" asp-action="Index">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+
+            <a class="mobile-link"
+               asp-controller="Blog"
+               asp-action="Index">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                </svg>Blog
+
+                </svg>
+
+                Blog
+
             </a>
-            <a class="mobile-link" asp-controller="Home" asp-action="Contato">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+
+            <a class="mobile-link"
+               asp-controller="Home"
+               asp-action="Contato">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>Contato
+
+                </svg>
+
+                Contato
+
             </a>
-            <a class="mobile-link" asp-controller="Account" asp-action="Login">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+
+            <a class="mobile-link"
+               asp-controller="Account"
+               asp-action="Login">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+
                     <polyline points="10 17 15 12 10 7" />
-                    <line x1="15" y1="12" x2="3" y2="12" />
-                </svg>Entrar
+
+                    <line x1="15"
+                          y1="12"
+                          x2="3"
+                          y2="12" />
+
+                </svg>
+
+                Entrar
+
             </a>
+
         </div>
+
     </nav>
 
-    <!-- ─── Conteúdo principal ─── -->
-    <main style="padding-top: 70px;">
+
+
+    <!-- =========================================================
+         CONTEÚDO PRINCIPAL
+         ========================================================= -->
+
+    <main style="padding-top:70px;">
+
         @RenderBody()
+
     </main>
 
-    <!-- ─── Footer ─── -->
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
     <footer>
+
         <div class="container">
+
             <div class="footer-grid">
+
+
+                <!-- MARCA -->
+
                 <div>
+
                     <div class="footer-brand">
+
+
                         <div class="footer-brand-icon">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="currentColor">
+
                                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+
                             </svg>
+
                         </div>
-                        <span class="footer-brand-name serif">DoceCantinho</span>
+
+
+                        <span class="footer-brand-name serif">
+
+                            DoceCantinho
+
+                        </span>
+
                     </div>
-                    <p class="footer-desc">Confeitaria artesanal com amor e tradição desde 2012.</p>
+
+
+                    <p class="footer-desc">
+
+                        Confeitaria artesanal com amor e tradição desde 2012.
+
+                    </p>
+
                 </div>
+
+
+
+                <!-- NAVEGAÇÃO -->
+
                 <div>
-                    <p class="footer-col-title">Navegação</p>
+
+                    <p class="footer-col-title">
+
+                        Navegação
+
+                    </p>
+
+
                     <ul class="footer-links">
-                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-controller="Doces" asp-action="Index">Loja</a></li>
-                        <li><a asp-controller="Home" asp-action="Servicos">Serviços</a></li>
-                        <li><a asp-controller="Home" asp-action="Sobre">Sobre Nós</a></li>
-                        <li><a asp-controller="Blog" asp-action="Index">Blog</a></li>
+
+
+                        <li>
+
+                            <a asp-controller="Home"
+                               asp-action="Index">
+
+                                Home
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a asp-controller="Doces"
+                               asp-action="Index">
+
+                                Loja
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a asp-controller="Home"
+                               asp-action="Servicos">
+
+                                Serviços
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a asp-controller="Home"
+                               asp-action="Sobre">
+
+                                Sobre Nós
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a asp-controller="Blog"
+                               asp-action="Index">
+
+                                Blog
+
+                            </a>
+
+                        </li>
+
+
                     </ul>
+
                 </div>
+
+
+
+                <!-- CONTA -->
+
                 <div>
-                    <p class="footer-col-title">Conta</p>
+
+                    <p class="footer-col-title">
+
+                        Conta
+
+                    </p>
+
+
                     <ul class="footer-links">
-                        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
-                        <li><a asp-controller="Account" asp-action="Register">Cadastro</a></li>
+
+
+                        <li>
+
+                            <a asp-controller="Account"
+                               asp-action="Login">
+
+                                Login
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a asp-controller="Account"
+                               asp-action="Register">
+
+                                Cadastro
+
+                            </a>
+
+                        </li>
+
+
                     </ul>
+
                 </div>
+
+
+
+                <!-- CONTATO -->
+
                 <div>
-                    <p class="footer-col-title">Contato</p>
+
+                    <p class="footer-col-title">
+
+                        Contato
+
+                    </p>
+
+
                     <ul class="footer-contact">
+
+
                         <li>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2">
+
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>Rua das Flores, 342 — Centro
+
+                                <circle cx="12"
+                                        cy="10"
+                                        r="3" />
+
+                            </svg>
+
+
+                            Rua das Flores, 342 — Centro
+
                         </li>
+
+
+
                         <li>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2">
+
                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.5 2 2 0 0 1 3.6 1.32h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.04z" />
-                            </svg>(11) 94567-8901
+
+                            </svg>
+
+
+                            (11) 94567-8901
+
                         </li>
+
+
+
                         <li>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2">
+
                                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+
                                 <polyline points="22,6 12,13 2,6" />
-                            </svg>ola@docecantinho.com.br
+
+                            </svg>
+
+
+                            ola@docecantinho.com.br
+
                         </li>
+
+
                     </ul>
+
                 </div>
+
             </div>
+
         </div>
+
+
+
+        <!-- FOOTER BOTTOM -->
+
         <div class="footer-bottom">
-            <div class="container">© 2026 DoceCantinho. Todos os direitos reservados.</div>
+
+            <div class="container">
+
+                © 2026 DoceCantinho.
+                Todos os direitos reservados.
+
+            </div>
+
         </div>
+
     </footer>
 
+
+
+    <!-- =========================================================
+         JAVASCRIPT DO PROJETO
+         ========================================================= -->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/carousel.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+
+    <script src="~/js/site.js"
+            asp-append-version="true">
+    </script>
+
+
+    <script src="~/js/carousel.js"
+            asp-append-version="true">
+    </script>
+
+
+
+    <!-- =========================================================
+         AOS - ANIMAÇÕES
+         ========================================================= -->
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+
+
+    <!-- =========================================================
+         ACESSIBILIDADE + AOS
+         ========================================================= -->
+
+    <script>
+
+            document.addEventListener(
+                "DOMContentLoaded",
+                function () {
+
+
+                    /* =================================================
+                       BOTÕES DE FONTE
+                       ================================================= */
+
+                    const increaseButton =
+                        document.getElementById("fontIncrease");
+
+                    const decreaseButton =
+                        document.getElementById("fontDecrease");
+
+                    const resetButton =
+                        document.getElementById("fontReset");
+
+
+                    let fontSize = 100;
+
+
+                    /* =================================================
+                       RECUPERAR TAMANHO SALVO
+                       ================================================= */
+
+                    const savedFontSize =
+                        localStorage.getItem(
+                            "doceCantinhoFontSize"
+                        );
+
+
+                    if (savedFontSize) {
+
+                        fontSize =
+                            parseInt(savedFontSize);
+
+                        document.documentElement.style.fontSize =
+                            fontSize + "%";
+                    }
+
+
+
+                    /* =================================================
+                       AUMENTAR FONTE
+                       ================================================= */
+
+                    if (increaseButton) {
+
+                        increaseButton.addEventListener(
+                            "click",
+                            function () {
+
+                                if (fontSize < 130) {
+
+                                    fontSize += 10;
+
+                                    document.documentElement.style.fontSize =
+                                        fontSize + "%";
+
+
+                                    localStorage.setItem(
+                                        "doceCantinhoFontSize",
+                                        fontSize
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    }
+
+
+
+                    /* =================================================
+                       DIMINUIR FONTE
+                       ================================================= */
+
+                    if (decreaseButton) {
+
+                        decreaseButton.addEventListener(
+                            "click",
+                            function () {
+
+                                if (fontSize > 80) {
+
+                                    fontSize -= 10;
+
+                                    document.documentElement.style.fontSize =
+                                        fontSize + "%";
+
+
+                                    localStorage.setItem(
+                                        "doceCantinhoFontSize",
+                                        fontSize
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    }
+
+
+
+                    /* =================================================
+                       RESETAR FONTE
+                       ================================================= */
+
+                    if (resetButton) {
+
+                        resetButton.addEventListener(
+                            "click",
+                            function () {
+
+                                fontSize = 100;
+
+
+                                document.documentElement.style.fontSize =
+                                    "100%";
+
+
+                                localStorage.setItem(
+                                    "doceCantinhoFontSize",
+                                    fontSize
+                                );
+
+                            }
+                        );
+
+                    }
+
+
+
+                    /* =================================================
+                       AOS
+                       ================================================= */
+
+                    if (typeof AOS !== "undefined") {
+
+                        AOS.init({
+
+                            duration: 800,
+
+                            once: true,
+
+                            offset: 80,
+
+                            easing: "ease-out-cubic"
+
+                        });
+
+                    }
+
+                }
+            );
+
+    </script>
+
+
+
+    <!-- =========================================================
+         SCRIPTS DAS PÁGINAS
+         ========================================================= -->
+    @await RenderSectionAsync(
+            "Scripts",
+            required: false
+        )
+
 </body>
+
 </html>

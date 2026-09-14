@@ -6,20 +6,33 @@
 
 <div class="page active" id="page-loja">
 
-    <div class="container" style="padding-top:2.5rem;padding-bottom:4rem">
+    <div class="container loja-container">
 
-        <div style="margin-bottom:2rem">
-            <p class="section-eyebrow">Catálogo</p>
-            <h1 class="section-title">Nossa Loja</h1>
-            <p class=Pequenos doces, grandes momentos</p>
+        <!-- CABEÇALHO -->
+        <div class="loja-header">
+
+            <p class="section-eyebrow">
+                Catálogo
+            </p>
+
+            <h1 class="section-title">
+                Nossa Loja
+            </h1>
+
+            <p class="loja-subtitle">
+                Pequenos doces, grandes momentos
+            </p>
+
         </div>
+
 
         <!-- PRODUTOS -->
         @if (Model.Doces.Any())
         {
             <div class="products-grid">
 
-                @foreach (var doce in Model.Doces)
+                @* PRODUTOS EM DESTAQUE APARECEM PRIMEIRO *@
+                @foreach (var doce in Model.Doces.OrderByDescending(x => x.IsFeatured))
                 {
                     <div class="product-card">
 
@@ -75,89 +88,37 @@
 
 
                         <!-- INFORMAÇÕES DO PRODUTO -->
-
                         <div class="product-body">
 
-                            @if (!string.IsNullOrEmpty(doce.CategoryName))
-                            {
-                                <p class="product-cat">
-                                    @doce.CategoryName
-                                </p>
-                            }
-
-
+                            <!-- NOME DO DOCE -->
                             <h3 class="product-name">
                                 @doce.Title
                             </h3>
 
 
-                            <p class="product-desc">
-                                @doce.Description
-                            </p>
+                            <!-- ÁREA DE COMPRA -->
+                            <div class="loja-buy-area">
 
-
-                            <!-- PREÇO E BOTÕES -->
-                            ```cshtml
-                            <div class="product-body">
-
-                                @if (!string.IsNullOrEmpty(doce.CategoryName))
-                                {
-                                    <p class="product-cat">
-                                        @doce.CategoryName
-                                    </p>
-                                }
-
-                                <h3 class="product-name">
-                                    @doce.Title
-                                </h3>
-
-                                <p class="product-desc">
-                                    @doce.Description
-                                </p>
-
-                                <!-- PREÇO E BOTÕES -->
-                                <div class="product-footer">
-
-                                    <span class="product-price">
-                                        @doce.Preco.ToString("C")
-                                    </span>
-
-                                    <a asp-action="Details"
-                                       asp-route-id="@doce.Id"
-                                       class="btn btn-accent btn-sm">
-                                        Ver detalhes
-                                    </a>
-
-                                    <form asp-controller="Carrinho"
-                                          asp-action="Adicionar"
-                                          method="post">
-
-                                        @Html.AntiForgeryToken()
-
-                                        <input type="hidden"
-                                               name="id"
-                                               value="@doce.Id" />
-
-                                        <input type="hidden"
-                                               name="quantidade"
-                                               value="1" />
-
-                                        <button type="submit"
-                                                class="btn btn-outline btn-sm">
-                                            Adicionar
-                                        </button>
-
-                                    </form>
-
+                                <!-- PREÇO -->
+                                <div class="loja-price">
+                                    @doce.Preco.ToString("C")
                                 </div>
 
-                            </div>
-                            ```
 
+                                <!-- BOTÕES -->
+                                <div class="loja-buttons">
+
+                                    <!-- VER DETALHES -->
+                                    <a asp-action="Details"
+                                       asp-route-id="@doce.Id"
+                                       class="loja-btn loja-btn-details">
+
+                                        Ver detalhes
+
+                                    </a>
 
 
                                     <!-- ADICIONAR AO CARRINHO -->
-
                                     <form asp-controller="Carrinho"
                                           asp-action="Adicionar"
                                           method="post">
@@ -173,7 +134,7 @@
                                                value="1" />
 
                                         <button type="submit"
-                                                class="doce-btn-dois doce-btn-adicionar">
+                                                class="loja-btn loja-btn-add">
 
                                             Adicionar
 
@@ -185,18 +146,18 @@
 
                             </div>
 
+                        </div>
+
+                    </div>
                 }
 
             </div>
         }
         else
         {
-            <p style="text-align:center;
-                color:var(--muted-fg);
-                padding:5rem 0">
-
+            <!-- NENHUM PRODUTO -->
+            <p class="empty-products">
                 Nenhum produto encontrado nesta categoria.
-
             </p>
         }
 

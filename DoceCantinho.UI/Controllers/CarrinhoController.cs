@@ -3,17 +3,16 @@ using DoceCantinho.Application.Interfaces;
 using DoceCantinho.Domain.Entities;
 using DoceCantinho.Domain.Interfaces;
 using DoceCantinho.UI.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
-[Authorize]
 public class CarrinhoController : Controller
 {
     private const string CARRINHO_SESSION_KEY = "Carrinho";
     private const string CEP_ORIGEM_LOJA = "01001000";
+
     private readonly IDoceService _doceService;
     private readonly ICheckoutProfileService _checkoutProfileService;
     private readonly IShippingService _shippingService;
@@ -34,28 +33,42 @@ public class CarrinhoController : Controller
         _db = db;
     }
 
-    // GET: Carrinho (exibir carrinho)
+    // =========================================================
+    // CARRINHO
+    // =========================================================
+
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var carrinho = ObterCarrinhoDaSessao();
+
         var isAuthenticated = User?.Identity?.IsAuthenticated == true;
+
         CheckoutProfileDto? checkoutProfile = null;
         ShippingQuoteDto? shippingQuote = null;
 
         if (isAuthenticated)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (!string.IsNullOrWhiteSpace(userId))
             {
-                checkoutProfile = await _checkoutProfileService.GetByUserIdAsync(userId);
-                if (checkoutProfile != null && checkoutProfile.TemEnderecoCompleto)
+                checkoutProfile =
+                    await _checkoutProfileService.GetByUserIdAsync(userId);
+
+                if (checkoutProfile != null &&
+                    checkoutProfile.TemEnderecoCompleto)
                 {
-                    shippingQuote = await _shippingService.CalculateAsync(CEP_ORIGEM_LOJA, checkoutProfile.Cep);
+                    shippingQuote =
+                        await _shippingService.CalculateAsync(
+                            CEP_ORIGEM_LOJA,
+                            checkoutProfile.Cep);
                 }
             }
         }
 
-        var recommendedProducts = await _doceService.GetRecommendedAsync(3);
+        var recommendedProducts =
+            await _doceService.GetRecommendedAsync(3);
 
         var viewModel = new CarrinhoCheckoutViewModel
         {
@@ -64,6 +77,7 @@ public class CarrinhoController : Controller
             ShippingQuote = shippingQuote,
             RecommendedProducts = recommendedProducts,
             IsAuthenticated = isAuthenticated,
+
             NomeCliente = checkoutProfile?.Email ?? string.Empty,
             Cep = checkoutProfile?.Cep ?? string.Empty,
             Logradouro = checkoutProfile?.Logradouro ?? string.Empty,
@@ -76,28 +90,35 @@ public class CarrinhoController : Controller
         return View(viewModel);
     }
 
-    // POST: Adicionar item ao carrinho
+    // =========================================================
+    // ADICIONAR
+    // =========================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Adicionar(int id, int quantidade = 1)
+    public async Task<IActionResult> Adicionar(
+        int id,
+        int quantidade = 1)
     {
         var doce = await _doceService.GetByIdAsync(id);
+
         if (doce == null)
             return NotFound();
 
+        if (quantidade <= 0)
+            quantidade = 1;
+
         var carrinho = ObterCarrinhoDaSessao();
 
-        // Procura se o item já existe no carrinho
-        var itemExistente = carrinho.Itens.FirstOrDefault(i => i.DoceId == id);
+        var itemExistente =
+            carrinho.Itens.FirstOrDefault(i => i.DoceId == id);
 
         if (itemExistente != null)
         {
-            // Se existe, aumenta a quantidade
             itemExistente.Quantidade += quantidade;
         }
         else
         {
-            // Cria um novo item no carrinho
             carrinho.Itens.Add(new ItemCarrinho
             {
                 DoceId = doce.Id,
@@ -108,68 +129,88 @@ public class CarrinhoController : Controller
             });
         }
 
-        await SalvarCarrinhemaSessao(carrinho);
+        await SalvarCarrinhoNaSessao(carrinho);
 
-        // Redireciona para o carrinho ou volta à página anterior
         return RedirectToAction("Index");
     }
 
-    // POST: Remover item do carrinho
+    // =========================================================
+    // REMOVER
+    // =========================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Remover(int doceId)
     {
         var carrinho = ObterCarrinhoDaSessao();
-        var item = carrinho.Itens.FirstOrDefault(i => i.DoceId == doceId);
+
+        var item =
+            carrinho.Itens.FirstOrDefault(i => i.DoceId == doceId);
 
         if (item != null)
         {
             carrinho.Itens.Remove(item);
-            // salvar de forma síncrona na sessão e tentar persistir em background
-            _ = SalvarCarrinhemaSessao(carrinho);
+            _ = SalvarCarrinhoNaSessao(carrinho);
         }
 
         return RedirectToAction("Index");
     }
 
-    // POST: Atualizar quantidade
+    // =========================================================
+    // ATUALIZAR QUANTIDADE
+    // =========================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult AtualizarQuantidade(int doceId, int quantidade)
+    public IActionResult AtualizarQuantidade(
+        int doceId,
+        int quantidade)
     {
         if (quantidade <= 0)
             return Remover(doceId);
 
         var carrinho = ObterCarrinhoDaSessao();
-        var item = carrinho.Itens.FirstOrDefault(i => i.DoceId == doceId);
+
+        var item =
+            carrinho.Itens.FirstOrDefault(i => i.DoceId == doceId);
 
         if (item != null)
         {
             item.Quantidade = quantidade;
-            _ = SalvarCarrinhemaSessao(carrinho);
+            _ = SalvarCarrinhoNaSessao(carrinho);
         }
 
         return RedirectToAction("Index");
     }
 
-    // POST: Limpar carrinho
+    // =========================================================
+    // LIMPAR
+    // =========================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Limpar()
     {
         HttpContext.Session.Remove(CARRINHO_SESSION_KEY);
-        if (User?.Identity != null && User.Identity.IsAuthenticated)
+
+        if (User?.Identity?.IsAuthenticated == true)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (!string.IsNullOrEmpty(userId))
             {
                 _ = _cartRepository.DeleteCartByUserIdAsync(userId);
             }
         }
+
         return RedirectToAction("Index");
     }
 
-    // POST: Finalizar compra
+    // =========================================================
+    // FINALIZAR COMPRA
+    // =========================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> FinalizarCompra(
@@ -183,40 +224,135 @@ public class CarrinhoController : Controller
         string? estado,
         string? paymentMethod = null)
     {
+        // =====================================================
+        // PRIMEIRO: VERIFICA SE ESTÁ LOGADO
+        // =====================================================
+
+        if (User?.Identity?.IsAuthenticated != true)
+        {
+            // Guarda os dados do checkout na sessão
+            HttpContext.Session.SetString(
+                "CheckoutNome",
+                nomeCliente ?? string.Empty);
+
+            HttpContext.Session.SetString(
+                "CheckoutTelefone",
+                telefone ?? string.Empty);
+
+            HttpContext.Session.SetString(
+                "CheckoutCep",
+                cep ?? string.Empty);
+
+            HttpContext.Session.SetString(
+                "CheckoutLogradouro",
+                logradouro ?? string.Empty);
+
+            HttpContext.Session.SetString(
+                "CheckoutNumero",
+                numero ?? string.Empty);
+
+            HttpContext.Session.SetString(
+                "CheckoutBairro",
+                bairro ?? string.Empty);
+
+            HttpContext.Session.SetString(
+                "CheckoutCidade",
+                cidade ?? string.Empty);
+
+            HttpContext.Session.SetString(
+                "CheckoutEstado",
+                estado ?? string.Empty);
+
+            // Vai para cadastro
+            return RedirectToAction(
+                "Register",
+                "Account",
+                new
+                {
+                    returnUrl = Url.Action(
+                        "Index",
+                        "Carrinho")
+                });
+        }
+
+        // =====================================================
+        // DAQUI PARA BAIXO, SOMENTE USUÁRIO LOGADO
+        // =====================================================
+
         var carrinho = ObterCarrinhoDaSessao();
 
         if (!carrinho.Itens.Any())
             return RedirectToAction("Index");
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId =
+            User.FindFirstValue(ClaimTypes.NameIdentifier);
+
         CheckoutProfileDto? checkoutProfile = null;
-        if (User?.Identity?.IsAuthenticated == true && !string.IsNullOrWhiteSpace(userId))
+
+        if (!string.IsNullOrWhiteSpace(userId))
         {
-            checkoutProfile = await _checkoutProfileService.GetByUserIdAsync(userId);
+            checkoutProfile =
+                await _checkoutProfileService
+                    .GetByUserIdAsync(userId);
         }
 
         nomeCliente = string.IsNullOrWhiteSpace(nomeCliente)
-            ? checkoutProfile?.Email ?? nomeCliente
+            ? checkoutProfile?.Email ?? string.Empty
             : nomeCliente;
 
-        var cepFinal = NormalizeCep(cep ?? checkoutProfile?.Cep);
-        var logradouroFinal = string.IsNullOrWhiteSpace(logradouro) ? checkoutProfile?.Logradouro : logradouro;
-        var numeroFinal = string.IsNullOrWhiteSpace(numero) ? checkoutProfile?.Numero : numero;
-        var bairroFinal = string.IsNullOrWhiteSpace(bairro) ? checkoutProfile?.Bairro : bairro;
-        var cidadeFinal = string.IsNullOrWhiteSpace(cidade) ? checkoutProfile?.Cidade : cidade;
-        var estadoFinal = string.IsNullOrWhiteSpace(estado) ? checkoutProfile?.Estado : estado;
+        var cepFinal =
+            NormalizeCep(cep ?? checkoutProfile?.Cep);
 
-        var endereco = MontarEndereco(logradouroFinal, numeroFinal, bairroFinal, cidadeFinal, estadoFinal, cepFinal);
+        var logradouroFinal =
+            string.IsNullOrWhiteSpace(logradouro)
+                ? checkoutProfile?.Logradouro
+                : logradouro;
 
-        if (string.IsNullOrWhiteSpace(nomeCliente) || string.IsNullOrWhiteSpace(telefone))
-            return BadRequest("Nome e telefone são obrigatórios");
+        var numeroFinal =
+            string.IsNullOrWhiteSpace(numero)
+                ? checkoutProfile?.Numero
+                : numero;
+
+        var bairroFinal =
+            string.IsNullOrWhiteSpace(bairro)
+                ? checkoutProfile?.Bairro
+                : bairro;
+
+        var cidadeFinal =
+            string.IsNullOrWhiteSpace(cidade)
+                ? checkoutProfile?.Cidade
+                : cidade;
+
+        var estadoFinal =
+            string.IsNullOrWhiteSpace(estado)
+                ? checkoutProfile?.Estado
+                : estado;
+
+        var endereco = MontarEndereco(
+            logradouroFinal,
+            numeroFinal,
+            bairroFinal,
+            cidadeFinal,
+            estadoFinal,
+            cepFinal);
+
+        if (string.IsNullOrWhiteSpace(nomeCliente) ||
+            string.IsNullOrWhiteSpace(telefone))
+        {
+            return BadRequest(
+                "Nome e telefone são obrigatórios");
+        }
 
         ShippingQuoteDto? shippingQuote = null;
+
         if (!string.IsNullOrWhiteSpace(cepFinal))
         {
             try
             {
-                shippingQuote = await _shippingService.CalculateAsync(CEP_ORIGEM_LOJA, cepFinal);
+                shippingQuote =
+                    await _shippingService.CalculateAsync(
+                        CEP_ORIGEM_LOJA,
+                        cepFinal);
             }
             catch
             {
@@ -224,37 +360,15 @@ public class CarrinhoController : Controller
             }
         }
 
-        var mensagem = new StringBuilder();
-        mensagem.AppendLine("🎉 *NOVO PEDIDO - Doce Cantinho* 🎉");
-        mensagem.AppendLine("━━━━━━━━━━━━━━━━━━━━━━");
-        mensagem.AppendLine($"📝 *Cliente:* {nomeCliente}");
-        mensagem.AppendLine($"📱 *Telefone:* {telefone}");
-
-        if (!string.IsNullOrWhiteSpace(endereco))
-        {
-            mensagem.AppendLine($"📍 *Endereço:* {endereco}");
-        }
-
-        if (shippingQuote != null)
-        {
-            mensagem.AppendLine($"🚚 *Frete:* R$ {shippingQuote.ShippingPrice:F2} ({shippingQuote.EstimatedDays} dias)");
-        }
-
-        mensagem.AppendLine("━━━━━━━━━━━━━━━━━━━━━━");
-        mensagem.AppendLine("🛒 *Itens do Pedido:*");
-        mensagem.AppendLine("");
+        // =====================================================
+        // CALCULAR TOTAL
+        // =====================================================
 
         decimal total = 0;
 
         foreach (var item in carrinho.Itens)
         {
-            var subtotal = item.Preco * item.Quantidade;
-            mensagem.AppendLine($"✓ {item.Nome}");
-            mensagem.AppendLine($"  Qtd: {item.Quantidade} x R$ {item.Preco:F2}");
-            mensagem.AppendLine($"  Subtotal: R$ {subtotal:F2}");
-            mensagem.AppendLine("");
-
-            total += subtotal;
+            total += item.Preco * item.Quantidade;
         }
 
         if (shippingQuote != null)
@@ -262,124 +376,166 @@ public class CarrinhoController : Controller
             total += shippingQuote.ShippingPrice;
         }
 
-        mensagem.AppendLine("━━━━━━━━━━━━━━━━━━━━━━");
-        mensagem.AppendLine($"💰 *TOTAL:* R$ {total:F2}");
-        mensagem.AppendLine("━━━━━━━━━━━━━━━━━━━━━━");
-        mensagem.AppendLine("");
-        mensagem.AppendLine("Obrigado por sua compra! 🙏");
+        // =====================================================
+        // CRIAR PEDIDO
+        // =====================================================
 
-        // Salvar pedido no banco
-        var pedido = new DoceCantinho.Domain.Entities.Pedido
-        {
-            NomeCliente = nomeCliente,
-            Telefone = telefone,
-            Endereco = endereco,
-            Total = total,
-            CreatedAt = DateTime.UtcNow,
-            UserId = userId ?? string.Empty,
-            Status = string.IsNullOrEmpty(paymentMethod) ? "Pendente" : "Pago",
-            PaymentMethod = paymentMethod ?? string.Empty
-        };
+        var pedido =
+            new DoceCantinho.Domain.Entities.Pedido
+            {
+                NomeCliente = nomeCliente,
+                Telefone = telefone,
+                Endereco = endereco,
+                Total = total,
+                CreatedAt = DateTime.UtcNow,
+                UserId = userId ?? string.Empty,
+                Status = string.IsNullOrEmpty(paymentMethod)
+                    ? "Pendente"
+                    : "Pago",
+                PaymentMethod = paymentMethod ?? string.Empty
+            };
 
         foreach (var item in carrinho.Itens)
         {
-            pedido.Items.Add(new DoceCantinho.Domain.Entities.PedidoItem
-            {
-                DoceId = item.DoceId,
-                Nome = item.Nome,
-                Preco = item.Preco,
-                Quantidade = item.Quantidade
-            });
+            pedido.Items.Add(
+                new DoceCantinho.Domain.Entities.PedidoItem
+                {
+                    DoceId = item.DoceId,
+                    Nome = item.Nome,
+                    Preco = item.Preco,
+                    Quantidade = item.Quantidade
+                });
         }
 
         _db.Pedidos.Add(pedido);
         _db.SaveChanges();
 
-        // Limpar sessão após salvar pedido
-        HttpContext.Session.Remove(CARRINHO_SESSION_KEY);
-        if (User?.Identity != null && User.Identity.IsAuthenticated)
+        // =====================================================
+        // LIMPAR CARRINHO
+        // =====================================================
+
+        HttpContext.Session.Remove(
+            CARRINHO_SESSION_KEY);
+
+        if (!string.IsNullOrEmpty(userId))
         {
-            var cartUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!string.IsNullOrEmpty(cartUserId))
-            {
-                _ = _cartRepository.DeleteCartByUserIdAsync(cartUserId);
-            }
+            _ = _cartRepository
+                .DeleteCartByUserIdAsync(userId);
         }
 
-        // Se foi selecionado método de pagamento no carrinho, consideramos o pagamento concluído
+        // =====================================================
+        // PAGAMENTO
+        // =====================================================
+
         if (!string.IsNullOrEmpty(paymentMethod))
         {
-            return RedirectToAction("PaymentResult", new { orderId = pedido.Id });
+            return RedirectToAction(
+                "PaymentResult",
+                new { orderId = pedido.Id });
         }
 
-        // Caso contrário, segue para a simulação de pagamento tradicional
-        return RedirectToAction("Payment", new { orderId = pedido.Id });
+        return RedirectToAction(
+            "Payment",
+            new { orderId = pedido.Id });
     }
 
-    // POST: Finalizar compra e enviar para WhatsApp (opção direta)
+    // =========================================================
+    // WHATSAPP
+    // =========================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult FinalizarWhatsApp(string nomeCliente, string telefone, string? endereco = null)
+    public IActionResult FinalizarWhatsApp(
+        string nomeCliente,
+        string telefone,
+        string? endereco = null)
     {
         var carrinho = ObterCarrinhoDaSessao();
 
         if (!carrinho.Itens.Any())
             return RedirectToAction("Index");
 
-        if (string.IsNullOrWhiteSpace(nomeCliente) || string.IsNullOrWhiteSpace(telefone))
-            return BadRequest("Nome e telefone são obrigatórios");
+        if (string.IsNullOrWhiteSpace(nomeCliente) ||
+            string.IsNullOrWhiteSpace(telefone))
+        {
+            return BadRequest(
+                "Nome e telefone são obrigatórios");
+        }
 
         decimal total = 0;
+
         foreach (var item in carrinho.Itens)
         {
             total += item.Preco * item.Quantidade;
         }
 
-        var pedido = new DoceCantinho.Domain.Entities.Pedido
-        {
-            NomeCliente = nomeCliente,
-            Telefone = telefone,
-            Endereco = endereco,
-            Total = total,
-            CreatedAt = DateTime.UtcNow,
-            Status = "Pendente"
-        };
+        var pedido =
+            new DoceCantinho.Domain.Entities.Pedido
+            {
+                NomeCliente = nomeCliente,
+                Telefone = telefone,
+                Endereco = endereco,
+                Total = total,
+                CreatedAt = DateTime.UtcNow,
+                Status = "Pendente",
+                UserId = User?.Identity?.IsAuthenticated == true
+                    ? User.FindFirstValue(
+                        ClaimTypes.NameIdentifier) ?? string.Empty
+                    : string.Empty
+            };
 
         foreach (var item in carrinho.Itens)
         {
-            pedido.Items.Add(new DoceCantinho.Domain.Entities.PedidoItem
-            {
-                DoceId = item.DoceId,
-                Nome = item.Nome,
-                Preco = item.Preco,
-                Quantidade = item.Quantidade
-            });
+            pedido.Items.Add(
+                new DoceCantinho.Domain.Entities.PedidoItem
+                {
+                    DoceId = item.DoceId,
+                    Nome = item.Nome,
+                    Preco = item.Preco,
+                    Quantidade = item.Quantidade
+                });
         }
 
         _db.Pedidos.Add(pedido);
         _db.SaveChanges();
 
-        // Monta mensagem para WhatsApp
         var sb = new StringBuilder();
-        sb.AppendLine($"NOVO PEDIDO - Doce Cantinho\n");
+
+        sb.AppendLine("NOVO PEDIDO - Doce Cantinho");
+        sb.AppendLine();
         sb.AppendLine($"Cliente: {nomeCliente}");
         sb.AppendLine($"Telefone: {telefone}");
-        if (!string.IsNullOrWhiteSpace(endereco)) sb.AppendLine($"Endereço: {endereco}");
-        sb.AppendLine("\nItens:");
+
+        if (!string.IsNullOrWhiteSpace(endereco))
+            sb.AppendLine($"Endereço: {endereco}");
+
+        sb.AppendLine();
+        sb.AppendLine("Itens:");
+
         foreach (var it in pedido.Items)
         {
-            sb.AppendLine($"- {it.Nome} x{it.Quantidade} = R$ {it.Subtotal:F2}");
+            sb.AppendLine(
+                $"- {it.Nome} x{it.Quantidade} = R$ {it.Subtotal:F2}");
         }
-        sb.AppendLine($"\nTotal: R$ {pedido.Total:F2}");
 
-        // Limpar sessão
-        HttpContext.Session.Remove(CARRINHO_SESSION_KEY);
+        sb.AppendLine();
+        sb.AppendLine($"Total: R$ {pedido.Total:F2}");
 
-        string numeroWhatsApp = "5511999999999"; // substituir pelo número real
-        string link = $"https://wa.me/{numeroWhatsApp}?text={Uri.EscapeDataString(sb.ToString())}";
+        HttpContext.Session.Remove(
+            CARRINHO_SESSION_KEY);
+
+        string numeroWhatsApp = "5511999999999";
+
+        string link =
+            $"https://wa.me/{numeroWhatsApp}?text=" +
+            Uri.EscapeDataString(sb.ToString());
 
         return Redirect(link);
     }
+
+    // =========================================================
+    // PAGAMENTO
+    // =========================================================
 
     [HttpGet]
     public IActionResult Payment(int orderId)
@@ -393,124 +549,236 @@ public class CarrinhoController : Controller
                 p.Telefone,
                 p.Endereco,
                 p.Total,
-                Items = p.Items.Select(i => new { i.Nome, i.Preco, i.Quantidade, i.Subtotal })
+                Items = p.Items.Select(i => new
+                {
+                    i.Nome,
+                    i.Preco,
+                    i.Quantidade,
+                    i.Subtotal
+                })
             })
             .FirstOrDefault();
 
-        if (order == null) return NotFound();
+        if (order == null)
+            return NotFound();
 
         ViewData["Order"] = order;
+
         return View();
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Payment(int orderId, string paymentMethod, string? cardNumber, string? cardName)
+    public IActionResult Payment(
+        int orderId,
+        string paymentMethod,
+        string? cardNumber,
+        string? cardName)
     {
-        var order = _db.Pedidos.FirstOrDefault(p => p.Id == orderId);
-        if (order == null) return NotFound();
+        var order =
+            _db.Pedidos.FirstOrDefault(
+                p => p.Id == orderId);
 
-        // Simula processamento de pagamento
-        // Em ambiente real aqui integraria com gateway de pagamento
+        if (order == null)
+            return NotFound();
+
         order.PaymentMethod = paymentMethod;
         order.Status = "Pago";
+
         _db.SaveChanges();
 
-        return RedirectToAction("PaymentResult", new { orderId = order.Id });
+        return RedirectToAction(
+            "PaymentResult",
+            new { orderId = order.Id });
     }
 
     [HttpGet]
     public IActionResult PaymentResult(int orderId)
     {
-        var order = _db.Pedidos.FirstOrDefault(p => p.Id == orderId);
-        if (order == null) return NotFound();
+        var order =
+            _db.Pedidos.FirstOrDefault(
+                p => p.Id == orderId);
+
+        if (order == null)
+            return NotFound();
+
         return View(order);
     }
 
-    // Métodos auxiliares
-    private static string NormalizeCep(string? cep)
-        => new string((cep ?? string.Empty).Where(char.IsDigit).ToArray());
-
-    private static string MontarEndereco(string? logradouro, string? numero, string? bairro, string? cidade, string? estado, string? cep)
-    {
-        var partes = new List<string>();
-
-        if (!string.IsNullOrWhiteSpace(logradouro)) partes.Add(logradouro);
-        if (!string.IsNullOrWhiteSpace(numero) && partes.Count > 0) partes[partes.Count - 1] = $"{partes.Last()}, {numero}";
-        if (!string.IsNullOrWhiteSpace(numero) && partes.Count == 0) partes.Add(numero);
-        if (!string.IsNullOrWhiteSpace(bairro)) partes.Add(bairro);
-        if (!string.IsNullOrWhiteSpace(cidade)) partes.Add(cidade);
-        if (!string.IsNullOrWhiteSpace(estado)) partes.Add(estado);
-        if (!string.IsNullOrWhiteSpace(cep)) partes.Add($"CEP {cep}");
-
-        return string.Join(" - ", partes.Where(p => !string.IsNullOrWhiteSpace(p)));
-    }
-
-    private CarrinhoSessao ObterCarrinhoDaSessao()
-    {
-        var carrinhoJson = HttpContext.Session.GetString(CARRINHO_SESSION_KEY);
-
-        if (string.IsNullOrEmpty(carrinhoJson))
-        {
-            // se usuário autenticado, tentar carregar do DB
-            if (User?.Identity != null && User.Identity.IsAuthenticated)
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (!string.IsNullOrEmpty(userId))
-                {
-                    var persisted = _cartRepository.GetCartJsonByUserIdAsync(userId).GetAwaiter().GetResult();
-                    if (!string.IsNullOrEmpty(persisted))
-                    {
-                        HttpContext.Session.SetString(CARRINHO_SESSION_KEY, persisted);
-                        return JsonSerializer.Deserialize<CarrinhoSessao>(persisted) ?? new CarrinhoSessao { Itens = new List<ItemCarrinho>() };
-                    }
-                }
-            }
-
-            return new CarrinhoSessao { Itens = new List<ItemCarrinho>() };
-        }
-
-        return JsonSerializer.Deserialize<CarrinhoSessao>(carrinhoJson) 
-            ?? new CarrinhoSessao { Itens = new List<ItemCarrinho>() };
-    }
-
-    private async Task SalvarCarrinhemaSessao(CarrinhoSessao carrinho)
-    {
-        var carrinhoJson = JsonSerializer.Serialize(carrinho);
-        HttpContext.Session.SetString(CARRINHO_SESSION_KEY, carrinhoJson);
-
-        if (User?.Identity != null && User.Identity.IsAuthenticated)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!string.IsNullOrEmpty(userId))
-            {
-                await _cartRepository.SaveCartJsonByUserIdAsync(userId, carrinhoJson);
-            }
-        }
-    }
+    // =========================================================
+    // QUANTIDADE DO CARRINHO
+    // =========================================================
 
     [HttpGet]
     public IActionResult Quantidade()
     {
         var carrinho = ObterCarrinhoDaSessao();
-        return Json(new { count = carrinho.QuantidadeTotal });
+
+        return Json(new
+        {
+            count = carrinho.QuantidadeTotal
+        });
+    }
+
+    // =========================================================
+    // AUXILIARES
+    // =========================================================
+
+    private static string NormalizeCep(string? cep)
+    {
+        return new string(
+            (cep ?? string.Empty)
+                .Where(char.IsDigit)
+                .ToArray());
+    }
+
+    private static string MontarEndereco(
+        string? logradouro,
+        string? numero,
+        string? bairro,
+        string? cidade,
+        string? estado,
+        string? cep)
+    {
+        var partes = new List<string>();
+
+        if (!string.IsNullOrWhiteSpace(logradouro))
+            partes.Add(logradouro);
+
+        if (!string.IsNullOrWhiteSpace(numero) &&
+            partes.Count > 0)
+        {
+            partes[partes.Count - 1] =
+                $"{partes.Last()}, {numero}";
+        }
+
+        if (!string.IsNullOrWhiteSpace(numero) &&
+            partes.Count == 0)
+        {
+            partes.Add(numero);
+        }
+
+        if (!string.IsNullOrWhiteSpace(bairro))
+            partes.Add(bairro);
+
+        if (!string.IsNullOrWhiteSpace(cidade))
+            partes.Add(cidade);
+
+        if (!string.IsNullOrWhiteSpace(estado))
+            partes.Add(estado);
+
+        if (!string.IsNullOrWhiteSpace(cep))
+            partes.Add($"CEP {cep}");
+
+        return string.Join(
+            " - ",
+            partes.Where(
+                p => !string.IsNullOrWhiteSpace(p)));
+    }
+
+    private CarrinhoSessao ObterCarrinhoDaSessao()
+    {
+        var carrinhoJson =
+            HttpContext.Session.GetString(
+                CARRINHO_SESSION_KEY);
+
+        if (string.IsNullOrEmpty(carrinhoJson))
+        {
+            // Usuário logado:
+            // tenta recuperar o carrinho salvo no banco.
+            if (User?.Identity?.IsAuthenticated == true)
+            {
+                var userId =
+                    User.FindFirstValue(
+                        ClaimTypes.NameIdentifier);
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var persisted =
+                        _cartRepository
+                            .GetCartJsonByUserIdAsync(userId)
+                            .GetAwaiter()
+                            .GetResult();
+
+                    if (!string.IsNullOrEmpty(persisted))
+                    {
+                        HttpContext.Session.SetString(
+                            CARRINHO_SESSION_KEY,
+                            persisted);
+
+                        return JsonSerializer.Deserialize<CarrinhoSessao>(
+                            persisted)
+                            ?? new CarrinhoSessao();
+                    }
+                }
+            }
+
+            // Visitante: carrinho vazio na sessão.
+            return new CarrinhoSessao();
+        }
+
+        return JsonSerializer.Deserialize<CarrinhoSessao>(
+            carrinhoJson)
+            ?? new CarrinhoSessao();
+    }
+
+    private async Task SalvarCarrinhoNaSessao(
+        CarrinhoSessao carrinho)
+    {
+        var carrinhoJson =
+            JsonSerializer.Serialize(carrinho);
+
+        // Sempre salva na sessão.
+        // Portanto visitante também pode ter carrinho.
+        HttpContext.Session.SetString(
+            CARRINHO_SESSION_KEY,
+            carrinhoJson);
+
+        // Se estiver logado, também salva no banco.
+        if (User?.Identity?.IsAuthenticated == true)
+        {
+            var userId =
+                User.FindFirstValue(
+                    ClaimTypes.NameIdentifier);
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await _cartRepository
+                    .SaveCartJsonByUserIdAsync(
+                        userId,
+                        carrinhoJson);
+            }
+        }
     }
 }
 
-// Modelos para carrinho
+// =============================================================
+// MODELOS DO CARRINHO
+// =============================================================
+
 public class CarrinhoSessao
 {
     public List<ItemCarrinho> Itens { get; set; } = new();
 
-    public decimal Total => Itens.Sum(i => i.Preco * i.Quantidade);
-    public int QuantidadeTotal => Itens.Sum(i => i.Quantidade);
+    public decimal Total =>
+        Itens.Sum(
+            i => i.Preco * i.Quantidade);
+
+    public int QuantidadeTotal =>
+        Itens.Sum(
+            i => i.Quantidade);
 }
 
 public class ItemCarrinho
 {
     public int DoceId { get; set; }
-    public string Nome { get; set; } = string.Empty;
+
+    public string Nome { get; set; } =
+        string.Empty;
+
     public decimal Preco { get; set; }
+
     public int Quantidade { get; set; }
+
     public string? CoverImageUrl { get; set; }
 }

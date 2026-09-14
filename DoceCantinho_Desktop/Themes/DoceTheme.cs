@@ -11,25 +11,21 @@ namespace DoceCantinho.Desktop.Themes
         // CORES PRINCIPAIS
         // ============================================================
 
-        // Fundo geral das telas
         public static readonly Color Fundo =
             Color.FromArgb(248, 245, 242);
 
-        // Branco dos cards
         public static readonly Color Branco =
             Color.FromArgb(255, 255, 255);
 
         public static readonly Color Card =
             Color.FromArgb(255, 255, 255);
 
-        // Sidebar
         public static readonly Color Sidebar =
             Color.FromArgb(48, 31, 27);
 
         public static readonly Color SidebarHover =
             Color.FromArgb(68, 45, 39);
 
-        // Cor principal — terracota
         public static readonly Color Primaria =
             Color.FromArgb(207, 132, 106);
 
@@ -39,7 +35,6 @@ namespace DoceCantinho.Desktop.Themes
         public static readonly Color PrimariaClara =
             Color.FromArgb(250, 237, 231);
 
-        // Textos
         public static readonly Color Texto =
             Color.FromArgb(45, 30, 26);
 
@@ -49,19 +44,17 @@ namespace DoceCantinho.Desktop.Themes
         public static readonly Color TextoFraco =
             Color.FromArgb(158, 139, 130);
 
-        // Bordas
         public static readonly Color Borda =
             Color.FromArgb(235, 227, 222);
 
         public static readonly Color BordaEscura =
             Color.FromArgb(224, 214, 208);
 
-        // Campos
         public static readonly Color FundoInput =
             Color.FromArgb(250, 247, 244);
 
         // ============================================================
-        // CORES DE STATUS
+        // STATUS
         // ============================================================
 
         public static readonly Color Verde =
@@ -95,7 +88,7 @@ namespace DoceCantinho.Desktop.Themes
             Color.FromArgb(253, 233, 233);
 
         // ============================================================
-        // CORES DAS CATEGORIAS
+        // CATEGORIAS
         // ============================================================
 
         public static readonly Color CategoriaBolos =
@@ -117,41 +110,29 @@ namespace DoceCantinho.Desktop.Themes
         // FONTES
         // ============================================================
 
-        // Fonte principal.
-        // Segoe UI é usada porque já vem instalada no Windows.
         public static string FonteBase => "Segoe UI";
 
-        // Texto pequeno
         public static Font Fonte8 =>
             new Font(FonteBase, 8f, FontStyle.Regular);
 
-        // Texto padrão
         public static Font Fonte9 =>
             new Font(FonteBase, 9f, FontStyle.Regular);
 
-        // Texto padrão em negrito
         public static Font Fonte9Bold =>
             new Font(FonteBase, 9f, FontStyle.Bold);
 
-        // Texto médio
         public static Font Fonte10 =>
             new Font(FonteBase, 10f, FontStyle.Regular);
 
-        // Texto médio em negrito
         public static Font Fonte10Bold =>
             new Font(FonteBase, 10f, FontStyle.Bold);
 
-        // Títulos das páginas
-        //
-        // A referência usa um estilo serifado nos títulos.
-        // Georgia existe no Windows.
         public static Font FonteTitulo =>
             new Font("Georgia", 19f, FontStyle.Bold);
 
         public static Font FonteTituloGrande =>
             new Font("Georgia", 21f, FontStyle.Bold);
 
-        // Números dos cards
         public static Font FonteNumero =>
             new Font("Georgia", 17f, FontStyle.Bold);
 
@@ -160,15 +141,12 @@ namespace DoceCantinho.Desktop.Themes
         // ============================================================
 
         public const int SidebarWidth = 190;
-
         public const int PagePadding = 22;
-
         public const int CardRadius = 12;
-
         public const int ButtonRadius = 8;
 
         // ============================================================
-        // BOTÕES
+        // BOTÃO PRIMÁRIO
         // ============================================================
 
         public static void AplicarBotaoPrimario(Guna2Button botao)
@@ -177,19 +155,13 @@ namespace DoceCantinho.Desktop.Themes
                 return;
 
             botao.BorderRadius = ButtonRadius;
-
             botao.FillColor = Primaria;
-
             botao.ForeColor = Color.White;
-
             botao.Font = Fonte9Bold;
-
             botao.BorderThickness = 0;
-
             botao.Cursor = Cursors.Hand;
 
             botao.HoverState.FillColor = PrimariaHover;
-
             botao.HoverState.ForeColor = Color.White;
 
             botao.PressedColor = PrimariaHover;
@@ -201,32 +173,29 @@ namespace DoceCantinho.Desktop.Themes
                 Color.White;
         }
 
+        // ============================================================
+        // BOTÃO SECUNDÁRIO
+        // ============================================================
+
         public static void AplicarBotaoSecundario(Guna2Button botao)
         {
             if (botao == null)
                 return;
 
             botao.BorderRadius = ButtonRadius;
-
             botao.FillColor = FundoInput;
-
             botao.ForeColor = TextoSecundario;
-
             botao.Font = Fonte9Bold;
-
             botao.BorderThickness = 0;
-
             botao.Cursor = Cursors.Hand;
 
             botao.HoverState.FillColor = PrimariaClara;
-
             botao.HoverState.ForeColor = Texto;
-
             botao.PressedColor = BordaEscura;
         }
 
         // ============================================================
-        // LABEL DE TÍTULO
+        // TÍTULO
         // ============================================================
 
         public static void AplicarTitulo(Label label)
@@ -235,11 +204,8 @@ namespace DoceCantinho.Desktop.Themes
                 return;
 
             label.AutoSize = true;
-
             label.Font = FonteTitulo;
-
             label.ForeColor = Texto;
-
             label.BackColor = Color.Transparent;
         }
 
@@ -253,16 +219,13 @@ namespace DoceCantinho.Desktop.Themes
                 return;
 
             label.AutoSize = true;
-
             label.Font = Fonte9;
-
             label.ForeColor = TextoSecundario;
-
             label.BackColor = Color.Transparent;
         }
 
         // ============================================================
-        // LABEL PADRÃO
+        // TEXTO
         // ============================================================
 
         public static void AplicarTexto(Label label)
@@ -271,14 +234,12 @@ namespace DoceCantinho.Desktop.Themes
                 return;
 
             label.Font = Fonte9;
-
             label.ForeColor = Texto;
-
             label.BackColor = Color.Transparent;
         }
 
         // ============================================================
-        // LABEL PEQUENO
+        // TEXTO PEQUENO
         // ============================================================
 
         public static void AplicarTextoPequeno(Label label)
@@ -287,9 +248,7 @@ namespace DoceCantinho.Desktop.Themes
                 return;
 
             label.Font = Fonte8;
-
             label.ForeColor = TextoSecundario;
-
             label.BackColor = Color.Transparent;
         }
 
@@ -315,11 +274,8 @@ namespace DoceCantinho.Desktop.Themes
                 return;
 
             textBox.BackColor = FundoInput;
-
             textBox.ForeColor = Texto;
-
             textBox.Font = Fonte9;
-
             textBox.BorderStyle = BorderStyle.FixedSingle;
         }
 
@@ -333,11 +289,8 @@ namespace DoceCantinho.Desktop.Themes
                 return;
 
             comboBox.BackColor = FundoInput;
-
             comboBox.ForeColor = Texto;
-
             comboBox.Font = Fonte9;
-
             comboBox.FlatStyle = FlatStyle.Flat;
         }
 
@@ -350,12 +303,21 @@ namespace DoceCantinho.Desktop.Themes
             if (grid == null)
                 return;
 
-            // ----------------------------
-            // Fundo
-            // ----------------------------
+            Color fundoLinha = Branco;
+            Color fundoLinhaAlternada =
+                Color.FromArgb(253, 251, 249);
+
+            Color fundoSelecionado =
+                PrimariaClara;
+
+            Color textoSelecionado =
+                Texto;
+
+            // --------------------------------------------------------
+            // FUNDO
+            // --------------------------------------------------------
 
             grid.BackgroundColor = Fundo;
-
             grid.BorderStyle = BorderStyle.None;
 
             grid.CellBorderStyle =
@@ -363,9 +325,9 @@ namespace DoceCantinho.Desktop.Themes
 
             grid.GridColor = Borda;
 
-            // ----------------------------
-            // Cabeçalho
-            // ----------------------------
+            // --------------------------------------------------------
+            // CABEÇALHO
+            // --------------------------------------------------------
 
             grid.EnableHeadersVisualStyles = false;
 
@@ -393,12 +355,12 @@ namespace DoceCantinho.Desktop.Themes
 
             grid.ColumnHeadersHeight = 38;
 
-            // ----------------------------
-            // Células
-            // ----------------------------
+            // --------------------------------------------------------
+            // CÉLULAS
+            // --------------------------------------------------------
 
             grid.DefaultCellStyle.BackColor =
-                Branco;
+                fundoLinha;
 
             grid.DefaultCellStyle.ForeColor =
                 Texto;
@@ -407,32 +369,35 @@ namespace DoceCantinho.Desktop.Themes
                 Fonte9;
 
             grid.DefaultCellStyle.SelectionBackColor =
-                PrimariaClara;
+                fundoSelecionado;
 
             grid.DefaultCellStyle.SelectionForeColor =
-                Texto;
+                textoSelecionado;
 
             grid.DefaultCellStyle.Padding =
                 new Padding(8, 3, 8, 3);
 
             grid.DefaultCellStyle.NullValue = "—";
 
-            // ----------------------------
-            // Linhas alternadas
-            // ----------------------------
+            // --------------------------------------------------------
+            // LINHAS ALTERNADAS
+            // --------------------------------------------------------
 
             grid.AlternatingRowsDefaultCellStyle.BackColor =
-                Color.FromArgb(253, 251, 249);
+                fundoLinhaAlternada;
 
-            grid.AlternatingRowsDefaultCellStyle.SelectionBackColor =
-                PrimariaClara;
-
-            grid.AlternatingRowsDefaultCellStyle.SelectionForeColor =
+            grid.AlternatingRowsDefaultCellStyle.ForeColor =
                 Texto;
 
-            // ----------------------------
-            // Configuração
-            // ----------------------------
+            grid.AlternatingRowsDefaultCellStyle.SelectionBackColor =
+                fundoSelecionado;
+
+            grid.AlternatingRowsDefaultCellStyle.SelectionForeColor =
+                textoSelecionado;
+
+            // --------------------------------------------------------
+            // CONFIGURAÇÃO
+            // --------------------------------------------------------
 
             grid.RowHeadersVisible = false;
 
@@ -449,11 +414,8 @@ namespace DoceCantinho.Desktop.Themes
             grid.ReadOnly = true;
 
             grid.AllowUserToAddRows = false;
-
             grid.AllowUserToDeleteRows = false;
-
             grid.AllowUserToResizeRows = false;
-
             grid.AllowUserToResizeColumns = false;
 
             grid.RowHeadersWidthSizeMode =
@@ -462,36 +424,35 @@ namespace DoceCantinho.Desktop.Themes
             grid.ColumnHeadersHeightSizeMode =
                 DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 
-            // Evita que o usuário veja o cursor azul padrão
-            // quando a tabela recebe foco.
-            grid.ClearSelection();
-
-            // ----------------------------
-            // Guna DataGridView
-            // ----------------------------
+            // --------------------------------------------------------
+            // GUNA UI2
+            // --------------------------------------------------------
 
             if (grid is Guna2DataGridView guna)
             {
                 guna.ThemeStyle.RowsStyle.BackColor =
-                    Branco;
+                    fundoLinha;
 
                 guna.ThemeStyle.RowsStyle.ForeColor =
                     Texto;
 
                 guna.ThemeStyle.RowsStyle.SelectionBackColor =
-                    PrimariaClara;
+                    fundoSelecionado;
 
                 guna.ThemeStyle.RowsStyle.SelectionForeColor =
-                    Texto;
+                    textoSelecionado;
 
                 guna.ThemeStyle.AlternatingRowsStyle.BackColor =
-                    Color.FromArgb(253, 251, 249);
+                    fundoLinhaAlternada;
+
+                guna.ThemeStyle.AlternatingRowsStyle.ForeColor =
+                    Texto;
 
                 guna.ThemeStyle.AlternatingRowsStyle.SelectionBackColor =
-                    PrimariaClara;
+                    fundoSelecionado;
 
                 guna.ThemeStyle.AlternatingRowsStyle.SelectionForeColor =
-                    Texto;
+                    textoSelecionado;
 
                 guna.ThemeStyle.HeaderStyle.BackColor =
                     Branco;
@@ -505,6 +466,45 @@ namespace DoceCantinho.Desktop.Themes
                         8f,
                         FontStyle.Bold
                     );
+
+                guna.ThemeStyle.HeaderStyle.Height = 38;
+
+                guna.DefaultCellStyle.SelectionBackColor =
+                    fundoSelecionado;
+
+                guna.DefaultCellStyle.SelectionForeColor =
+                    textoSelecionado;
+
+                guna.AlternatingRowsDefaultCellStyle.SelectionBackColor =
+                    fundoSelecionado;
+
+                guna.AlternatingRowsDefaultCellStyle.SelectionForeColor =
+                    textoSelecionado;
+            }
+
+            // ============================================================
+            // FORÇA O CABEÇALHO DE TODAS AS COLUNAS
+            // ============================================================
+
+            foreach (DataGridViewColumn coluna in grid.Columns)
+            {
+                coluna.HeaderCell.Style.BackColor = Branco;
+                coluna.HeaderCell.Style.ForeColor = TextoSecundario;
+                coluna.HeaderCell.Style.Font =
+                    new Font(FonteBase, 8f, FontStyle.Bold);
+
+                coluna.HeaderCell.Style.SelectionBackColor = Branco;
+                coluna.HeaderCell.Style.SelectionForeColor = TextoSecundario;
+            }
+
+            // --------------------------------------------------------
+            // INICIA SEM SELEÇÃO
+            // --------------------------------------------------------
+
+            if (grid.Rows.Count > 0)
+            {
+                grid.ClearSelection();
+                grid.CurrentCell = null;
             }
         }
 
@@ -544,7 +544,8 @@ namespace DoceCantinho.Desktop.Themes
 
         public static Color ObterCorClaraCategoria(string nome)
         {
-            Color cor = ObterCorCategoria(nome);
+            Color cor =
+                ObterCorCategoria(nome);
 
             return ControlPaint.LightLight(cor);
         }
@@ -553,7 +554,9 @@ namespace DoceCantinho.Desktop.Themes
         // ARREDONDAR CONTROLE
         // ============================================================
 
-        public static void Arredondar(Control controle, int raio)
+        public static void Arredondar(
+            Control controle,
+            int raio)
         {
             if (controle == null)
                 return;
@@ -567,7 +570,10 @@ namespace DoceCantinho.Desktop.Themes
                 );
 
             using GraphicsPath path =
-                CriarPathArredondado(area, raio);
+                CriarPathArredondado(
+                    area,
+                    raio
+                );
 
             controle.Region =
                 new Region(path);
@@ -581,9 +587,11 @@ namespace DoceCantinho.Desktop.Themes
             Rectangle area,
             int raio)
         {
-            GraphicsPath path = new GraphicsPath();
+            GraphicsPath path =
+                new GraphicsPath();
 
-            int diametro = raio * 2;
+            int diametro =
+                raio * 2;
 
             if (diametro > area.Width)
                 diametro = area.Width;
@@ -638,18 +646,17 @@ namespace DoceCantinho.Desktop.Themes
         }
 
         // ============================================================
-        // APLICAR ESTILO GERAL
+        // ESTILO GERAL DO FORM
         // ============================================================
 
-        public static void AplicarEstiloFormulario(Form form)
+        public static void AplicarEstiloFormulario(
+            Form form)
         {
             if (form == null)
                 return;
 
             form.BackColor = Fundo;
-
             form.ForeColor = Texto;
-
             form.Font = Fonte9;
 
             form.StartPosition =
@@ -666,55 +673,87 @@ namespace DoceCantinho.Desktop.Themes
         // COMPATIBILIDADE
         // ============================================================
 
-        public static Color AzulPrimario => Primaria;
+        public static Color AzulPrimario =>
+            Primaria;
 
-        public static Color AzulVariante => Primaria;
+        public static Color AzulVariante =>
+            Primaria;
 
-        public static Color AzulClaroLegacy => PrimariaClara;
+        public static Color AzulClaroLegacy =>
+            PrimariaClara;
 
-        public static Color LaranjaPrimario => Primaria;
+        public static Color LaranjaPrimario =>
+            Primaria;
 
-        public static Color LaranjaVariante => PrimariaHover;
+        public static Color LaranjaVariante =>
+            PrimariaHover;
 
-        public static Color LaranjaClaro => PrimariaClara;
+        public static Color LaranjaClaro =>
+            PrimariaClara;
 
-        public static Color CinzaFundo => Fundo;
+        public static Color CinzaFundo =>
+            Fundo;
 
-        public static Color CinzaClaro => Borda;
+        public static Color CinzaClaro =>
+            Borda;
 
-        public static Color CinzaMedio => TextoSecundario;
+        public static Color CinzaMedio =>
+            TextoSecundario;
 
-        public static Color GrafiteTexto => Texto;
+        public static Color GrafiteTexto =>
+            Texto;
 
-        public static Color GrafiteEscuro => Texto;
+        public static Color GrafiteEscuro =>
+            Texto;
 
-        public static Color Sucesso => Verde;
+        public static Color Sucesso =>
+            Verde;
 
-        public static Color Perigo => Vermelho;
+        public static Color Perigo =>
+            Vermelho;
 
-        public static Color Aviso => Amarelo;
+        public static Color Aviso =>
+            Amarelo;
 
-        public static Color Info => Azul;
+        public static Color Info =>
+            Azul;
 
-        public static Color SucessoClaro => VerdeClaro;
+        public static Color SucessoClaro =>
+            VerdeClaro;
 
-        public static Color PerigoClaro => VermelhoClaro;
+        public static Color PerigoClaro =>
+            VermelhoClaro;
 
-        public static Color AvisoClaro => AmareloClaro;
+        public static Color AvisoClaro =>
+            AmareloClaro;
 
-        public static Color InfoClaro => AzulClaro;
+        public static Color InfoClaro =>
+            AzulClaro;
 
-        public static string FonteBaseString => FonteBase;
+        public static string FonteBaseString =>
+            FonteBase;
 
         public static Font Fonte9Semi =>
-            new Font(FonteBase, 9f, FontStyle.Bold);
+            new Font(
+                FonteBase,
+                9f,
+                FontStyle.Bold
+            );
 
         public static Font Fonte10Semi =>
-            new Font(FonteBase, 10f, FontStyle.Bold);
+            new Font(
+                FonteBase,
+                10f,
+                FontStyle.Bold
+            );
 
-        public static int Raio => CardRadius;
+        public static int Raio =>
+            CardRadius;
 
-        // Compatibilidade com código antigo.
+        // ============================================================
+        // COMPATIBILIDADE COM CÓDIGO ANTIGO
+        // ============================================================
+
         public static void EstilizarBotao(
             Guna2Button botao,
             bool primario = false)
@@ -724,5 +763,6 @@ namespace DoceCantinho.Desktop.Themes
             else
                 AplicarBotaoSecundario(botao);
         }
+
     }
 }
