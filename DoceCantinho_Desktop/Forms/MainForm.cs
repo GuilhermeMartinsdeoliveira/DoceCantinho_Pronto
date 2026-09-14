@@ -31,9 +31,11 @@ namespace DoceCantinho.Desktop.Forms
         private AuthApiService? _authService;
 
         // ==========================================
-        // BOTÃO X
+        // BOTÕES DE CONTROLE DA JANELA
         // ==========================================
         private Guna2Button? _btnFechar;
+        private Guna2Button? _btnMaximizar;
+        private Guna2Button? _btnMinimizar;
 
         public MainForm()
         {
@@ -43,8 +45,8 @@ namespace DoceCantinho.Desktop.Forms
             // a borda padrão do Windows.
             FormBorderStyle = FormBorderStyle.None;
 
-            // Cria o X visual no canto superior direito.
-            CriarBotaoFechar();
+            // Cria os botões de controle no canto superior direito.
+            CriarBotoesJanela();
         }
 
         // ==========================================
@@ -82,95 +84,146 @@ namespace DoceCantinho.Desktop.Forms
         }
 
         // ==========================================
-        // CRIAR BOTÃO X
+        // CRIAR BOTÕES DE CONTROLE DA JANELA
         // ==========================================
-        private void CriarBotaoFechar()
+        private void CriarBotoesJanela()
         {
             if (_btnFechar != null)
                 return;
 
+            // --- BOTÃO FECHAR (X) ---
             _btnFechar = new Guna2Button();
-
             _btnFechar.Name = "btnFecharMain";
-            _btnFechar.Text = "×";
-
-            _btnFechar.Size = new Size(42, 34);
-
-            // Fica no canto superior direito
-            _btnFechar.Anchor =
-                AnchorStyles.Top |
-                AnchorStyles.Right;
-
-            _btnFechar.Location =
-                new Point(
-                    ClientSize.Width - 48,
-                    8
-                );
-
+            _btnFechar.Text = "✕";
+            _btnFechar.Size = new Size(40, 36);
             _btnFechar.BorderRadius = 8;
+            _btnFechar.FillColor = Color.Transparent;
+            _btnFechar.ForeColor = Color.FromArgb(100, 80, 70);
+            _btnFechar.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
+            _btnFechar.Padding = new Padding(0);
+            _btnFechar.HoverState.FillColor = Color.FromArgb(215, 60, 60);
+            _btnFechar.HoverState.ForeColor = Color.White;
+            _btnFechar.Cursor = Cursors.Hand;
+            _btnFechar.Click += BtnFechar_Click;
 
-            _btnFechar.FillColor =
-                Color.Transparent;
+            // --- BOTÃO MAXIMIZAR / RESTAURAR ---
+            _btnMaximizar = new Guna2Button();
+            _btnMaximizar.Name = "btnMaximizarMain";
+            _btnMaximizar.Text = WindowState == FormWindowState.Maximized ? "❐" : "🗖";
+            _btnMaximizar.Size = new Size(40, 36);
+            _btnMaximizar.BorderRadius = 8;
+            _btnMaximizar.FillColor = Color.Transparent;
+            _btnMaximizar.ForeColor = Color.FromArgb(100, 80, 70);
+            _btnMaximizar.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
+            _btnMaximizar.Padding = new Padding(0);
+            _btnMaximizar.HoverState.FillColor = Color.FromArgb(235, 226, 220);
+            _btnMaximizar.HoverState.ForeColor = Color.FromArgb(60, 40, 30);
+            _btnMaximizar.Cursor = Cursors.Hand;
+            _btnMaximizar.Click += BtnMaximizar_Click;
 
-            _btnFechar.ForeColor =
-                Color.FromArgb(
-                    224,
-                    211,
-                    204
-                );
+            // --- BOTÃO MINIMIZAR ---
+            _btnMinimizar = new Guna2Button();
+            _btnMinimizar.Name = "btnMinimizarMain";
+            _btnMinimizar.Text = "🗕";
+            _btnMinimizar.Size = new Size(40, 36);
+            _btnMinimizar.BorderRadius = 8;
+            _btnMinimizar.FillColor = Color.Transparent;
+            _btnMinimizar.ForeColor = Color.FromArgb(100, 80, 70);
+            _btnMinimizar.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
+            _btnMinimizar.Padding = new Padding(0);
+            _btnMinimizar.HoverState.FillColor = Color.FromArgb(235, 226, 220);
+            _btnMinimizar.HoverState.ForeColor = Color.FromArgb(60, 40, 30);
+            _btnMinimizar.Cursor = Cursors.Hand;
+            _btnMinimizar.Click += BtnMinimizar_Click;
 
-            _btnFechar.Font =
-                new Font(
-                    "Segoe UI",
-                    18F,
-                    FontStyle.Regular
-                );
-
-            _btnFechar.HoverState.FillColor =
-                Color.FromArgb(
-                    170,
-                    65,
-                    65
-                );
-
-            _btnFechar.HoverState.ForeColor =
-                Color.White;
-
-            _btnFechar.Cursor =
-                Cursors.Hand;
-
-            _btnFechar.Padding =
-                new Padding(0, 0, 0, 4);
-
-            _btnFechar.Click +=
-                BtnFechar_Click;
-
+            // Adiciona ao formulário
             Controls.Add(_btnFechar);
+            Controls.Add(_btnMaximizar);
+            Controls.Add(_btnMinimizar);
 
-            _btnFechar.BringToFront();
+            ReposicionarBotoesJanela();
 
-            // Reposiciona automaticamente caso
-            // o tamanho da janela mude.
+            // Reposiciona quando a janela mudar de tamanho
+            Resize -= MainForm_Resize;
             Resize += MainForm_Resize;
+
+            // Suporte a duplo clique para maximizar/restaurar
+            guna2Panel1.DoubleClick -= PainelTopo_DoubleClick;
+            guna2Panel1.DoubleClick += PainelTopo_DoubleClick;
         }
 
         // ==========================================
-        // POSIÇÃO DO X
+        // REPOSICIONAR BOTÕES DE CONTROLE
         // ==========================================
-        private void MainForm_Resize(
-            object? sender,
-            EventArgs e)
+        private void MainForm_Resize(object? sender, EventArgs e)
+        {
+            ReposicionarBotoesJanela();
+        }
+
+        private void ReposicionarBotoesJanela()
         {
             if (_btnFechar == null)
                 return;
 
-            _btnFechar.Location =
-                new Point(
-                    ClientSize.Width -
-                    _btnFechar.Width -
-                    8,
-                    8
-                );
+            int top = 6;
+            int right = ClientSize.Width - 8;
+
+            _btnFechar.Location = new Point(right - _btnFechar.Width, top);
+            _btnFechar.BringToFront();
+
+            if (_btnMaximizar != null)
+            {
+                _btnMaximizar.Location = new Point(_btnFechar.Left - _btnMaximizar.Width - 2, top);
+                _btnMaximizar.Text = WindowState == FormWindowState.Maximized ? "❐" : "🗖";
+                _btnMaximizar.BringToFront();
+            }
+
+            if (_btnMinimizar != null)
+            {
+                _btnMinimizar.Location = new Point((_btnMaximizar?.Left ?? _btnFechar.Left) - _btnMinimizar.Width - 2, top);
+                _btnMinimizar.BringToFront();
+            }
+        }
+
+        // ==========================================
+        // CLIQUE NO BOTÃO MAXIMIZAR / RESTAURAR
+        // ==========================================
+        private void BtnMaximizar_Click(object? sender, EventArgs e)
+        {
+            AlternarMaximizar();
+        }
+
+        // ==========================================
+        // CLIQUE NO BOTÃO MINIMIZAR
+        // ==========================================
+        private void BtnMinimizar_Click(object? sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        // ==========================================
+        // DUPLO CLIQUE NO CABEÇALHO PARA MAXIMIZAR
+        // ==========================================
+        private void PainelTopo_DoubleClick(object? sender, EventArgs e)
+        {
+            AlternarMaximizar();
+        }
+
+        // ==========================================
+        // ALTERNAR MAXIMIZADO / RESTAURADO
+        // ==========================================
+        private void AlternarMaximizar()
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                WindowState = FormWindowState.Maximized;
+            }
+
+            ReposicionarBotoesJanela();
         }
 
         // ==========================================
@@ -479,6 +532,9 @@ namespace DoceCantinho.Desktop.Forms
 
             // Dashboard
             btnDashboard.Visible = true;
+
+            // Blog
+            btnBlog.Visible = true;
         }
 
         // ==========================================
@@ -504,6 +560,9 @@ namespace DoceCantinho.Desktop.Forms
             btnUsuario.Click -=
                 btnUsuario_Click;
 
+            btnBlog.Click -=
+                btnBlog_Click;
+
             btnDashboard.Click +=
                 btnDashboard_Click;
 
@@ -518,6 +577,9 @@ namespace DoceCantinho.Desktop.Forms
 
             btnUsuario.Click +=
                 btnUsuario_Click;
+
+            btnBlog.Click +=
+                btnBlog_Click;
 
             // ==========================================
             // SAIR
@@ -866,19 +928,84 @@ namespace DoceCantinho.Desktop.Forms
             }
 
             // ==========================================
-            // LIBERAR CONTROLE DO X
+            // LIBERAR CONTROLES DA JANELA
             // ==========================================
             if (_btnFechar != null)
             {
-                _btnFechar.Click -=
-                    BtnFechar_Click;
-
+                _btnFechar.Click -= BtnFechar_Click;
                 _btnFechar.Dispose();
-
                 _btnFechar = null;
             }
 
+            if (_btnMaximizar != null)
+            {
+                _btnMaximizar.Click -= BtnMaximizar_Click;
+                _btnMaximizar.Dispose();
+                _btnMaximizar = null;
+            }
+
+            if (_btnMinimizar != null)
+            {
+                _btnMinimizar.Click -= BtnMinimizar_Click;
+                _btnMinimizar.Dispose();
+                _btnMinimizar = null;
+            }
+
             base.OnFormClosed(e);
+        }
+
+        // ==========================================
+        // REDIMENSIONAMENTO NATIVO DE BORDAS
+        // ==========================================
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTLEFT = 10;
+        private const int HTRIGHT = 11;
+        private const int HTTOP = 12;
+        private const int HTTOPLEFT = 13;
+        private const int HTTOPRIGHT = 14;
+        private const int HTBOTTOM = 15;
+        private const int HTBOTTOMLEFT = 16;
+        private const int HTBOTTOMRIGHT = 17;
+        private const int BORDER_RESIZE_WIDTH = 8;
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (m.Msg == WM_NCHITTEST && WindowState == FormWindowState.Normal)
+            {
+                Point cursor = PointToClient(Cursor.Position);
+
+                if (cursor.X <= BORDER_RESIZE_WIDTH && cursor.Y <= BORDER_RESIZE_WIDTH)
+                    m.Result = (IntPtr)HTTOPLEFT;
+                else if (cursor.X >= ClientSize.Width - BORDER_RESIZE_WIDTH && cursor.Y <= BORDER_RESIZE_WIDTH)
+                    m.Result = (IntPtr)HTTOPRIGHT;
+                else if (cursor.X <= BORDER_RESIZE_WIDTH && cursor.Y >= ClientSize.Height - BORDER_RESIZE_WIDTH)
+                    m.Result = (IntPtr)HTBOTTOMLEFT;
+                else if (cursor.X >= ClientSize.Width - BORDER_RESIZE_WIDTH && cursor.Y >= ClientSize.Height - BORDER_RESIZE_WIDTH)
+                    m.Result = (IntPtr)HTBOTTOMRIGHT;
+                else if (cursor.X <= BORDER_RESIZE_WIDTH)
+                    m.Result = (IntPtr)HTLEFT;
+                else if (cursor.X >= ClientSize.Width - BORDER_RESIZE_WIDTH)
+                    m.Result = (IntPtr)HTRIGHT;
+                else if (cursor.Y <= BORDER_RESIZE_WIDTH)
+                    m.Result = (IntPtr)HTTOP;
+                else if (cursor.Y >= ClientSize.Height - BORDER_RESIZE_WIDTH)
+                    m.Result = (IntPtr)HTBOTTOM;
+            }
+        }
+
+        // ==========================================
+        // BOTÃO BLOG
+        // ==========================================
+        private void btnBlog_Click(
+            object? sender,
+            EventArgs e)
+        {
+            Navegar(
+                new BlogUserControl(),
+                btnBlog
+            );
         }
     }
 }

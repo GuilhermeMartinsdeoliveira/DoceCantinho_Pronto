@@ -34,11 +34,6 @@ namespace DoceCantinho.Desktop1.Forms
         private bool _modoEdicao = false;
 
         // ==========================================
-        // BOTÃO X
-        // ==========================================
-        private Guna2Button? _btnFechar;
-
-        // ==========================================
         // ARRASTAR FORM SEM BORDA
         // ==========================================
         private const int WM_NCLBUTTONDOWN = 0xA1;
@@ -59,7 +54,6 @@ namespace DoceCantinho.Desktop1.Forms
 
             ConfigurarFormulario();
             ConfigurarEventos();
-            CriarBotaoFechar();
 
             _ = CarregarDadosAsync();
         }
@@ -79,7 +73,6 @@ namespace DoceCantinho.Desktop1.Forms
 
             ConfigurarFormulario();
             ConfigurarEventos();
-            CriarBotaoFechar();
 
             _ = CarregarDadosAsync();
         }
@@ -163,96 +156,7 @@ namespace DoceCantinho.Desktop1.Forms
             dgvItens.CellClick += dgvItens_CellClick;
         }
 
-        // ==========================================
-        // CRIAR X
-        // ==========================================
-        private void CriarBotaoFechar()
-        {
-            if (_btnFechar != null)
-                return;
 
-            _btnFechar = new Guna2Button
-            {
-                Name = "btnFecharPedido",
-                Text = "×",
-                Size = new Size(42, 34),
-                Anchor =
-                    AnchorStyles.Top |
-                    AnchorStyles.Right,
-
-                Location = new Point(
-                    ClientSize.Width - 50,
-                    8
-                ),
-
-                BorderRadius = 8,
-
-                FillColor =
-                    Color.Transparent,
-
-                ForeColor =
-                    Color.FromArgb(
-                        225,
-                        210,
-                        204
-                    ),
-
-                Font =
-                    new Font(
-                        "Segoe UI",
-                        18F,
-                        FontStyle.Regular
-                    ),
-
-                Cursor =
-                    Cursors.Hand
-            };
-
-            _btnFechar.HoverState.FillColor =
-                Color.FromArgb(
-                    170,
-                    65,
-                    65
-                );
-
-            _btnFechar.HoverState.ForeColor =
-                Color.White;
-
-            _btnFechar.Click +=
-                BtnFechar_Click;
-
-            Controls.Add(_btnFechar);
-
-            _btnFechar.BringToFront();
-
-            Resize +=
-                PedidoForm_Resize;
-        }
-
-        // ==========================================
-        // POSICIONAR X
-        // ==========================================
-        private void PedidoForm_Resize(
-            object? sender,
-            EventArgs e)
-        {
-            if (_btnFechar == null)
-                return;
-
-            _btnFechar.Location =
-                new Point(
-                    ClientSize.Width -
-                    _btnFechar.Width -
-                    8,
-                    8
-                );
-
-            _btnFechar.BringToFront();
-        }
-
-        // ==========================================
-        // CLIQUE NO X
-        // ==========================================
         private void BtnFechar_Click(
             object? sender,
             EventArgs e)
@@ -1196,24 +1100,6 @@ namespace DoceCantinho.Desktop1.Forms
         );
 
         // ==========================================
-        // FECHAMENTO
-        // ==========================================
-        protected override void OnFormClosed(
-            FormClosedEventArgs e)
-        {
-            if (_btnFechar != null)
-            {
-                _btnFechar.Click -=
-                    BtnFechar_Click;
-
-                _btnFechar.Dispose();
-                _btnFechar = null;
-            }
-
-            base.OnFormClosed(e);
-        }
-
-        // ==========================================
         // DTO NOVO PEDIDO
         // ==========================================
         private class CreateOrderRequest
@@ -1231,6 +1117,11 @@ namespace DoceCantinho.Desktop1.Forms
             public string Nome { get; set; } = "";
             public decimal Preco { get; set; }
             public int Quantidade { get; set; }
+        }
+
+        private void BtnFechar_Click_1(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
