@@ -1,10 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DoceCantinho.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DoceCantinho.Domain.Interfaces;
 
 namespace DoceCantinho.Infrastructure.Configurations
 {
@@ -15,23 +11,27 @@ namespace DoceCantinho.Infrastructure.Configurations
             builder.HasKey(g => g.Id);
 
             builder.Property(g => g.Title)
-                .IsRequired() // Define que o campo é obrigatório
-                .HasMaxLength(200); // Define um tamanho máximo para o campo
+                .IsRequired()
+                .HasMaxLength(200);
 
             builder.Property(g => g.Description)
-                .HasMaxLength(2000); // Define um tamanho máximo para o campo
+                .HasMaxLength(2000);
 
+            // IMPORTANTE:
+            // Imagens locais são convertidas para Base64.
+            // Base64 pode ultrapassar facilmente 500 caracteres.
+            // Por isso o campo precisa ser NVARCHAR(MAX).
             builder.Property(g => g.CoverImageUrl)
-                .HasMaxLength(500); // Define um tamanho máximo para o campo
+                .IsRequired()
+                .HasColumnType("nvarchar(max)");
 
             builder.Property(g => g.IsRecomendado)
                 .HasDefaultValue(false);
 
-            builder.HasOne(g => g.Category) // UM game tem UMA categoria
-                .WithMany(c => c.Doces) // UMA categoria tem MUITOS games 
-                .HasForeignKey(g => g.CategoryId) // a FK é CategoryId
+            builder.HasOne(g => g.Category)
+                .WithMany(c => c.Doces)
+                .HasForeignKey(g => g.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
-
 }

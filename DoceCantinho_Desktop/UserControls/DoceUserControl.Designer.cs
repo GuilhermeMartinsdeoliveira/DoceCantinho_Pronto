@@ -1,12 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
- 
+
 namespace DoceCantinho.Desktop.UserControls
 {
     partial class DoceUserControl
     {
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         protected override void Dispose(bool disposing)
         {
@@ -18,41 +19,80 @@ namespace DoceCantinho.Desktop.UserControls
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
         private void InitializeComponent()
         {
-            this.pnlPrincipal = new Guna.UI2.WinForms.Guna2Panel();
-            this.lblTitulo = new Label();
-            this.lblSubtitulo = new Label();
+            this.components = new Container();
 
-            this.btnNovo = new Guna.UI2.WinForms.Guna2Button();
-            this.btnAtualizar = new Guna.UI2.WinForms.Guna2Button();
+            this.pnlPrincipal =
+                new Guna.UI2.WinForms.Guna2Panel();
 
-            this.pnlFiltros = new Guna.UI2.WinForms.Guna2Panel();
-            this.txtPesquisa = new Guna.UI2.WinForms.Guna2TextBox();
-            this.btnPesquisar = new Guna.UI2.WinForms.Guna2Button();
+            this.lblTitulo =
+                new Label();
 
-            this.btnEditar = new Guna.UI2.WinForms.Guna2Button();
-            this.btnExcluir = new Guna.UI2.WinForms.Guna2Button();
+            this.lblSubtitulo =
+                new Label();
 
-            this.pnlTabela = new Guna.UI2.WinForms.Guna2Panel();
-            this.gridBanco = new DataGridView();
+            this.btnAtualizar =
+                new Guna.UI2.WinForms.Guna2Button();
 
-            this.colId = new DataGridViewTextBoxColumn();
-            this.colTitle = new DataGridViewTextBoxColumn();
-            this.colCategoryId = new DataGridViewTextBoxColumn();
-            this.colPreco = new DataGridViewTextBoxColumn();
-            this.colEstoque = new DataGridViewTextBoxColumn();
-            this.colStatus = new DataGridViewTextBoxColumn();
-            this.colIsFeatured = new DataGridViewTextBoxColumn();
-            this.colData = new DataGridViewTextBoxColumn();
+            this.btnNovo =
+                new Guna.UI2.WinForms.Guna2Button();
 
-            this.lblResultados = new Label();
+            this.pnlFiltros =
+                new Guna.UI2.WinForms.Guna2Panel();
+
+            this.txtPesquisa =
+                new Guna.UI2.WinForms.Guna2TextBox();
+
+            this.btnPesquisar =
+                new Guna.UI2.WinForms.Guna2Button();
+
+            this.btnEditar =
+                new Guna.UI2.WinForms.Guna2Button();
+
+            this.btnExcluir =
+                new Guna.UI2.WinForms.Guna2Button();
+
+            this.lblResultados =
+                new Label();
+
+            this.pnlTabela =
+                new Guna.UI2.WinForms.Guna2Panel();
+
+            this.gridBanco =
+                new DataGridView();
+
+            this.colId =
+                new DataGridViewTextBoxColumn();
+
+            this.colTitle =
+                new DataGridViewTextBoxColumn();
+
+            this.colCategoryId =
+                new DataGridViewTextBoxColumn();
+
+            this.colPreco =
+                new DataGridViewTextBoxColumn();
+
+            this.colEstoque =
+                new DataGridViewTextBoxColumn();
+
+            this.colStatus =
+                new DataGridViewTextBoxColumn();
+
+            this.colIsFeatured =
+                new DataGridViewTextBoxColumn();
+
+            this.colData =
+                new DataGridViewTextBoxColumn();
+
+            ((ISupportInitialize)(this.gridBanco)).BeginInit();
 
             this.pnlPrincipal.SuspendLayout();
             this.pnlFiltros.SuspendLayout();
             this.pnlTabela.SuspendLayout();
-
-            ((System.ComponentModel.ISupportInitialize)(this.gridBanco)).BeginInit();
 
             this.SuspendLayout();
 
@@ -60,30 +100,47 @@ namespace DoceCantinho.Desktop.UserControls
             // pnlPrincipal
             // ============================================================
 
-            this.pnlPrincipal.BackColor = Color.FromArgb(247, 243, 240);
-            this.pnlPrincipal.FillColor = Color.FromArgb(247, 243, 240);
-            this.pnlPrincipal.Dock = DockStyle.Fill;
-            this.pnlPrincipal.Location = new Point(0, 0);
-            this.pnlPrincipal.Name = "pnlPrincipal";
-            this.pnlPrincipal.Size = new Size(1075, 720);
-            this.pnlPrincipal.TabIndex = 0;
+            this.pnlPrincipal.Dock =
+                DockStyle.Fill;
+
+            this.pnlPrincipal.FillColor =
+                Color.FromArgb(247, 243, 240);
+
+            this.pnlPrincipal.BackColor =
+                Color.FromArgb(247, 243, 240);
+
+            this.pnlPrincipal.Location =
+                new Point(0, 0);
+
+            this.pnlPrincipal.Name =
+                "pnlPrincipal";
+
+            this.pnlPrincipal.Size =
+                new Size(1075, 720);
+
+            this.pnlPrincipal.TabIndex =
+                0;
 
             // ============================================================
             // lblTitulo
             // ============================================================
 
             this.lblTitulo.AutoSize = true;
-            this.lblTitulo.BackColor = Color.Transparent;
-            this.lblTitulo.Font = new Font(
-                "Georgia",
-                22F,
-                FontStyle.Bold);
+
+            this.lblTitulo.BackColor =
+                Color.Transparent;
+
+            this.lblTitulo.Font =
+                new Font(
+                    "Georgia",
+                    22F,
+                    FontStyle.Bold);
 
             this.lblTitulo.ForeColor =
                 Color.FromArgb(53, 39, 33);
 
             this.lblTitulo.Location =
-                new Point(28, 22);
+                new Point(28, 20);
 
             this.lblTitulo.Name =
                 "lblTitulo";
@@ -102,7 +159,9 @@ namespace DoceCantinho.Desktop.UserControls
             // ============================================================
 
             this.lblSubtitulo.AutoSize = true;
-            this.lblSubtitulo.BackColor = Color.Transparent;
+
+            this.lblSubtitulo.BackColor =
+                Color.Transparent;
 
             this.lblSubtitulo.Font =
                 new Font(
@@ -114,13 +173,13 @@ namespace DoceCantinho.Desktop.UserControls
                 Color.FromArgb(154, 137, 128);
 
             this.lblSubtitulo.Location =
-                new Point(30, 62);
+                new Point(30, 59);
 
             this.lblSubtitulo.Name =
                 "lblSubtitulo";
 
             this.lblSubtitulo.Size =
-                new Size(130, 15);
+                new Size(150, 15);
 
             this.lblSubtitulo.TabIndex =
                 1;
@@ -129,15 +188,69 @@ namespace DoceCantinho.Desktop.UserControls
                 "Carregando produtos...";
 
             // ============================================================
+            // btnAtualizar
+            // ============================================================
+
+            this.btnAtualizar.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Right;
+
+            this.btnAtualizar.Animated =
+                true;
+
+            this.btnAtualizar.BorderRadius =
+                8;
+
+            this.btnAtualizar.FillColor =
+                Color.FromArgb(101, 97, 94);
+
+            this.btnAtualizar.Font =
+                new Font(
+                    "Segoe UI Semibold",
+                    9F,
+                    FontStyle.Bold);
+
+            this.btnAtualizar.ForeColor =
+                Color.White;
+
+            this.btnAtualizar.HoverState.FillColor =
+                Color.FromArgb(81, 77, 74);
+
+            this.btnAtualizar.Location =
+                new Point(798, 25);
+
+            this.btnAtualizar.Name =
+                "btnAtualizar";
+
+            this.btnAtualizar.Size =
+                new Size(112, 40);
+
+            this.btnAtualizar.TabIndex =
+                2;
+
+            this.btnAtualizar.Text =
+                "↻  Atualizar";
+
+            this.btnAtualizar.Cursor =
+                Cursors.Hand;
+
+            this.btnAtualizar.Click +=
+                new EventHandler(
+                    this.btnAtualizar_Click);
+
+            // ============================================================
             // btnNovo
             // ============================================================
 
             this.btnNovo.Anchor =
-                AnchorStyles.Top | AnchorStyles.Right;
+                AnchorStyles.Top |
+                AnchorStyles.Right;
 
-            this.btnNovo.Animated = true;
+            this.btnNovo.Animated =
+                true;
 
-            this.btnNovo.BorderRadius = 7;
+            this.btnNovo.BorderRadius =
+                8;
 
             this.btnNovo.FillColor =
                 Color.FromArgb(198, 124, 99);
@@ -155,73 +268,35 @@ namespace DoceCantinho.Desktop.UserControls
                 Color.FromArgb(178, 105, 83);
 
             this.btnNovo.Location =
-                new Point(930, 28);
+                new Point(922, 25);
 
             this.btnNovo.Name =
                 "btnNovo";
 
             this.btnNovo.Size =
-                new Size(117, 38);
+                new Size(125, 40);
 
             this.btnNovo.TabIndex =
-                2;
+                3;
 
             this.btnNovo.Text =
                 "+  Novo Doce";
 
-            this.btnNovo.UseTransparentBackground =
-                false;
+            this.btnNovo.Cursor =
+                Cursors.Hand;
 
             this.btnNovo.Click +=
-                new EventHandler(this.btnNovo_Click);
-
-            // ============================================================
-            // btnAtualizar
-            // ============================================================
-
-            this.btnAtualizar.Anchor =
-                AnchorStyles.Top | AnchorStyles.Right;
-
-            this.btnAtualizar.Animated = true;
-
-            this.btnAtualizar.BorderRadius = 7;
-
-            this.btnAtualizar.FillColor =
-                Color.FromArgb(101, 97, 94);
-
-            this.btnAtualizar.Font =
-                new Font(
-                    "Segoe UI Semibold",
-                    8.5F,
-                    FontStyle.Bold);
-
-            this.btnAtualizar.ForeColor =
-                Color.White;
-
-            this.btnAtualizar.HoverState.FillColor =
-                Color.FromArgb(81, 77, 74);
-
-            this.btnAtualizar.Location =
-                new Point(806, 28);
-
-            this.btnAtualizar.Name =
-                "btnAtualizar";
-
-            this.btnAtualizar.Size =
-                new Size(112, 38);
-
-            this.btnAtualizar.TabIndex =
-                3;
-
-            this.btnAtualizar.Text =
-                "↻  Atualizar";
-
-            this.btnAtualizar.Click +=
-                new EventHandler(this.btnAtualizar_Click);
+                new EventHandler(
+                    this.btnNovo_Click);
 
             // ============================================================
             // pnlFiltros
             // ============================================================
+
+            this.pnlFiltros.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Left |
+                AnchorStyles.Right;
 
             this.pnlFiltros.BackColor =
                 Color.White;
@@ -236,13 +311,13 @@ namespace DoceCantinho.Desktop.UserControls
                 Color.White;
 
             this.pnlFiltros.Location =
-                new Point(28, 92);
+                new Point(28, 91);
 
             this.pnlFiltros.Name =
                 "pnlFiltros";
 
             this.pnlFiltros.Size =
-                new Size(1019, 60);
+                new Size(1019, 64);
 
             this.pnlFiltros.TabIndex =
                 4;
@@ -250,6 +325,11 @@ namespace DoceCantinho.Desktop.UserControls
             // ============================================================
             // txtPesquisa
             // ============================================================
+
+            this.txtPesquisa.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Left |
+                AnchorStyles.Right;
 
             this.txtPesquisa.BorderColor =
                 Color.FromArgb(224, 214, 208);
@@ -259,21 +339,6 @@ namespace DoceCantinho.Desktop.UserControls
 
             this.txtPesquisa.Cursor =
                 Cursors.IBeam;
-
-            this.txtPesquisa.DefaultText =
-                "";
-
-            this.txtPesquisa.DisabledState.BorderColor =
-                Color.FromArgb(208, 208, 208);
-
-            this.txtPesquisa.DisabledState.FillColor =
-                Color.FromArgb(226, 226, 226);
-
-            this.txtPesquisa.DisabledState.ForeColor =
-                Color.FromArgb(138, 138, 138);
-
-            this.txtPesquisa.DisabledState.PlaceholderForeColor =
-                Color.FromArgb(138, 138, 138);
 
             this.txtPesquisa.FillColor =
                 Color.FromArgb(250, 248, 246);
@@ -293,10 +358,7 @@ namespace DoceCantinho.Desktop.UserControls
                 Color.FromArgb(210, 170, 156);
 
             this.txtPesquisa.Location =
-                new Point(12, 11);
-
-            this.txtPesquisa.Margin =
-                new Padding(3, 4, 3, 4);
+                new Point(12, 13);
 
             this.txtPesquisa.Name =
                 "txtPesquisa";
@@ -308,17 +370,22 @@ namespace DoceCantinho.Desktop.UserControls
                 "";
 
             this.txtPesquisa.Size =
-                new Size(720, 38);
+                new Size(765, 38);
 
             this.txtPesquisa.TabIndex =
                 5;
 
             this.txtPesquisa.TextChanged +=
-                new EventHandler(this.txtPesquisa_TextChanged);
+                new EventHandler(
+                    this.txtPesquisa_TextChanged);
 
             // ============================================================
             // btnPesquisar
             // ============================================================
+
+            this.btnPesquisar.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Right;
 
             this.btnPesquisar.Animated =
                 true;
@@ -332,7 +399,7 @@ namespace DoceCantinho.Desktop.UserControls
             this.btnPesquisar.Font =
                 new Font(
                     "Segoe UI Semibold",
-                    8.5F,
+                    9F,
                     FontStyle.Bold);
 
             this.btnPesquisar.ForeColor =
@@ -342,13 +409,13 @@ namespace DoceCantinho.Desktop.UserControls
                 Color.FromArgb(178, 105, 83);
 
             this.btnPesquisar.Location =
-                new Point(744, 11);
+                new Point(789, 13);
 
             this.btnPesquisar.Name =
                 "btnPesquisar";
 
             this.btnPesquisar.Size =
-                new Size(110, 38);
+                new Size(115, 38);
 
             this.btnPesquisar.TabIndex =
                 6;
@@ -356,15 +423,16 @@ namespace DoceCantinho.Desktop.UserControls
             this.btnPesquisar.Text =
                 "Buscar";
 
+            this.btnPesquisar.Cursor =
+                Cursors.Hand;
+
             this.btnPesquisar.Click +=
-                new EventHandler(this.btnPesquisar_Click);
+                new EventHandler(
+                    this.btnPesquisar_Click);
 
             // ============================================================
             // btnEditar
             // ============================================================
-
-            this.btnEditar.Anchor =
-                AnchorStyles.Top | AnchorStyles.Left;
 
             this.btnEditar.Animated =
                 true;
@@ -388,13 +456,13 @@ namespace DoceCantinho.Desktop.UserControls
                 Color.FromArgb(178, 105, 83);
 
             this.btnEditar.Location =
-                new Point(28, 119);
+                new Point(28, 169);
 
             this.btnEditar.Name =
                 "btnEditar";
 
             this.btnEditar.Size =
-                new Size(105, 36);
+                new Size(108, 36);
 
             this.btnEditar.TabIndex =
                 7;
@@ -402,15 +470,16 @@ namespace DoceCantinho.Desktop.UserControls
             this.btnEditar.Text =
                 "✎  Editar";
 
+            this.btnEditar.Cursor =
+                Cursors.Hand;
+
             this.btnEditar.Click +=
-                new EventHandler(this.btnEditar_Click);
+                new EventHandler(
+                    this.btnEditar_Click);
 
             // ============================================================
             // btnExcluir
             // ============================================================
-
-            this.btnExcluir.Anchor =
-                AnchorStyles.Top | AnchorStyles.Left;
 
             this.btnExcluir.Animated =
                 true;
@@ -434,13 +503,13 @@ namespace DoceCantinho.Desktop.UserControls
                 Color.FromArgb(216, 203, 196);
 
             this.btnExcluir.Location =
-                new Point(141, 119);
+                new Point(144, 169);
 
             this.btnExcluir.Name =
                 "btnExcluir";
 
             this.btnExcluir.Size =
-                new Size(105, 36);
+                new Size(108, 36);
 
             this.btnExcluir.TabIndex =
                 8;
@@ -448,12 +517,20 @@ namespace DoceCantinho.Desktop.UserControls
             this.btnExcluir.Text =
                 "⌫  Excluir";
 
+            this.btnExcluir.Cursor =
+                Cursors.Hand;
+
             this.btnExcluir.Click +=
-                new EventHandler(this.btnExcluir_Click);
+                new EventHandler(
+                    this.btnExcluir_Click);
 
             // ============================================================
             // lblResultados
             // ============================================================
+
+            this.lblResultados.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Right;
 
             this.lblResultados.AutoSize =
                 true;
@@ -464,19 +541,20 @@ namespace DoceCantinho.Desktop.UserControls
             this.lblResultados.Font =
                 new Font(
                     "Segoe UI",
-                    8.5F);
+                    8.5F,
+                    FontStyle.Regular);
 
             this.lblResultados.ForeColor =
                 Color.FromArgb(150, 134, 125);
 
             this.lblResultados.Location =
-                new Point(258, 130);
+                new Point(950, 180);
 
             this.lblResultados.Name =
                 "lblResultados";
 
             this.lblResultados.Size =
-                new Size(62, 15);
+                new Size(80, 15);
 
             this.lblResultados.TabIndex =
                 9;
@@ -488,8 +566,17 @@ namespace DoceCantinho.Desktop.UserControls
             // pnlTabela
             // ============================================================
 
+            this.pnlTabela.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Bottom |
+                AnchorStyles.Left |
+                AnchorStyles.Right;
+
             this.pnlTabela.BackColor =
                 Color.White;
+
+            this.pnlTabela.BorderColor =
+                Color.FromArgb(235, 227, 222);
 
             this.pnlTabela.BorderRadius =
                 10;
@@ -498,13 +585,13 @@ namespace DoceCantinho.Desktop.UserControls
                 Color.White;
 
             this.pnlTabela.Location =
-                new Point(28, 166);
+                new Point(28, 218);
 
             this.pnlTabela.Name =
                 "pnlTabela";
 
             this.pnlTabela.Size =
-                new Size(1019, 515);
+                new Size(1019, 470);
 
             this.pnlTabela.TabIndex =
                 10;
@@ -517,6 +604,9 @@ namespace DoceCantinho.Desktop.UserControls
                 false;
 
             this.gridBanco.AllowUserToDeleteRows =
+                false;
+
+            this.gridBanco.AllowUserToResizeColumns =
                 false;
 
             this.gridBanco.AllowUserToResizeRows =
@@ -541,7 +631,10 @@ namespace DoceCantinho.Desktop.UserControls
                 DataGridViewHeaderBorderStyle.None;
 
             this.gridBanco.ColumnHeadersHeight =
-                42;
+                44;
+
+            this.gridBanco.Dock =
+                DockStyle.Fill;
 
             this.gridBanco.EnableHeadersVisualStyles =
                 false;
@@ -565,19 +658,19 @@ namespace DoceCantinho.Desktop.UserControls
                 false;
 
             this.gridBanco.RowTemplate.Height =
-                48;
+                46;
 
             this.gridBanco.SelectionMode =
                 DataGridViewSelectionMode.FullRowSelect;
 
             this.gridBanco.Size =
-                new Size(1003, 499);
+                new Size(1003, 454);
 
             this.gridBanco.TabIndex =
                 11;
 
             // ============================================================
-            // ESTILO CABEÇALHO
+            // HEADER GRID
             // ============================================================
 
             DataGridViewCellStyle headerStyle =
@@ -611,7 +704,7 @@ namespace DoceCantinho.Desktop.UserControls
                 headerStyle;
 
             // ============================================================
-            // ESTILO DAS LINHAS
+            // LINHAS
             // ============================================================
 
             DataGridViewCellStyle rowStyle =
@@ -653,6 +746,9 @@ namespace DoceCantinho.Desktop.UserControls
             alternateStyle.BackColor =
                 Color.FromArgb(253, 250, 248);
 
+            alternateStyle.ForeColor =
+                Color.FromArgb(65, 50, 43);
+
             alternateStyle.SelectionBackColor =
                 Color.FromArgb(249, 235, 229);
 
@@ -676,10 +772,17 @@ namespace DoceCantinho.Desktop.UserControls
                 true;
 
             this.colId.FillWeight =
-                42;
+                40;
 
             this.colId.MinimumWidth =
                 45;
+
+            this.colId.DefaultCellStyle =
+                new DataGridViewCellStyle
+                {
+                    Alignment =
+                        DataGridViewContentAlignment.MiddleCenter
+                };
 
             // ============================================================
             // COLUNA PRODUTO
@@ -695,10 +798,10 @@ namespace DoceCantinho.Desktop.UserControls
                 true;
 
             this.colTitle.FillWeight =
-                150;
+                155;
 
             this.colTitle.MinimumWidth =
-                140;
+                150;
 
             // ============================================================
             // COLUNA CATEGORIA
@@ -714,10 +817,10 @@ namespace DoceCantinho.Desktop.UserControls
                 true;
 
             this.colCategoryId.FillWeight =
-                105;
+                115;
 
             this.colCategoryId.MinimumWidth =
-                100;
+                105;
 
             // ============================================================
             // COLUNA PREÇO
@@ -733,7 +836,7 @@ namespace DoceCantinho.Desktop.UserControls
                 true;
 
             this.colPreco.FillWeight =
-                75;
+                80;
 
             this.colPreco.MinimumWidth =
                 80;
@@ -752,10 +855,10 @@ namespace DoceCantinho.Desktop.UserControls
                 true;
 
             this.colEstoque.FillWeight =
-                85;
+                105;
 
             this.colEstoque.MinimumWidth =
-                90;
+                95;
 
             // ============================================================
             // COLUNA STATUS
@@ -771,7 +874,7 @@ namespace DoceCantinho.Desktop.UserControls
                 true;
 
             this.colStatus.FillWeight =
-                75;
+                80;
 
             this.colStatus.MinimumWidth =
                 80;
@@ -790,7 +893,7 @@ namespace DoceCantinho.Desktop.UserControls
                 true;
 
             this.colIsFeatured.FillWeight =
-                75;
+                80;
 
             this.colIsFeatured.MinimumWidth =
                 80;
@@ -809,13 +912,13 @@ namespace DoceCantinho.Desktop.UserControls
                 true;
 
             this.colData.FillWeight =
-                85;
+                90;
 
             this.colData.MinimumWidth =
                 90;
 
             // ============================================================
-            // ADICIONAR COLUNAS
+            // COLUNAS
             // ============================================================
 
             this.gridBanco.Columns.AddRange(
@@ -832,17 +935,17 @@ namespace DoceCantinho.Desktop.UserControls
                 });
 
             // ============================================================
-            // ADICIONAR CONTROLES AO PAINEL PRINCIPAL
+            // CONTROLES
             // ============================================================
-
-            this.pnlTabela.Controls.Add(
-                this.gridBanco);
 
             this.pnlFiltros.Controls.Add(
                 this.txtPesquisa);
 
             this.pnlFiltros.Controls.Add(
                 this.btnPesquisar);
+
+            this.pnlTabela.Controls.Add(
+                this.gridBanco);
 
             this.pnlPrincipal.Controls.Add(
                 this.pnlTabela);
@@ -851,19 +954,19 @@ namespace DoceCantinho.Desktop.UserControls
                 this.lblResultados);
 
             this.pnlPrincipal.Controls.Add(
-                this.pnlFiltros);
-
-            this.pnlPrincipal.Controls.Add(
                 this.btnExcluir);
 
             this.pnlPrincipal.Controls.Add(
                 this.btnEditar);
 
             this.pnlPrincipal.Controls.Add(
-                this.btnAtualizar);
+                this.pnlFiltros);
 
             this.pnlPrincipal.Controls.Add(
                 this.btnNovo);
+
+            this.pnlPrincipal.Controls.Add(
+                this.btnAtualizar);
 
             this.pnlPrincipal.Controls.Add(
                 this.lblSubtitulo);
@@ -872,7 +975,7 @@ namespace DoceCantinho.Desktop.UserControls
                 this.lblTitulo);
 
             // ============================================================
-            // DOCE USER CONTROL
+            // USER CONTROL
             // ============================================================
 
             this.AutoScaleDimensions =
@@ -894,23 +997,26 @@ namespace DoceCantinho.Desktop.UserControls
                 new Size(1075, 720);
 
             this.Load +=
-                new EventHandler(this.DoceUserControl_Load);
+                new EventHandler(
+                    this.DoceUserControl_Load);
 
             // ============================================================
             // FINALIZAÇÃO
             // ============================================================
 
             this.pnlTabela.ResumeLayout(false);
+
             this.pnlFiltros.ResumeLayout(false);
 
-            ((System.ComponentModel.ISupportInitialize)
-                (this.gridBanco)).EndInit();
+            ((ISupportInitialize)(this.gridBanco)).EndInit();
 
             this.pnlPrincipal.ResumeLayout(false);
             this.pnlPrincipal.PerformLayout();
 
             this.ResumeLayout(false);
         }
+
+        #endregion
 
         // ================================================================
         // CONTROLES
@@ -959,4 +1065,3 @@ namespace DoceCantinho.Desktop.UserControls
         private DataGridViewTextBoxColumn colData;
     }
 }
-

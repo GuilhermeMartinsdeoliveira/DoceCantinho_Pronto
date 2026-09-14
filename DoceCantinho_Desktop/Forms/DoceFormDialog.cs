@@ -417,8 +417,7 @@ namespace DoceCantinho.Desktop.Forms
         {
             try
             {
-                using OpenFileDialog dialog =
-                    new OpenFileDialog();
+                using OpenFileDialog dialog = new OpenFileDialog();
 
                 dialog.Multiselect = false;
 
@@ -432,14 +431,12 @@ namespace DoceCantinho.Desktop.Forms
                 dialog.Title =
                     "Selecionar imagem do doce";
 
-                if (dialog.ShowDialog(this) !=
-                    DialogResult.OK)
-                {
-                    return;
-                }
+                dialog.CheckFileExists = true;
 
-                string caminho =
-                    dialog.FileName;
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                string caminho = dialog.FileName;
 
                 if (string.IsNullOrWhiteSpace(caminho))
                     return;
@@ -455,18 +452,28 @@ namespace DoceCantinho.Desktop.Forms
                     return;
                 }
 
-                FileInfo arquivo =
-                    new FileInfo(caminho);
+                FileInfo arquivo = new FileInfo(caminho);
 
-                // ====================================================
-                // LIMITE DE 5 MB
-                // ====================================================
+                // Limite de segurança: 5 MB
+                const long tamanhoMaximo =
+                    5L * 1024L * 1024L;
 
-                if (arquivo.Length >
-                    5 * 1024 * 1024)
+                if (arquivo.Length <= 0)
                 {
                     MessageBox.Show(
-                        "A imagem não pode ter mais de 5 MB.",
+                        "A imagem selecionada está vazia.",
+                        "Imagem inválida",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                if (arquivo.Length > tamanhoMaximo)
+                {
+                    MessageBox.Show(
+                        "A imagem não pode ter mais de 5 MB.\n\n" +
+                        $"Tamanho atual: {arquivo.Length / 1024.0 / 1024.0:F2} MB",
                         "Imagem muito grande",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
@@ -474,50 +481,59 @@ namespace DoceCantinho.Desktop.Forms
                     return;
                 }
 
-                // ====================================================
-                // LER ARQUIVO
-                // ====================================================
-
-                byte[] bytes =
-                    File.ReadAllBytes(caminho);
-
                 string extensao =
                     Path.GetExtension(caminho)
                         .ToLowerInvariant();
 
-                string mimeType =
-                    extensao switch
-                    {
-                        ".jpg" =>
-                            "image/jpeg",
+                string mimeType = extensao switch
+                {
+                    ".jpg" => "image/jpeg",
+                    ".jpeg" => "image/jpeg",
+                    ".png" => "image/png",
+                    ".webp" => "image/webp",
+                    ".bmp" => "image/bmp",
 
-                        ".jpeg" =>
-                            "image/jpeg",
+                    _ => string.Empty
+                };
 
-                        ".png" =>
-                            "image/png",
+                if (string.IsNullOrWhiteSpace(mimeType))
+                {
+                    MessageBox.Show(
+                        "Formato de imagem não suportado.",
+                        "Imagem inválida",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
 
-                        ".webp" =>
-                            "image/webp",
+                    return;
+                }
 
-                        ".bmp" =>
-                            "image/bmp",
+                byte[] bytes = File.ReadAllBytes(caminho);
 
-                        _ =>
-                            "application/octet-stream"
-                    };
+                if (bytes.Length == 0)
+                {
+                    MessageBox.Show(
+                        "Não foi possível ler a imagem selecionada.",
+                        "Erro",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
 
-                _imagemBase64 =
-                    $"data:{mimeType};base64," +
+                    return;
+                }
+
+                string base64 =
                     Convert.ToBase64String(bytes);
 
-                ImagemArquivoPath =
-                    caminho;
+                string imagemBase64 =
+                    $"data:{mimeType};base64,{base64}";
 
-                // ====================================================
-                // LIMPAR URL
-                // ====================================================
+                // Guarda a imagem para envio à API
+                _imagemBase64 = imagemBase64;
 
+                // Guarda o caminho apenas no formulário.
+                // O caminho NÃO será enviado para o banco.
+                ImagemArquivoPath = caminho;
+
+                // Limpa a URL
                 _preenchendoCampos = true;
 
                 try
@@ -529,19 +545,29 @@ namespace DoceCantinho.Desktop.Forms
                     _preenchendoCampos = false;
                 }
 
-                // ====================================================
-                // NOME DO ARQUIVO
-                // ====================================================
-
+                // Mostra o nome do arquivo
                 lblArquivoImagem.Text =
                     Path.GetFileName(caminho);
 
-                // ====================================================
-                // PREVIEW
-                // ====================================================
-
-                CarregarPreviewBase64(
-                    _imagemBase64);
+                // Mostra preview
+                CarregarPreviewBase64(imagemBase64);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show(
+                    "O Windows não permitiu acessar a imagem selecionada.",
+                    "Acesso negado",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(
+                    "Não foi possível ler a imagem.\n\n" +
+                    ex.Message,
+                    "Erro ao ler imagem",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
