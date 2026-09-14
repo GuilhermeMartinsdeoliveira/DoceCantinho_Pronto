@@ -20,6 +20,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // SERVIÇOS
         // ============================================================
+
         private readonly DoceApiService _doceService;
         private readonly CategoriasApiService _categoriasService;
         private readonly PedidosApiService _pedidosService;
@@ -27,6 +28,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // DADOS
         // ============================================================
+
         private List<DoceResponseDto> _doces = new();
         private List<CategoriaResponseDto> _categorias = new();
         private List<PedidoResponseDto> _pedidos = new();
@@ -34,52 +36,41 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // VENDAS DOS 7 DIAS
         // ============================================================
-        private readonly decimal[] _vendasPorDia =
-            new decimal[7];
+
+        private readonly decimal[] _vendasPorDia = new decimal[7];
 
         // ============================================================
         // CONSTRUTOR
         // ============================================================
+
         public DashboardUserControl()
         {
             InitializeComponent();
 
-            _doceService =
-                new DoceApiService();
-
-            _categoriasService =
-                new CategoriasApiService();
-
-            _pedidosService =
-                new PedidosApiService();
+            _doceService = new DoceApiService();
+            _categoriasService = new CategoriasApiService();
+            _pedidosService = new PedidosApiService();
 
             // ========================================================
-            // O GRÁFICO AGORA É DESENHADO PELO CÓDIGO
+            // O GRÁFICO É DESENHADO PELO CÓDIGO
             // ========================================================
+
             OcultarBarrasDoDesigner();
 
-            pnlChart.Paint -=
-                PnlChart_Paint;
+            pnlChart.Paint -= PnlChart_Paint;
+            pnlChart.Paint += PnlChart_Paint;
 
-            pnlChart.Paint +=
-                PnlChart_Paint;
+            Resize -= DashboardUserControl_Resize;
+            Resize += DashboardUserControl_Resize;
 
-            Resize -=
-                DashboardUserControl_Resize;
-
-            Resize +=
-                DashboardUserControl_Resize;
-
-            Load -=
-                DashboardUserControl_Load;
-
-            Load +=
-                DashboardUserControl_Load;
+            Load -= DashboardUserControl_Load;
+            Load += DashboardUserControl_Load;
         }
 
         // ============================================================
         // LOAD
         // ============================================================
+
         private async void DashboardUserControl_Load(
             object? sender,
             EventArgs e)
@@ -94,6 +85,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // USUÁRIO
             // ========================================================
+
             string nome =
                 SessionManager.Instance
                     .GetDisplayName();
@@ -113,17 +105,16 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // DATA
         // ============================================================
+
         private string ObterDataAtualFormatada()
         {
             CultureInfo cultura =
-                CultureInfo.GetCultureInfo(
-                    "pt-BR");
+                CultureInfo.GetCultureInfo("pt-BR");
 
             string data =
-                DateTime.Now
-                    .ToString(
-                        "dddd, dd 'de' MMMM 'de' yyyy",
-                        cultura);
+                DateTime.Now.ToString(
+                    "dddd, dd 'de' MMMM 'de' yyyy",
+                    cultura);
 
             if (string.IsNullOrEmpty(data))
                 return data;
@@ -135,6 +126,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // CARREGAR DADOS
         // ============================================================
+
         private async Task CarregarDadosAsync()
         {
             try
@@ -170,6 +162,7 @@ namespace DoceCantinho.Desktop1.UserControls
                 // ====================================================
                 // ATUALIZAR COMPONENTES
                 // ====================================================
+
                 AtualizarCards();
 
                 AtualizarGrafico();
@@ -195,11 +188,13 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // CARDS
         // ============================================================
+
         private void AtualizarCards()
         {
             // ========================================================
             // DOCES
             // ========================================================
+
             int quantidadeDoces =
                 _doces.Count;
 
@@ -209,6 +204,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // CATEGORIAS
             // ========================================================
+
             int quantidadeCategorias =
                 _categorias.Count;
 
@@ -218,6 +214,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // DESTAQUES
             // ========================================================
+
             int quantidadeDestaques =
                 _doces.Count(
                     d => d.IsFeatured);
@@ -228,6 +225,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // PEDIDOS HOJE
             // ========================================================
+
             DateTime hoje =
                 DateTime.Now.Date;
 
@@ -266,6 +264,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // RECEITA DA SEMANA
             // ========================================================
+
             decimal receita =
                 CalcularReceitaSemana();
 
@@ -279,6 +278,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // RECEITA DOS ÚLTIMOS 7 DIAS
         // ============================================================
+
         private decimal CalcularReceitaSemana()
         {
             DateTime hoje =
@@ -316,6 +316,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // GRÁFICO
         // ============================================================
+
         private void AtualizarGrafico()
         {
             Array.Clear(
@@ -332,6 +333,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // SOMAR PEDIDOS
             // ========================================================
+
             foreach (var pedido in _pedidos)
             {
                 string status =
@@ -371,6 +373,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // DIAS
             // ========================================================
+
             Label[] dias =
             {
                 lblSeg,
@@ -395,17 +398,20 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // ESCALA
             // ========================================================
+
             AtualizarEscalaGrafico();
 
             // ========================================================
             // REDESENHAR
             // ========================================================
+
             pnlChart.Invalidate();
         }
 
         // ============================================================
         // ABREVIAÇÃO DO DIA
         // ============================================================
+
         private string ObterAbreviacaoDia(
             DayOfWeek dia)
         {
@@ -440,6 +446,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // ESCALA
         // ============================================================
+
         private void AtualizarEscalaGrafico()
         {
             decimal maior =
@@ -495,8 +502,7 @@ namespace DoceCantinho.Desktop1.UserControls
                 decimal milhares =
                     valor / 1000m;
 
-                if (milhares % 1 ==
-                    0)
+                if (milhares % 1 == 0)
                 {
                     return $"R$ {milhares:0}k";
                 }
@@ -510,6 +516,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // DESENHAR GRÁFICO
         // ============================================================
+
         private void PnlChart_Paint(
             object? sender,
             PaintEventArgs e)
@@ -532,6 +539,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // DIMENSÕES
             // ========================================================
+
             int margemEsquerda =
                 45;
 
@@ -562,6 +570,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // MAIOR VALOR
             // ========================================================
+
             decimal maior =
                 _vendasPorDia.Max();
 
@@ -585,6 +594,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // LINHAS DO GRÁFICO
             // ========================================================
+
             using var penLinha =
                 new Pen(
                     Color.FromArgb(
@@ -616,6 +626,7 @@ namespace DoceCantinho.Desktop1.UserControls
             // ========================================================
             // BARRAS
             // ========================================================
+
             float espaco =
                 largura /
                 7f;
@@ -704,6 +715,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // CATEGORIAS
         // ============================================================
+
         private void AtualizarCategorias()
         {
             var lista =
@@ -809,6 +821,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // ÚLTIMOS DOCES
         // ============================================================
+
         private void AtualizarUltimosDoces()
         {
             gridUltimosDoces.Rows.Clear();
@@ -854,6 +867,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // OCULTAR BARRAS ESTÁTICAS
         // ============================================================
+
         private void OcultarBarrasDoDesigner()
         {
             barra1.Visible = false;
@@ -867,6 +881,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // CARREGANDO
         // ============================================================
+
         private void SetCarregando(
             bool carregando)
         {
@@ -896,6 +911,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // ATUALIZAÇÃO EXTERNA
         // ============================================================
+
         public async Task AtualizarDashboardAsync()
         {
             await CarregarDadosAsync();
@@ -904,6 +920,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // RESIZE
         // ============================================================
+
         private void DashboardUserControl_Resize(
             object? sender,
             EventArgs e)
@@ -917,6 +934,7 @@ namespace DoceCantinho.Desktop1.UserControls
         // ============================================================
         // NORMALIZAR STATUS
         // ============================================================
+
         private string NormalizarStatus(
             string? status)
         {

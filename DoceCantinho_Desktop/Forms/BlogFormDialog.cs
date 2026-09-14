@@ -70,14 +70,6 @@ namespace DoceCantinho.Desktop.Forms
             Load +=
                 BlogFormDialog_Load;
 
-
-            txtTitulo.TextChanged -=
-                txtTitulo_TextChanged;
-
-            txtTitulo.TextChanged +=
-                txtTitulo_TextChanged;
-
-
             btnSalvar.Click -=
                 btnSalvar_Click;
 
@@ -146,9 +138,6 @@ namespace DoceCantinho.Desktop.Forms
 
                     txtTitulo.Text =
                         p.Title;
-
-                    txtSlug.Text =
-                        p.Slug;
 
                     txtCategoria.Text =
                         p.Category;
@@ -262,97 +251,6 @@ namespace DoceCantinho.Desktop.Forms
 
 
         // ============================================================
-        // GERAR SLUG
-        // ============================================================
-
-        private void txtTitulo_TextChanged(
-            object? sender,
-            EventArgs e)
-        {
-            if (_preenchendo ||
-                _postExistente != null)
-            {
-                return;
-            }
-
-            txtSlug.Text =
-                GerarSlug(
-                    txtTitulo.Text
-                );
-        }
-
-
-        private static string GerarSlug(
-            string texto)
-        {
-            if (string.IsNullOrWhiteSpace(texto))
-                return string.Empty;
-
-
-            string normalizado =
-                texto
-                    .Trim()
-                    .ToLowerInvariant()
-
-                    .Replace("á", "a")
-                    .Replace("à", "a")
-                    .Replace("ã", "a")
-                    .Replace("â", "a")
-
-                    .Replace("é", "e")
-                    .Replace("ê", "e")
-
-                    .Replace("í", "i")
-
-                    .Replace("ó", "o")
-                    .Replace("ô", "o")
-                    .Replace("õ", "o")
-
-                    .Replace("ú", "u")
-                    .Replace("ü", "u")
-
-                    .Replace("ç", "c");
-
-
-            var chars =
-                new char[
-                    normalizado.Length
-                ];
-
-
-            for (
-                int i = 0;
-                i < normalizado.Length;
-                i++)
-            {
-                chars[i] =
-                    char.IsLetterOrDigit(
-                        normalizado[i])
-                        ? normalizado[i]
-                        : '-';
-            }
-
-
-            string slug =
-                new string(chars);
-
-
-            while (
-                slug.Contains("--"))
-            {
-                slug =
-                    slug.Replace(
-                        "--",
-                        "-"
-                    );
-            }
-
-
-            return slug.Trim('-');
-        }
-
-
-        // ============================================================
         // SALVAR
         // ============================================================
 
@@ -461,9 +359,6 @@ namespace DoceCantinho.Desktop.Forms
                 Title =
                     txtTitulo.Text.Trim(),
 
-                Slug =
-                    txtSlug.Text.Trim(),
-
                 Excerpt =
                     txtResumo.Text.Trim(),
 
@@ -513,9 +408,6 @@ namespace DoceCantinho.Desktop.Forms
             {
                 Title =
                     txtTitulo.Text.Trim(),
-
-                Slug =
-                    txtSlug.Text.Trim(),
 
                 Excerpt =
                     txtResumo.Text.Trim(),
