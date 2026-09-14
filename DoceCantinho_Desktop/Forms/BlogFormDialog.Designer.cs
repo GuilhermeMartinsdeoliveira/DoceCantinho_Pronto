@@ -18,9 +18,6 @@ namespace DoceCantinho.Desktop.Forms
         private Label lblTitulo;
         private Guna.UI2.WinForms.Guna2TextBox txtTitulo;
 
-        private Label lblSlug;
-        private Guna.UI2.WinForms.Guna2TextBox txtSlug;
-
         private Label lblCategoria;
         private Guna.UI2.WinForms.Guna2TextBox txtCategoria;
 
@@ -93,12 +90,6 @@ namespace DoceCantinho.Desktop.Forms
                 new Label();
 
             txtTitulo =
-                new Guna.UI2.WinForms.Guna2TextBox();
-
-            lblSlug =
-                new Label();
-
-            txtSlug =
                 new Guna.UI2.WinForms.Guna2TextBox();
 
             lblCategoria =
@@ -305,14 +296,6 @@ namespace DoceCantinho.Desktop.Forms
             );
 
             pnlPrincipal.Controls.Add(
-                txtSlug
-            );
-
-            pnlPrincipal.Controls.Add(
-                lblSlug
-            );
-
-            pnlPrincipal.Controls.Add(
                 txtTitulo
             );
 
@@ -490,23 +473,6 @@ namespace DoceCantinho.Desktop.Forms
 
 
             ConfigurarLabel(
-                lblSlug,
-                "Slug",
-                698,
-                108
-            );
-
-            ConfigurarTextBox(
-                txtSlug,
-                698,
-                130,
-                360,
-                40,
-                "gerado automaticamente"
-            );
-
-
-            ConfigurarLabel(
                 lblCategoria,
                 "Categoria *",
                 28,
@@ -588,9 +554,6 @@ namespace DoceCantinho.Desktop.Forms
 
             txtCapa.MaxLength =
                 500;
-
-            txtSlug.MaxLength =
-                250;
 
             txtCategoria.MaxLength =
                 100;
