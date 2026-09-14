@@ -102,34 +102,27 @@ namespace DoceCantinho.Desktop.Forms
         // LOAD
         // ============================================================
 
-        private void DoceFormDialog_Load(
-            object? sender,
-            EventArgs e)
+        private void DoceFormDialog_Load(object? sender, EventArgs e)
         {
             if (DesignMode)
                 return;
 
             bool editando = _doceExistente != null;
 
-            Text = editando
-                ? "Editar Doce"
-                : "Novo Doce";
+            Text = editando ? "Editar Doce" : "Novo Doce";
 
-            lblTitulo.Text = editando
-                ? "✏️ Editar Doce"
-                : "➕ Novo Doce";
+            lblTitulo.Text = editando ? "✏️ Editar Doce" : "➕ Novo Doce";
 
-            btnSalvar.Text = editando
-                ? "✓  Salvar alterações"
-                : "✓  Salvar Doce";
+            lblSubtitulo.Text = editando
+                ? "Edite as informações deste doce"
+                : "Cadastre um novo produto no DoceCantinho";
+
+            btnSalvar.Text = editando ? "✓  Salvar alterações" : "✓  Salvar Doce";
 
             ConfigurarCampos();
-
             CarregarCategorias();
-
             PreencherCampos();
         }
-
         // ============================================================
         // CONFIGURAÇÃO
         // ============================================================
@@ -628,19 +621,12 @@ namespace DoceCantinho.Desktop.Forms
                 using Image original =
                     Image.FromStream(stream);
 
-                Image novaImagem =
-                    new Bitmap(original);
+                Image? antiga = picturePreview.Image;
 
-                Image? imagemAntiga =
-                    pictureImagem.Image;
+                picturePreview.Image = new Bitmap(original);
+                picturePreview.SizeMode = PictureBoxSizeMode.Zoom;
 
-                pictureImagem.Image =
-                    novaImagem;
-
-                pictureImagem.SizeMode =
-                    PictureBoxSizeMode.Zoom;
-
-                imagemAntiga?.Dispose();
+                antiga?.Dispose();
             }
             catch
             {
