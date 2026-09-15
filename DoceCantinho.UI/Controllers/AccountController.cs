@@ -1,8 +1,10 @@
 using DoceCantinho.Application.DTOs;
 using DoceCantinho.Infrastructure.Identity;
 using DoceCantinho.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace DoceCantinho.UI.Controllers
 {
@@ -33,6 +35,7 @@ namespace DoceCantinho.UI.Controllers
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
             return View();
         }
 
@@ -55,8 +58,10 @@ namespace DoceCantinho.UI.Controllers
                 var user =
                     await _userManager.FindByEmailAsync(dto.Email);
 
-                // Se veio de uma página específica,
-                // volta para ela.
+                // -------------------------------------------------
+                // ReturnUrl
+                // -------------------------------------------------
+
                 if (!string.IsNullOrEmpty(returnUrl) &&
                     Url.IsLocalUrl(returnUrl))
                 {
@@ -73,7 +78,9 @@ namespace DoceCantinho.UI.Controllers
                                 await _userManager.GetRolesAsync(user);
 
                             if (roles.Contains("Admin"))
+                            {
                                 return Redirect(returnUrl);
+                            }
                         }
 
                         return RedirectToAction(
@@ -84,7 +91,10 @@ namespace DoceCantinho.UI.Controllers
                     return Redirect(returnUrl);
                 }
 
-                // Admin vai para o painel
+                // -------------------------------------------------
+                // Admin
+                // -------------------------------------------------
+
                 if (user != null)
                 {
                     var roles =
@@ -97,6 +107,10 @@ namespace DoceCantinho.UI.Controllers
                             "Admin");
                     }
                 }
+
+                // -------------------------------------------------
+                // Usuário comum
+                // -------------------------------------------------
 
                 return RedirectToAction(
                     "Index",
@@ -111,16 +125,274 @@ namespace DoceCantinho.UI.Controllers
         }
 
         // =====================================================
-        // REGISTER
+        // LOGIN / CADASTRO COM GOOGLE
         // =====================================================
 
         [HttpGet]
-        public IActionResult Register(string? returnUrl = null)
+        public IActionResult ExternalLogin(
+            string provider,
+            string? returnUrl = null)
+        {
+            if (string.IsNullOrWhiteSpace(provider))
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            var redirectUrl = Url.Action(
+                nameof(ExternalLoginCallback),
+                "Account",
+                new
+                {
+                    returnUrl
+                });
+
+            var properties =
+                _signInManager.ConfigureExternalAuthenticationProperties(
+                    provider,
+                    redirectUrl!);
+
+            return Challenge(
+                properties,
+                provider);
+        }
+
+        // =====================================================
+        // CALLBACK DO GOOGLE
+        // =====================================================
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(
+            string? returnUrl = null,
+            string? remoteError = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
 
+            // -------------------------------------------------
+            // Erro retornado pelo Google
+            // -------------------------------------------------
+
+            if (!string.IsNullOrWhiteSpace(remoteError))
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    $"Erro ao entrar com Google: {remoteError}");
+
+                return View("Login");
+            }
+
+            // -------------------------------------------------
+            // Recupera informações do Google
+            // -------------------------------------------------
+
+            var info =
+                await _signInManager.GetExternalLoginInfoAsync();
+
+            if (info == null)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Não foi possível obter as informações da conta Google.");
+
+                return View("Login");
+            }
+
+            // -------------------------------------------------
+            // Verifica se o Google já está vinculado
+            // -------------------------------------------------
+
+            var loginResult =
+                await _signInManager.ExternalLoginSignInAsync(
+                    info.LoginProvider,
+                    info.ProviderKey,
+                    isPersistent: false,
+                    bypassTwoFactor: true);
+
+            if (loginResult.Succeeded)
+            {
+                var existingUser =
+                    await _userManager.FindByLoginAsync(
+                        info.LoginProvider,
+                        info.ProviderKey);
+
+                return await RedirecionarDepoisDoLoginAsync(
+                    existingUser,
+                    returnUrl);
+            }
+
+            // -------------------------------------------------
+            // Recupera e-mail
+            // -------------------------------------------------
+
+            var email =
+                info.Principal.FindFirstValue(
+                    ClaimTypes.Email);
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "O Google não forneceu um e-mail válido.");
+
+                return View("Login");
+            }
+
+            // -------------------------------------------------
+            // Verifica se já existe usuário pelo e-mail
+            // -------------------------------------------------
+
+            var user =
+                await _userManager.FindByEmailAsync(email);
+
+            if (user != null)
+            {
+                // -------------------------------------------------
+                // Conta já existe.
+                // Vincula Google à conta existente.
+                // -------------------------------------------------
+
+                var existingLogins =
+                    await _userManager.GetLoginsAsync(user);
+
+                var alreadyLinked =
+                    existingLogins.Any(x =>
+                        x.LoginProvider == info.LoginProvider &&
+                        x.ProviderKey == info.ProviderKey);
+
+                if (!alreadyLinked)
+                {
+                    var addLoginResult =
+                        await _userManager.AddLoginAsync(
+                            user,
+                            info);
+
+                    if (!addLoginResult.Succeeded)
+                    {
+                        foreach (var error in addLoginResult.Errors)
+                        {
+                            ModelState.AddModelError(
+                                string.Empty,
+                                error.Description);
+                        }
+
+                        return View("Login");
+                    }
+                }
+
+                await _signInManager.SignInAsync(
+                    user,
+                    isPersistent: false);
+
+                return await RedirecionarDepoisDoLoginAsync(
+                    user,
+                    returnUrl);
+            }
+
+            // -------------------------------------------------
+            // NOVO USUÁRIO GOOGLE
+            // -------------------------------------------------
+
+            var nome =
+                info.Principal.FindFirstValue(
+                    ClaimTypes.GivenName);
+
+            var sobrenome =
+                info.Principal.FindFirstValue(
+                    ClaimTypes.Surname);
+
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                nome =
+                    info.Principal.FindFirstValue(
+                        ClaimTypes.Name);
+            }
+
+            // -------------------------------------------------
+            // Guarda os dados temporariamente
+            // -------------------------------------------------
+
+            TempData["GoogleLoginProvider"] =
+                info.LoginProvider;
+
+            TempData["GoogleProviderKey"] =
+                info.ProviderKey;
+
+            TempData["GoogleEmail"] =
+                email;
+
+            TempData["GoogleNome"] =
+                nome ?? string.Empty;
+
+            TempData["GoogleSobrenome"] =
+                sobrenome ?? string.Empty;
+
+            TempData["GoogleReturnUrl"] =
+                returnUrl ?? string.Empty;
+
+            // -------------------------------------------------
+            // Vai para cadastro complementar
+            // -------------------------------------------------
+
+            return RedirectToAction(
+                nameof(Register),
+                new
+                {
+                    returnUrl,
+                    google = true
+                });
+        }
+
+        // =====================================================
+        // REGISTER - GET
+        // =====================================================
+
+        [HttpGet]
+        public IActionResult Register(
+            string? returnUrl = null,
+            bool google = false)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+
+            // -------------------------------------------------
+            // Cadastro vindo do Google
+            // -------------------------------------------------
+
+            if (google &&
+                TempData["GoogleEmail"] != null)
+            {
+                var dto = new RegisterDto
+                {
+                    Email =
+                        TempData["GoogleEmail"]?.ToString()
+                        ?? string.Empty,
+
+                    Nome =
+                        TempData["GoogleNome"]?.ToString()
+                        ?? string.Empty,
+
+                    Sobrenome =
+                        TempData["GoogleSobrenome"]?.ToString()
+                        ?? string.Empty
+                };
+
+                // Coloca novamente no TempData para o POST.
+                TempData.Keep("GoogleLoginProvider");
+                TempData.Keep("GoogleProviderKey");
+                TempData.Keep("GoogleEmail");
+                TempData.Keep("GoogleNome");
+                TempData.Keep("GoogleSobrenome");
+                TempData.Keep("GoogleReturnUrl");
+
+                ViewBag.GoogleCadastro = true;
+
+                return View(dto);
+            }
+
             return View();
         }
+
+        // =====================================================
+        // REGISTER - POST
+        // =====================================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -129,6 +401,194 @@ namespace DoceCantinho.UI.Controllers
             string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+            // =================================================
+            // VERIFICA SE É CADASTRO GOOGLE
+            // =================================================
+
+            var googleProvider =
+                TempData["GoogleLoginProvider"]?.ToString();
+
+            var googleProviderKey =
+                TempData["GoogleProviderKey"]?.ToString();
+
+            var googleEmail =
+                TempData["GoogleEmail"]?.ToString();
+
+            var isGoogleRegistration =
+                !string.IsNullOrWhiteSpace(googleProvider) &&
+                !string.IsNullOrWhiteSpace(googleProviderKey) &&
+                !string.IsNullOrWhiteSpace(googleEmail);
+
+            // =================================================
+            // CADASTRO GOOGLE
+            // =================================================
+
+            if (isGoogleRegistration)
+            {
+                // ---------------------------------------------
+                // O e-mail deve ser o fornecido pelo Google.
+                // ---------------------------------------------
+
+                dto.Email = googleEmail!;
+
+                // ---------------------------------------------
+                // Procura novamente para evitar duplicação.
+                // ---------------------------------------------
+
+                var existingUser =
+                    await _userManager.FindByEmailAsync(
+                        googleEmail!);
+
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "Já existe uma conta com esse e-mail.");
+
+                    return View(dto);
+                }
+
+                // ---------------------------------------------
+                // Cria usuário SEM senha.
+                // O acesso será feito pelo Google.
+                // ---------------------------------------------
+
+                var user = new ApplicationUser
+                {
+                    UserName = googleEmail,
+                    Email = googleEmail,
+
+                    Nome =
+                        string.IsNullOrWhiteSpace(dto.Sobrenome)
+                            ? dto.Nome
+                            : $"{dto.Nome} {dto.Sobrenome}",
+
+                    Cpf = dto.Cpf,
+
+                    Logradouro = dto.Logradouro,
+                    Numero = dto.Numero,
+                    Complemento = dto.Complemento,
+                    Bairro = dto.Bairro,
+                    Cidade = dto.Cidade,
+                    Estado = dto.Estado,
+                    Cep = dto.Cep
+                };
+
+                var createResult =
+                    await _userManager.CreateAsync(user);
+
+                if (!createResult.Succeeded)
+                {
+                    foreach (var error in createResult.Errors)
+                    {
+                        ModelState.AddModelError(
+                            string.Empty,
+                            error.Description);
+                    }
+
+                    return View(dto);
+                }
+
+                // ---------------------------------------------
+                // Adiciona papel de usuário comum.
+                // ---------------------------------------------
+
+                var roleResult =
+                    await _userManager.AddToRoleAsync(
+                        user,
+                        "Usuário");
+
+                if (!roleResult.Succeeded)
+                {
+                    foreach (var error in roleResult.Errors)
+                    {
+                        ModelState.AddModelError(
+                            string.Empty,
+                            error.Description);
+                    }
+
+                    await _userManager.DeleteAsync(user);
+
+                    return View(dto);
+                }
+
+                // ---------------------------------------------
+                // Recupera informações externas novamente.
+                // ---------------------------------------------
+
+                var externalInfo =
+                    await _signInManager.GetExternalLoginInfoAsync();
+
+                if (externalInfo == null)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "Não foi possível vincular sua conta Google.");
+
+                    await _userManager.DeleteAsync(user);
+
+                    return View(dto);
+                }
+
+                // ---------------------------------------------
+                // Vincula Google ao usuário.
+                // ---------------------------------------------
+
+                var addLoginResult =
+                    await _userManager.AddLoginAsync(
+                        user,
+                        externalInfo);
+
+                if (!addLoginResult.Succeeded)
+                {
+                    foreach (var error in addLoginResult.Errors)
+                    {
+                        ModelState.AddModelError(
+                            string.Empty,
+                            error.Description);
+                    }
+
+                    await _userManager.DeleteAsync(user);
+
+                    return View(dto);
+                }
+
+                // ---------------------------------------------
+                // Login automático
+                // ---------------------------------------------
+
+                await _signInManager.SignInAsync(
+                    user,
+                    isPersistent: false);
+
+                // ---------------------------------------------
+                // Redirecionamento
+                // ---------------------------------------------
+
+                var googleReturnUrl =
+                    TempData["GoogleReturnUrl"]?.ToString();
+
+                if (!string.IsNullOrWhiteSpace(returnUrl) &&
+                    Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
+                if (!string.IsNullOrWhiteSpace(googleReturnUrl) &&
+                    Url.IsLocalUrl(googleReturnUrl))
+                {
+                    return Redirect(googleReturnUrl);
+                }
+
+                return RedirectToAction(
+                    "Index",
+                    "Home");
+            }
+
+            // =================================================
+            // CADASTRO NORMAL
+            // =================================================
 
             if (dto.Password != dto.ConfirmPassword)
             {
@@ -139,41 +599,45 @@ namespace DoceCantinho.UI.Controllers
                 return View(dto);
             }
 
-            var user = new ApplicationUser
+            var normalUser = new ApplicationUser
             {
                 UserName = dto.Email,
                 Email = dto.Email,
 
-                Cpf = "000.000.000-00",
-                Logradouro = string.Empty,
-                Bairro = string.Empty,
-                Cidade = string.Empty,
-                Estado = string.Empty,
-                Numero = string.Empty,
-                Cep = string.Empty
+                Nome =
+                    string.IsNullOrWhiteSpace(dto.Sobrenome)
+                        ? dto.Nome
+                        : $"{dto.Nome} {dto.Sobrenome}",
+
+                Cpf = dto.Cpf,
+
+                Logradouro = dto.Logradouro,
+                Numero = dto.Numero,
+                Complemento = dto.Complemento,
+                Bairro = dto.Bairro,
+                Cidade = dto.Cidade,
+                Estado = dto.Estado,
+                Cep = dto.Cep
             };
 
             var result =
                 await _userManager.CreateAsync(
-                    user,
+                    normalUser,
                     dto.Password);
 
             if (result.Succeeded)
             {
-                // Usuário comum
                 await _userManager.AddToRoleAsync(
-                    user,
+                    normalUser,
                     "Usuário");
 
-                // Login automático
                 await _signInManager.SignInAsync(
-                    user,
+                    normalUser,
                     isPersistent: false);
 
-                // =================================================
-                // IMPORTANTE:
-                // Se veio do carrinho, volta para o carrinho.
-                // =================================================
+                // ---------------------------------------------
+                // ReturnUrl
+                // ---------------------------------------------
 
                 if (!string.IsNullOrEmpty(returnUrl) &&
                     Url.IsLocalUrl(returnUrl))
@@ -208,18 +672,19 @@ namespace DoceCantinho.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(
+            string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
                 ViewBag.Erro = "Informe seu e-mail.";
+
                 return View();
             }
 
             var user =
                 await _userManager.FindByEmailAsync(email);
 
-            // Por segurança, não informamos se o e-mail existe ou não.
             if (user == null)
             {
                 ViewBag.Mensagem =
@@ -228,16 +693,9 @@ namespace DoceCantinho.UI.Controllers
                 return View();
             }
 
-            // =====================================================
-            // GERA O TOKEN DE RECUPERAÇÃO
-            // =====================================================
-
             var token =
-                await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            // =====================================================
-            // PEGA O ENDEREÇO DO APPSETTINGS.JSON
-            // =====================================================
+                await _userManager.GeneratePasswordResetTokenAsync(
+                    user);
 
             var appUrl =
                 _configuration["AppUrl"]?.TrimEnd('/');
@@ -250,18 +708,10 @@ namespace DoceCantinho.UI.Controllers
                 return View();
             }
 
-            // =====================================================
-            // CRIA O LINK QUE SERÁ ENVIADO POR E-MAIL
-            // =====================================================
-
             var resetLink =
                 $"{appUrl}/Account/ResetPassword" +
                 $"?email={Uri.EscapeDataString(user.Email!)}" +
                 $"&token={Uri.EscapeDataString(token)}";
-
-            // =====================================================
-            // ENVIA O E-MAIL
-            // =====================================================
 
             await _emailService.EnviarRecuperacaoSenhaAsync(
                 user.Email!,
@@ -274,7 +724,7 @@ namespace DoceCantinho.UI.Controllers
         }
 
         // =====================================================
-        // REDEFINIR SENHA
+        // REDEFINIR SENHA - GET
         // =====================================================
 
         [HttpGet]
@@ -297,13 +747,19 @@ namespace DoceCantinho.UI.Controllers
             return View(model);
         }
 
+        // =====================================================
+        // REDEFINIR SENHA - POST
+        // =====================================================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(
             ResetPasswordDto dto)
         {
             if (!ModelState.IsValid)
+            {
                 return View(dto);
+            }
 
             var user =
                 await _userManager.FindByEmailAsync(dto.Email);
@@ -364,6 +820,50 @@ namespace DoceCantinho.UI.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        // =====================================================
+        // REDIRECIONAMENTO APÓS LOGIN
+        // =====================================================
+
+        private async Task<IActionResult> RedirecionarDepoisDoLoginAsync(
+            ApplicationUser? user,
+            string? returnUrl)
+        {
+            // -------------------------------------------------
+            // ReturnUrl seguro
+            // -------------------------------------------------
+
+            if (!string.IsNullOrWhiteSpace(returnUrl) &&
+                Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            // -------------------------------------------------
+            // Verifica Admin
+            // -------------------------------------------------
+
+            if (user != null)
+            {
+                var roles =
+                    await _userManager.GetRolesAsync(user);
+
+                if (roles.Contains("Admin"))
+                {
+                    return RedirectToAction(
+                        "Index",
+                        "Admin");
+                }
+            }
+
+            // -------------------------------------------------
+            // Usuário comum
+            // -------------------------------------------------
+
+            return RedirectToAction(
+                "Index",
+                "Home");
         }
     }
 }

@@ -18,38 +18,58 @@ using DoceCantinho.Infrastructure.Repositories;
 using DoceCantinho.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ======================================
 // ENTITY FRAMEWORK CORE - Banco de Dados
 // ======================================
-// Conceito: Configura o EF Core para usar o SQL Server
+// Configura o EF Core para usar o SQL Server
 builder.Services.AddDbContext<DoceCantinhoDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
 // =============================================
 // ASP.NET IDENTITY - Autenticação e Autorização
 // =============================================
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    //Options: Configura as regras de senha (exemplo: exigir letra maiúscula, número, etc.)
+    // Regras de senha
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 6;
 })
-// Configura o Identity para usar o EF Core e a nossa DbContext personalizada (SenacGamesDbContext)
 .AddEntityFrameworkStores<DoceCantinhoDbContext>()
 .AddDefaultTokenProviders();
 
-//Configuração dos cookies de autenticação 
+// =============================================
+// GOOGLE - LOGIN SOCIAL
+// =============================================
+builder.Services
+    .AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId =
+            builder.Configuration["Authentication:Google:ClientId"]
+            ?? string.Empty;
+
+        options.ClientSecret =
+            builder.Configuration["Authentication:Google:ClientSecret"]
+            ?? string.Empty;
+    });
+
+// =============================================
+// COOKIES DE AUTENTICAÇÃO
+// =============================================
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Account/Login"; // Redireciona para Página de login
-    options.LogoutPath = "/Account/Logout"; // Redireciona para Página de logout
-    options.AccessDeniedPath = "/Account/AccessDenied"; // Redireciona para Página de acesso negado
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
 // ========================================================================

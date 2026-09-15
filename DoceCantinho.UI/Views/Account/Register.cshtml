@@ -1,31 +1,193 @@
 @{
     ViewData["Title"] = "Cadastro";
+
+    bool googleCadastro = ViewBag.GoogleCadastro == true;
+
+    var returnUrl = ViewData["ReturnUrl"]?.ToString();
 }
 
 <div class="page active" id="page-cadastro">
+
     <div class="auth-wrap">
+
         <div class="auth-box">
 
+            <!-- =====================================================
+                 CABEÇALHO
+                 ===================================================== -->
+
             <div class="auth-header">
+
                 <div class="auth-logo-icon">
+
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                     </svg>
+
                 </div>
 
-                <h1 class="auth-title">Criar Conta</h1>
+                @if (googleCadastro)
+                {
+                    <h1 class="auth-title">
+                        Complete seu cadastro
+                    </h1>
 
-                <p class="auth-sub">
-                    Junte-se ao DoceCantinho e aproveite vantagens exclusivas
-                </p>
+                    <p class="auth-sub">
+                        Só precisamos de mais algumas informações para criar sua conta DoceCantinho
+                    </p>
+                }
+                else
+                {
+                    <h1 class="auth-title">
+                        Criar Conta
+                    </h1>
+
+                    <p class="auth-sub">
+                        Junte-se ao DoceCantinho e aproveite vantagens exclusivas
+                    </p>
+                }
+
             </div>
+
+
+            <!-- =====================================================
+                 MENSAGENS DE ERRO
+                 ===================================================== -->
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert-error"
+                     style="
+                        background:#fee2e2;
+                        border:1px solid #fca5a5;
+                        color:#991b1b;
+                        padding:.75rem 1rem;
+                        border-radius:.5rem;
+                        margin-bottom:1rem;
+                        font-size:.9rem;
+                     ">
+
+                    @foreach (var error in ViewData.ModelState.Values
+                        .SelectMany(v => v.Errors))
+                    {
+                        if (!string.IsNullOrWhiteSpace(error.ErrorMessage))
+                        {
+                            <div>@error.ErrorMessage</div>
+                        }
+                    }
+
+                </div>
+            }
 
             @if (!string.IsNullOrEmpty(ViewBag.Erro as string))
             {
-                <div style="background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:.75rem 1rem;border-radius:.5rem;margin-bottom:1rem;font-size:.9rem">
+                <div style="
+                    background:#fee2e2;
+                    border:1px solid #fca5a5;
+                    color:#991b1b;
+                    padding:.75rem 1rem;
+                    border-radius:.5rem;
+                    margin-bottom:1rem;
+                    font-size:.9rem">
+
                     @ViewBag.Erro
+
                 </div>
             }
+
+
+            <!-- =====================================================
+                 AVISO DO CADASTRO GOOGLE
+                 ===================================================== -->
+
+            @if (googleCadastro)
+            {
+                <div style="
+                    background:#f8fafc;
+                    border:1px solid #e2e8f0;
+                    color:#475569;
+                    padding:12px 14px;
+                    border-radius:8px;
+                    margin-bottom:20px;
+                    font-size:.9rem;
+                    line-height:1.5;
+                ">
+
+                    <strong style="color:#202124;">
+                        Cadastro com Google
+                    </strong>
+
+                    <br />
+
+                    Seus dados do Google já foram reconhecidos.
+                    Complete abaixo seu CPF e endereço para finalizar o cadastro.
+
+                </div>
+            }
+
+
+            <!-- =====================================================
+                 BOTÃO GOOGLE
+                 SOMENTE NO CADASTRO NORMAL
+                 ===================================================== -->
+
+            @if (!googleCadastro)
+            {
+                <a asp-controller="Account"
+                   asp-action="ExternalLogin"
+                   asp-route-provider="Google"
+                   asp-route-returnUrl="@returnUrl"
+                   class="google-login-button">
+
+                    <span class="google-logo">
+
+                        <svg viewBox="0 0 24 24"
+                             width="20"
+                             height="20"
+                             aria-hidden="true">
+
+                            <path fill="#4285F4"
+                                  d="M21.35 12.27c0-.79-.07-1.55-.2-2.27H12v4.3h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.42z" />
+
+                            <path fill="#34A853"
+                                  d="M12 21.5c2.63 0 4.84-.87 6.45-2.36l-3.14-2.45c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.5z" />
+
+                            <path fill="#FBBC05"
+                                  d="M6.54 13.59A5.85 5.85 0 0 1 6.23 12c0-.55.11-1.09.31-1.59V7.88H3.3A9.5 9.5 0 0 0 2.5 12c0 1.53.37 2.98 1.03 4.12l3.01-2.53z" />
+
+                            <path fill="#EA4335"
+                                  d="M12 6.38c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.84 3.42 14.63 2.5 12 2.5a9.74 9.74 0 0 0-8.7 5.38l3.01 2.53C7.31 8.1 9.46 6.38 12 6.38z" />
+
+                        </svg>
+
+                    </span>
+
+                    <span>
+                        Cadastrar com Google
+                    </span>
+
+                </a>
+
+
+                <!-- =================================================
+                     DIVISOR
+                     ================================================= -->
+
+                <div class="auth-divider">
+
+                    <div class="line"></div>
+
+                    <span>ou</span>
+
+                    <div class="line"></div>
+
+                </div>
+            }
+
+
+            <!-- =====================================================
+                 FORMULÁRIO
+                 ===================================================== -->
 
             <form class="auth-form"
                   asp-controller="Account"
@@ -34,93 +196,199 @@
 
                 @Html.AntiForgeryToken()
 
-                <!-- IMPORTANTE:
-                     mantém o usuário voltando para o carrinho
-                     depois que terminar o cadastro -->
+                <!-- RETURN URL -->
+
                 <input type="hidden"
                        name="returnUrl"
-                       value="@ViewData["ReturnUrl"]" />
+                       value="@returnUrl" />
+
+
+                <!-- =================================================
+                     NOME / SOBRENOME
+                     ================================================= -->
 
                 <div class="form-grid2">
+
                     <div class="form-group">
-                        <label class="form-label">Nome</label>
+
+                        <label class="form-label">
+                            Nome
+                        </label>
+
                         <input class="form-input"
                                type="text"
                                name="Nome"
+                               value="@Model?.Nome"
                                required
-                               placeholder="Maria" />
+                               placeholder="Maria"
+                               autocomplete="given-name" />
+
                     </div>
 
+
                     <div class="form-group">
-                        <label class="form-label">Sobrenome</label>
+
+                        <label class="form-label">
+                            Sobrenome
+                        </label>
+
                         <input class="form-input"
                                type="text"
                                name="Sobrenome"
-                               placeholder="Silva" />
+                               value="@Model?.Sobrenome"
+                               placeholder="Silva"
+                               autocomplete="family-name" />
+
                     </div>
+
                 </div>
 
+
+                <!-- =================================================
+                     EMAIL / CPF
+                     ================================================= -->
+
                 <div class="form-grid2">
+
                     <div class="form-group">
-                        <label class="form-label">E-mail</label>
+
+                        <label class="form-label">
+                            E-mail
+                        </label>
+
                         <input class="form-input"
                                type="email"
                                name="Email"
+                               value="@Model?.Email"
                                required
-                               placeholder="seu@email.com" />
+                               placeholder="seu@email.com"
+                               autocomplete="email"
+                               @(googleCadastro ? "readonly" : "") />
+
+                        @if (googleCadastro)
+                        {
+                            <small style="
+                                display:block;
+                                margin-top:6px;
+                                color:#64748b;
+                                font-size:.78rem;
+                            ">
+                                E-mail fornecido pela sua conta Google.
+                            </small>
+                        }
+
                     </div>
 
+
                     <div class="form-group">
-                        <label class="form-label">CPF</label>
+
+                        <label class="form-label">
+                            CPF
+                        </label>
+
                         <input class="form-input"
                                type="text"
                                name="Cpf"
                                id="Cpf"
+                               value="@Model?.Cpf"
                                required
                                placeholder="000.000.000-00"
-                               maxlength="14" />
+                               maxlength="14"
+                               autocomplete="off" />
+
                     </div>
+
                 </div>
 
-                <hr style="border:0;border-top:1px solid var(--border);margin:1.5rem 0;" />
 
-                <h3 style="font-size:1.1rem;margin-bottom:1rem;color:var(--fg)">
+                <!-- =================================================
+                     SEPARADOR
+                     ================================================= -->
+
+                <hr style="
+                    border:0;
+                    border-top:1px solid var(--border);
+                    margin:1.5rem 0;" />
+
+
+                <!-- =================================================
+                     ENDEREÇO
+                     ================================================= -->
+
+                <h3 style="
+                    font-size:1.1rem;
+                    margin-bottom:1rem;
+                    color:var(--fg)">
+
                     Endereço de Entrega
+
                 </h3>
 
+
+                <!-- =================================================
+                     CEP / ESTADO
+                     ================================================= -->
+
                 <div class="form-grid2">
+
                     <div class="form-group">
-                        <label class="form-label">CEP</label>
+
+                        <label class="form-label">
+                            CEP
+                        </label>
 
                         <input class="form-input"
                                type="text"
                                name="Cep"
                                id="Cep"
+                               value="@Model?.Cep"
                                required
                                placeholder="00000-000"
-                               maxlength="9" />
+                               maxlength="9"
+                               autocomplete="postal-code" />
 
                         <small id="cep-error"
-                               style="color:red;display:none;">
+                               style="
+                                   color:red;
+                                   display:none;">
+
                             CEP não encontrado ou inválido
+
                         </small>
+
                     </div>
 
+
                     <div class="form-group">
-                        <label class="form-label">Estado (UF)</label>
+
+                        <label class="form-label">
+                            Estado (UF)
+                        </label>
 
                         <input class="form-input"
                                type="text"
                                name="Estado"
                                id="Estado"
+                               value="@Model?.Estado"
                                required
                                placeholder="SP"
-                               maxlength="2" />
+                               maxlength="2"
+                               autocomplete="address-level1" />
+
                     </div>
+
                 </div>
 
+
+                <!-- =================================================
+                     LOGRADOURO
+                     ================================================= -->
+
                 <div class="form-grid2">
-                    <div class="form-group" style="grid-column:span 2">
+
+                    <div class="form-group"
+                         style="grid-column:span 2">
+
                         <label class="form-label">
                             Logradouro / Rua
                         </label>
@@ -129,232 +397,461 @@
                                type="text"
                                name="Logradouro"
                                id="Logradouro"
+                               value="@Model?.Logradouro"
                                required
-                               placeholder="Av. Paulista" />
+                               placeholder="Av. Paulista"
+                               autocomplete="street-address" />
+
                     </div>
+
                 </div>
 
+
+                <!-- =================================================
+                     NÚMERO / BAIRRO
+                     ================================================= -->
+
                 <div class="form-grid2">
+
                     <div class="form-group">
-                        <label class="form-label">Número</label>
+
+                        <label class="form-label">
+                            Número
+                        </label>
 
                         <input class="form-input"
                                type="text"
                                name="Numero"
                                id="Numero"
+                               value="@Model?.Numero"
                                required
-                               placeholder="1000" />
+                               placeholder="1000"
+                               autocomplete="address-line2" />
+
                     </div>
 
+
                     <div class="form-group">
-                        <label class="form-label">Bairro</label>
+
+                        <label class="form-label">
+                            Bairro
+                        </label>
 
                         <input class="form-input"
                                type="text"
                                name="Bairro"
                                id="Bairro"
+                               value="@Model?.Bairro"
                                required
                                placeholder="Bela Vista" />
+
                     </div>
+
                 </div>
 
+
+                <!-- =================================================
+                     CIDADE
+                     ================================================= -->
+
                 <div class="form-group">
-                    <label class="form-label">Cidade</label>
+
+                    <label class="form-label">
+                        Cidade
+                    </label>
 
                     <input class="form-input"
                            type="text"
                            name="Cidade"
                            id="Cidade"
+                           value="@Model?.Cidade"
                            required
-                           placeholder="São Paulo" />
+                           placeholder="São Paulo"
+                           autocomplete="address-level2" />
+
                 </div>
 
-                <hr style="border:0;border-top:1px solid var(--border);margin:1.5rem 0;" />
 
-                <div class="form-group">
-                    <label class="form-label">Senha</label>
+                <!-- =================================================
+                     SENHA
+                     SOMENTE CADASTRO NORMAL
+                     ================================================= -->
 
-                    <input class="form-input"
-                           type="password"
-                           name="Password"
-                           required
-                           placeholder="••••••••" />
-                </div>
+                @if (!googleCadastro)
+                {
+                    <hr style="
+                        border:0;
+                        border-top:1px solid var(--border);
+                        margin:1.5rem 0;" />
 
-                <div class="form-group">
-                    <label class="form-label">Confirmar Senha</label>
 
-                    <input class="form-input"
-                           type="password"
-                           name="ConfirmPassword"
-                           required
-                           placeholder="••••••••" />
-                </div>
+                    <div class="form-group">
 
-                <button type="submit" class="form-submit">
-                    Criar conta
+                        <label class="form-label">
+                            Senha
+                        </label>
+
+                        <input class="form-input"
+                               type="password"
+                               name="Password"
+                               required
+                               placeholder="••••••••"
+                               autocomplete="new-password" />
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Confirmar Senha
+                        </label>
+
+                        <input class="form-input"
+                               type="password"
+                               name="ConfirmPassword"
+                               required
+                               placeholder="••••••••"
+                               autocomplete="new-password" />
+
+                    </div>
+                }
+
+
+                <!-- =================================================
+                     BOTÃO
+                     ================================================= -->
+
+                <button type="submit"
+                        class="form-submit">
+
+                    @if (googleCadastro)
+                    {
+                        <span>
+                            Finalizar cadastro
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            Criar conta
+                        </span>
+                    }
+
                 </button>
 
-                <div class="auth-divider">
-                    <div class="line"></div>
-                    <span>ou</span>
-                    <div class="line"></div>
-                </div>
+
+                <!-- =================================================
+                     LOGIN
+                     ================================================= -->
 
                 <p class="auth-footer">
+
                     Já tem conta?
+
                     <a asp-controller="Account"
                        asp-action="Login"
-                       asp-route-returnUrl="@ViewData["ReturnUrl"]">
+                       asp-route-returnUrl="@returnUrl">
+
                         Fazer login
+
                     </a>
+
                 </p>
 
             </form>
 
+
+            <!-- =====================================================
+                 JAVASCRIPT
+                 ===================================================== -->
+
             <script>
-                document.addEventListener('DOMContentLoaded', function () {
 
-                    // =====================================================
-                    // CEP
-                    // =====================================================
+                document.addEventListener(
+                    'DOMContentLoaded',
+                    function () {
 
-                    const cepInput = document.getElementById('Cep');
-                    const cepError = document.getElementById('cep-error');
+                        // =================================================
+                        // CEP
+                        // =================================================
 
-                    if (cepInput) {
-                        cepInput.addEventListener('keyup', function () {
+                        const cepInput =
+                            document.getElementById('Cep');
 
-                            let cep = cepInput.value.replace(/\D/g, '');
+                        const cepError =
+                            document.getElementById('cep-error');
 
-                            if (cep.length === 8) {
+                        if (cepInput) {
 
-                                fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                                    .then(response => response.json())
-                                    .then(data => {
+                            cepInput.addEventListener(
+                                'keyup',
+                                function () {
 
-                                        if (data.erro) {
-
-                                            cepError.style.display = 'block';
-
-                                        } else {
-
-                                            cepError.style.display = 'none';
-
-                                            document.getElementById('Logradouro').value =
-                                                data.logradouro || '';
-
-                                            document.getElementById('Bairro').value =
-                                                data.bairro || '';
-
-                                            document.getElementById('Cidade').value =
-                                                data.localidade || '';
-
-                                            document.getElementById('Estado').value =
-                                                data.uf || '';
-
-                                            document.getElementById('Numero').focus();
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error(
-                                            'Erro ao buscar CEP:',
-                                            error
+                                    let cep =
+                                        cepInput.value.replace(
+                                            /\D/g,
+                                            ''
                                         );
-                                    });
-                            }
-                        });
+
+                                    if (cep.length === 8) {
+
+                                        fetch(
+                                            `https://viacep.com.br/ws/${cep}/json/`
+                                        )
+                                            .then(
+                                                response => {
+
+                                                    if (!response.ok) {
+                                                        throw new Error(
+                                                            'Erro na consulta do CEP'
+                                                        );
+                                                    }
+
+                                                    return response.json();
+                                                }
+                                            )
+                                            .then(
+                                                data => {
+
+                                                    if (data.erro) {
+
+                                                        if (cepError) {
+                                                            cepError.style.display =
+                                                                'block';
+                                                        }
+
+                                                        return;
+                                                    }
+
+                                                    if (cepError) {
+                                                        cepError.style.display =
+                                                            'none';
+                                                    }
+
+                                                    const logradouro =
+                                                        document.getElementById(
+                                                            'Logradouro'
+                                                        );
+
+                                                    const bairro =
+                                                        document.getElementById(
+                                                            'Bairro'
+                                                        );
+
+                                                    const cidade =
+                                                        document.getElementById(
+                                                            'Cidade'
+                                                        );
+
+                                                    const estado =
+                                                        document.getElementById(
+                                                            'Estado'
+                                                        );
+
+                                                    if (logradouro) {
+
+                                                        logradouro.value =
+                                                            data.logradouro || '';
+
+                                                    }
+
+                                                    if (bairro) {
+
+                                                        bairro.value =
+                                                            data.bairro || '';
+
+                                                    }
+
+                                                    if (cidade) {
+
+                                                        cidade.value =
+                                                            data.localidade || '';
+
+                                                    }
+
+                                                    if (estado) {
+
+                                                        estado.value =
+                                                            data.uf || '';
+
+                                                    }
+
+                                                    const numero =
+                                                        document.getElementById(
+                                                            'Numero'
+                                                        );
+
+                                                    if (numero) {
+
+                                                        numero.focus();
+
+                                                    }
+
+                                                }
+                                            )
+                                            .catch(
+                                                error => {
+
+                                                    console.error(
+                                                        'Erro ao buscar CEP:',
+                                                        error
+                                                    );
+
+                                                    if (cepError) {
+                                                        cepError.style.display =
+                                                            'block';
+                                                    }
+
+                                                }
+                                            );
+                                    }
+                                }
+                            );
+                        }
+
+
+                        // =================================================
+                        // MÁSCARA CPF
+                        // =================================================
+
+                        const cpfInput =
+                            document.getElementById('Cpf');
+
+                        if (cpfInput) {
+
+                            cpfInput.addEventListener(
+                                'input',
+                                function (e) {
+
+                                    let value =
+                                        e.target.value.replace(
+                                            /\D/g,
+                                            ''
+                                        );
+
+                                    value =
+                                        value.substring(
+                                            0,
+                                            11
+                                        );
+
+                                    if (value.length > 9) {
+
+                                        value =
+                                            value.replace(
+                                                /(\d{3})(\d{3})(\d{3})(\d{1,2})/,
+                                                '$1.$2.$3-$4'
+                                            );
+
+                                    }
+                                    else if (value.length > 6) {
+
+                                        value =
+                                            value.replace(
+                                                /(\d{3})(\d{3})(\d{1,3})/,
+                                                '$1.$2.$3'
+                                            );
+
+                                    }
+                                    else if (value.length > 3) {
+
+                                        value =
+                                            value.replace(
+                                                /(\d{3})(\d{1,3})/,
+                                                '$1.$2'
+                                            );
+
+                                    }
+
+                                    e.target.value =
+                                        value;
+
+                                }
+                            );
+                        }
+
+
+                        // =================================================
+                        // MÁSCARA CEP
+                        // =================================================
+
+                        if (cepInput) {
+
+                            cepInput.addEventListener(
+                                'input',
+                                function (e) {
+
+                                    let value =
+                                        e.target.value.replace(
+                                            /\D/g,
+                                            ''
+                                        );
+
+                                    value =
+                                        value.substring(
+                                            0,
+                                            8
+                                        );
+
+                                    if (value.length > 5) {
+
+                                        value =
+                                            value.substring(
+                                                0,
+                                                5
+                                            ) +
+                                            '-' +
+                                            value.substring(
+                                                5
+                                            );
+
+                                    }
+
+                                    e.target.value =
+                                        value;
+
+                                }
+                            );
+                        }
+
+
+                        // =================================================
+                        // ESTADO
+                        // =================================================
+
+                        const estadoInput =
+                            document.getElementById('Estado');
+
+                        if (estadoInput) {
+
+                            estadoInput.addEventListener(
+                                'input',
+                                function () {
+
+                                    this.value =
+                                        this.value
+                                            .replace(
+                                                /[^a-zA-Z]/g,
+                                                ''
+                                            )
+                                            .toUpperCase()
+                                            .substring(
+                                                0,
+                                                2
+                                            );
+
+                                }
+                            );
+                        }
+
                     }
+                );
 
-                    // =====================================================
-                    // MÁSCARA CPF
-                    // =====================================================
-
-                    const cpfInput = document.getElementById('Cpf');
-
-                    if (cpfInput) {
-
-                        cpfInput.addEventListener('input', function (e) {
-
-                            let value =
-                                e.target.value.replace(/\D/g, '');
-
-                            value = value.substring(0, 11);
-
-                            if (value.length > 9) {
-
-                                value =
-                                    value.replace(
-                                        /(\d{3})(\d{3})(\d{3})(\d{1,2})/,
-                                        '$1.$2.$3-$4'
-                                    );
-
-                            } else if (value.length > 6) {
-
-                                value =
-                                    value.replace(
-                                        /(\d{3})(\d{3})(\d{1,3})/,
-                                        '$1.$2.$3'
-                                    );
-
-                            } else if (value.length > 3) {
-
-                                value =
-                                    value.replace(
-                                        /(\d{3})(\d{1,3})/,
-                                        '$1.$2'
-                                    );
-                            }
-
-                            e.target.value = value;
-                        });
-                    }
-
-                    // =====================================================
-                    // MÁSCARA CEP
-                    // =====================================================
-
-                    if (cepInput) {
-
-                        cepInput.addEventListener('input', function (e) {
-
-                            let value =
-                                e.target.value.replace(/\D/g, '');
-
-                            value = value.substring(0, 8);
-
-                            if (value.length > 5) {
-                                value =
-                                    value.substring(0, 5) +
-                                    '-' +
-                                    value.substring(5);
-                            }
-
-                            e.target.value = value;
-                        });
-                    }
-
-                    // =====================================================
-                    // ESTADO
-                    // =====================================================
-
-                    const estadoInput =
-                        document.getElementById('Estado');
-
-                    if (estadoInput) {
-
-                        estadoInput.addEventListener('input', function () {
-
-                            this.value =
-                                this.value
-                                    .replace(/[^a-zA-Z]/g, '')
-                                    .toUpperCase()
-                                    .substring(0, 2);
-                        });
-                    }
-                });
             </script>
 
         </div>
+
     </div>
+
 </div>
