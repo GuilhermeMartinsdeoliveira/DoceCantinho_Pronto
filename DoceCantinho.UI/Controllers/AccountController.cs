@@ -3,6 +3,7 @@ using DoceCantinho.Infrastructure.Identity;
 using DoceCantinho.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -401,6 +402,23 @@ namespace DoceCantinho.UI.Controllers
             string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+            // CPF é armazenado somente com os 11 dígitos.
+            dto.Cpf = NormalizarCpf(dto.Cpf);
+
+            if (dto.Cpf.Length != 11)
+            {
+                ModelState.AddModelError(nameof(dto.Cpf), "Informe um CPF com 11 dígitos.");
+            }
+            else if (await _userManager.Users.AnyAsync(u => u.Cpf == dto.Cpf))
+            {
+                ModelState.AddModelError(nameof(dto.Cpf), "Este CPF já está cadastrado em outra conta.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
 
             // =================================================
             // VERIFICA SE É CADASTRO GOOGLE
@@ -865,5 +883,10 @@ namespace DoceCantinho.UI.Controllers
                 "Index",
                 "Home");
         }
+        private static string NormalizarCpf(string? cpf)
+        {
+            return new string((cpf ?? string.Empty).Where(char.IsDigit).ToArray());
+        }
+
     }
 }

@@ -174,6 +174,13 @@
                 Pagamento: @Model.PaymentMethod
             </small>
 
+            @if (!string.IsNullOrWhiteSpace(Model.CartaoUltimos4))
+            {
+                <small>
+                    Cartão: •••• @Model.CartaoUltimos4
+                </small>
+            }
+
         </div>
 
     </div>

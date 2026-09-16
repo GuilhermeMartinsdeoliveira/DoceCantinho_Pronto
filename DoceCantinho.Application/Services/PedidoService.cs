@@ -171,6 +171,8 @@ namespace DoceCantinho.Application.Services
                 Endereco = pedido.Endereco,
                 Total = pedido.Total,
                 PaymentMethod = pedido.PaymentMethod,
+                CartaoId = pedido.CartaoId,
+                CartaoUltimos4 = pedido.CartaoUltimos4,
                 Status = pedido.Status,
                 Items = pedido.Items?.Select(i => new PedidoItemDto
                 {

@@ -1,0 +1,181 @@
+@model DoceCantinho.UI.ViewModels.CartaoCadastroViewModel
+@using DoceCantinho.UI.ViewModels
+
+@{
+    ViewData["Title"] = "Meus Cartões";
+    var cartoes = ViewBag.Cartoes as List<CartaoResumoViewModel> ?? new List<CartaoResumoViewModel>();
+}
+
+<style>
+    .cartoes-page { max-width: 1120px; margin: 0 auto; padding: 38px 24px 70px; }
+    .cartoes-header { margin-bottom: 28px; }
+    .cartoes-eyebrow { color:#e29a72; font-size:11px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; }
+    .cartoes-header h1 { margin:7px 0 8px; color:#f4e8e1; font-size:32px; }
+    .cartoes-header p { margin:0; color:#bca79d; font-size:14px; }
+    .cartoes-layout { display:grid; grid-template-columns:minmax(0,1fr) 390px; gap:26px; align-items:start; }
+    .cartoes-list-card, .cartoes-form-card { background:linear-gradient(145deg,#352119,#291914); border:1px solid rgba(226,154,114,.16); border-radius:18px; box-shadow:0 14px 35px rgba(0,0,0,.24); }
+    .cartoes-list-card { padding:24px; }
+    .cartoes-form-card { padding:25px; position:sticky; top:95px; }
+    .cartoes-card-title { color:#f0dfd6; font-size:19px; font-weight:800; margin:0 0 5px; }
+    .cartoes-card-subtitle { color:#9f8b82; font-size:12px; margin:0 0 20px; }
+    .cartao-item { display:flex; align-items:center; gap:16px; padding:18px 0; border-bottom:1px solid rgba(226,154,114,.10); }
+    .cartao-item:last-child { border-bottom:0; }
+    .cartao-chip { width:62px; height:42px; border-radius:10px; background:linear-gradient(135deg,#5b392c,#2a1914); border:1px solid rgba(226,154,114,.22); display:flex; align-items:center; justify-content:center; color:#e29a72; font-size:18px; flex:0 0 62px; }
+    .cartao-info { min-width:0; flex:1; }
+    .cartao-numero { color:#f0dfd6; font-weight:800; font-size:15px; }
+    .cartao-meta { color:#a99489; font-size:12px; margin-top:4px; }
+    .cartao-delete { border:1px solid rgba(220,100,90,.28); background:transparent; color:#d8897c; border-radius:8px; padding:8px 11px; cursor:pointer; font-size:11px; font-weight:700; }
+    .cartao-delete:hover { background:rgba(220,100,90,.08); }
+    .cartoes-empty { padding:42px 20px; text-align:center; border:1px dashed rgba(226,154,114,.18); border-radius:14px; color:#a99489; }
+    .cartoes-empty-icon { font-size:34px; margin-bottom:10px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-group { margin-bottom:15px; }
+    .form-group label { display:block; color:#d9c8bf; font-size:12px; font-weight:700; margin-bottom:7px; }
+    .form-group input, .form-group select { width:100%; box-sizing:border-box; padding:11px 12px; border:1px solid rgba(226,154,114,.18); border-radius:9px; background:#24150f; color:#f1e3dc; outline:none; }
+    .form-group input:focus, .form-group select:focus { border-color:#e29a72; }
+    .field-validation-error { display:block; color:#e8897d; font-size:11px; margin-top:5px; }
+    .cartao-submit { width:100%; min-height:46px; border:0; border-radius:10px; background:#e29a72; color:#2a140d; font-weight:800; cursor:pointer; }
+    .cartao-submit:hover { filter:brightness(1.06); }
+    .cartoes-security { margin-top:15px; color:#8f7b72; font-size:10px; line-height:1.5; }
+    .cartao-alert { padding:12px 14px; border-radius:10px; margin-bottom:18px; font-size:13px; }
+    .cartao-alert-success { background:#203b2a; color:#ccebd5; border:1px solid #477c59; }
+    .cartao-alert-error { background:#40221e; color:#f2c8c2; border:1px solid #8b4c43; }
+    .cartoes-back { display:inline-block; margin-top:20px; color:#bca79d; text-decoration:none; font-size:12px; }
+    .cartoes-back:hover { color:#e29a72; }
+    @@media(max-width:850px) { .cartoes-layout { grid-template-columns:1fr; } .cartoes-form-card { position:static; } }
+    @@media(max-width:520px) { .cartoes-page { padding:25px 15px 50px; } .form-row { grid-template-columns:1fr; } .cartao-item { align-items:flex-start; } }
+</style>
+
+<div class="cartoes-page">
+
+    <div class="cartoes-header">
+        <span class="cartoes-eyebrow">MINHA CONTA</span>
+        <h1>Meus Cartões</h1>
+        <p>Cadastre cartões para selecioná-los rapidamente durante o pagamento.</p>
+    </div>
+
+    @if (TempData["CartaoSucesso"] != null)
+    {
+        <div class="cartao-alert cartao-alert-success">✓ @TempData["CartaoSucesso"]</div>
+    }
+
+    @if (TempData["CartaoErro"] != null)
+    {
+        <div class="cartao-alert cartao-alert-error">! @TempData["CartaoErro"]</div>
+    }
+
+    <div class="cartoes-layout">
+
+        <section class="cartoes-list-card">
+            <h2 class="cartoes-card-title">Cartões cadastrados</h2>
+            <p class="cartoes-card-subtitle">Somente informações necessárias para identificação do cartão são armazenadas.</p>
+
+            @if (cartoes.Any())
+            {
+                foreach (var cartao in cartoes)
+                {
+                    <div class="cartao-item">
+                        <div class="cartao-chip">▰</div>
+                        <div class="cartao-info">
+                            <div class="cartao-numero">@cartao.Bandeira •••• @cartao.Ultimos4</div>
+                            <div class="cartao-meta">@cartao.TipoFormatado · @cartao.NomeTitular · Validade @cartao.Validade</div>
+                        </div>
+                        <form asp-action="Excluir" method="post" onsubmit="return confirm('Deseja remover este cartão?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@cartao.Id" />
+                            <button type="submit" class="cartao-delete">Remover</button>
+                        </form>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="cartoes-empty">
+                    <div class="cartoes-empty-icon">💳</div>
+                    <strong>Você ainda não possui cartões cadastrados.</strong>
+                    <div style="margin-top:6px; font-size:12px;">Cadastre o primeiro cartão ao lado.</div>
+                </div>
+            }
+
+            <a asp-controller="Home" asp-action="Index" class="cartoes-back">← Voltar para minha conta</a>
+        </section>
+
+        <section class="cartoes-form-card">
+            <h2 class="cartoes-card-title">Adicionar cartão</h2>
+            <p class="cartoes-card-subtitle">O número completo e o CVV não são armazenados.</p>
+
+            <form asp-action="Index" method="post">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="field-validation-error" style="margin-bottom:12px;"></div>
+
+                <div class="form-group">
+                    <label asp-for="NomeTitular"></label>
+                    <input asp-for="NomeTitular" autocomplete="cc-name" placeholder="Nome como aparece no cartão" />
+                    <span asp-validation-for="NomeTitular" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Numero"></label>
+                    <input asp-for="Numero" autocomplete="cc-number" inputmode="numeric" placeholder="4111 1111 1111 1111" maxlength="23" />
+                    <span asp-validation-for="Numero" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="Tipo"></label>
+                        <select asp-for="Tipo">
+                            <option value="Credito">Crédito</option>
+                            <option value="Debito">Débito</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Bandeira"></label>
+                        <select asp-for="Bandeira">
+                            <option>Visa</option>
+                            <option>Mastercard</option>
+                            <option>Elo</option>
+                            <option>American Express</option>
+                            <option>Hipercard</option>
+                            <option>Outra</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="MesValidade"></label>
+                        <select asp-for="MesValidade">
+                            <option value="">Mês</option>
+                            @for (var mes = 1; mes <= 12; mes++)
+                            {
+                                <option value="@mes">@mes.ToString("00")</option>
+                            }
+                        </select>
+                        <span asp-validation-for="MesValidade" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="AnoValidade"></label>
+                        <select asp-for="AnoValidade">
+                            <option value="">Ano</option>
+                            @for (var ano = DateTime.Today.Year; ano <= DateTime.Today.Year + 15; ano++)
+                            {
+                                <option value="@ano">@ano</option>
+                            }
+                        </select>
+                        <span asp-validation-for="AnoValidade" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="cartao-submit">+ Cadastrar cartão</button>
+
+                <div class="cartoes-security">
+                    🔒 Para segurança, o sistema guarda apenas titular, bandeira, tipo, validade e os 4 últimos dígitos. Nunca armazene o CVV ou o número completo do cartão.
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>

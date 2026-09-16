@@ -43,6 +43,7 @@ namespace DoceCantinho.API.Controllers
         public string Id { get; set; } = string.Empty;
         public string Nome { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string Cpf { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public List<string> Roles { get; set; } = new();
         public string Telefone { get; set; } = string.Empty;
@@ -59,6 +60,7 @@ namespace DoceCantinho.API.Controllers
     {
         public string Nome { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string Cpf { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;
 
@@ -79,6 +81,7 @@ namespace DoceCantinho.API.Controllers
     {
         public string Nome { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string Cpf { get; set; } = string.Empty;
         public string? Password { get; set; }
         public string? ConfirmPassword { get; set; }
         public string Telefone  { get; set; } = string.Empty;
@@ -111,6 +114,8 @@ namespace DoceCantinho.API.Controllers
                         Nome = user.Nome,
 
                         Email = user.Email ?? string.Empty,
+
+                        Cpf = user.Cpf ?? string.Empty,
 
                         UserName = user.UserName ?? string.Empty,
 
@@ -178,6 +183,7 @@ namespace DoceCantinho.API.Controllers
                 Id = user.Id,
                 Nome = user.Nome,
                 Email = user.Email ?? string.Empty,
+                Cpf = user.Cpf ?? string.Empty,
                 UserName = user.UserName ?? string.Empty,
                 Roles = roles.ToList(),
                 Telefone = user.PhoneNumber ?? string.Empty,
@@ -204,6 +210,19 @@ namespace DoceCantinho.API.Controllers
             if (string.IsNullOrWhiteSpace(dto.Password) || dto.Password != dto.ConfirmPassword)
                 return BadRequest(new { message = "As senhas não coincidem." });
 
+            var cpf = new string((dto.Cpf ?? string.Empty)
+                .Where(char.IsDigit)
+                .ToArray());
+
+            if (cpf.Length != 11 || !ValidarCpf(cpf))
+                return BadRequest(new { message = "Informe um CPF válido com 11 números." });
+
+            var cpfExistente = _userManager.Users
+                .FirstOrDefault(u => u.Cpf == cpf);
+
+            if (cpfExistente != null)
+                return BadRequest(new { message = "Este CPF já está cadastrado em outra conta." });
+
             var existente = await _userManager.FindByEmailAsync(dto.Email);
             if (existente != null)
                 return BadRequest(new { message = "Já existe um usuário com este e-mail." });
@@ -213,6 +232,7 @@ namespace DoceCantinho.API.Controllers
                 Nome = dto.Nome.Trim(),
                 UserName = dto.Email.Trim(),
                 Email = dto.Email.Trim(),
+                Cpf = cpf,
                 PhoneNumber = dto.Telefone.Trim(),
                 Logradouro = dto.Logradouro.Trim(),
                 Numero = dto.Numero.Trim(),
@@ -241,6 +261,7 @@ namespace DoceCantinho.API.Controllers
             {
                 Id = user.Id,
                 Email = user.Email!,
+                Cpf = user.Cpf ?? string.Empty,
                 UserName = user.UserName!,
                 Roles = roles.ToList(),
 
@@ -277,6 +298,25 @@ namespace DoceCantinho.API.Controllers
 
             try
             {
+                var cpf = new string((dto.Cpf ?? string.Empty)
+                    .Where(char.IsDigit)
+                    .ToArray());
+
+                if (cpf.Length != 11 || !ValidarCpf(cpf))
+                {
+                    return BadRequest(new { message = "Informe um CPF válido com 11 números." });
+                }
+
+                var cpfExistente = _userManager.Users
+                    .FirstOrDefault(u => u.Cpf == cpf && u.Id != id);
+
+                if (cpfExistente != null)
+                {
+                    return BadRequest(new { message = "Este CPF já está cadastrado em outra conta." });
+                }
+
+                user.Cpf = cpf;
+
                 // E-mail
                 if (!string.IsNullOrWhiteSpace(dto.Email) &&
                     !string.Equals(
@@ -401,6 +441,36 @@ namespace DoceCantinho.API.Controllers
         // =====================================================================
         // AUXILIAR
         // =====================================================================
+        private static bool ValidarCpf(string cpf)
+        {
+            if (string.IsNullOrWhiteSpace(cpf))
+                return false;
+
+            string numeros = new string(cpf.Where(char.IsDigit).ToArray());
+
+            if (numeros.Length != 11 || numeros.Distinct().Count() == 1)
+                return false;
+
+            int soma = 0;
+            for (int i = 0; i < 9; i++)
+                soma += (numeros[i] - '0') * (10 - i);
+
+            int resto = soma % 11;
+            int digito1 = resto < 2 ? 0 : 11 - resto;
+
+            if (digito1 != numeros[9] - '0')
+                return false;
+
+            soma = 0;
+            for (int i = 0; i < 10; i++)
+                soma += (numeros[i] - '0') * (11 - i);
+
+            resto = soma % 11;
+            int digito2 = resto < 2 ? 0 : 11 - resto;
+
+            return digito2 == numeros[10] - '0';
+        }
+
         private async Task GarantirRoleExisteAsync(string role)
         {
             if (!await _roleManager.RoleExistsAsync(role))

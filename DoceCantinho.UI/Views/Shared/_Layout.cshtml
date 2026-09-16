@@ -823,6 +823,14 @@
 
                     </a>
 
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Cartoes" ? "active" : "")"
+                       asp-controller="Cartoes"
+                       asp-action="Index">
+
+                        Meus Cartões
+
+                    </a>
+
                 }
 
             </div>
@@ -1184,6 +1192,23 @@
                 Contato
 
             </a>
+
+
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <a class="mobile-link"
+                   asp-controller="Cartoes"
+                   asp-action="Index">
+
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+
+                    Meus Cartões
+
+                </a>
+            }
 
 
             <a class="mobile-link"

@@ -25,6 +25,7 @@ namespace DoceCantinho.Infrastructure.Context
         public DbSet<Doce> Doces { get; set; }
         public DbSet<DoceCantinho.Domain.Entities.Pedido> Pedidos { get; set; }
         public DbSet<DoceCantinho.Domain.Entities.PedidoItem> PedidoItems { get; set; }
+        public DbSet<DoceCantinho.Domain.Entities.Cartao> Cartoes { get; set; }
 
         /// <summary>
         /// Persistência simples de carrinho por usuário (JSON).
@@ -44,6 +45,12 @@ namespace DoceCantinho.Infrastructure.Context
             modelBuilder.ApplyConfiguration(new DoceConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
 
+            // CPF é único por usuário. O cadastro normaliza o CPF para 11 dígitos.
+            modelBuilder.Entity<ApplicationUser>()
+                .HasIndex(u => u.Cpf)
+                .IsUnique()
+                .HasDatabaseName("IX_AspNetUsers_Cpf");
+
             // Pedidos
             modelBuilder.Entity<DoceCantinho.Domain.Entities.Pedido>(b =>
             {
@@ -52,6 +59,11 @@ namespace DoceCantinho.Infrastructure.Context
                 b.Property(p => p.UserId).IsRequired().HasMaxLength(450); // FK para IdentityUser
                 b.Property(p => p.Total).HasPrecision(18, 2);
                 b.Property(p => p.Status).HasMaxLength(50);
+                b.Property(p => p.CartaoUltimos4).HasMaxLength(4);
+                b.HasOne<DoceCantinho.Domain.Entities.Cartao>()
+                    .WithMany()
+                    .HasForeignKey(p => p.CartaoId)
+                    .OnDelete(DeleteBehavior.SetNull);
                 b.HasMany(p => p.Items).WithOne(i => i.Pedido).HasForeignKey(i => i.PedidoId);
             });
 
@@ -60,6 +72,27 @@ namespace DoceCantinho.Infrastructure.Context
                 b.HasKey(i => i.Id);
                 b.Property(i => i.Nome).IsRequired().HasMaxLength(200);
                 b.Property(i => i.Preco).HasPrecision(18, 2);
+            });
+
+            // Cartões salvos pelo usuário. Nunca armazenamos número completo ou CVV.
+            modelBuilder.Entity<DoceCantinho.Domain.Entities.Cartao>(b =>
+            {
+                b.HasKey(c => c.Id);
+                b.Property(c => c.UserId).IsRequired().HasMaxLength(450);
+                b.Property(c => c.NomeTitular).IsRequired().HasMaxLength(120);
+                b.Property(c => c.Ultimos4).IsRequired().HasMaxLength(4);
+                b.Property(c => c.Bandeira).IsRequired().HasMaxLength(30);
+                b.Property(c => c.Tipo).IsRequired().HasMaxLength(20);
+                b.Property(c => c.MesValidade).IsRequired();
+                b.Property(c => c.AnoValidade).IsRequired();
+                b.Property(c => c.CreatedAt).IsRequired();
+
+                b.HasIndex(c => c.UserId);
+                b.HasOne<DoceCantinho.Infrastructure.Identity.ApplicationUser>()
+                    .WithMany()
+                    .HasForeignKey(c => c.UserId)
+                    .HasPrincipalKey(u => u.Id)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<BlogPost>(b =>
