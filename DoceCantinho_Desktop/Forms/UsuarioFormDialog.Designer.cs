@@ -1,4 +1,4 @@
-﻿namespace DoceCantinho.Desktop1.Forms
+namespace DoceCantinho.Desktop1.Forms
 {
     partial class UsuarioFormDialog
     {
@@ -12,6 +12,9 @@
 
         private System.Windows.Forms.Label lblTelefone;
         private System.Windows.Forms.TextBox txtTelefone;
+
+        private System.Windows.Forms.Label lblCpf;
+        private System.Windows.Forms.TextBox txtCpf;
 
         private System.Windows.Forms.Label lblEmail;
         private System.Windows.Forms.TextBox txtEmail;
@@ -77,6 +80,8 @@
             txtNome = new TextBox();
             lblTelefone = new Label();
             txtTelefone = new TextBox();
+            lblCpf = new Label();
+            txtCpf = new TextBox();
             lblEmail = new Label();
             txtEmail = new TextBox();
             lblSenha = new Label();
@@ -148,7 +153,7 @@
             txtNome.ForeColor = Color.FromArgb(50, 40, 37);
             txtNome.Location = new Point(51, 171);
             txtNome.Name = "txtNome";
-            txtNome.Size = new Size(491, 30);
+            txtNome.Size = new Size(280, 30);
             txtNome.TabIndex = 3;
             // 
             // lblTelefone
@@ -156,7 +161,7 @@
             lblTelefone.AutoSize = true;
             lblTelefone.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lblTelefone.ForeColor = Color.FromArgb(70, 55, 50);
-            lblTelefone.Location = new Point(566, 140);
+            lblTelefone.Location = new Point(578, 140);
             lblTelefone.Name = "lblTelefone";
             lblTelefone.Size = new Size(79, 20);
             lblTelefone.TabIndex = 4;
@@ -168,10 +173,34 @@
             txtTelefone.BorderStyle = BorderStyle.FixedSingle;
             txtTelefone.Font = new Font("Segoe UI", 10F);
             txtTelefone.ForeColor = Color.FromArgb(50, 40, 37);
-            txtTelefone.Location = new Point(563, 171);
+            txtTelefone.Location = new Point(575, 171);
             txtTelefone.Name = "txtTelefone";
-            txtTelefone.Size = new Size(251, 30);
+            txtTelefone.Size = new Size(240, 30);
             txtTelefone.TabIndex = 5;
+            // 
+            // lblCpf
+            // 
+            lblCpf.AutoSize = true;
+            lblCpf.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblCpf.ForeColor = Color.FromArgb(70, 55, 50);
+            lblCpf.Location = new Point(350, 140);
+            lblCpf.Name = "lblCpf";
+            lblCpf.Size = new Size(39, 20);
+            lblCpf.TabIndex = 6;
+            lblCpf.Text = "CPF";
+            // 
+            // txtCpf
+            // 
+            txtCpf.BackColor = Color.White;
+            txtCpf.BorderStyle = BorderStyle.FixedSingle;
+            txtCpf.Font = new Font("Segoe UI", 10F);
+            txtCpf.ForeColor = Color.FromArgb(50, 40, 37);
+            txtCpf.Location = new Point(347, 171);
+            txtCpf.Name = "txtCpf";
+            txtCpf.Size = new Size(210, 30);
+            txtCpf.TabIndex = 7;
+            txtCpf.MaxLength = 14;
+            txtCpf.PlaceholderText = "000.000.000-00";
             // 
             // lblEmail
             // 
@@ -181,7 +210,7 @@
             lblEmail.Location = new Point(54, 237);
             lblEmail.Name = "lblEmail";
             lblEmail.Size = new Size(58, 20);
-            lblEmail.TabIndex = 6;
+            lblEmail.TabIndex = 8;
             lblEmail.Text = "E-MAIL";
             // 
             // txtEmail
@@ -193,7 +222,7 @@
             txtEmail.Location = new Point(51, 268);
             txtEmail.Name = "txtEmail";
             txtEmail.Size = new Size(491, 30);
-            txtEmail.TabIndex = 7;
+            txtEmail.TabIndex = 9;
             // 
             // lblSenha
             // 
@@ -203,7 +232,7 @@
             lblSenha.Location = new Point(54, 335);
             lblSenha.Name = "lblSenha";
             lblSenha.Size = new Size(58, 20);
-            lblSenha.TabIndex = 8;
+            lblSenha.TabIndex = 10;
             lblSenha.Text = "SENHA";
             // 
             // txtSenha
@@ -215,7 +244,7 @@
             txtSenha.Location = new Point(51, 365);
             txtSenha.Name = "txtSenha";
             txtSenha.Size = new Size(360, 30);
-            txtSenha.TabIndex = 9;
+            txtSenha.TabIndex = 11;
             txtSenha.UseSystemPasswordChar = true;
             // 
             // lblConfirmar
@@ -226,7 +255,7 @@
             lblConfirmar.Location = new Point(442, 335);
             lblConfirmar.Name = "lblConfirmar";
             lblConfirmar.Size = new Size(148, 20);
-            lblConfirmar.TabIndex = 10;
+            lblConfirmar.TabIndex = 12;
             lblConfirmar.Text = "CONFIRMAR SENHA";
             // 
             // txtConfirmar
@@ -238,7 +267,7 @@
             txtConfirmar.Location = new Point(440, 365);
             txtConfirmar.Name = "txtConfirmar";
             txtConfirmar.Size = new Size(335, 30);
-            txtConfirmar.TabIndex = 11;
+            txtConfirmar.TabIndex = 13;
             txtConfirmar.UseSystemPasswordChar = true;
             // 
             // lblEnderecoTitulo
@@ -249,7 +278,7 @@
             lblEnderecoTitulo.Location = new Point(51, 435);
             lblEnderecoTitulo.Name = "lblEnderecoTitulo";
             lblEnderecoTitulo.Size = new Size(109, 25);
-            lblEnderecoTitulo.TabIndex = 12;
+            lblEnderecoTitulo.TabIndex = 14;
             lblEnderecoTitulo.Text = "ENDEREÇO";
             // 
             // lblLogradouro
@@ -260,7 +289,7 @@
             lblLogradouro.Location = new Point(304, 472);
             lblLogradouro.Name = "lblLogradouro";
             lblLogradouro.Size = new Size(109, 20);
-            lblLogradouro.TabIndex = 13;
+            lblLogradouro.TabIndex = 15;
             lblLogradouro.Text = "LOGRADOURO";
             // 
             // txtLogradouro
@@ -271,7 +300,7 @@
             txtLogradouro.Location = new Point(304, 507);
             txtLogradouro.Name = "txtLogradouro";
             txtLogradouro.Size = new Size(511, 30);
-            txtLogradouro.TabIndex = 14;
+            txtLogradouro.TabIndex = 16;
             // 
             // lblNumero
             // 
@@ -281,7 +310,7 @@
             lblNumero.Location = new Point(605, 667);
             lblNumero.Name = "lblNumero";
             lblNumero.Size = new Size(74, 20);
-            lblNumero.TabIndex = 15;
+            lblNumero.TabIndex = 17;
             lblNumero.Text = "NÚMERO";
             // 
             // txtNumero
@@ -292,7 +321,7 @@
             txtNumero.Location = new Point(605, 697);
             txtNumero.Name = "txtNumero";
             txtNumero.Size = new Size(194, 30);
-            txtNumero.TabIndex = 16;
+            txtNumero.TabIndex = 18;
             // 
             // lblComplemento
             // 
@@ -302,7 +331,7 @@
             lblComplemento.Location = new Point(54, 571);
             lblComplemento.Name = "lblComplemento";
             lblComplemento.Size = new Size(119, 20);
-            lblComplemento.TabIndex = 17;
+            lblComplemento.TabIndex = 19;
             lblComplemento.Text = "COMPLEMENTO";
             // 
             // txtComplemento
@@ -313,7 +342,7 @@
             txtComplemento.Location = new Point(51, 601);
             txtComplemento.Name = "txtComplemento";
             txtComplemento.Size = new Size(360, 30);
-            txtComplemento.TabIndex = 18;
+            txtComplemento.TabIndex = 20;
             // 
             // lblBairro
             // 
@@ -323,7 +352,7 @@
             lblBairro.Location = new Point(442, 571);
             lblBairro.Name = "lblBairro";
             lblBairro.Size = new Size(61, 20);
-            lblBairro.TabIndex = 19;
+            lblBairro.TabIndex = 21;
             lblBairro.Text = "BAIRRO";
             // 
             // txtBairro
@@ -334,7 +363,7 @@
             txtBairro.Location = new Point(440, 601);
             txtBairro.Name = "txtBairro";
             txtBairro.Size = new Size(375, 30);
-            txtBairro.TabIndex = 20;
+            txtBairro.TabIndex = 22;
             // 
             // lblCidade
             // 
@@ -344,7 +373,7 @@
             lblCidade.Location = new Point(54, 667);
             lblCidade.Name = "lblCidade";
             lblCidade.Size = new Size(62, 20);
-            lblCidade.TabIndex = 21;
+            lblCidade.TabIndex = 23;
             lblCidade.Text = "CIDADE";
             // 
             // txtCidade
@@ -355,7 +384,7 @@
             txtCidade.Location = new Point(51, 697);
             txtCidade.Name = "txtCidade";
             txtCidade.Size = new Size(360, 30);
-            txtCidade.TabIndex = 22;
+            txtCidade.TabIndex = 24;
             // 
             // lblEstado
             // 
@@ -365,7 +394,7 @@
             lblEstado.Location = new Point(442, 667);
             lblEstado.Name = "lblEstado";
             lblEstado.Size = new Size(64, 20);
-            lblEstado.TabIndex = 23;
+            lblEstado.TabIndex = 25;
             lblEstado.Text = "ESTADO";
             // 
             // cmbEstado
@@ -378,7 +407,7 @@
             cmbEstado.Location = new Point(440, 696);
             cmbEstado.Name = "cmbEstado";
             cmbEstado.Size = new Size(114, 31);
-            cmbEstado.TabIndex = 24;
+            cmbEstado.TabIndex = 26;
             // 
             // lblCep
             // 
@@ -388,7 +417,7 @@
             lblCep.Location = new Point(54, 472);
             lblCep.Name = "lblCep";
             lblCep.Size = new Size(35, 20);
-            lblCep.TabIndex = 25;
+            lblCep.TabIndex = 27;
             lblCep.Text = "CEP";
             // 
             // txtCep
@@ -399,7 +428,7 @@
             txtCep.Location = new Point(51, 507);
             txtCep.Name = "txtCep";
             txtCep.Size = new Size(240, 30);
-            txtCep.TabIndex = 26;
+            txtCep.TabIndex = 28;
             // 
             // lblPerfil
             // 
@@ -409,7 +438,7 @@
             lblPerfil.Location = new Point(566, 237);
             lblPerfil.Name = "lblPerfil";
             lblPerfil.Size = new Size(54, 20);
-            lblPerfil.TabIndex = 27;
+            lblPerfil.TabIndex = 29;
             lblPerfil.Text = "PERFIL";
             // 
             // cmbPerfil
@@ -421,7 +450,7 @@
             cmbPerfil.Location = new Point(563, 267);
             cmbPerfil.Name = "cmbPerfil";
             cmbPerfil.Size = new Size(251, 31);
-            cmbPerfil.TabIndex = 28;
+            cmbPerfil.TabIndex = 30;
             // 
             // btnCancelar
             // 
@@ -433,7 +462,7 @@
             btnCancelar.Location = new Point(491, 819);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.Size = new Size(154, 60);
-            btnCancelar.TabIndex = 29;
+            btnCancelar.TabIndex = 31;
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = false;
             btnCancelar.Click += btnCancelar_Click;
@@ -448,7 +477,7 @@
             btnSalvar.Location = new Point(657, 819);
             btnSalvar.Name = "btnSalvar";
             btnSalvar.Size = new Size(158, 60);
-            btnSalvar.TabIndex = 30;
+            btnSalvar.TabIndex = 32;
             btnSalvar.Text = "Salvar";
             btnSalvar.UseVisualStyleBackColor = false;
             btnSalvar.Click += btnSalvar_Click;
@@ -467,7 +496,7 @@
             btnFechar.Name = "btnFechar";
             btnFechar.ShadowDecoration.CustomizableEdges = customizableEdges2;
             btnFechar.Size = new Size(43, 43);
-            btnFechar.TabIndex = 31;
+            btnFechar.TabIndex = 33;
             btnFechar.Text = "X";
             btnFechar.Click += btnFechar_Click;
             // 
@@ -483,7 +512,7 @@
             btnMostrarSenha.Name = "btnMostrarSenha";
             btnMostrarSenha.ShadowDecoration.CustomizableEdges = customizableEdges4;
             btnMostrarSenha.Size = new Size(41, 36);
-            btnMostrarSenha.TabIndex = 32;
+            btnMostrarSenha.TabIndex = 34;
             btnMostrarSenha.Text = "👁";
             // 
             // btnMostrarConfirSenha
@@ -498,7 +527,7 @@
             btnMostrarConfirSenha.Name = "btnMostrarConfirSenha";
             btnMostrarConfirSenha.ShadowDecoration.CustomizableEdges = customizableEdges6;
             btnMostrarConfirSenha.Size = new Size(42, 36);
-            btnMostrarConfirSenha.TabIndex = 33;
+            btnMostrarConfirSenha.TabIndex = 35;
             btnMostrarConfirSenha.Text = "👁";
             // 
             // UsuarioFormDialog
@@ -518,6 +547,8 @@
             Controls.Add(txtNome);
             Controls.Add(lblTelefone);
             Controls.Add(txtTelefone);
+            Controls.Add(lblCpf);
+            Controls.Add(txtCpf);
             Controls.Add(lblEmail);
             Controls.Add(txtEmail);
             Controls.Add(lblSenha);

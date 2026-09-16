@@ -1,4 +1,4 @@
-﻿namespace DoceCantinho.Desktop.DTOs
+namespace DoceCantinho.Desktop.DTOs
 {
     /// <summary>
     /// DTO para representar um Usuário retornado da API.
@@ -10,6 +10,8 @@
         public string Nome { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;
+
+        public string Cpf { get; set; } = string.Empty;
 
         public string UserName { get; set; } = string.Empty;
 
@@ -46,6 +48,8 @@
         public string Telefone { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;
+
+        public string Cpf { get; set; } = string.Empty;
 
         public string Password { get; set; } = string.Empty;
 
@@ -100,6 +104,8 @@
         public string Telefone { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;
+
+        public string Cpf { get; set; } = string.Empty;
 
         public string? Password { get; set; }
 

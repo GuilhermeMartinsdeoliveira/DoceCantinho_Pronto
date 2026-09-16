@@ -1,4 +1,5 @@
-﻿using DoceCantinho.Desktop.DTOs;
+using System.Linq;
+using DoceCantinho.Desktop.DTOs;
 using System.Text.Json;
 
 namespace DoceCantinho.Desktop1.Forms
@@ -36,6 +37,7 @@ namespace DoceCantinho.Desktop1.Forms
 
             txtCep.TextChanged += txtCep_TextChanged;
             txtTelefone.TextChanged += txtTelefone_TextChanged;
+            txtCpf.TextChanged += txtCpf_TextChanged;
 
             cmbPerfil.Items.Clear();
             cmbPerfil.Items.Add("Admin");
@@ -59,6 +61,7 @@ namespace DoceCantinho.Desktop1.Forms
 
             txtCep.TextChanged += txtCep_TextChanged;
             txtTelefone.TextChanged += txtTelefone_TextChanged;
+            txtCpf.TextChanged += txtCpf_TextChanged;
 
             cmbPerfil.Items.Clear();
             cmbPerfil.Items.Add("Admin");
@@ -79,6 +82,10 @@ namespace DoceCantinho.Desktop1.Forms
 
             txtEmail.Text =
                 usuarioExistente.Email ?? string.Empty;
+
+            txtCpf.Text =
+                FormatarCpf(
+                    usuarioExistente.Cpf ?? string.Empty);
 
             // --------------------------------------------------------
             // ENDEREÇO
@@ -273,6 +280,9 @@ namespace DoceCantinho.Desktop1.Forms
             string email =
                 txtEmail.Text.Trim();
 
+            string cpf =
+                SomenteNumeros(txtCpf.Text);
+
             string senha =
                 txtSenha.Text;
 
@@ -365,6 +375,34 @@ namespace DoceCantinho.Desktop1.Forms
                     MessageBoxIcon.Warning);
 
                 txtTelefone.Focus();
+                return;
+            }
+
+            // ========================================================
+            // VALIDAÇÃO DO CPF
+            // ========================================================
+
+            if (cpf.Length != 11)
+            {
+                MessageBox.Show(
+                    "Informe um CPF válido com 11 números.",
+                    "Validação",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                txtCpf.Focus();
+                return;
+            }
+
+            if (!ValidarCpf(cpf))
+            {
+                MessageBox.Show(
+                    "O CPF informado não é válido.",
+                    "Validação",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                txtCpf.Focus();
                 return;
             }
 
@@ -640,6 +678,8 @@ namespace DoceCantinho.Desktop1.Forms
 
                         Email = email,
 
+                        Cpf = cpf,
+
                         Password =
                             string.IsNullOrWhiteSpace(senha)
                                 ? null
@@ -690,6 +730,8 @@ namespace DoceCantinho.Desktop1.Forms
                     Telefone = telefone,
 
                     Email = email,
+
+                    Cpf = cpf,
 
                     Password = senha,
 
@@ -991,6 +1033,77 @@ namespace DoceCantinho.Desktop1.Forms
             {
                 _buscandoCep = false;
             }
+        }
+
+        // ============================================================
+        // CPF - FORMATAÇÃO AUTOMÁTICA
+        // ============================================================
+
+        private void txtCpf_TextChanged(
+            object? sender,
+            EventArgs e)
+        {
+            string numeros = SomenteNumeros(txtCpf.Text);
+
+            if (numeros.Length > 11)
+                numeros = numeros[..11];
+
+            string formatado = FormatarCpf(numeros);
+
+            if (txtCpf.Text == formatado)
+                return;
+
+            txtCpf.Text = formatado;
+            txtCpf.SelectionStart = txtCpf.Text.Length;
+        }
+
+        private static string FormatarCpf(string cpf)
+        {
+            string numeros = SomenteNumeros(cpf);
+
+            if (numeros.Length > 11)
+                numeros = numeros[..11];
+
+            if (numeros.Length <= 3)
+                return numeros;
+
+            if (numeros.Length <= 6)
+                return $"{numeros[..3]}.{numeros[3..]}";
+
+            if (numeros.Length <= 9)
+                return $"{numeros[..3]}.{numeros.Substring(3, 3)}.{numeros[6..]}";
+
+            return $"{numeros[..3]}.{numeros.Substring(3, 3)}.{numeros.Substring(6, 3)}-{numeros[9..]}";
+        }
+
+        private static bool ValidarCpf(string cpf)
+        {
+            string numeros = SomenteNumeros(cpf);
+
+            if (numeros.Length != 11)
+                return false;
+
+            if (numeros.Distinct().Count() == 1)
+                return false;
+
+            int soma = 0;
+            for (int i = 0; i < 9; i++)
+                soma += (numeros[i] - '0') * (10 - i);
+
+            int resto = soma % 11;
+            int digito1 = resto < 2 ? 0 : 11 - resto;
+
+            if (digito1 != numeros[9] - '0')
+                return false;
+
+            soma = 0;
+            for (int i = 0; i < 10; i++)
+                soma += (numeros[i] - '0') * (11 - i);
+
+            resto = soma % 11;
+            int digito2 = resto < 2 ? 0 : 11 - resto;
+
+            return digito2 == numeros[10] - '0';
         }
 
         // ============================================================

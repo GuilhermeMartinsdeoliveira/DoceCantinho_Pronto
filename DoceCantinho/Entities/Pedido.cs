@@ -1,4 +1,4 @@
-﻿namespace DoceCantinho.Domain.Entities;
+namespace DoceCantinho.Domain.Entities;
 
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,10 @@ public class Pedido
 
     // Ex.: CartaoCredito, CartaoDebito, Pix
     public string PaymentMethod { get; set; } = string.Empty;
+
+    // Cartão usado no pagamento. O número completo nunca é armazenado.
+    public int? CartaoId { get; set; }
+    public string? CartaoUltimos4 { get; set; }
 
     // Ex.: Pendente, Pago, Cancelado
     public string Status { get; set; } = "Pendente";

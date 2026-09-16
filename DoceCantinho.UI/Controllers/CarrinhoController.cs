@@ -1,4 +1,4 @@
-﻿using DoceCantinho.Application.DTOs;
+using DoceCantinho.Application.DTOs;
 using DoceCantinho.Application.Interfaces;
 using DoceCantinho.Domain.Entities;
 using DoceCantinho.Domain.Interfaces;
@@ -6,6 +6,7 @@ using DoceCantinho.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 
@@ -50,6 +51,7 @@ public class CarrinhoController : Controller
 
         CheckoutProfileDto? checkoutProfile = null;
         ShippingQuoteDto? shippingQuote = null;
+        var cartoes = new List<CartaoResumoViewModel>();
 
         // -----------------------------------------------------
         // RECUPERAR DADOS DO USUÁRIO
@@ -66,6 +68,22 @@ public class CarrinhoController : Controller
                 checkoutProfile =
                     await _checkoutProfileService
                         .GetByUserIdAsync(userId);
+
+                cartoes = await _db.Cartoes
+                    .AsNoTracking()
+                    .Where(c => c.UserId == userId)
+                    .OrderByDescending(c => c.CreatedAt)
+                    .Select(c => new CartaoResumoViewModel
+                    {
+                        Id = c.Id,
+                        NomeTitular = c.NomeTitular,
+                        Ultimos4 = c.Ultimos4,
+                        Bandeira = c.Bandeira,
+                        Tipo = c.Tipo,
+                        MesValidade = c.MesValidade,
+                        AnoValidade = c.AnoValidade
+                    })
+                    .ToListAsync();
 
                 // -------------------------------------------------
                 // CALCULAR FRETE
@@ -125,6 +143,11 @@ public class CarrinhoController : Controller
                     checkoutProfile?.Email
                     ?? string.Empty,
 
+                Telefone =
+                    checkoutProfile?.PhoneNumber
+                    ?? HttpContext.Session.GetString("CheckoutTelefone")
+                    ?? string.Empty,
+
                 Cep =
                     checkoutProfile?.Cep
                     ?? string.Empty,
@@ -147,7 +170,9 @@ public class CarrinhoController : Controller
 
                 Estado =
                     checkoutProfile?.Estado
-                    ?? string.Empty
+                    ?? string.Empty,
+
+                Cartoes = cartoes
             };
 
         return View(viewModel);
@@ -301,25 +326,25 @@ public class CarrinhoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Remover(
-        int doceId)
+    public async Task<IActionResult> Remover(int id)
     {
-        var carrinho =
-            await ObterCarrinhoDaSessaoAsync();
+        var carrinho = await ObterCarrinhoDaSessaoAsync();
 
-        var item =
-            carrinho.Itens.FirstOrDefault(
-                i => i.DoceId == doceId);
+        var item = carrinho.Itens.FirstOrDefault(i => i.DoceId == id);
 
-        if (item != null)
+        if (item == null)
         {
-            carrinho.Itens.Remove(item);
-
-            await SalvarCarrinhoNaSessaoAsync(
-                carrinho);
+            TempData["CarrinhoErro"] = "O produto selecionado não está no carrinho.";
+            return RedirectToAction("Index", "Carrinho");
         }
 
-        return RedirectToAction("Index");
+        carrinho.Itens.Remove(item);
+
+        await SalvarCarrinhoNaSessaoAsync(carrinho);
+
+        TempData["CarrinhoSucesso"] = $"\"{item.Nome}\" foi removido do carrinho.";
+
+        return RedirectToAction("Index", "Carrinho");
     }
 
 
@@ -449,7 +474,8 @@ public class CarrinhoController : Controller
         string? estado,
         string? paymentMethod,
         string? cpfConfirmacao,
-        string? cupom)
+        string? cupom,
+        int? cartaoId)
     {
         // =====================================================
         // 1. EXIGIR LOGIN
@@ -535,8 +561,15 @@ public class CarrinhoController : Controller
 
         telefone =
             string.IsNullOrWhiteSpace(telefone)
-                ? string.Empty
+                ? checkoutProfile?.PhoneNumber
                 : telefone.Trim();
+
+        if (string.IsNullOrWhiteSpace(telefone))
+        {
+            telefone = HttpContext.Session.GetString("CheckoutTelefone");
+        }
+
+        telefone = telefone?.Trim();
 
 
         var cepFinal =
@@ -591,8 +624,9 @@ public class CarrinhoController : Controller
         if (string.IsNullOrWhiteSpace(telefone))
         {
             TempData["CarrinhoErro"] =
-                "Telefone é obrigatório.";
-
+                "Informe seu telefone na etapa de Identificação para continuar.";
+            TempData["CheckoutStep"] = "2";
+            SalvarDadosCheckoutNaSessao(nomeCliente, telefone, cepFinal, logradouroFinal, numeroFinal, bairroFinal, cidadeFinal, estadoFinal);
             return RedirectToAction("Index");
         }
 
@@ -615,7 +649,7 @@ public class CarrinhoController : Controller
         {
             TempData["CarrinhoErro"] =
                 "Não encontramos um CPF cadastrado no seu perfil.";
-
+            TempData["CheckoutStep"] = "3";
             return RedirectToAction("Index");
         }
 
@@ -624,7 +658,7 @@ public class CarrinhoController : Controller
         {
             TempData["CarrinhoErro"] =
                 "Informe um CPF válido para confirmar a compra.";
-
+            TempData["CheckoutStep"] = "3";
             return RedirectToAction("Index");
         }
 
@@ -636,7 +670,7 @@ public class CarrinhoController : Controller
         {
             TempData["CarrinhoErro"] =
                 "O CPF informado não corresponde ao CPF cadastrado.";
-
+            TempData["CheckoutStep"] = "3";
             return RedirectToAction("Index");
         }
 
@@ -654,8 +688,59 @@ public class CarrinhoController : Controller
         {
             TempData["CarrinhoErro"] =
                 "Selecione uma forma de pagamento.";
-
+            TempData["CheckoutStep"] = "3";
             return RedirectToAction("Index");
+        }
+
+        // -----------------------------------------------------
+        // CARTÃO CADASTRADO
+        // -----------------------------------------------------
+        Cartao? cartaoSelecionado = null;
+
+        if (paymentMethodFinal == "CartaoCredito" ||
+            paymentMethodFinal == "CartaoDebito")
+        {
+            if (!cartaoId.HasValue)
+            {
+                TempData["CarrinhoErro"] =
+                    "Selecione um cartão cadastrado para continuar.";
+
+                return RedirectToAction("Index");
+            }
+
+            cartaoSelecionado = await _db.Cartoes
+                .FirstOrDefaultAsync(c =>
+                    c.Id == cartaoId.Value &&
+                    c.UserId == userId);
+
+            if (cartaoSelecionado == null)
+            {
+                TempData["CarrinhoErro"] =
+                    "O cartão selecionado não pertence à sua conta.";
+
+                return RedirectToAction("Index");
+            }
+
+            var tipoEsperado = paymentMethodFinal == "CartaoCredito"
+                ? "Credito"
+                : "Debito";
+
+            if (!string.Equals(cartaoSelecionado.Tipo, tipoEsperado, StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["CarrinhoErro"] =
+                    "O tipo do cartão selecionado não corresponde à forma de pagamento.";
+
+                return RedirectToAction("Index");
+            }
+
+            if (new DateTime(cartaoSelecionado.AnoValidade, cartaoSelecionado.MesValidade, 1)
+                < new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1))
+            {
+                TempData["CarrinhoErro"] =
+                    "O cartão selecionado está vencido.";
+
+                return RedirectToAction("Index");
+            }
         }
 
 
@@ -831,6 +916,9 @@ public class CarrinhoController : Controller
 
                 PaymentMethod =
                     paymentMethodFinal,
+
+                CartaoId = cartaoSelecionado?.Id,
+                CartaoUltimos4 = cartaoSelecionado?.Ultimos4,
 
                 // Como os pagamentos deste projeto são
                 // demonstrativos, a confirmação acontece
@@ -1216,6 +1304,21 @@ public class CarrinhoController : Controller
         ViewData["Order"] =
             order;
 
+        ViewBag.Cartoes = await _db.Cartoes
+            .AsNoTracking()
+            .Where(c => c.UserId == userId)
+            .OrderByDescending(c => c.CreatedAt)
+            .Select(c => new CartaoResumoViewModel
+            {
+                Id = c.Id,
+                NomeTitular = c.NomeTitular,
+                Ultimos4 = c.Ultimos4,
+                Bandeira = c.Bandeira,
+                Tipo = c.Tipo,
+                MesValidade = c.MesValidade,
+                AnoValidade = c.AnoValidade
+            })
+            .ToListAsync();
 
         return View();
     }
@@ -1231,7 +1334,8 @@ public class CarrinhoController : Controller
         int orderId,
         string paymentMethod,
         string? cardNumber,
-        string? cardName)
+        string? cardName,
+        int? cartaoId)
     {
         // -----------------------------------------------------
         // PEDIDO
@@ -1295,20 +1399,40 @@ public class CarrinhoController : Controller
         // CARTÃO
         // -----------------------------------------------------
 
+        Cartao? cartaoSelecionado = null;
+
         if (metodo == "CartaoCredito" ||
             metodo == "CartaoDebito")
         {
-            // Como o projeto é demonstrativo,
-            // aceitamos o cartão de teste.
-
-            var numero =
-                SomenteNumeros(
-                    cardNumber);
-
-            if (string.IsNullOrWhiteSpace(numero))
+            if (!cartaoId.HasValue)
             {
-                // Não bloqueia o fluxo demonstrativo
-                // se o cartão já estiver cadastrado.
+                TempData["PagamentoErro"] = "Selecione um cartão cadastrado.";
+                return RedirectToAction("Payment", new { orderId });
+            }
+
+            cartaoSelecionado = await _db.Cartoes
+                .FirstOrDefaultAsync(c =>
+                    c.Id == cartaoId.Value &&
+                    c.UserId == userId);
+
+            if (cartaoSelecionado == null)
+            {
+                TempData["PagamentoErro"] = "Cartão inválido ou não pertence à sua conta.";
+                return RedirectToAction("Payment", new { orderId });
+            }
+
+            var tipoEsperado = metodo == "CartaoCredito" ? "Credito" : "Debito";
+            if (!string.Equals(cartaoSelecionado.Tipo, tipoEsperado, StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["PagamentoErro"] = "O cartão selecionado não corresponde ao tipo de pagamento.";
+                return RedirectToAction("Payment", new { orderId });
+            }
+
+            if (new DateTime(cartaoSelecionado.AnoValidade, cartaoSelecionado.MesValidade, 1)
+                < new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1))
+            {
+                TempData["PagamentoErro"] = "O cartão selecionado está vencido.";
+                return RedirectToAction("Payment", new { orderId });
             }
         }
 
@@ -1319,6 +1443,9 @@ public class CarrinhoController : Controller
 
         order.PaymentMethod =
             metodo;
+
+        order.CartaoId = cartaoSelecionado?.Id;
+        order.CartaoUltimos4 = cartaoSelecionado?.Ultimos4;
 
         order.Status =
             "Pago";

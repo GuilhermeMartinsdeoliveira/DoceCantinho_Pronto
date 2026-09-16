@@ -8,6 +8,7 @@ namespace DoceCantinho.UI.ViewModels
         public CheckoutProfileDto? CheckoutProfile { get; set; }
         public ShippingQuoteDto? ShippingQuote { get; set; }
         public IEnumerable<DoceDto> RecommendedProducts { get; set; } = new List<DoceDto>();
+        public List<CartaoResumoViewModel> Cartoes { get; set; } = new();
         public bool IsAuthenticated { get; set; }
         public string NomeCliente { get; set; } = string.Empty;
         public string Telefone { get; set; } = string.Empty;

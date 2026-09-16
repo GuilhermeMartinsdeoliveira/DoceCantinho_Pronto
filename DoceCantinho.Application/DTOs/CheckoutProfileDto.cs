@@ -5,6 +5,7 @@ namespace DoceCantinho.Application.DTOs
         public string UserId { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Cpf { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         public string Logradouro { get; set; } = string.Empty;
         public string Bairro { get; set; } = string.Empty;
         public string Cidade { get; set; } = string.Empty;

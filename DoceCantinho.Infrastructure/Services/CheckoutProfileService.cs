@@ -35,6 +35,7 @@ namespace DoceCantinho.Infrastructure.Services
                 UserId = user.Id,
                 Email = user.Email ?? string.Empty,
                 Cpf = user.Cpf ?? string.Empty,
+                PhoneNumber = user.PhoneNumber ?? string.Empty,
                 Logradouro = user.Logradouro ?? string.Empty,
                 Bairro = user.Bairro ?? string.Empty,
                 Cidade = user.Cidade ?? string.Empty,

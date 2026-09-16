@@ -27,6 +27,8 @@ namespace DoceCantinho.Application.DTOs
         public string? Endereco { get; set; }
         public decimal Total { get; set; }
         public string PaymentMethod { get; set; } = string.Empty;
+        public int? CartaoId { get; set; }
+        public string? CartaoUltimos4 { get; set; }
         public string Status { get; set; } = "Pendente";
         public List<PedidoItemDto> Items { get; set; } = new();
     }
