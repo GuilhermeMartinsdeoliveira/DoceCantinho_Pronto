@@ -440,6 +440,10 @@ namespace DoceCantinho.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Cpf")
+                        .IsUnique()
+                        .HasDatabaseName("IX_AspNetUsers_Cpf");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 

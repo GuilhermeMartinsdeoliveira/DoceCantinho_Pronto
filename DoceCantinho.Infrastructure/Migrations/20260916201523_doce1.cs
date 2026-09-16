@@ -117,26 +117,6 @@ namespace DoceCantinho.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pedidos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    NomeCliente = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Total = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pedidos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -243,6 +223,32 @@ namespace DoceCantinho.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cartoes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    NomeTitular = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Ultimos4 = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
+                    Bandeira = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Tipo = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    MesValidade = table.Column<int>(type: "int", nullable: false),
+                    AnoValidade = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cartoes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cartoes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Doces",
                 columns: table => new
                 {
@@ -268,6 +274,34 @@ namespace DoceCantinho.Infrastructure.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pedidos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    NomeCliente = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Total = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CartaoId = table.Column<int>(type: "int", nullable: true),
+                    CartaoUltimos4 = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pedidos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pedidos_Cartoes_CartaoId",
+                        column: x => x.CartaoId,
+                        principalTable: "Cartoes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -326,6 +360,12 @@ namespace DoceCantinho.Infrastructure.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Cpf",
+                table: "AspNetUsers",
+                column: "Cpf",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -339,6 +379,11 @@ namespace DoceCantinho.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cartoes_UserId",
+                table: "Cartoes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Doces_CategoryId",
                 table: "Doces",
                 column: "CategoryId");
@@ -347,6 +392,11 @@ namespace DoceCantinho.Infrastructure.Migrations
                 name: "IX_PedidoItems_PedidoId",
                 table: "PedidoItems",
                 column: "PedidoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pedidos_CartaoId",
+                table: "Pedidos",
+                column: "CartaoId");
         }
 
         /// <inheritdoc />
@@ -383,13 +433,16 @@ namespace DoceCantinho.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Pedidos");
+
+            migrationBuilder.DropTable(
+                name: "Cartoes");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

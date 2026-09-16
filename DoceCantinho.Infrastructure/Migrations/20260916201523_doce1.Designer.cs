@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoceCantinho.Infrastructure.Migrations
 {
     [DbContext(typeof(DoceCantinhoDbContext))]
-    [Migration("20260916173010_doce1")]
+    [Migration("20260916201523_doce1")]
     partial class doce1
     {
         /// <inheritdoc />
@@ -134,6 +134,55 @@ namespace DoceCantinho.Infrastructure.Migrations
                     b.ToTable("CartPersistences");
                 });
 
+            modelBuilder.Entity("DoceCantinho.Domain.Entities.Cartao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnoValidade")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Bandeira")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MesValidade")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NomeTitular")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Ultimos4")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Cartoes");
+                });
+
             modelBuilder.Entity("DoceCantinho.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -159,6 +208,13 @@ namespace DoceCantinho.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CartaoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CartaoUltimos4")
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -194,6 +250,8 @@ namespace DoceCantinho.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartaoId");
 
                     b.ToTable("Pedidos");
                 });
@@ -385,6 +443,10 @@ namespace DoceCantinho.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Cpf")
+                        .IsUnique()
+                        .HasDatabaseName("IX_AspNetUsers_Cpf");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -527,6 +589,23 @@ namespace DoceCantinho.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("DoceCantinho.Domain.Entities.Cartao", b =>
+                {
+                    b.HasOne("DoceCantinho.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DoceCantinho.Domain.Entities.Pedido", b =>
+                {
+                    b.HasOne("DoceCantinho.Domain.Entities.Cartao", null)
+                        .WithMany()
+                        .HasForeignKey("CartaoId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("DoceCantinho.Domain.Entities.PedidoItem", b =>
