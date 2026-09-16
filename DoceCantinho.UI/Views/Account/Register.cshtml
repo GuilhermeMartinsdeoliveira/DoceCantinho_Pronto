@@ -773,6 +773,159 @@
 
 
                         // =================================================
+                        // VALIDAÇÃO MATEMÁTICA DO CPF
+                        // =================================================
+
+                        function validarCpf(cpf) {
+
+                            // Remove pontos, hífen e qualquer caractere não numérico
+                            cpf = (cpf || '').replace(/\D/g, '');
+
+                            // CPF precisa ter exatamente 11 dígitos
+                            if (cpf.length !== 11) {
+                                return false;
+                            }
+
+                            // Rejeita CPFs formados pelo mesmo dígito
+                            if (/^(\d)\1{10}$/.test(cpf)) {
+                                return false;
+                            }
+
+                            // -------------------------------------------------
+                            // PRIMEIRO DÍGITO VERIFICADOR
+                            // Multiplica os 9 primeiros dígitos por 10..2
+                            // -------------------------------------------------
+
+                            let soma = 0;
+
+                            for (let i = 0; i < 9; i++) {
+                                soma += Number(cpf.charAt(i)) * (10 - i);
+                            }
+
+                            let resto = soma % 11;
+                            let digito1 = resto < 2 ? 0 : 11 - resto;
+
+                            if (digito1 !== Number(cpf.charAt(9))) {
+                                return false;
+                            }
+
+                            // -------------------------------------------------
+                            // SEGUNDO DÍGITO VERIFICADOR
+                            // Multiplica os 10 primeiros dígitos por 11..2
+                            // -------------------------------------------------
+
+                            soma = 0;
+
+                            for (let i = 0; i < 10; i++) {
+                                soma += Number(cpf.charAt(i)) * (11 - i);
+                            }
+
+                            resto = soma % 11;
+                            let digito2 = resto < 2 ? 0 : 11 - resto;
+
+                            return digito2 === Number(cpf.charAt(10));
+                        }
+
+
+                        // =================================================
+                        // VALIDAÇÃO DO CPF NO FORMULÁRIO
+                        // =================================================
+
+                        const formCadastro =
+                            document.querySelector('.auth-form');
+
+                        if (cpfInput && formCadastro) {
+
+                            let cpfError =
+                                document.getElementById('cpf-error');
+
+                            // Cria a mensagem sem precisar alterar o HTML
+                            if (!cpfError) {
+
+                                cpfError =
+                                    document.createElement('small');
+
+                                cpfError.id = 'cpf-error';
+
+                                cpfError.style.display = 'none';
+                                cpfError.style.color = '#dc2626';
+                                cpfError.style.marginTop = '6px';
+                                cpfError.style.fontSize = '.8rem';
+
+                                cpfInput.parentElement.appendChild(cpfError);
+                            }
+
+
+                            function verificarCpf() {
+
+                                const cpf = cpfInput.value;
+
+                                // Enquanto estiver incompleto, não exibe erro.
+                                // O required do HTML cuidará do campo vazio.
+                                if (cpf.replace(/\\D/g, '').length === 0) {
+
+                                    cpfError.style.display = 'none';
+                                    cpfInput.setCustomValidity('');
+
+                                    return;
+                                }
+
+                                const valido = validarCpf(cpf);
+
+                                if (!valido) {
+
+                                    cpfError.textContent =
+                                        'CPF inválido. Confira os números digitados.';
+
+                                    cpfError.style.display = 'block';
+
+                                    cpfInput.setCustomValidity(
+                                        'Digite um CPF válido.'
+                                    );
+
+                                } else {
+
+                                    cpfError.textContent = '';
+                                    cpfError.style.display = 'none';
+
+                                    cpfInput.setCustomValidity('');
+                                }
+                            }
+
+
+                            // Valida enquanto o usuário digita
+                            cpfInput.addEventListener(
+                                'input',
+                                verificarCpf
+                            );
+
+
+                            // Valida também ao sair do campo
+                            cpfInput.addEventListener(
+                                'blur',
+                                verificarCpf
+                            );
+
+
+                            // Impede o envio caso o CPF seja inválido
+                            formCadastro.addEventListener(
+                                'submit',
+                                function (event) {
+
+                                    verificarCpf();
+
+                                    if (!formCadastro.checkValidity()) {
+
+                                        event.preventDefault();
+                                        formCadastro.reportValidity();
+                                    }
+                                }
+                            );
+
+                        }
+
+
+                        // =================================================
                         // MÁSCARA CEP
                         // =================================================
 
