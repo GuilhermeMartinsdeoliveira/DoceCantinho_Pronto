@@ -69,9 +69,9 @@ namespace DoceCantinho.Infrastructure.Identity
             if (!context.Doces.Any())
             {
                 // Busca as categorias recém-criadas para obter os IDs
-                var Bolo_Tradicional_G  = await context.Categories.FirstAsync(c => c.Name == "Bolo Tradicional");
-                var Bolo_Tradicional_M  = await context.Categories.FirstAsync(c => c.Name == "Bolo Tradicional");
-                var Bolo_Tradicional_P  = await context.Categories.FirstAsync(c => c.Name == "Bolo Tradicional");
+                var Bolo_Tradicional_G = await context.Categories.FirstAsync(c => c.Name == "Bolo Tradicional");
+                var Bolo_Tradicional_M = await context.Categories.FirstAsync(c => c.Name == "Bolo Tradicional");
+                var Bolo_Tradicional_P = await context.Categories.FirstAsync(c => c.Name == "Bolo Tradicional");
                 var Bolo_Pote = await context.Categories.FirstAsync(c => c.Name == "Bolo de Pote");
                 var Cone = await context.Categories.FirstAsync(c => c.Name == "Cone");
                 var Bombom = await context.Categories.FirstAsync(c => c.Name == "Bombom");
@@ -198,6 +198,8 @@ namespace DoceCantinho.Infrastructure.Identity
             var adminEmail = "admin@docecantinho.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
+            
+
             if (adminUser == null)
             {
                 adminUser = new ApplicationUser
@@ -205,7 +207,7 @@ namespace DoceCantinho.Infrastructure.Identity
                     UserName = adminEmail,
                     Email = adminEmail,
                     EmailConfirmed = true,
-                    // Campos obrigatórios do ApplicationUser com valores padrão
+
                     Cpf = "000.000.000-00",
                     Logradouro = "Não informado",
                     Bairro = "Não informado",
@@ -215,13 +217,35 @@ namespace DoceCantinho.Infrastructure.Identity
                     Cep = "00000-000"
                 };
 
-                // Cria o usuário com a senha padrão
-                var result = await userManager.CreateAsync(adminUser, "Admin@123");
+                var result = await userManager.CreateAsync(
+                    adminUser,
+                    "Admin@123"
+                );
 
-                if (result.Succeeded)
+                if (!result.Succeeded)
                 {
-                    // Atribui a role "Admin" ao usuário
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                    foreach (var error in result.Errors)
+                    {
+                        Console.WriteLine(
+                            $"Erro ao criar administrador: {error.Description}"
+                        );
+                    }
+                }
+            }
+
+            /*
+             * Garante que o usuário existente
+             * também tenha a função Admin.
+             */
+            if (adminUser != null)
+            {
+                if (!await userManager.IsInRoleAsync(
+                    adminUser,
+                    "Admin"))
+                {
+                    await userManager.AddToRoleAsync(
+                        adminUser,
+                        "Admin");
                 }
             }
         }

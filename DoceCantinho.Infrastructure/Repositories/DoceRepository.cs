@@ -63,28 +63,20 @@ namespace DoceCantinho.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Retorna produtos recomendados para cross-selling.
-        /// Prioriza os marcados com IsRecomendado = true; se não houver, devolve itens aleatórios.
+        /// Retorna produtos para o carrossel "Aproveite e leve também".
+        /// Busca os doces ativos cadastrados no banco,
+        /// priorizando os que estão marcados como destaque.
         /// </summary>
-        public async Task<IEnumerable<Doce>> GetRecommendedAsync(int count = 3)
+        public async Task<IEnumerable<Doce>> GetRecommendedAsync(int count = 12)
         {
-            var recommended = await _context.Doces
+            return await _context.Doces
                 .AsNoTracking()
-                .Include(g => g.Category)
-                .Where(g => g.IsRecomendado)
+                .Include(d => d.Category)
+                .Where(d => d.IsAtivo)
+                .OrderByDescending(d => d.IsFeatured)
+                .ThenByDescending(d => d.CreatedAt)
+                .Take(count)
                 .ToListAsync();
-
-            if (recommended.Any())
-                return recommended.OrderBy(_ => Guid.NewGuid()).Take(count).ToList();
-
-            var fallback = await _context.Doces
-                .AsNoTracking()
-                .Include(g => g.Category)
-                .OrderByDescending(g => g.CreatedAt)
-                .Take(Math.Max(count, 1) * 3)
-                .ToListAsync();
-
-            return fallback.OrderBy(_ => Guid.NewGuid()).Take(count).ToList();
         }
 
         /// <summary>
