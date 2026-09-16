@@ -6888,3 +6888,774 @@ html[data-theme="dark"] .footer-bottom {
         right: 10px;
     }
 }
+/* =========================================================
+   DOCECANTINHO - PADRONIZAÇÃO FINAL DAS CORES
+   MODO CLARO
+   ========================================================= */
+
+:root {
+    /* Fundo principal */
+    --bg: #F8F0E7;
+    /* Cards */
+    --card: #FFF9F2;
+    /* Textos */
+    --fg: #321B10;
+    --muted-fg: #8C6B59;
+    /* MARROM PRINCIPAL - MESMO DO DASHBOARD */
+    --primary: #69340F;
+    --primary-fg: #FFF9F2;
+    /* LARANJA DE DESTAQUE */
+    --accent: #D8794F;
+    --accent-fg: #FFF9F2;
+    /* Secundária */
+    --muted: #EDE1D5;
+    /* Bordas */
+    --border: rgba(105, 52, 15, 0.15);
+    /* Campos */
+    --input-bg: #FFF9F2;
+    --input-fg: #321B10;
+    --input-border: rgba(105, 52, 15, 0.20);
+    /* Tabelas */
+    --table-bg: #FFF9F2;
+    --table-header: #69340F;
+    --table-hover: rgba(237, 225, 213, 0.55);
+    /* Sombras */
+    --shadow: 0 4px 18px rgba(76, 43, 25, 0.08);
+    --shadow-lg: 0 12px 35px rgba(76, 43, 25, 0.13);
+}
+
+
+/* =========================================================
+   FUNDO GERAL
+   ========================================================= */
+
+html,
+body {
+    background: var(--bg) !important;
+    color: var(--fg);
+}
+
+main {
+    background: var(--bg);
+}
+
+
+/* =========================================================
+   SEÇÕES DA HOME
+   ========================================================= */
+
+.section-featured,
+.section-carousel,
+.categories-modern,
+.categories-section,
+.services-section {
+    background: var(--bg);
+}
+
+
+/* =========================================================
+   CATEGORIAS DA HOME
+   ========================================================= */
+
+.categories-modern {
+    background: var(--bg) !important;
+    padding: 90px 0;
+}
+
+.categories-heading {
+    text-align: center;
+}
+
+.categories-subtitle {
+    color: var(--muted-fg) !important;
+}
+
+
+/* Card de categoria */
+
+.category-modern-card {
+    background: var(--card) !important;
+    color: var(--fg) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+    .category-modern-card:hover {
+        transform: translateY(-5px);
+        background: #FFFDF9 !important;
+        border-color: rgba(105, 52, 15, 0.25) !important;
+        box-shadow: var(--shadow-lg) !important;
+    }
+
+
+/* Ícone da categoria */
+
+.category-modern-icon {
+    background: #F4E5D8 !important;
+    color: var(--primary) !important;
+}
+
+.category-modern-card:hover .category-modern-icon {
+    background: var(--primary) !important;
+    color: var(--primary-fg) !important;
+}
+
+
+/* Texto da categoria */
+
+.category-modern-info h3 {
+    color: var(--fg) !important;
+}
+
+.category-modern-info span {
+    color: var(--muted-fg) !important;
+}
+
+
+/* =========================================================
+   TÍTULOS DAS SEÇÕES
+   ========================================================= */
+
+.section-title {
+    color: var(--fg);
+}
+
+.section-eyebrow {
+    color: var(--accent);
+}
+
+
+/* =========================================================
+   BOTÕES GERAIS DO SITE
+   ========================================================= */
+
+.btn-primary {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-fg) !important;
+}
+
+    .btn-primary:hover {
+        background: #52270B !important;
+        border-color: #52270B !important;
+        color: #FFF9F2 !important;
+    }
+
+.btn-accent {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent-fg) !important;
+}
+
+    .btn-accent:hover {
+        background: var(--primary) !important;
+        border-color: var(--primary) !important;
+        color: var(--primary-fg) !important;
+    }
+
+.btn-outline {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+    .btn-outline:hover {
+        background: var(--primary) !important;
+        color: var(--primary-fg) !important;
+    }
+
+
+/* =========================================================
+   ADMIN - FUNDO
+   ========================================================= */
+
+#page-admin {
+    background: var(--bg) !important;
+}
+
+.admin-layout {
+    background: var(--bg) !important;
+}
+
+.admin-main {
+    background: var(--bg) !important;
+}
+
+
+/* =========================================================
+   ADMIN - SIDEBAR
+   ========================================================= */
+
+.admin-sidebar {
+    background: #FFF9F2 !important;
+    border-right: 1px solid var(--border) !important;
+}
+
+
+/* Avatar */
+
+.admin-avatar {
+    background: var(--accent) !important;
+    color: #FFF9F2 !important;
+}
+
+
+/* Nome e função */
+
+.admin-user-name {
+    color: var(--fg) !important;
+}
+
+.admin-user-role {
+    color: var(--muted-fg) !important;
+}
+
+
+/* =========================================================
+   ADMIN - MENU LATERAL
+   ========================================================= */
+
+.admin-nav-btn {
+    color: var(--fg) !important;
+    background: transparent !important;
+}
+
+
+    /* Hover */
+
+    .admin-nav-btn:hover {
+        background: var(--muted) !important;
+        color: var(--fg) !important;
+    }
+
+
+    /* BOTÃO ATIVO - MESMO MARROM DO DASHBOARD */
+
+    .admin-nav-btn.active {
+        background: var(--primary) !important;
+        color: var(--primary-fg) !important;
+    }
+
+
+        /* Ícones do botão ativo */
+
+        .admin-nav-btn.active svg {
+            color: var(--primary-fg) !important;
+        }
+
+
+/* =========================================================
+   ADMIN - CARDS DO DASHBOARD
+   ========================================================= */
+
+.kpi-card,
+.chart-card,
+.table-card,
+.admin-product-card,
+.admin-form-card,
+.admin-delete-card {
+    background: var(--card) !important;
+    border-color: var(--border) !important;
+    color: var(--fg) !important;
+}
+
+
+/* =========================================================
+   ADMIN - TÍTULOS
+   ========================================================= */
+
+.admin-section-title,
+.chart-title,
+.table-header h3,
+.admin-product-name {
+    color: var(--fg) !important;
+}
+
+
+/* =========================================================
+   ADMIN - BOTÕES
+   ========================================================= */
+
+/* Botão Novo Produto */
+.admin-main .btn-primary,
+.admin-tab .btn-primary {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-fg) !important;
+}
+
+
+    /* Hover dos botões */
+
+    .admin-main .btn-primary:hover,
+    .admin-tab .btn-primary:hover {
+        background: #52270B !important;
+        border-color: #52270B !important;
+        color: #FFF9F2 !important;
+    }
+
+
+/* Botões personalizados do Admin */
+
+.admin-btn-primary {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-fg) !important;
+}
+
+    .admin-btn-primary:hover {
+        background: #52270B !important;
+        border-color: #52270B !important;
+        color: #FFF9F2 !important;
+    }
+
+
+/* Botão outline */
+
+.admin-btn-outline {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    background: transparent !important;
+}
+
+    .admin-btn-outline:hover {
+        background: var(--primary) !important;
+        color: var(--primary-fg) !important;
+    }
+
+
+/* =========================================================
+   ADMIN - BOTÕES DOS PRODUTOS
+   ========================================================= */
+
+.admin-product-actions a:first-child {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-fg) !important;
+}
+
+    .admin-product-actions a:first-child:hover {
+        background: #52270B !important;
+        border-color: #52270B !important;
+    }
+
+
+/* =========================================================
+   ADMIN - TABELAS
+   ========================================================= */
+
+.table-card {
+    background: var(--card) !important;
+    border-color: var(--border) !important;
+}
+
+.data-table {
+    background: var(--table-bg) !important;
+    color: var(--fg) !important;
+}
+
+    .data-table thead {
+        background: var(--primary) !important;
+    }
+
+    .data-table th {
+        background: transparent !important;
+        color: var(--primary-fg) !important;
+    }
+
+    .data-table td {
+        color: var(--fg) !important;
+        border-bottom-color: var(--border) !important;
+    }
+
+    .data-table tr:hover td {
+        background: var(--table-hover) !important;
+    }
+
+
+/* =========================================================
+   ADMIN - AÇÕES DA TABELA
+   ========================================================= */
+
+.order-action-btn {
+    color: var(--primary) !important;
+    border-color: var(--border) !important;
+    background: var(--card) !important;
+}
+
+    .order-action-btn:hover {
+        background: var(--primary) !important;
+        color: var(--primary-fg) !important;
+    }
+
+
+/* =========================================================
+   ADMIN - FORMULÁRIOS
+   ========================================================= */
+
+.admin-form-card {
+    background: var(--card) !important;
+}
+
+.admin-form-group input,
+.admin-form-group textarea,
+.admin-form-group select,
+.admin-field input,
+.admin-field textarea,
+.admin-field select {
+    background: var(--input-bg) !important;
+    color: var(--input-fg) !important;
+    border-color: var(--input-border) !important;
+}
+
+
+    /* Campo selecionado */
+
+    .admin-form-group input:focus,
+    .admin-form-group textarea:focus,
+    .admin-form-group select:focus,
+    .admin-field input:focus,
+    .admin-field textarea:focus,
+    .admin-field select:focus {
+        border-color: var(--accent) !important;
+        box-shadow: 0 0 0 3px rgba(216, 121, 79, 0.15) !important;
+    }
+
+
+/* =========================================================
+   ADMIN - TOPO
+   ========================================================= */
+
+#admin-topnav {
+    background: #FFF9F2 !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.admin-topnav-name {
+    color: var(--primary) !important;
+}
+
+.admin-badge {
+    background: var(--primary) !important;
+    color: var(--primary-fg) !important;
+}
+
+.admin-back-btn {
+    color: var(--primary) !important;
+}
+
+
+/* =========================================================
+   ADMIN - LOGOUT
+   ========================================================= */
+
+.admin-logout-btn {
+    color: var(--muted-fg) !important;
+}
+
+    .admin-logout-btn:hover {
+        background: var(--muted) !important;
+        color: var(--primary) !important;
+    }
+
+
+/* =========================================================
+   MODO ESCURO - NÃO ALTERAR
+   ========================================================= */
+
+html[data-theme="dark"] {
+    --bg: #17100C;
+    --card: #241914;
+    --fg: #F8EDE2;
+    --muted-fg: #C7AA98;
+    --primary: #D8956F;
+    --primary-fg: #21150F;
+    --accent: #E59A72;
+    --accent-fg: #21150F;
+    --muted: #34251E;
+    --border: rgba(255, 225, 205, 0.15);
+    --input-bg: #2A1D17;
+    --input-fg: #F8EDE2;
+    --input-border: rgba(255, 225, 205, 0.20);
+    --table-bg: #241914;
+    --table-header: #3A241A;
+    --table-hover: rgba(255, 225, 205, 0.07);
+}
+/* =========================================================
+   HOME - CABEÇALHO "NOSSAS CATEGORIAS"
+   ========================================================= */
+
+.categories-modern {
+    background: #F8F0E7 !important;
+}
+
+    /* Área do título */
+    .categories-modern .categories-heading {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto 45px;
+    }
+
+    /* "EXPLORE" */
+    .categories-modern .section-eyebrow {
+        margin-bottom: 12px;
+        color: #D8794F !important;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    /* Nossas Categorias */
+    .categories-modern .section-title {
+        margin: 0;
+        color: #321B10 !important;
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        line-height: 1.15;
+    }
+
+    /* Frase abaixo */
+    .categories-modern .categories-subtitle {
+        margin: 15px auto 0;
+        color: #8C6B59 !important;
+        font-size: 1rem;
+        line-height: 1.7;
+        max-width: 600px;
+    }
+/* =========================================================
+   DOCECANTINHO
+   PADRÃO DOS TÍTULOS - HOME E LOJA
+   REFERÊNCIA: PÁGINA SOBRE NÓS
+   ========================================================= */
+
+
+/* =========================================================
+   MODO CLARO
+   ========================================================= */
+
+html:not([data-theme="dark"]) {
+    --dc-bg: #F8F0E7;
+    --dc-title: #6B2F0F;
+    --dc-eyebrow: #8C4A2F;
+    --dc-text: #8C6B59;
+}
+
+
+    /* =========================================================
+   HOME
+   ========================================================= */
+
+    /* Fundo das seções */
+
+    html:not([data-theme="dark"]) .page {
+        background: #F8F0E7 !important;
+    }
+
+
+    /* Todos os títulos de seção */
+    /* NOSSAS CATEGORIAS - MODO CLARO */
+    html:not([data-theme="dark"]) .categories-modern .section-title {
+        color: #6B2F0F !important;
+        font-family: 'Playfair Display', serif !important;
+        font-weight: 700 !important;
+    }
+
+
+    /* Pequeno título acima */
+
+    html:not([data-theme="dark"]) .section-eyebrow {
+        color: #8C4A2F !important;
+        font-family: 'Nunito', sans-serif !important;
+        font-weight: 700 !important;
+    }
+
+
+    /* Descrição */
+
+    html:not([data-theme="dark"]) .section-subtitle {
+        color: #8C6B59 !important;
+    }
+
+
+    /* =========================================================
+   NOSSOS QUERIDINHOS
+   ========================================================= */
+
+    html:not([data-theme="dark"]) .featured-section .section-title,
+    html:not([data-theme="dark"]) .featured-heading .section-title,
+    html:not([data-theme="dark"]) .featured-title {
+        color: #6B2F0F !important;
+    }
+
+
+    /* =========================================================
+   NOSSAS CATEGORIAS
+   ========================================================= */
+
+    html:not([data-theme="dark"]) .categories-modern .section-title {
+        color: #6B2F0F !important;
+    }
+
+    html:not([data-theme="dark"]) .categories-modern .section-eyebrow {
+        color: #8C4A2F !important;
+    }
+
+    html:not([data-theme="dark"]) .categories-modern .categories-subtitle {
+        color: #8C6B59 !important;
+    }
+
+
+    /* =========================================================
+   NOSSOS SERVIÇOS
+   ========================================================= */
+
+    html:not([data-theme="dark"]) .services-section .section-title,
+    html:not([data-theme="dark"]) .services-heading .section-title {
+        color: #6B2F0F !important;
+    }
+
+    html:not([data-theme="dark"]) .services-section .section-eyebrow {
+        color: #8C4A2F !important;
+    }
+
+
+    /* =========================================================
+   BASTIDORES
+   ========================================================= */
+
+    html:not([data-theme="dark"]) .section-carousel .section-title,
+    html:not([data-theme="dark"]) .carousel-section .section-title {
+        color: #6B2F0F !important;
+    }
+
+    html:not([data-theme="dark"]) .section-carousel .section-eyebrow,
+    html:not([data-theme="dark"]) .carousel-section .section-eyebrow {
+        color: #8C4A2F !important;
+    }
+
+
+    /* =========================================================
+   FUNDO DAS SEÇÕES DA HOME
+   ========================================================= */
+
+    html:not([data-theme="dark"]) .featured-section,
+    html:not([data-theme="dark"]) .categories-modern,
+    html:not([data-theme="dark"]) .services-section,
+    html:not([data-theme="dark"]) .section-carousel,
+    html:not([data-theme="dark"]) .carousel-section {
+        background: #F8F0E7 !important;
+    }
+
+
+    /* =========================================================
+   LOJA
+   ========================================================= */
+
+    html:not([data-theme="dark"]) .loja-container {
+        background: #F8F0E7 !important;
+    }
+
+
+    /* Cabeçalho */
+
+    html:not([data-theme="dark"]) .loja-header {
+        background: #F8F0E7 !important;
+    }
+
+
+        /* CATÁLOGO */
+
+        html:not([data-theme="dark"]) .loja-header .section-eyebrow {
+            color: #8C4A2F !important;
+        }
+
+
+        /* NOSSA LOJA */
+
+        html:not([data-theme="dark"]) .loja-header .section-title {
+            color: #6B2F0F !important;
+            font-family: 'Playfair Display', serif !important;
+            font-weight: 700 !important;
+        }
+
+
+        /* Texto abaixo */
+
+        html:not([data-theme="dark"]) .loja-header .loja-subtitle,
+        html:not([data-theme="dark"]) .loja-header .section-subtitle {
+            color: #8C6B59 !important;
+        }
+
+
+    /* Fundo da página da loja */
+
+    html:not([data-theme="dark"]) .page-loja {
+        background: #F8F0E7 !important;
+    }
+
+
+/* =========================================================
+   MODO ESCURO
+   ========================================================= */
+
+html[data-theme="dark"] .section-title {
+    color: var(--fg) !important;
+}
+
+html[data-theme="dark"] .section-eyebrow {
+    color: var(--accent) !important;
+}
+
+html[data-theme="dark"] .section-subtitle {
+    color: var(--muted-fg) !important;
+}
+
+
+
+html[data-theme="dark"] .loja-header .section-eyebrow {
+    color: var(--accent) !important;
+}
+
+html[data-theme="dark"] .loja-header .loja-subtitle,
+html[data-theme="dark"] .loja-header .section-subtitle {
+    color: var(--muted-fg) !important;
+}
+
+/* =========================================================
+   HOME - NOSSOS QUERIDINHOS
+   ========================================================= */
+
+html:not([data-theme="dark"]) .section-eyebrow {
+    color: #8C4A2F !important;
+}
+
+html:not([data-theme="dark"]) .section-title {
+    color: #6B2F0F !important;
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 700 !important;
+}
+
+
+/* Nossos Queridinhos especificamente */
+
+html:not([data-theme="dark"]) .section-header .section-eyebrow {
+    color: #8C4A2F !important;
+}
+
+html:not([data-theme="dark"]) .section-header .section-title {
+    color: #6B2F0F !important;
+}
+
+/* SOMENTE O TITULO DA LOJA NO DARK MODE */
+[data-theme="dark"] .loja-header h1 {
+    color: #FFFFFF !important;
+}
+/* NOSSAS CATEGORIAS - SEM EFEITO DE HOVER */
+.categories-modern .categories-heading .section-title,
+.categories-modern .categories-heading .section-title:hover {
+    color: white !important;
+    background: transparent !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
+}

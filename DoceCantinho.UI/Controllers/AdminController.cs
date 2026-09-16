@@ -415,7 +415,15 @@ namespace DoceCantinho.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditDoces(int id, DoceFormViewModel viewModel, IFormFile? imageFile)
         {
-            // Se um novo arquivo de imagem foi enviado, ele substitui a imagem/URL atual.
+            // Busca o doce atual antes de atualizar para garantir
+            // que os dados que não são editados nesta tela não sejam perdidos.
+            var doceAtual = await _doceService.GetByIdAsync(id);
+
+            if (doceAtual == null)
+                return NotFound();
+
+            // Se um novo arquivo de imagem foi enviado, ele substitui
+            // a imagem/URL atual. Caso contrário, mantém a imagem existente.
             var imagemFileUrl = await SalvarImagemAsync(imageFile);
 
             var dto = new UpdateDoceDto
@@ -425,7 +433,16 @@ namespace DoceCantinho.UI.Controllers
                 CoverImageUrl = imagemFileUrl ?? viewModel.CoverImageUrl,
                 CategoryId = viewModel.CategoryId,
                 Preco = viewModel.Preco,
+
+                // O formulário de edição não possui um campo para desativar
+                // o produto. Portanto, ao salvar/editar o doce, ele continua
+                // ativo e disponível na Loja.
+                IsAtivo = true,
+
+                // Mantém a opção de destaque marcada/desmarcada pelo usuário.
                 IsFeatured = viewModel.IsFeatured,
+
+                // Mantém a opção de recomendado marcada/desmarcada pelo usuário.
                 IsRecomendado = viewModel.IsRecomendado
             };
 
@@ -434,7 +451,10 @@ namespace DoceCantinho.UI.Controllers
             if (result == null)
                 return NotFound();
 
-            TempData["Success"] = "Doce atualizado com sucesso!";
+            TempData["Success"] = viewModel.IsFeatured
+                ? "Doce atualizado e definido como destaque!"
+                : "Doce atualizado com sucesso!";
+
             return RedirectToAction(nameof(Doces));
         }
 
@@ -548,8 +568,8 @@ namespace DoceCantinho.UI.Controllers
         // CRUD DO BLOG
         // =====================================================
 
-      
-   
+
+
 
         // =====================================================
         // CRIAR POST

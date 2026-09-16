@@ -569,9 +569,8 @@ function productCardHTML(p, showAdd = true) {
                         ${p.price}
                     </span>
 
-                    ${
-                        showAdd
-                            ? `
+                    ${showAdd
+            ? `
                                 <button
                                     class="add-btn"
                                     onclick="addToCart()"
@@ -605,8 +604,8 @@ function productCardHTML(p, showAdd = true) {
 
                                 </button>
                             `
-                            : ""
-                    }
+            : ""
+        }
 
                 </div>
 
@@ -1127,8 +1126,8 @@ function renderAdmin() {
                             class="bar"
                             style="
                                 height:${Math.round(
-                                    (d.vendas / maxVal) * 140
-                                )}px
+                    (d.vendas / maxVal) * 140
+                )}px
                             "
                             title="${d.mes}: R$ ${d.vendas.toLocaleString()}"
                         >
@@ -1388,17 +1387,17 @@ function renderAdmin() {
 
                 ${clientes.map(function (c) {
 
-                    const initials =
-                        c.name
-                            .split(" ")
-                            .map(function (n) {
-                                return n[0];
-                            })
-                            .join("")
-                            .slice(0, 2);
+        const initials =
+            c.name
+                .split(" ")
+                .map(function (n) {
+                    return n[0];
+                })
+                .join("")
+                .slice(0, 2);
 
 
-                    return `
+        return `
 
                         <tr>
 
@@ -1477,7 +1476,7 @@ function renderAdmin() {
 
                     `;
 
-                }).join("")}
+    }).join("")}
 
             </tbody>
 
@@ -1863,7 +1862,7 @@ document.addEventListener(
    CARROSSEL DOCE CANTINHO
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
 
     const carousel = document.querySelector(".dc-carousel");
 
@@ -1895,15 +1894,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
         current = index;
 
-        slides.forEach(function(slide, i) {
+        slides.forEach(function (slide, i) {
             slide.classList.toggle("active", i === current);
         });
 
-        dots.forEach(function(dot, i) {
+        dots.forEach(function (dot, i) {
             dot.classList.toggle("active", i === current);
         });
 
-        slides.forEach(function(slide) {
+        slides.forEach(function (slide) {
 
             const video = slide.querySelector("video");
 
@@ -1922,11 +1921,13 @@ document.addEventListener("DOMContentLoaded", function() {
             const playVideo = currentVideo.play();
 
             if (playVideo !== undefined) {
-                playVideo.catch(function() {
+                playVideo.catch(function () {
                     console.log("Clique no vídeo para iniciar.");
                 });
             }
         }
+
+    }
 
     function nextSlide() {
 
@@ -1950,9 +1951,9 @@ document.addEventListener("DOMContentLoaded", function() {
         prev.addEventListener("click", previousSlide);
     }
 
-    dots.forEach(function(dot, index) {
+    dots.forEach(function (dot, index) {
 
-        dot.addEventListener("click", function() {
+        dot.addEventListener("click", function () {
 
             showSlide(index);
 
@@ -1962,19 +1963,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     });
 
-    slides.forEach(function(slide) {
+    slides.forEach(function (slide) {
 
         const video = slide.querySelector("video");
 
         if (!video) return;
 
-        video.addEventListener("ended", function() {
+        video.addEventListener("ended", function () {
             nextSlide();
         });
 
-        video.addEventListener("error", function() {
+        video.addEventListener("error", function () {
 
-            setTimeout(function() {
+            setTimeout(function () {
                 nextSlide();
             }, 1000);
 
@@ -1986,7 +1987,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         clearInterval(timer);
 
-        timer = setInterval(function() {
+        timer = setInterval(function () {
 
             const video =
                 slides[current].querySelector("video");
@@ -2011,13 +2012,13 @@ document.addEventListener("DOMContentLoaded", function() {
         startTimer();
     }
 
-    carousel.addEventListener("mouseenter", function() {
+    carousel.addEventListener("mouseenter", function () {
 
         clearInterval(timer);
 
     });
 
-    carousel.addEventListener("mouseleave", function() {
+    carousel.addEventListener("mouseleave", function () {
 
         startTimer();
 
@@ -2028,7 +2029,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     carousel.addEventListener(
         "touchstart",
-        function(event) {
+        function (event) {
 
             touchStart =
                 event.changedTouches[0].screenX;
@@ -2039,7 +2040,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     carousel.addEventListener(
         "touchend",
-        function(event) {
+        function (event) {
 
             touchEnd =
                 event.changedTouches[0].screenX;
@@ -2065,5 +2066,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
     startTimer();
 
-    }
+}
 );
