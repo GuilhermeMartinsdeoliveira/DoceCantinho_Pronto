@@ -6,6 +6,7 @@ using DoceCantinho.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 
@@ -301,25 +302,25 @@ public class CarrinhoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Remover(
-        int doceId)
+    public async Task<IActionResult> Remover(int id)
     {
-        var carrinho =
-            await ObterCarrinhoDaSessaoAsync();
+        var carrinho = await ObterCarrinhoDaSessaoAsync();
 
-        var item =
-            carrinho.Itens.FirstOrDefault(
-                i => i.DoceId == doceId);
+        var item = carrinho.Itens.FirstOrDefault(i => i.DoceId == id);
 
-        if (item != null)
+        if (item == null)
         {
-            carrinho.Itens.Remove(item);
-
-            await SalvarCarrinhoNaSessaoAsync(
-                carrinho);
+            TempData["CarrinhoErro"] = "O produto selecionado não está no carrinho.";
+            return RedirectToAction("Index", "Carrinho");
         }
 
-        return RedirectToAction("Index");
+        carrinho.Itens.Remove(item);
+
+        await SalvarCarrinhoNaSessaoAsync(carrinho);
+
+        TempData["CarrinhoSucesso"] = $"\"{item.Nome}\" foi removido do carrinho.";
+
+        return RedirectToAction("Index", "Carrinho");
     }
 
 
