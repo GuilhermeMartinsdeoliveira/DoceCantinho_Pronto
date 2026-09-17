@@ -257,8 +257,18 @@ namespace DoceCantinho.UI.Controllers
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Cancel(int id)
+        public async Task<IActionResult> Cancel(int id, string? returnUrl = null)
         {
+            // Redireciona de volta para a tela de origem (ex.: Admin) quando informado,
+            // caindo em Details do pedido quando não vier returnUrl ou vier algo inválido/externo.
+            IActionResult RedirecionarDeVolta()
+            {
+                if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
+
+                return RedirectToAction(nameof(Details), new { id = id });
+            }
+
             var pedido = await _pedidoService.GetByIdAsync(id);
             if (pedido == null)
                 return NotFound();
@@ -280,7 +290,7 @@ namespace DoceCantinho.UI.Controllers
             if (!podeCancelar)
             {
                 TempData["Error"] = $"Não é possível cancelar um pedido com status '{pedido.Status}'.";
-                return RedirectToAction(nameof(Details), new { id = id });
+                return RedirecionarDeVolta();
             }
 
             try
@@ -290,12 +300,12 @@ namespace DoceCantinho.UI.Controllers
                     return NotFound();
 
                 TempData["Success"] = "Pedido cancelado com sucesso!";
-                return RedirectToAction(nameof(Details), new { id = id });
+                return RedirecionarDeVolta();
             }
             catch (Exception ex)
             {
                 TempData["Error"] = $"Erro ao cancelar pedido: {ex.Message}";
-                return RedirectToAction(nameof(Details), new { id = id });
+                return RedirecionarDeVolta();
             }
         }
 

@@ -1143,6 +1143,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 }
 
+    /* Mantém os campos deste formulário sempre claros,
+       mesmo quando o site está no modo escuro */
+    html[data-theme="dark"] .novo-input {
+        background: white !important;
+        border-color: #DDCEC2 !important;
+    }
+
+        html[data-theme="dark"] .novo-input input,
+        html[data-theme="dark"] .novo-input select,
+        html[data-theme="dark"] .novo-input textarea {
+            background: transparent !important;
+            color: #3D2314 !important;
+        }
+
+            html[data-theme="dark"] .novo-input input::placeholder,
+            html[data-theme="dark"] .novo-input textarea::placeholder {
+                color: #B78974 !important;
+            }
+
 .currency {
 
     color: #C96B45;
@@ -1229,6 +1248,8 @@ document.addEventListener("DOMContentLoaded", function () {
     border-radius: 9px;
     padding: 0 10px;
     outline: none;
+    background: white;
+    color: #3D2314;
 
 }
 
@@ -1259,8 +1280,45 @@ document.addEventListener("DOMContentLoaded", function () {
     height: 100%;
     border: none;
     outline: none;
+    background: transparent;
+    color: #3D2314;
 
 }
+
+
+.quantidade-input {
+
+    width: 100%;
+    height: 43px;
+    border: 1px solid #DDCEC2;
+    border-radius: 9px;
+    padding: 0 10px;
+    outline: none;
+    background: white;
+    color: #3D2314;
+
+}
+
+
+    /* Mantém os campos de itens (Produto/Nome, Código do Doce,
+       Preço e Quantidade) sempre claros, mesmo no tema escuro */
+    html[data-theme="dark"] .novo-item-grid .form-control,
+    html[data-theme="dark"] .mini-input,
+    html[data-theme="dark"] .quantidade-input {
+        background: white !important;
+        border-color: #DDCEC2 !important;
+        color: #3D2314 !important;
+    }
+
+        html[data-theme="dark"] .mini-input input {
+            background: transparent !important;
+            color: #3D2314 !important;
+        }
+
+        html[data-theme="dark"] .novo-item-grid .form-control::placeholder,
+        html[data-theme="dark"] .quantidade-input::placeholder {
+            color: #B78974 !important;
+        }
 
 
 .novo-subtotal {

@@ -20,17 +20,22 @@
         "Cancelado"
     };
 
-    (string bg, string fg) StatusCores(string status) => status switch
+    (string bg, string fg, string icon) StatusCores(string status) => status switch
     {
-        "Pago" => ("#DCFCE7", "#15803D"),
-        "Entregue" => ("#DCFCE7", "#15803D"),
-        "Em Preparo" => ("#FEF3C7", "#B45309"),
-        "Saiu para Entrega" => ("#DBEAFE", "#1D4ED8"),
-        "Cancelado" => ("#FEE2E2", "#DC2626"),
-        _ => ("#FEF3C7", "#B45309")
+        "Pago" => ("#DCFCE7", "#15803D", "bi-check-circle-fill"),
+        "Entregue" => ("#DCFCE7", "#15803D", "bi-bag-check-fill"),
+        "Em Preparo" => ("#FEF3C7", "#B45309", "bi-hourglass-split"),
+        "Saiu para Entrega" => ("#DBEAFE", "#1D4ED8", "bi-truck"),
+        "Cancelado" => ("#FEE2E2", "#DC2626", "bi-x-circle-fill"),
+        _ => ("#FEF3C7", "#B45309", "bi-clock-fill")
     };
 
-    var (bgC, fgC) = StatusCores(Model.Status);
+    var (bgC, fgC, iconC) = StatusCores(Model.Status);
+
+    // Etapas do acompanhamento do pedido (não inclui "Cancelado", que é tratado à parte)
+    var etapas = new[] { "Pendente", "Pago", "Em Preparo", "Saiu para Entrega", "Entregue" };
+    var isCancelado = Model.Status == "Cancelado";
+    var etapaAtualIndex = Array.IndexOf(etapas, Model.Status);
 }
 
 <div class="pedido-page">
@@ -120,7 +125,7 @@
         <div class="status-left">
 
             <div class="status-icon">
-                ✓
+                <i class="bi @iconC"></i>
             </div>
 
             <div>
@@ -184,6 +189,53 @@
         </div>
 
     </div>
+
+
+    <!-- =========================================
+         ACOMPANHAMENTO DO PEDIDO
+         ========================================= -->
+
+    @if (isCancelado)
+    {
+        <div class="pedido-tracker-cancelado">
+            <i class="bi bi-x-circle-fill"></i>
+            <span>Este pedido foi cancelado e não receberá mais atualizações de status.</span>
+        </div>
+    }
+    else
+    {
+        <div class="pedido-tracker">
+
+            @for (var i = 0; i < etapas.Length; i++)
+            {
+                var concluida = i < etapaAtualIndex;
+                var atual = i == etapaAtualIndex;
+
+                <div class="tracker-step @(concluida ? "done" : "") @(atual ? "current" : "")">
+
+                    <div class="tracker-dot">
+                        @if (concluida)
+                        {
+                            <i class="bi bi-check-lg"></i>
+                        }
+                        else
+                        {
+                            @((i + 1).ToString())
+                        }
+                    </div>
+
+                    <span>@etapas[i]</span>
+
+                </div>
+
+                @if (i < etapas.Length - 1)
+                {
+                    <div class="tracker-line @(i < etapaAtualIndex ? "done" : "")"></div>
+                }
+            }
+
+        </div>
+    }
 
 
     <!-- =========================================
@@ -892,6 +944,116 @@
     }
 
 
+    /* =========================================
+       RASTREADOR DE PROGRESSO
+       ========================================= */
+
+    .pedido-tracker {
+        display: flex;
+        align-items: flex-start;
+
+        margin-bottom: 25px;
+        padding: 25px 20px;
+
+        background: #FFF9F3;
+        border: 1px solid #EBDDD1;
+        border-radius: 20px;
+    }
+
+    .tracker-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        gap: 8px;
+
+        min-width: 70px;
+        text-align: center;
+    }
+
+    .tracker-dot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 34px;
+        height: 34px;
+        flex-shrink: 0;
+
+        border-radius: 50%;
+
+        background: #fff;
+        border: 2px solid #DDCBBE;
+        color: #A08070;
+
+        font-size: .8rem;
+        font-weight: 800;
+    }
+
+    .tracker-step span {
+        color: #A08070;
+        font-size: .7rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .tracker-step.done .tracker-dot {
+        background: #C96B45;
+        border-color: #C96B45;
+        color: #fff;
+    }
+
+    .tracker-step.done span {
+        color: #755443;
+    }
+
+    .tracker-step.current .tracker-dot {
+        background: #3D2314;
+        border-color: #3D2314;
+        color: #fff;
+        box-shadow: 0 0 0 4px rgba(61,35,20,.12);
+    }
+
+    .tracker-step.current span {
+        color: #3D2314;
+        font-weight: 800;
+    }
+
+    .tracker-line {
+        flex: 1;
+
+        height: 2px;
+        margin-top: 17px;
+
+        background: #DDCBBE;
+    }
+
+    .tracker-line.done {
+        background: #C96B45;
+    }
+
+    .pedido-tracker-cancelado {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        margin-bottom: 25px;
+        padding: 18px 22px;
+
+        background: #FDECEC;
+        border: 1px solid #F3C6C6;
+        border-radius: 16px;
+
+        color: #B93A3A;
+        font-size: .85rem;
+        font-weight: 700;
+    }
+
+    .pedido-tracker-cancelado i {
+        font-size: 1.3rem;
+    }
+
+
     .status-description {
         margin-top: 3px;
 
@@ -1514,6 +1676,20 @@
             border-top: 1px solid rgba(255,255,255,.12);
 
             text-align: left;
+
+        }
+
+        .pedido-tracker {
+
+            overflow-x: auto;
+
+            justify-content: flex-start;
+
+        }
+
+        .tracker-step {
+
+            min-width: 62px;
 
         }
 

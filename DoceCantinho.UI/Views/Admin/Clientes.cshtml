@@ -13,22 +13,70 @@
         text-decoration: none;
     }
 
-    #clientes-table .admin-users-controls .btn:hover {
-        background: var(--accent);
-        color: #FDF6ED;
-    }
+        #clientes-table .admin-users-controls .btn:hover {
+            background: var(--accent);
+            color: #FDF6ED;
+        }
 
     #clientes-table .admin-users-controls .btn-danger {
         background: #b91c1c;
     }
 
-    #clientes-table .admin-users-controls .btn-danger:hover {
-        background: #dc2626;
+        #clientes-table .admin-users-controls .btn-danger:hover {
+            background: #dc2626;
+        }
+
+    /* Cards de estatísticas (Total de Usuarios, Usuarios Ativos, Administradores) */
+    #clientes-table .stat-card {
+        flex: 1;
+        background: rgba(253, 246, 237, .06);
+        border: 1px solid rgba(253, 246, 237, .15);
+        border-radius: 14px;
+        padding: 1rem;
+        text-align: center;
     }
 
-    /* Números dos cards (Total de Usuarios, Usuarios Ativos, Administradores) */
     #clientes-table .stat-value {
         color: #FDF6ED;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    #clientes-table .stat-label {
+        color: rgba(253, 246, 237, .7);
+        font-size: 0.8125rem;
+    }
+
+    /* Ícones Bootstrap Icons dos cards de estatísticas */
+    #clientes-table .stat-icon {
+        width: 42px;
+        height: 42px;
+        margin: 0 auto 0.5rem;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+
+        #clientes-table .stat-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    #clientes-table .stat-icon-purple {
+        background: rgba(124, 92, 252, .18);
+        color: #B7A6FF;
+    }
+
+    #clientes-table .stat-icon-green {
+        background: rgba(21, 148, 71, .18);
+        color: #5FE39B;
+    }
+
+    #clientes-table .stat-icon-gold {
+        background: rgba(214, 168, 63, .18);
+        color: #F0C767;
     }
 </style>
 
@@ -45,17 +93,33 @@
 
             <div class="admin-users-header" style="display:flex;gap:1rem;margin-bottom:1rem">
                 <div class="stat-card">
-                    <div class="stat-icon">👥</div>
+                    <div class="stat-icon stat-icon-purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </div>
                     <div class="stat-value">@total</div>
                     <div class="stat-label">Total de Usuarios</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">✅</div>
+                    <div class="stat-icon stat-icon-green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
                     <div class="stat-value">@ativos</div>
                     <div class="stat-label">Usuarios Ativos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">⭐</div>
+                    <div class="stat-icon stat-icon-gold">
+                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                    </div>
                     <div class="stat-value">@admins</div>
                     <div class="stat-label">Administradores</div>
                 </div>
@@ -63,7 +127,7 @@
 
             <div class="admin-users-controls" style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
                 <input type="search" id="user-search" placeholder="Buscar usuário..." style="flex:1;padding:0.6rem 0.9rem;border-radius:999px;border:1px solid var(--muted-border);background:var(--card-bg)" />
-                <a id="btn-create-user" class="btn" href="@Url.Action("CreateUser","Admin")">Novo Usuario</a>
+                <a id="btn-create-user" class="btn" href="@Url.Action("CreateUser", "Admin")">Novo Usuario</a>
                 <button id="btn-edit-user" class="btn">Editar</button>
                 <button id="btn-delete-user" class="btn btn-danger">Excluir</button>
                 <button class="btn" id="refresh-users">Atualizar</button>
@@ -91,35 +155,35 @@
             </table>
 
             <script>
-                document.getElementById('refresh-users').addEventListener('click', function(){ location.reload(); });
-                document.getElementById('user-search').addEventListener('input', function(e){
-                    const q = e.target.value.toLowerCase();
-                    document.querySelectorAll('#users-tbody tr').forEach(tr => {
-                        const txt = tr.textContent.toLowerCase();
-                        tr.style.display = txt.indexOf(q) === -1 ? 'none' : '';
-                    });
-                });
+                        document.getElementById('refresh-users').addEventListener('click', function () { location.reload(); });
+                        document.getElementById('user-search').addEventListener('input', function (e) {
+                            const q = e.target.value.toLowerCase();
+                            document.querySelectorAll('#users-tbody tr').forEach(tr => {
+                                const txt = tr.textContent.toLowerCase();
+                                tr.style.display = txt.indexOf(q) === -1 ? 'none' : '';
+                            });
+                        });
 
-                // Seleção de usuário
-                let selectedId = null;
-                document.querySelectorAll('#users-tbody tr').forEach(tr => {
-                    tr.addEventListener('click', function(){
-                        document.querySelectorAll('#users-tbody tr').forEach(r=>r.classList.remove('selected'));
-                        tr.classList.add('selected');
-                        selectedId = tr.dataset.id;
-                    });
-                });
+                        // Seleção de usuário
+                        let selectedId = null;
+                        document.querySelectorAll('#users-tbody tr').forEach(tr => {
+                            tr.addEventListener('click', function () {
+                                document.querySelectorAll('#users-tbody tr').forEach(r => r.classList.remove('selected'));
+                                tr.classList.add('selected');
+                                selectedId = tr.dataset.id;
+                            });
+                        });
 
-                document.getElementById('btn-edit-user').addEventListener('click', function(){
-                    if (!selectedId) { alert('Selecione um usuário na lista para editar.'); return; }
-                    location.href = '@Url.Action("EditUser","Admin")' + '?id=' + encodeURIComponent(selectedId);
-                });
+                        document.getElementById('btn-edit-user').addEventListener('click', function () {
+                            if (!selectedId) { alert('Selecione um usuário na lista para editar.'); return; }
+                            location.href = '@Url.Action("EditUser", "Admin")' + '?id=' + encodeURIComponent(selectedId);
+                        });
 
-                document.getElementById('btn-delete-user').addEventListener('click', function(){
-                    if (!selectedId) { alert('Selecione um usuário na lista para excluir.'); return; }
-                    if (!confirm('Confirma exclusão do usuário selecionado?')) return;
-                    location.href = '@Url.Action("DeleteUser","Admin")' + '?id=' + encodeURIComponent(selectedId);
-                });
+                        document.getElementById('btn-delete-user').addEventListener('click', function () {
+                            if (!selectedId) { alert('Selecione um usuário na lista para excluir.'); return; }
+                            if (!confirm('Confirma exclusão do usuário selecionado?')) return;
+                            location.href = '@Url.Action("DeleteUser", "Admin")' + '?id=' + encodeURIComponent(selectedId);
+                        });
             </script>
         }
     </div>

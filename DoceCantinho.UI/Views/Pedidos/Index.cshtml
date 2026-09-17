@@ -397,6 +397,37 @@
                         </div>
 
 
+                        @if (isAdmin)
+                        {
+                            <!-- ATUALIZAÇÃO RÁPIDA DE STATUS -->
+
+                            <form method="post"
+                                  action="@Url.Action("UpdateStatus", "Pedidos", new { id = pedido.Id })"
+                                  class="pedido-quickstatus-form"
+                                  onchange="this.submit()">
+
+                                @Html.AntiForgeryToken()
+
+                                <label for="quickstatus-@pedido.Id">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                    Status
+                                </label>
+
+                                <select id="quickstatus-@pedido.Id"
+                                        name="newStatus"
+                                        class="pedido-quickstatus-select">
+
+                                    @foreach (var s in new[] { "Pendente", "Pago", "Em Preparo", "Saiu para Entrega", "Entregue", "Cancelado" })
+                                    {
+                                        <option value="@s" selected="@(pedido.Status == s)">@s</option>
+                                    }
+
+                                </select>
+
+                            </form>
+                        }
+
+
                         <div class="pedido-actions">
 
                             <!-- DETALHES -->
@@ -1076,6 +1107,66 @@ body[data-theme="dark"] .pedidos-header h1 {
     }
 
 
+    .pedido-quickstatus-form {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+    }
+
+
+    .pedido-quickstatus-form label {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 4px;
+
+        color: #8C6B5B;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+
+    }
+
+
+    .pedido-quickstatus-select {
+
+        padding: 7px 10px;
+
+        border: 1px solid #DDCBBE;
+
+        border-radius: 8px;
+
+        background: #fff;
+
+        color: #3D2314;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        cursor: pointer;
+
+    }
+
+
+    .pedido-quickstatus-select:focus {
+
+        outline: none;
+
+        border-color: #C96B45;
+
+    }
+
+
     .pedido-actions {
 
         display: flex;
@@ -1329,6 +1420,22 @@ body[data-theme="dark"] .pedidos-header h1 {
         .pedido-actions {
 
             width: 100%;
+
+        }
+
+
+        .pedido-quickstatus-form {
+
+            width: 100%;
+
+            justify-content: space-between;
+
+        }
+
+
+        .pedido-quickstatus-select {
+
+            flex: 1;
 
         }
 

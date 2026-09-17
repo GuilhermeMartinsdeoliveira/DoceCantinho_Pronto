@@ -2271,6 +2271,12 @@ footer {
         background: #fee2e2;
     }
 
+.order-action-inline-form {
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+}
+
 .data-table td {
     padding: 0.875rem 1rem;
     border-bottom: 1px solid rgba(92,46,14,.07);
@@ -8014,4 +8020,155 @@ html:not([data-theme="dark"]) .section-header .section-title {
     .admin-field input[type="tel"]:focus {
         border-color: #9b6b52;
         box-shadow: none;
+    }
+/* =========================================================
+   AVALIAÇÕES / DEPOIMENTOS
+   TÍTULOS E TEXTOS BRANCOS NOS DOIS TEMAS
+   ========================================================= */
+
+/* Título principal */
+.section-testimonials .section-title,
+.section-testimonials .section-title.light {
+    color: #FFFFFF !important;
+}
+
+/* Pequeno título "EXPERIÊNCIAS REAIS" */
+.section-testimonials .section-eyebrow {
+    color: #FFFFFF !important;
+}
+
+/* Texto abaixo do título */
+.section-testimonials .reviews-intro {
+    color: #FFFFFF !important;
+}
+
+/* Nota 5,0 */
+.section-testimonials .rating-summary strong {
+    color: #FFFFFF !important;
+}
+
+/* Texto "clientes satisfeitos" */
+.section-testimonials .rating-summary small {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Textos dos depoimentos */
+.section-testimonials .testimonial-text {
+    color: rgba(255, 255, 255, 0.90) !important;
+}
+
+/* Nome do cliente */
+.section-testimonials .testimonial-author {
+    color: #FFFFFF !important;
+}
+
+/* "Cliente verificada" */
+.section-testimonials .testimonial-role {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+/* =========================================================
+   MODAL DE CONFIRMAÇÃO (substitui o confirm() nativo do navegador)
+   ========================================================= */
+
+.confirm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(23, 16, 12, 0.55);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .18s ease;
+}
+
+    .confirm-modal-overlay.is-open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+.confirm-modal-box {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 1.5rem;
+    transform: translateY(8px) scale(.98);
+    transition: transform .18s ease;
+}
+
+    .confirm-modal-overlay.is-open .confirm-modal-box {
+        transform: translateY(0) scale(1);
+    }
+
+.confirm-modal-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+    html[data-theme="dark"] .confirm-modal-icon {
+        background: rgba(220, 38, 38, 0.18);
+        color: #f28b8b;
+    }
+
+.confirm-modal-title {
+    margin: 0 0 .4rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--fg);
+}
+
+.confirm-modal-message {
+    margin: 0 0 1.5rem;
+    font-size: .9rem;
+    color: var(--muted-fg);
+    line-height: 1.5;
+}
+
+.confirm-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .6rem;
+}
+
+.confirm-modal-btn {
+    padding: .55rem 1.1rem;
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.confirm-modal-btn.confirm-modal-btn-secondary {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--fg);
+}
+
+    .confirm-modal-btn.confirm-modal-btn-secondary:hover {
+        background: var(--muted);
+    }
+
+.confirm-modal-btn.confirm-modal-btn-danger {
+    background: #dc2626;
+    color: #fff;
+}
+
+    .confirm-modal-btn.confirm-modal-btn-danger:hover {
+        background: #b91c1c;
     }

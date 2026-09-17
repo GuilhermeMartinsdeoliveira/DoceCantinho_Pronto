@@ -2068,3 +2068,116 @@ document.addEventListener("DOMContentLoaded", function () {
 
 }
 );
+
+/* =========================================================
+   MODAL DE CONFIRMAÇÃO (substitui o confirm() nativo do navegador)
+   Uso: adicione a classe "js-confirm-submit" ao <form>, com
+   data-confirm-title / data-confirm-message / data-confirm-ok
+   / data-confirm-cancel opcionais.
+   ========================================================= */
+
+(function () {
+
+    let overlay = null;
+    let pendingForm = null;
+
+    function buildModal() {
+
+        overlay = document.createElement("div");
+        overlay.className = "confirm-modal-overlay";
+        overlay.innerHTML =
+            '<div class="confirm-modal-box" role="alertdialog" aria-modal="true">' +
+            '  <div class="confirm-modal-icon">' +
+            '    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">' +
+            '      <path d="M12 9v4M12 17h.01"/>' +
+            '      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>' +
+            '    </svg>' +
+            '  </div>' +
+            '  <h3 class="confirm-modal-title"></h3>' +
+            '  <p class="confirm-modal-message"></p>' +
+            '  <div class="confirm-modal-actions">' +
+            '    <button type="button" class="confirm-modal-btn confirm-modal-btn-secondary" data-confirm-cancel-btn></button>' +
+            '    <button type="button" class="confirm-modal-btn confirm-modal-btn-danger" data-confirm-ok-btn></button>' +
+            '  </div>' +
+            '</div>';
+
+        document.body.appendChild(overlay);
+
+        overlay.addEventListener("click", function (event) {
+            if (event.target === overlay) {
+                closeModal();
+            }
+        });
+
+        overlay.querySelector("[data-confirm-cancel-btn]")
+            .addEventListener("click", closeModal);
+
+        overlay.querySelector("[data-confirm-ok-btn]")
+            .addEventListener("click", function () {
+
+                const form = pendingForm;
+                closeModal();
+
+                if (form) {
+                    form.submit();
+                }
+
+            });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && overlay.classList.contains("is-open")) {
+                closeModal();
+            }
+        });
+    }
+
+    function openModal(form) {
+
+        pendingForm = form;
+
+        const title =
+            form.getAttribute("data-confirm-title") || "Confirmar ação";
+
+        const message =
+            form.getAttribute("data-confirm-message") || "Tem certeza que deseja continuar?";
+
+        const okLabel =
+            form.getAttribute("data-confirm-ok") || "Confirmar";
+
+        const cancelLabel =
+            form.getAttribute("data-confirm-cancel") || "Voltar";
+
+        overlay.querySelector(".confirm-modal-title").textContent = title;
+        overlay.querySelector(".confirm-modal-message").textContent = message;
+        overlay.querySelector("[data-confirm-ok-btn]").textContent = okLabel;
+        overlay.querySelector("[data-confirm-cancel-btn]").textContent = cancelLabel;
+
+        overlay.classList.add("is-open");
+    }
+
+    function closeModal() {
+        pendingForm = null;
+        if (overlay) {
+            overlay.classList.remove("is-open");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        buildModal();
+
+        document.addEventListener("submit", function (event) {
+
+            const form = event.target;
+
+            if (!(form instanceof HTMLFormElement)) return;
+            if (!form.classList.contains("js-confirm-submit")) return;
+
+            event.preventDefault();
+            openModal(form);
+
+        });
+
+    });
+
+})();

@@ -10,8 +10,26 @@
     .cartoes-page { max-width: 1120px; margin: 0 auto; padding: 38px 24px 70px; }
     .cartoes-header { margin-bottom: 28px; }
     .cartoes-eyebrow { color:#e29a72; font-size:11px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; }
-    .cartoes-header h1 { margin:7px 0 8px; color:#f4e8e1; font-size:32px; }
-    .cartoes-header p { margin:0; color:#bca79d; font-size:14px; }
+    .cartoes-eyebrow {
+        color: #8C4A2F;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+    }
+
+    .cartoes-header h1 {
+        margin: 7px 0 8px;
+        color: #6B2F0F;
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    .cartoes-header p {
+        margin: 0;
+        color: #8C6B59;
+        font-size: 14px;
+    }
     .cartoes-layout { display:grid; grid-template-columns:minmax(0,1fr) 390px; gap:26px; align-items:start; }
     .cartoes-list-card, .cartoes-form-card { background:linear-gradient(145deg,#352119,#291914); border:1px solid rgba(226,154,114,.16); border-radius:18px; box-shadow:0 14px 35px rgba(0,0,0,.24); }
     .cartoes-list-card { padding:24px; }
@@ -44,7 +62,25 @@
     .cartoes-back:hover { color:#e29a72; }
     @@media(max-width:850px) { .cartoes-layout { grid-template-columns:1fr; } .cartoes-form-card { position:static; } }
     @@media(max-width:520px) { .cartoes-page { padding:25px 15px 50px; } .form-row { grid-template-columns:1fr; } .cartao-item { align-items:flex-start; } }
+
+    /* =========================================================
+       MEUS CARTÕES - MODO ESCURO
+       Mantém a identidade marrom, mas com contraste suficiente
+       ========================================================= */
+
+    html[data-theme="dark"] .cartoes-eyebrow {
+        color: #D8956F !important;
+    }
+
+    html[data-theme="dark"] .cartoes-header h1 {
+        color: white !important;
+    }
+
+    html[data-theme="dark"] .cartoes-header p {
+        color: #C7AA98 !important;
+    }
 </style>
+
 
 <div class="cartoes-page">
 
