@@ -1,0 +1,126 @@
+@using DoceCantinho.Application.DTOs
+
+<link href="~/css/site.css" rel="stylesheet" />
+
+@model CategoryDto
+
+<style>
+    .edit-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+    }
+
+    .edit-container h2 {
+        font-family: 'Playfair Display', serif;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--fg);
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid var(--border);
+        border-radius: calc(var(--radius) - 0.25rem);
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background: var(--bg);
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(92, 46, 14, 0.1);
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .button-group button,
+    .button-group a {
+        flex: 1;
+        padding: 0.85rem;
+        border-radius: calc(var(--radius) - 0.25rem);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 2px solid;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .button-group button {
+        background: var(--primary);
+        color: var(--primary-fg);
+        border-color: var(--primary);
+    }
+
+    .button-group button:hover {
+        background: #4a2309;
+        border-color: #4a2309;
+        box-shadow: 0 4px 12px rgba(92, 46, 14, 0.25);
+    }
+
+    .button-group a {
+        background: transparent;
+        color: var(--muted-fg);
+        border-color: var(--muted);
+    }
+
+    .button-group a:hover {
+        background: var(--muted);
+        border-color: var(--muted);
+        box-shadow: 0 4px 12px rgba(92, 46, 14, 0.1);
+    }
+</style>
+
+<div class="edit-container">
+
+    <h2>Editar Categoria</h2>
+
+    <form asp-action="EditCategory" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+
+        <input name="id" value="@Model.Id" type="hidden" />
+
+        <div class="form-group">
+            <label>Nome</label>
+            <input name="dto.Name" value="@Model.Name" class="form-control" />
+        </div>
+
+        <div class="button-group">
+            <button type="submit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align:middle;margin-right:6px"><path d="M20 6L9 17l-5-5"></path></svg>Atualizar
+            </button>
+
+            <a asp-action="Categories">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align:middle;margin-right:6px"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Cancelar
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+<script src="~/js/site.js"></script>

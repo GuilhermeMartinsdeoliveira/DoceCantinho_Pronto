@@ -1,0 +1,398 @@
+@model DoceCantinho.Application.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="page active" id="page-home">
+
+    <!-- ─── Hero ─── -->
+    <section class="hero">
+
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=1600&h=900&fit=crop&auto=format"
+                 alt="Confeitaria artesanal" loading="eager" />
+            <div class="hero-overlay"></div>
+        </div>
+
+        <div class="container hero-content">
+            <div>
+                <span class="hero-badge">Artesanal • Feito com Amor</span>
+                <h1 class="hero-title">Feito com <em>amor</em>,<br>entregue com carinho</h1>
+                <p class="hero-desc">
+                    Confeitaria artesanal com 12 anos de tradição. Criamos momentos doces
+                    para celebrar cada ocasião especial da sua vida.
+                </p>
+                <div class="hero-btns">
+                    <a asp-controller="Doces" asp-action="Index" class="btn btn-accent">
+                        Ver Produtos
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </a>
+                    <a asp-controller="Home" asp-action="Contato" class="btn btn-ghost">Fazer Encomenda</a>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-n">500+</div>
+                    <div class="stat-label">Clientes felizes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-n">12</div>
+                    <div class="stat-label">Anos de tradição</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-n">@Model.Categories.Count()</div>
+                    <div class="stat-label">Categorias</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-n">★ 5.0</div>
+                    <div class="stat-label">Avaliação média</div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ─── Produtos em Destaque ─── -->
+    <section class="section-featured">
+        <div class="container">
+            <div class="section-header-row">
+                <div>
+                    <p class="section-eyebrow">Destaques</p>
+                    <h2 class="section-title">Nossos Queridinhos</h2>
+                </div>
+                <a asp-controller="Doces" asp-action="Index" class="see-all-link">
+                    Ver todos
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                </a>
+            </div>
+
+            @if (Model.FeaturedDoce.Any())
+            {
+                <div class="products-grid">
+                    @foreach (var doce in Model.FeaturedDoce.Take(4))
+                    {
+                        <div class="product-card">
+                            <div class="product-img-wrap">
+                                @if (!string.IsNullOrEmpty(doce.CoverImageUrl))
+                                {
+                                    <img src="@doce.CoverImageUrl" alt="@doce.Title" class="product-img" />
+                                }
+                                else
+                                {
+                                    <div class="product-img-placeholder">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                    </div>
+                                }
+                            </div>
+                            <div class="product-body">
+                                @if (!string.IsNullOrEmpty(doce.CategoryName))
+                                {
+                                    <p class="product-cat">@doce.CategoryName</p>
+                                }
+                                <h3 class="product-name">@doce.Title</h3>
+                                <p class="product-desc">@doce.Description</p>
+                                <div class="product-footer">
+                                    <span class="product-price">@doce.Preco.ToString("C")</span>
+                                    <a asp-controller="Doces" asp-action="Details" asp-route-id="@doce.Id"
+                                       class="btn btn-accent btn-sm">Ver</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else if (Model.RecentDoce.Any())
+            {
+                <!-- Fallback: mostra recentes se não houver destaques cadastrados -->
+                <div class="products-grid">
+                    @foreach (var doce in Model.RecentDoce.Take(4))
+                    {
+                        <div class="product-card">
+                            <div class="product-img-wrap">
+                                @if (!string.IsNullOrEmpty(doce.CoverImageUrl))
+                                {
+                                    <img src="@doce.CoverImageUrl" alt="@doce.Title" class="product-img" />
+                                }
+                                else
+                                {
+                                    <div class="product-img-placeholder">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                    </div>
+                                }
+                            </div>
+                            <div class="product-body">
+                                @if (!string.IsNullOrEmpty(doce.CategoryName))
+                                {
+                                    <p class="product-cat">@doce.CategoryName</p>
+                                }
+                                <h3 class="product-name">@doce.Title</h3>
+                                <p class="product-desc">@doce.Description</p>
+                                <div class="product-footer">
+                                    <span class="product-price">@doce.Preco.ToString("C")</span>
+                                    <a asp-controller="Doces" asp-action="Details" asp-route-id="@doce.Id"
+                                       class="btn btn-accent btn-sm">Ver</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p style="text-align:center;color:var(--muted-fg);padding:3rem 0">
+                    Nenhum produto em destaque cadastrado ainda.
+                </p>
+            }
+
+        </div>
+    </section>
+
+    <!-- ─── Categorias ─── -->
+    @if (Model.Categories.Any())
+    {
+        <section class="section-services">
+            <div class="container">
+                <div style="text-align:center;margin-bottom:2.5rem">
+                    <p class="section-eyebrow">Explore</p>
+                    <h2 class="section-title">Nossas Categorias</h2>
+                </div>
+                <div class="services-grid">
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <a asp-controller="Doces" asp-action="Index" asp-route-categoryId="@cat.Id"
+                           class="service-card" style="text-decoration:none;cursor:pointer">
+                            <div class="service-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                </svg>
+                            </div>
+                            <h3 class="service-name">@cat.Name</h3>
+                            <p class="service-desc">@cat.DoceCount produto@(cat.DoceCount != 1 ? "s" : "")</p>
+                        </a>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+
+    <!-- ─── Carrossel Dinâmico (imagens + vídeo) ─── -->
+    <section class="section-carousel">
+        <div class="container">
+            <div style="text-align:center;margin-bottom:2.5rem">
+                <p class="section-eyebrow">Bastidores</p>
+                <h2 class="section-title">Nosso Cantinho em Imagens e Vídeo</h2>
+            </div>
+
+            <!--
+                Carrossel dinâmico: os slides abaixo (imagens e vídeo) são lidos
+                a partir do JSON no bloco <script> logo abaixo e desenhados
+                automaticamente pelo carousel.js (wwwroot/js/carousel.js).
+
+                Para adicionar um novo vídeo, basta incluir mais um objeto no
+                array com "type": "video" e o caminho do arquivo (por exemplo,
+                um arquivo salvo em wwwroot/videos/seu-video.mp4). Veja os
+                comentários dentro de carousel.js para o passo a passo completo.
+            -->
+            <div class="mm-carousel" data-autoplay="6000" aria-roledescription="carrossel" aria-label="Bastidores do Doce Cantinho">
+                <div class="mm-carousel-viewport">
+                    <div class="mm-carousel-track"></div>
+
+                    <button type="button" class="mm-carousel-prev" aria-label="Slide anterior">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+                    </button>
+                    <button type="button" class="mm-carousel-next" aria-label="Próximo slide">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                    </button>
+
+                    <div class="mm-carousel-dots"></div>
+                </div>
+
+                <script type="application/json" data-carousel-json>
+                [
+                    {
+                        "type": "video",
+                        "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                        "poster": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
+                        "title": "Direto da nossa cozinha",
+                        "caption": "Vídeo de demonstração — substitua por um vídeo real da produção em wwwroot/videos/."
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&h=900&fit=crop&auto=format",
+                        "title": "Confeitaria artesanal, feita à mão",
+                        "caption": "Cada doce é preparado com ingredientes selecionados e muito carinho."
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=1600&h=900&fit=crop&auto=format",
+                        "title": "Decoração cuidadosamente pensada",
+                        "caption": "Detalhes que fazem toda a diferença em cada encomenda."
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?w=1600&h=900&fit=crop&auto=format",
+                        "title": "Nossa equipe em ação",
+                        "caption": "Confeiteiros apaixonados, trabalhando desde cedo para você."
+                    }
+                ]
+                </script>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── Avaliações e Depoimentos ─── -->
+    <section class="section-testimonials" id="avaliacoes">
+        <div class="container">
+            <div class="reviews-heading">
+                <div>
+                    <p class="section-eyebrow">Experiências reais</p>
+                    <h2 class="section-title light">Avalie os doces e o nosso site</h2>
+                    <p class="reviews-intro">Sua opinião ajuda o DoceCantinho a ficar cada vez melhor.</p>
+                </div>
+                <div class="rating-summary" aria-label="Avaliação média 5 de 5">
+                    <strong>5,0</strong>
+                    <span class="rating-stars">★★★★★</span>
+                    <small>clientes satisfeitos</small>
+                </div>
+            </div>
+
+            <div class="reviews-layout">
+                <div class="testimonials-grid">
+                    <article class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">“O bolo de casamento foi simplesmente perfeito. Todos os convidados adoraram!”</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">A</div>
+                            <div>
+                                <p class="testimonial-name">Ana Oliveira</p>
+                                <p class="testimonial-role">Cliente verificada</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">“Encomendei para o aniversário da minha filha e ela ficou encantada. Qualidade incrível!”</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">M</div>
+                            <div>
+                                <p class="testimonial-name">Maria Santos</p>
+                                <p class="testimonial-role">Cliente verificada</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">“Os macarons são os melhores que já comi. O site também é fácil de navegar. Recomendo!”</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">C</div>
+                            <div>
+                                <p class="testimonial-name">Carlos Mendes</p>
+                                <p class="testimonial-role">Cliente verificado</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <form class="review-form" id="review-form">
+                    <div class="review-form-header">
+                        <p class="section-eyebrow">Deixe seu depoimento</p>
+                        <h3>Como foi sua experiência?</h3>
+                        <p>Conte o que achou dos doces e da experiência de navegar pelo site.</p>
+                    </div>
+
+                    <div class="form-grid2">
+                        <div class="review-field">
+                            <label for="review-name">Seu nome</label>
+                            <input id="review-name" name="name" type="text" maxlength="60" placeholder="Ex.: Juliana Souza" required>
+                        </div>
+                        <div class="review-field">
+                            <label for="review-email">E-mail</label>
+                            <input id="review-email" name="email" type="email" placeholder="seu@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="review-rating-grid">
+                        <fieldset class="rating-fieldset">
+                            <legend>Avaliação dos doces</legend>
+                            <div class="star-picker" data-rating="sweet">
+                                <button type="button" data-value="1" aria-label="1 estrela">★</button>
+                                <button type="button" data-value="2" aria-label="2 estrelas">★</button>
+                                <button type="button" data-value="3" aria-label="3 estrelas">★</button>
+                                <button type="button" data-value="4" aria-label="4 estrelas">★</button>
+                                <button type="button" data-value="5" aria-label="5 estrelas">★</button>
+                            </div>
+                            <input type="hidden" name="sweetRating" id="sweet-rating" value="5">
+                        </fieldset>
+
+                        <fieldset class="rating-fieldset">
+                            <legend>Avaliação do site</legend>
+                            <div class="star-picker" data-rating="site">
+                                <button type="button" data-value="1" aria-label="1 estrela">★</button>
+                                <button type="button" data-value="2" aria-label="2 estrelas">★</button>
+                                <button type="button" data-value="3" aria-label="3 estrelas">★</button>
+                                <button type="button" data-value="4" aria-label="4 estrelas">★</button>
+                                <button type="button" data-value="5" aria-label="5 estrelas">★</button>
+                            </div>
+                            <input type="hidden" name="siteRating" id="site-rating" value="5">
+                        </fieldset>
+                    </div>
+
+                    <div class="review-field">
+                        <label for="review-message">Seu depoimento</label>
+                        <textarea id="review-message" name="message" rows="4" maxlength="500" placeholder="O que você mais gostou? Conte para a gente..." required></textarea>
+                        <small class="field-hint">Até 500 caracteres.</small>
+                    </div>
+
+                    <label class="review-check">
+                        <input type="checkbox" name="permission" required>
+                        <span>Autorizo a exibição deste depoimento no site.</span>
+                    </label>
+
+                    <button type="submit" class="btn btn-accent review-submit">
+                        Enviar avaliação
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                    <p class="review-success" id="review-success" role="status" aria-live="polite">
+                        Obrigado! Sua avaliação foi registrada neste navegador.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── CTA ─── -->
+    <section class="section-cta">
+        <div class="container">
+            <div class="cta-box">
+                <p class="section-eyebrow" style="color:var(--accent)">Pronto para adoçar?</p>
+                <h2 class="section-title serif" style="margin-bottom:1rem">Faça seu pedido hoje</h2>
+                <p style="color:var(--muted-fg);margin-bottom:2rem">Encomende com antecedência e garanta seu doce especial.</p>
+                <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+                    <a asp-controller="Doces" asp-action="Index" class="btn btn-primary">Ver produtos</a>
+                    <a href="#avaliacoes" class="btn btn-outline">Avaliar experiência</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

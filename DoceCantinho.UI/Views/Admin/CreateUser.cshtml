@@ -1,3 +1,4 @@
+
 @model DoceCantinho.UI.ViewModels.CreateUserViewModel
 @{
     ViewData["Title"] = "Novo Usuário";
@@ -7,37 +8,88 @@
     <div class="admin-form-card" style="max-width: 480px;">
 
         <p class="admin-form-eyebrow">Área Administrativa</p>
-        <h2 class="admin-form-title"><i class="bi bi-person-plus"></i>Novo Usuário</h2>
+        <h2 class="admin-form-title">
+            <i class="bi bi-person-plus"></i>Novo Usuário
+        </h2>
 
         <form asp-action="CreateUser" method="post">
             @Html.AntiForgeryToken()
+            <div class="admin-field">
+    <label>Nome</label>
+
+    <input asp-for="Nome"
+           type="text"
+           placeholder="Nome completo" />
+
+    @Html.ValidationMessageFor(
+        m => m.Nome,
+        "",
+        new { @class = "admin-field-error" }
+    )
+</div>
 
             <div class="admin-field">
                 <label>Email</label>
-                <input asp-for="Email" type="email" placeholder="usuario@exemplo.com" />
+                <input asp-for="Email"
+                       type="email"
+                       placeholder="usuario@exemplo.com" />
                 @Html.ValidationMessageFor(m => m.Email, "", new { @class = "admin-field-error" })
             </div>
 
             <div class="admin-field">
+                <label>CPF</label>
+                <input asp-for="Cpf"
+                       type="text"
+                       placeholder="000.000.000-00"
+                       maxlength="14" />
+                @Html.ValidationMessageFor(m => m.Cpf, "", new { @class = "admin-field-error" })
+            </div>
+
+            <div class="admin-field">
+                <label>CEP</label>
+                <input asp-for="Cep"
+                       type="text"
+                       placeholder="00000-000"
+                       maxlength="9" />
+                @Html.ValidationMessageFor(m => m.Cep, "", new { @class = "admin-field-error" })
+            </div>
+
+            <div class="admin-field">
+                <label>Telefone</label>
+                <input asp-for="Telefone"
+                       type="tel"
+                       placeholder="(00) 00000-0000"
+                       maxlength="15" />
+                @Html.ValidationMessageFor(m => m.Telefone, "", new { @class = "admin-field-error" })
+            </div>
+
+            <div class="admin-field">
                 <label>Senha</label>
-                <input asp-for="Password" type="password" placeholder="••••••••" />
+                <input asp-for="Password"
+                       type="password"
+                       placeholder="••••••••" />
                 @Html.ValidationMessageFor(m => m.Password, "", new { @class = "admin-field-error" })
             </div>
 
             <div class="admin-field">
                 <label>Confirmar Senha</label>
-                <input asp-for="ConfirmPassword" type="password" placeholder="••••••••" />
+                <input asp-for="ConfirmPassword"
+                       type="password"
+                       placeholder="••••••••" />
             </div>
 
             <div class="admin-field">
                 <label>Perfil</label>
-                <select asp-for="Role" asp-items="new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.Roles)"></select>
+                <select asp-for="Role"
+                        asp-items="new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.Roles)">
+                </select>
             </div>
 
             <div class="admin-form-actions">
                 <button type="submit" class="admin-btn admin-btn-primary">
                     <i class="bi bi-check-lg"></i> Criar
                 </button>
+
                 <a asp-action="Index" class="admin-btn admin-btn-outline">
                     <i class="bi bi-arrow-left"></i> Cancelar
                 </a>

@@ -2,9 +2,15 @@ namespace DoceCantinho.UI.ViewModels
 {
     public class CreateUserViewModel
     {
+        public string Nome { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;
+        public string Cpf { get; set; } = string.Empty;
+
+        public string Cep { get; set; } = string.Empty;
+
+        public string Telefone { get; set; } = string.Empty;
         public string Role { get; set; } = "Usuário";
         public System.Collections.Generic.List<string> Roles { get; set; } = new();
     }

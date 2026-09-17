@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20260619203120_CriarBanco2.cs" />
+    <Compile Remove="Migrations\20260619203120_CriarBanco2.Designer.cs" />
+    <Compile Remove="Migrations\20260817200155_DoceCantinhoDb.cs" />
+    <Compile Remove="Migrations\20260817200155_DoceCantinhoDb.Designer.cs" />
+    <Compile Remove="Migrations\20260817200429_DoceCantinho00Db.cs" />
+    <Compile Remove="Migrations\20260817200429_DoceCantinho00Db.Designer.cs" />
+    <Compile Remove="Migrations\20260820174020_doce1.cs" />
+    <Compile Remove="Migrations\20260820174020_doce1.Designer.cs" />
+    <Compile Remove="Migrations\20260820195031_doces.cs" />
+    <Compile Remove="Migrations\20260820195031_doces.Designer.cs" />
+    <Compile Remove="Migrations\DoceCantinhoDbContextModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DoceCantinho.Application\DoceCantinho.Application.csproj" />
+    <ProjectReference Include="..\DoceCantinho\DoceCantinho.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+</Project>

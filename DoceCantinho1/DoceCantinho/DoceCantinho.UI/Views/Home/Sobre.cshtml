@@ -1,0 +1,338 @@
+@{
+    ViewData["Title"] = "Sobre Nós";
+}
+
+<style>
+    .page { padding-top: 2rem; padding-bottom: 4rem; }
+
+    .section { margin-bottom: 4rem; }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-eyebrow {
+        font-size: 0.9rem;
+        color: var(--muted-fg);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--muted-fg);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .about-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        margin-bottom: 4rem;
+    }
+
+
+
+    .about-text h3 {
+        font-size: 1.5rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .about-text p {
+        color: var(--muted-fg);
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+
+    .about-image {
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .about-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .value-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 2rem;
+        border: 1px solid var(--border);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .value-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .value-icon {
+        margin-bottom: 1rem;
+    }
+    .value-icon img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        display: inline-block;
+    }
+
+    .value-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.75rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .value-description {
+        color: var(--muted-fg);
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .team-member {
+        background: var(--card);
+        border-radius: var(--radius);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .team-member:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .team-image {
+        width: 100%;
+        height: 250px;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted-fg);
+        font-size: 0; /* evita que o texto ALT apareça grande quando a imagem falha */
+        overflow: hidden;
+    }
+    .team-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .team-info {
+        padding: 1.5rem;
+    }
+
+    .team-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .team-role {
+        font-size: 0.95rem;
+        color: var(--accent);
+        margin-bottom: 0.75rem;
+    }
+
+    .team-description {
+        font-size: 0.9rem;
+        color: var(--muted-fg);
+        line-height: 1.5;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        padding: 3rem;
+        border-radius: var(--radius);
+        color: white;
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    .stat-item h4 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-item p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+</style>
+
+<div class="page active">
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="section-header">
+            <p class="section-eyebrow">Conheça nosso projeto</p>
+            <h1 class="section-title">Sobre o Doce Cantinho</h1>
+            <p class="section-subtitle">
+                Há mais de uma década criando doces artesanais com qualidade e dedicação.
+                Cada receita é feita com amor e ingredientes premium selecionados.
+            </p>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="section about-content">
+            <div class="about-text">
+                <h3>Nossa História</h3>
+                <p>
+                    O Doce Cantinho nasceu de uma paixão familiar pela confeitaria artesanal. Começamos pequeno,
+                    em uma cozinha familiar, transformando ovos, açúcar e manteiga em delícias.
+                </p>
+                <p>
+                    Hoje, contamos com uma equipe dedicada de confeiteiros que mantêm a qualidade e a tradição
+                    de cada receita, adaptando-as aos paladares modernos sem perder a essência caseira.
+                </p>
+                <p>
+                    Cada doce que sai de nossa cozinha é um reflexo do nosso compromisso com excelência,
+                    sabor autêntico e satisfação do cliente.
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1400&h=400&fit=crop&auto=format" alt="Bolos e confeitaria" loading="lazy" width="1400" height="400" onerror="this.onerror=null;this.src='https://via.placeholder.com/1400x400?text=Doce+Cantinho'" />
+            </div>
+        </div>
+
+        <!-- Nossos Valores -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Nossos Valores</h2>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon" aria-hidden="true"><img src="https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=200&h=200&fit=crop&auto=format" alt="" loading="lazy" width="80" height="80" onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=+'"/></div>
+                    <div class="value-title">Qualidade</div>
+                    <p class="value-description">
+                        Ingredientes premium selecionados e processos rigorosos garantem doces de excelência.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon" aria-hidden="true"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&h=200&fit=crop&auto=format" alt="" loading="lazy" width="80" height="80" onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=+'"/></div>
+                    <div class="value-title">Dedicação</div>
+                    <p class="value-description">
+                        Fazemos cada doce com cuidado e carinho, como se fosse para nossa própria família.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon" aria-hidden="true"><img src="https://images.unsplash.com/photo-1558980664-10d27a3c6f0f?w=200&h=200&fit=crop&auto=format" alt="" loading="lazy" width="80" height="80" onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=+'"/></div>
+                    <div class="value-title">Inovação</div>
+                    <p class="value-description">
+                        Sem perder a tradição, buscamos constantemente novas receitas e combinações.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon" aria-hidden="true"><img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=200&h=200&fit=crop&auto=format" alt="" loading="lazy" width="80" height="80" onerror="this.onerror=null;this.src='https://via.placeholder.com/80?text=+'"/></div>
+                    <div class="value-title">Confiança</div>
+                    <p class="value-description">
+                        Transparência e honestidade em tudo o que fazemos com nossos clientes.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h4>10+</h4>
+                <p>Anos no mercado</p>
+            </div>
+            <div class="stat-item">
+                <h4>5.000+</h4>
+                <p>Clientes felizes</p>
+            </div>
+            <div class="stat-item">
+                <h4>50+</h4>
+                <p>Receitas diferentes</p>
+            </div>
+            <div class="stat-item">
+                <h4>100%</h4>
+                <p>Satisfação garantida</p>
+            </div>
+        </div>
+
+        <!-- Nossa Equipe -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Nossa Equipe</h2>
+                <p class="section-subtitle">
+                    Profissionais apaixonados por confeitaria
+                </p>
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-image" aria-label="Foto de Maria Silva"><img src="https://placehold.co/400x400?text=Maria+Silva" alt="" loading="lazy" width="400" height="400" /></div>
+                    <div class="team-info">
+                        <div class="team-name">Maria Silva</div>
+                        <div class="team-role">Confeiteira Chefe</div>
+                        <p class="team-description">
+                            Com 15 anos de experiência, liderança expert na criação de receitas.
+                        </p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-image" aria-label="Foto de João Santos"><img src="https://placehold.co/400x400?text=João+Santos" alt="" loading="lazy" width="400" height="400" /></div>
+                    <div class="team-info">
+                        <div class="team-name">João Santos</div>
+                        <div class="team-role">Confeiteiro Artesanal</div>
+                        <p class="team-description">
+                            Especialista em técnicas tradicionais e inovações doces.
+                        </p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-image" aria-label="Foto de Ana Oliveira"><img src="https://placehold.co/400x400?text=Ana+Oliveira" alt="" loading="lazy" width="400" height="400" /></div>
+                    <div class="team-info">
+                        <div class="team-name">Ana Oliveira</div>
+                        <div class="team-role">Gerente de Produção</div>
+                        <p class="team-description">
+                            Garante padrões de qualidade em todos os doces produzidos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

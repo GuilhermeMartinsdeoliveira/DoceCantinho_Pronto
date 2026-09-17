@@ -69,7 +69,22 @@ namespace DoceCantinho.UI.Controllers
                 return View(model);
             }
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true, Cpf = "000.000.000-00", Logradouro = string.Empty, Bairro = string.Empty, Cidade = string.Empty, Estado = string.Empty, Numero = string.Empty, Cep = string.Empty };
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = true,
+
+                Cpf = model.Cpf,
+                Cep = model.Cep,
+                PhoneNumber = model.Telefone,
+
+                Logradouro = string.Empty,
+                Bairro = string.Empty,
+                Cidade = string.Empty,
+                Estado = string.Empty,
+                Numero = string.Empty
+            };
             var res = await _userManager.CreateAsync(user, model.Password);
             if (!res.Succeeded)
             {

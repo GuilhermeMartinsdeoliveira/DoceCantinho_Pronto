@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="page active" id="page-login">
+    <div class="auth-wrap">
+        <div class="auth-box">
+
+            <div class="auth-header">
+                <div class="auth-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    </svg>
+                </div>
+                <h1 class="auth-title">Bem-vinda de volta</h1>
+                <p class="auth-sub">Acesse sua conta DoceCantinho</p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ViewBag.Erro as string))
+            {
+                <div class="alert-error" style="background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:.75rem 1rem;border-radius:.5rem;margin-bottom:1rem;font-size:.9rem">
+                    @ViewBag.Erro
+                </div>
+            }
+
+            <form class="auth-form" asp-controller="Account" asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label class="form-label">E-mail</label>
+                    <input class="form-input" type="email" name="Email" required placeholder="seu@email.com" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input class="form-input" type="password" name="Password" required placeholder="••••••••" />
+                </div>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="remember" name="RememberMe" />
+                    <label class="checkbox-label" for="remember">Lembrar de mim</label>
+                </div>
+
+                <button type="submit" class="form-submit">Entrar</button>
+
+                <div class="auth-divider">
+                    <div class="line"></div><span>ou</span><div class="line"></div>
+                </div>
+
+                <p class="auth-footer">
+                    Ainda não tem conta?
+                    <a asp-controller="Account" asp-action="Register">Cadastre-se</a>
+                </p>
+
+                @if (User.Identity != null && false)
+                {
+                    <div class="admin-link">
+                        <a asp-controller="Admin" asp-action="Index">→ Acessar painel admin</a>
+                    </div>
+                }
+            </form>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,446 @@
+@model DoceCantinho.UI.ViewModels.CarrinhoCheckoutViewModel
+
+@{
+    ViewData["Title"] = "Carrinho de Compras";
+}
+
+<style>
+    .carrinho-container {
+        max-width: 1100px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .stepper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .stepper::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--border);
+        z-index: 1;
+    }
+
+    .step {
+        background: var(--bg);
+        border: 2px solid var(--border);
+        color: var(--muted-fg);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s;
+    }
+
+    .step.active {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-fg);
+    }
+    
+    .step.completed {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-fg);
+    }
+
+    .step-label {
+        position: absolute;
+        top: 45px;
+        white-space: nowrap;
+        font-size: 0.85rem;
+        color: var(--fg);
+        font-weight: 600;
+    }
+
+    .carrinho-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .carrinho-content {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        padding: 2rem;
+        min-height: 400px;
+    }
+
+    .carrinho-sidebar {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        height: fit-content;
+        position: sticky;
+        top: 1rem;
+    }
+    
+    .step-section {
+        display: none;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .step-section.active {
+        display: block;
+    }
+    
+
+
+    /* ITEM DO CARRINHO */
+    .carrinho-item {
+        display: flex;
+        gap: 1rem;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+        align-items: flex-start;
+    }
+
+    .item-img {
+        width: 80px;
+        height: 80px;
+        background: var(--bg);
+        border-radius: var(--radius);
+        overflow: hidden;
+    }
+
+    .item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .item-details { flex: 1; }
+    .item-name { font-weight: bold; color: var(--fg); font-size: 1.1rem; }
+    .item-price { color: var(--primary); margin-bottom: 0.5rem; }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .quantity-control button {
+        width: 30px; height: 30px; border: 1px solid var(--border); background: var(--bg); border-radius: 4px; cursor: pointer;
+    }
+
+    /* CROSS-SELLING */
+    .cross-selling {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 2px dashed var(--border);
+    }
+    .cross-selling h3 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary); }
+    .cross-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    .cross-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1rem;
+        text-align: center;
+    }
+    .cross-card img { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 0.5rem; }
+
+    /* BOTOES GERAIS */
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: var(--radius);
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .btn-secondary {
+        background: transparent;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        padding: 0.8rem 1.5rem;
+        border-radius: var(--radius);
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    /* IDENTIFICAÇÃO TABS */
+    .auth-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .auth-tab {
+        flex: 1;
+        padding: 1rem;
+        text-align: center;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .auth-tab.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+    
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; font-size: 0.9rem; }
+    .form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; }
+    
+    .resumo-linha { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+    .resumo-total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border); color: var(--primary); }
+</style>
+
+<div class="carrinho-container">
+    
+    @if (Model?.Carrinho?.Itens == null || !Model.Carrinho.Itens.Any())
+    {
+        <div style="text-align:center; padding: 4rem; background: var(--card); border-radius: 8px;">
+            <h2>Seu carrinho está vazio 🛒</h2>
+            <p>Que tal adicionar alguns doces deliciosos?</p>
+            <a asp-controller="Doces" asp-action="Index" class="btn-primary" style="display:inline-block; width:auto; text-decoration:none; margin-top: 2rem;">Ver Produtos</a>
+        </div>
+    }
+    else
+    {
+        <div class="stepper">
+            <div class="step active" id="indicator-1">1<div class="step-label">Carrinho</div></div>
+            <div class="step" id="indicator-2">2<div class="step-label">Identificação</div></div>
+            <div class="step" id="indicator-3">3<div class="step-label">Pagamento</div></div>
+        </div>
+
+        <form asp-action="FinalizarCompra" method="post" id="checkoutForm">
+            @Html.AntiForgeryToken()
+            <div class="carrinho-grid">
+
+                <!-- CONTEÚDO PRINCIPAL (STEPS) -->
+                <div class="carrinho-content">
+
+                    <!-- STEP 1: CARRINHO -->
+                    <div class="step-section active" id="step-1">
+                        <h2>Revise seus itens</h2>
+                        <br/>
+                        @foreach (var item in Model.Carrinho.Itens)
+                        {
+                            <div class="carrinho-item">
+                                <div class="item-img">
+                                    <img src="@(item.CoverImageUrl ?? "https://placehold.co/100x100?text=Doce")" alt="@item.Nome" />
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">@item.Nome</div>
+                                    <div class="item-price">R$ @item.Preco.ToString("F2")</div>
+                                    <div class="quantity-control">
+                                        <span>Qtd: <b>@item.Quantidade</b></span>
+                                    </div>
+                                    <div style="margin-top: 0.5rem; font-weight: bold; color: var(--primary);">
+                                        Subtotal: R$ @((item.Preco * item.Quantidade).ToString("F2"))
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- CROSS SELLING -->
+                        <div class="cross-selling">
+                            <h3>Aproveite e leve também</h3>
+                            <div class="cross-grid">
+                                @if (Model.RecommendedProducts.Any())
+                                {
+                                    foreach (var doce in Model.RecommendedProducts)
+                                    {
+                                        <div class="cross-card">
+                                            <img src="@doce.CoverImageUrl" alt="@doce.Title" />
+                                            <div style="font-size:0.9rem; font-weight:bold;">@doce.Title</div>
+                                            <div style="color:var(--primary); font-size:0.8rem;">R$ @doce.Preco.ToString("F2")</div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="cross-card" style="grid-column:1/-1;">Nenhum produto recomendado encontrado.</div>
+                                }
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-primary" onclick="nextStep(2)">Continuar para Identificação</button>
+                    </div>
+
+                    <!-- STEP 2: IDENTIFICAÇÃO -->
+                    <div class="step-section" id="step-2">
+                        <h2>Identificação</h2>
+                        <p style="color:var(--muted-fg); margin-bottom:1.5rem;">Como você deseja prosseguir?</p>
+                        
+                        <div class="auth-tabs">
+                            <div class="auth-tab active" onclick="setAuthMode('visitante')" id="tab-visitante">Comprar como Visitante</div>
+                            <div class="auth-tab" onclick="setAuthMode('login')" id="tab-login">Já tenho conta</div>
+                        </div>
+                        
+                        <div id="form-visitante">
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" name="nomeCliente" id="nomeCliente" placeholder="Maria Silva" required />
+                            </div>
+                            <div class="form-group">
+                                <label>WhatsApp</label>
+                                <input type="text" name="telefone" id="telefone" placeholder="(11) 99999-9999" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Endereço de Entrega (Opcional)</label>
+                                <input type="text" name="endereco" id="endereco" placeholder="Rua, número, bairro..." />
+                            </div>
+                        </div>
+                        
+                        <div id="form-login" style="display:none; text-align:center; padding: 2rem;">
+                            <p>Faça login rapidamente para recuperar seus endereços!</p>
+                            <a href="/Account/Login?returnUrl=/Carrinho" class="btn-secondary" style="display:inline-block; width:auto; text-decoration:none;">Fazer Login</a>
+                        </div>
+                        
+                        <div style="display:flex; gap:1rem; margin-top:2rem;">
+                            <button type="button" class="btn-secondary" onclick="nextStep(1)">← Voltar</button>
+                            <button type="button" class="btn-primary" onclick="nextStep(3)" id="btnToPayment">Ir para Pagamento →</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: PAGAMENTO -->
+                    <div class="step-section" id="step-3">
+                        <h2>Pagamento</h2>
+                        <p style="color:var(--muted-fg); margin-bottom:1.5rem;">Escolha como deseja pagar e finalizar o pedido.</p>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="radio" name="paymentMethod" value="Pix" checked /> PIX (Desconto 5%)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="radio" name="paymentMethod" value="Credito" /> Cartão de Crédito
+                            </label>
+                        </div>
+
+                        <div style="display:flex; gap:1rem; margin-top:3rem;">
+                            <button type="button" class="btn-secondary" onclick="nextStep(2)">← Voltar</button>
+                            <button type="submit" class="btn-primary" formaction="/Carrinho/FinalizarCompra">Finalizar Pedido ✔️</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- SIDEBAR FIXA -->
+                <div class="carrinho-sidebar">
+                    <h3 style="margin-bottom:1.5rem;">Resumo</h3>
+
+                    <div class="resumo-linha">
+                        <span>Produtos (@Model.Carrinho.QuantidadeTotal)</span>
+                        <span>R$ @Model.Subtotal.ToString("F2")</span>
+                    </div>
+
+                    <div class="resumo-linha">
+                        <span>Frete</span>
+                        <span>@(Model.ShippingQuote != null ? $"R$ {Model.Frete:F2}" : "A calcular")</span>
+                    </div>
+
+                    <div class="resumo-total">
+                        <span>Total</span>
+                        <span>R$ @Model.Total.ToString("F2")</span>
+                    </div>
+
+                    <div style="margin-top: 1rem; font-size:0.8rem; color:var(--muted-fg); text-align:center;">
+                        Ambiente seguro 🔒
+                        @if (Model.ShippingQuote != null)
+                        {
+                            <div style="margin-top:.35rem;">Prazo estimado: @Model.ShippingQuote.EstimatedDays dia(s)</div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    }
+</div>
+
+<script>
+    const isAuthenticated = @(Model.IsAuthenticated.ToString().ToLowerInvariant());
+    let authMode = 'visitante';
+
+    function setAuthMode(mode) {
+        authMode = mode;
+
+        const formVisitante = document.getElementById('form-visitante');
+        const formLogin = document.getElementById('form-login');
+        const tabVisitante = document.getElementById('tab-visitante');
+        const tabLogin = document.getElementById('tab-login');
+
+        if (!formVisitante) {
+            return;
+        }
+
+        if (mode === 'visitante') {
+            formVisitante.style.display = 'block';
+            if (formLogin) formLogin.style.display = 'none';
+            if (tabVisitante) tabVisitante.classList.add('active');
+            if (tabLogin) tabLogin.classList.remove('active');
+        } else {
+            formVisitante.style.display = 'none';
+            if (formLogin) formLogin.style.display = 'block';
+            if (tabVisitante) tabVisitante.classList.remove('active');
+            if (tabLogin) tabLogin.classList.add('active');
+        }
+    }
+
+    function nextStep(stepIndex) {
+        if (stepIndex === 3) {
+            const nome = document.getElementById('nomeCliente')?.value;
+            const tel = document.getElementById('telefone')?.value;
+
+            if (!nome || !tel) {
+                alert('Por favor, preencha nome e WhatsApp.');
+                return;
+            }
+
+            if (!isAuthenticated && authMode === 'login') {
+                alert('Você precisa fazer o login primeiro!');
+                return;
+            }
+        }
+
+        document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('step-' + stepIndex).classList.add('active');
+
+        document.querySelectorAll('.step').forEach(s => {
+            s.classList.remove('active');
+            s.classList.remove('completed');
+        });
+
+        for (let i = 1; i < stepIndex; i++) {
+            document.getElementById('indicator-' + i).classList.add('completed');
+        }
+
+        document.getElementById('indicator-' + stepIndex).classList.add('active');
+    }
+
+    if (!isAuthenticated) {
+        setAuthMode('visitante');
+    } else {
+        const loginTab = document.getElementById('tab-login');
+        if (loginTab) {
+            loginTab.style.display = 'none';
+        }
+        setAuthMode('visitante');
+    }
+</script>

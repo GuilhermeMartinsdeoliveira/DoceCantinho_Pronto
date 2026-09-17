@@ -1,0 +1,30 @@
+@model DoceCantinho.UI.ViewModels.CreateUserViewModel
+@{
+    ViewData["Title"] = "Novo Usuário";
+}
+<h2>Novo Usuário</h2>
+<form asp-action="CreateUser" method="post">
+    @Html.AntiForgeryToken()
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" />
+        @Html.ValidationMessageFor(m => m.Email)
+    </div>
+    <div>
+        <label>Senha</label>
+        <input asp-for="Password" type="password" />
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+    <div>
+        <label>Confirmar Senha</label>
+        <input asp-for="ConfirmPassword" type="password" />
+    </div>
+    <div>
+        <label>Perfil</label>
+        <select asp-for="Role" asp-items="new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Model.Roles)"></select>
+    </div>
+    <div style="margin-top:1rem">
+        <button type="submit" class="btn btn-primary">Criar</button>
+        <a asp-action="Index" class="btn">Cancelar</a>
+    </div>
+</form>

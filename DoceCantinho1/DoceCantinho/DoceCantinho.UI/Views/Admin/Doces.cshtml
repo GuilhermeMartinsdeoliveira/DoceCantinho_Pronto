@@ -1,0 +1,127 @@
+@using DoceCantinho.Application.DTOs
+@* Partial: lista de produtos no admin *@
+@model IEnumerable<DoceDto>
+
+<style>
+    .admin-products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .admin-product-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+    }
+
+    .admin-product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .admin-product-body {
+        padding: 1.25rem;
+    }
+
+    .admin-product-body p:first-child {
+        font-size: 0.85rem;
+        color: var(--muted-fg);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-product-body img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: calc(var(--radius) - 0.25rem);
+        margin-bottom: 1rem;
+    }
+
+    .admin-product-body h4 {
+        font-size: 1.15rem;
+        color: var(--fg);
+        margin-bottom: 0.5rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .admin-product-body > p:last-of-type {
+        color: var(--primary);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .admin-product-actions {
+        display: flex;
+        gap: 0.75rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .admin-product-actions a {
+        flex: 1;
+        padding: 0.65rem 1rem;
+        border-radius: calc(var(--radius) - 0.25rem);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.2s ease;
+        border: 2px solid;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .admin-product-actions a:first-child {
+        background: var(--primary);
+        color: var(--primary-fg);
+        border-color: var(--primary);
+    }
+
+    .admin-product-actions a:first-child:hover {
+        background: #4a2309;
+        border-color: #4a2309;
+        box-shadow: 0 4px 12px rgba(92, 46, 14, 0.25);
+    }
+
+    .admin-product-actions a:last-child {
+        background: transparent;
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+
+    .admin-product-actions a:last-child:hover {
+        background: var(--accent);
+        color: var(--accent-fg);
+        box-shadow: 0 4px 12px rgba(212, 112, 74, 0.25);
+    }
+</style>
+
+<div class="admin-products-grid">
+    @foreach (var doce in Model)
+    {
+        <div class="admin-product-card">
+            <div class="admin-product-body">
+                <p>@doce.CategoryName</p>
+                <img src="@doce.CoverImageUrl" alt="@doce.Title" />
+                <h4>@doce.Title</h4>
+                <p>R$ @doce.Preco.ToString("F2")</p>
+                <div class="admin-product-actions">
+                    <a asp-action="EditDoces" asp-route-id="@doce.Id">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align:middle;margin-right:6px"><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Editar
+                    </a>
+                    <a asp-action="DeleteDoce" asp-route-id="@doce.Id">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align:middle;margin-right:6px"><path d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6"/></svg>Deletar
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

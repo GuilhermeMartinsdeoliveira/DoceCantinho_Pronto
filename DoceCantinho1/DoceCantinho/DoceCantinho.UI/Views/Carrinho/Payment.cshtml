@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Pagamento";
+}
+
+<style>
+    .payment-wrap { max-width:800px;margin:2rem auto;background:var(--card);padding:2rem;border-radius:var(--radius);border:1px solid var(--border);} 
+    .order-items { margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem; }
+    .payment-methods { display:flex;gap:1rem;margin-top:1rem; }
+</style>
+
+<div class="payment-wrap">
+    <h2>Pagamento do pedido</h2>
+
+    @{ var order = ViewData["Order"]; }
+
+    <div>
+        <strong>Cliente:</strong> @(((dynamic)order).NomeCliente) <br />
+        <strong>Telefone:</strong> @(((dynamic)order).Telefone) <br />
+        <strong>Endereço:</strong> @(((dynamic)order).Endereco ?? "-") <br />
+        <strong>Total:</strong> R$ @(((dynamic)order).Total.ToString("F2"))
+    </div>
+
+    <div class="order-items">
+        <h4>Itens</h4>
+        <ul>
+            @foreach (var it in ((dynamic)order).Items)
+            {
+                <li>@it.Nome — @it.Quantidade x R$ @it.Preco.ToString("F2") = R$ @it.Subtotal.ToString("F2")</li>
+            }
+        </ul>
+    </div>
+
+    <form method="post" asp-action="Payment">
+        <input type="hidden" name="orderId" value="@(((dynamic)order).Id)" />
+
+        <div class="payment-methods">
+            <label><input type="radio" name="paymentMethod" value="CartaoCredito" checked /> Cartão de Crédito</label>
+            <label><input type="radio" name="paymentMethod" value="CartaoDebito" /> Cartão de Débito</label>
+            <label><input type="radio" name="paymentMethod" value="Pix" /> Pix</label>
+        </div>
+
+        <div style="margin-top:1rem">
+            <div id="card-fields">
+                <div><label>Número do cartão</label><input name="cardNumber" type="text" placeholder="4111 1111 1111 1111" /></div>
+                <div><label>Nome no cartão</label><input name="cardName" type="text" /></div>
+            </div>
+        </div>
+
+        <div style="margin-top:1.2rem">
+            <button type="submit" class="btn btn-primary">Simular pagamento</button>
+        </div>
+    </form>
+
+    <script>
+        // mostra/oculta campos de cartão dependendo do método
+        document.querySelectorAll('input[name="paymentMethod"]').forEach(r => r.addEventListener('change', function(){
+            var card = document.getElementById('card-fields');
+            if (this.value === 'Pix') card.style.display = 'none'; else card.style.display = 'block';
+        }));
+    </script>
+</div>

@@ -1,0 +1,43 @@
+﻿@using DoceCantinho.Domain.Interfaces
+
+
+
+<link href="~/css/site.css" rel="stylesheet" />
+
+@model Doce
+
+<div class="container mt-4">
+
+    <h2>Editar Doce</h2>
+
+    <form asp-action="EditDoce">
+
+        <input asp-for="Id" hidden />
+
+        <div class="mb-3">
+            <label>Nome</label>
+            <input asp-for="Title"
+                   class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Descrição</label>
+            <textarea asp-for="Description"
+                      class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Preço</label>
+            <input asp-for="Preco"
+                   class="form-control" />
+        </div>
+
+        <button class="btn btn-primary">
+            Atualizar
+        </button>
+
+    </form>
+
+</div>
+
+<script src="~/js/site.js"></script>

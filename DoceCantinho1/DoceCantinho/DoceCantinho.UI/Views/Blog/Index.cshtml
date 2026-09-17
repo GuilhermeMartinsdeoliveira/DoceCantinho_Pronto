@@ -1,0 +1,214 @@
+@model BlogIndexViewModel
+@{
+    ViewData["Title"] = "Blog";
+}
+
+<style>
+    .blog-hero {
+        background: linear-gradient(135deg, var(--primary) 0%, #3a1c0a 100%);
+        padding: 4.5rem 0 3.5rem;
+        text-align: center;
+        color: var(--primary-fg);
+    }
+    .blog-hero .section-eyebrow { color: var(--accent); }
+    .blog-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.2rem, 4.5vw, 3rem);
+        margin-bottom: 1rem;
+    }
+    .blog-hero p {
+        max-width: 640px; margin: 0 auto; color: rgba(253,246,237,.82); line-height: 1.7;
+    }
+
+    .blog-wrap { padding: 3.5rem 0 5rem; }
+
+    /* Filtro de categorias */
+    .blog-filters {
+        display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; margin-bottom: 3rem;
+    }
+    .blog-chip {
+        padding: .5rem 1.1rem; border-radius: 100px; font-size: .85rem; font-weight: 700;
+        border: 1.5px solid var(--border); color: var(--fg); background: var(--card); transition: all .2s;
+    }
+    .blog-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .blog-chip.active { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
+
+    /* Post em destaque */
+    .blog-featured {
+        display: grid; grid-template-columns: 1.1fr 1fr; gap: 2.5rem; align-items: center;
+        background: var(--card); border: 1px solid var(--border); border-radius: 1.25rem;
+        overflow: hidden; margin-bottom: 4rem; box-shadow: var(--shadow-lg);
+    }
+    .blog-featured-img { height: 100%; min-height: 320px; }
+    .blog-featured-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .blog-featured-body { padding: 2.5rem 2.5rem 2.5rem 0; }
+    .blog-featured-badge {
+        display: inline-block; background: var(--accent); color: var(--accent-fg);
+        font-size: .75rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+        padding: .3rem .8rem; border-radius: 100px; margin-bottom: 1rem;
+    }
+    .blog-featured-title {
+        font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3vw, 2.1rem);
+        color: var(--fg); margin-bottom: .9rem; line-height: 1.25;
+    }
+    .blog-featured-excerpt { color: var(--muted-fg); line-height: 1.7; margin-bottom: 1.5rem; }
+
+    /* Meta comum (autor, data, tempo leitura) */
+    .blog-meta {
+        display: flex; align-items: center; gap: .6rem; font-size: .82rem; color: var(--muted-fg); flex-wrap: wrap;
+    }
+    .blog-meta-avatar {
+        width: 30px; height: 30px; border-radius: 50%; background: var(--muted);
+        display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .blog-meta-dot::before { content: '•'; margin: 0 .35rem; }
+
+    /* Grid de posts */
+    .blog-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    }
+    .blog-card {
+        background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+        overflow: hidden; display: flex; flex-direction: column; transition: all .25s;
+    }
+    .blog-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .blog-card-img { aspect-ratio: 16/10; overflow: hidden; }
+    .blog-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .blog-card-body { padding: 1.5rem; display: flex; flex-direction: column; gap: .75rem; flex: 1; }
+    .blog-card-cat { color: var(--accent); font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+    .blog-card-title {
+        font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--fg); line-height: 1.3;
+    }
+    .blog-card-excerpt { color: var(--muted-fg); font-size: .9rem; line-height: 1.6; flex: 1; }
+    .blog-card-link {
+        color: var(--primary); font-weight: 700; font-size: .875rem; display: inline-flex; align-items: center; gap: .35rem;
+    }
+    .blog-card-link svg { width: 16px; height: 16px; transition: transform .2s; }
+    .blog-card:hover .blog-card-link svg { transform: translateX(3px); }
+
+    /* Newsletter CTA */
+    .blog-newsletter {
+        margin-top: 4.5rem; background: var(--primary); border-radius: 1.25rem; padding: 3rem 2.5rem;
+        text-align: center; color: var(--primary-fg);
+    }
+    .blog-newsletter h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: .6rem; }
+    .blog-newsletter p { color: rgba(253,246,237,.82); max-width: 480px; margin: 0 auto 1.5rem; }
+    .blog-newsletter-form { display: flex; gap: .6rem; max-width: 420px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+    .blog-newsletter-form input {
+        flex: 1; min-width: 220px; padding: .8rem 1.1rem; border-radius: 100px; border: none; font-size: .9rem;
+    }
+
+    @@media (max-width: 900px) {
+        .blog-featured { grid-template-columns: 1fr; }
+        .blog-featured-body { padding: 0 1.75rem 2rem; }
+        .blog-featured-img { min-height: 240px; }
+        .blog-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @@media (max-width: 600px) {
+        .blog-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="page active">
+
+    <section class="blog-hero">
+        <div class="container">
+            <p class="section-eyebrow">Nosso Blog</p>
+            <h1>Histórias, receitas e bastidores do Doce Cantinho</h1>
+            <p>
+                Dicas de confeitaria, guias completos para eventos, curiosidades sobre ingredientes
+                e um pouco dos bastidores da nossa cozinha — tudo escrito por quem faz o doce todos os dias.
+            </p>
+        </div>
+    </section>
+
+    <div class="container blog-wrap">
+
+        @if (Model.Categories.Any())
+        {
+            <div class="blog-filters">
+                <a asp-action="Index" class="blog-chip @(string.IsNullOrEmpty(Model.SelectedCategory) ? "active" : "")">Todos os posts</a>
+                @foreach (var cat in Model.Categories)
+                {
+                    <a asp-action="Index" asp-route-categoria="@cat"
+                       class="blog-chip @(Model.SelectedCategory == cat ? "active" : "")">@cat</a>
+                }
+            </div>
+        }
+
+        @if (Model.FeaturedPost != null)
+        {
+            var f = Model.FeaturedPost;
+            <a asp-action="Details" asp-route-id="@f.Slug" style="text-decoration:none;color:inherit;display:block">
+                <article class="blog-featured">
+                    <div class="blog-featured-img">
+                        <img src="@Url.Content(f.CoverImageUrl)" onerror="this.src='https://placehold.co/600x400?text=Imagem+indisponível'" alt="@f.Title" />
+                        <img src="@Url.Content(f.AuthorAvatar)" onerror="this.src='https://placehold.co/50x50?text=User'" alt="@f.AuthorName">
+                    </div>
+                    <div class="blog-featured-body">
+                        <span class="blog-featured-badge">Post em destaque</span>
+                        <h2 class="blog-featured-title">@f.Title</h2>
+                        <p class="blog-featured-excerpt">@f.Excerpt</p>
+                        <div class="blog-meta">
+                     
+                            <span>@f.AuthorName</span>
+                            <span class="blog-meta-dot"></span>
+                            <span>@f.PublishedAt.ToString("dd MMM yyyy")</span>
+                            <span class="blog-meta-dot"></span>
+                            <span>@f.ReadingTimeMinutes min de leitura</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+        }
+
+        @if (Model.Posts.Any())
+        {
+            <div class="blog-grid">
+                @foreach (var post in Model.Posts)
+                {
+                    <a asp-action="Details" asp-route-id="@post.Slug" style="text-decoration:none;color:inherit">
+                        <article class="blog-card">
+                            <div class="blog-card-img">
+                                <img src="@Url.Content(post.CoverImageUrl)" onerror="this.src='https://placehold.co/600x400?text=Imagem+indisponível'" alt="@post.Title" loading="lazy" />
+                            </div>
+                            <div class="blog-card-body">
+                                <span class="blog-card-cat">@post.Category</span>
+                                <h3 class="blog-card-title">@post.Title</h3>
+                                <p class="blog-card-excerpt">@post.Excerpt</p>
+                                <div class="blog-meta">
+                                    <span>@post.PublishedAt.ToString("dd MMM yyyy")</span>
+                                    <span class="blog-meta-dot"></span>
+                                    <span>@post.ReadingTimeMinutes min</span>
+                                </div>
+                                <span class="blog-card-link">
+                                    Ler artigo completo
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12" />
+                                        <polyline points="12 5 19 12 12 19" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </article>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <p style="text-align:center;color:var(--muted-fg);padding:3rem 0">
+                Nenhum post encontrado nessa categoria ainda.
+            </p>
+        }
+
+        <div class="blog-newsletter">
+            <h3 class="serif">Não perca nenhuma novidade</h3>
+            <p>Assine nossa newsletter e receba receitas, dicas de confeitaria e novidades da loja direto no seu e-mail.</p>
+            <form class="blog-newsletter-form" onsubmit="event.preventDefault(); alert('Obrigado! Em breve você receberá nossas novidades.');">
+                <input type="email" placeholder="Seu melhor e-mail" required />
+                <button type="submit" class="btn btn-accent">Assinar</button>
+            </form>
+        </div>
+
+    </div>
+</div>
