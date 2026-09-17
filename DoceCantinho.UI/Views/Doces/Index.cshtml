@@ -169,18 +169,35 @@
 <style>
 
     /* ==========================================
-           CABEÇALHO DA LOJA
-           MESMAS CORES DA PÁGINA SERVIÇOS
-           ========================================== */
+       CABEÇALHO DA LOJA
+       ========================================== */
 
-    /* Nossa Loja */
+    /* ==========================================
+       MODO CLARO
+       ========================================== */
+
     #page-loja .loja-header .section-title {
-        color: white !important;
+        color: #713817 !important;
     }
+
 
     /* Pequenos doces, grandes momentos */
     #page-loja .loja-header .loja-subtitle {
         color: #8A6555 !important;
+    }
+
+
+    /* ==========================================
+       MODO DARK
+       ========================================== */
+
+    body.dark-mode #page-loja .loja-header .section-title,
+    body.dark #page-loja .loja-header .section-title,
+    .dark-mode #page-loja .loja-header .section-title,
+    [data-theme="dark"] #page-loja .loja-header .section-title {
+
+        color: #ffffff !important;
+
     }
 
 </style>

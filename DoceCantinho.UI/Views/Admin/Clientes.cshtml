@@ -5,6 +5,33 @@
     var admins = ViewData["AdminsCount"] as int? ?? 0;
 }
 
+<style>
+    /* Botões da barra de ações (Novo Usuario, Editar, Excluir, Atualizar) */
+    #clientes-table .admin-users-controls .btn {
+        color: #FDF6ED;
+        background: var(--primary);
+        text-decoration: none;
+    }
+
+    #clientes-table .admin-users-controls .btn:hover {
+        background: var(--accent);
+        color: #FDF6ED;
+    }
+
+    #clientes-table .admin-users-controls .btn-danger {
+        background: #b91c1c;
+    }
+
+    #clientes-table .admin-users-controls .btn-danger:hover {
+        background: #dc2626;
+    }
+
+    /* Números dos cards (Total de Usuarios, Usuarios Ativos, Administradores) */
+    #clientes-table .stat-value {
+        color: #FDF6ED;
+    }
+</style>
+
 <div class="table-card">
     <div id="clientes-table" data-server="@(usersJson != null ? "1" : "0")">
         @if (usersJson == null)
