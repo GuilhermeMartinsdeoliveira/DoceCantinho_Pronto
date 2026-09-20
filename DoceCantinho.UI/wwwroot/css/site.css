@@ -8172,3 +8172,318 @@ html:not([data-theme="dark"]) .section-header .section-title {
     .confirm-modal-btn.confirm-modal-btn-danger:hover {
         background: #b91c1c;
     }
+
+/* =========================================================
+
+   CORREÇÃO DAS AVALIAÇÕES - MODO CLARO
+
+   ========================================================= */
+
+.section-testimonials .testimonial-card {
+    background: #FFF8F0;
+    border: 1px solid rgba(92, 46, 14, 0.15);
+}
+
+/* Texto do depoimento */
+
+.section-testimonials .testimonial-text {
+    color: #2C1810 !important;
+}
+
+/* Área do autor */
+
+.section-testimonials .testimonial-author {
+    color: #2C1810 !important;
+}
+
+/* Nome do cliente */
+
+.section-testimonials .testimonial-name {
+    color: #2C1810 !important;
+}
+
+/* Cliente verificado */
+
+.section-testimonials .testimonial-role {
+    color: #8A6555 !important;
+}
+
+/* Estrelas */
+
+.section-testimonials .testimonial-stars {
+    color: #F59E0B !important;
+}
+
+/* Avatar */
+
+.section-testimonials .testimonial-avatar {
+    background: rgba(212, 112, 74, 0.18);
+    color: #D4704A !important;
+}
+
+/* Mantém o título branco porque ele está sobre o fundo marrom */
+
+.section-testimonials .section-title.light {
+    color: #FDF6ED !important;
+}
+
+/* Texto abaixo do título */
+
+.section-testimonials .reviews-intro {
+    color: rgba(253, 246, 237, 0.85) !important;
+}
+ 
+
+/* =========================================================
+   CORREÇÕES DE ESTILO / RESPONSIVIDADE (fim do arquivo)
+   Este bloco fica por último para vencer as regras antigas.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   HOME - FAIXA VAZIA ENTRE A NAVBAR E O HERO
+   O <main> do layout já reserva 70px para a navbar fixa e o
+   .page somava outros 64px, deixando uma faixa em branco.
+   --------------------------------------------------------- */
+
+#page-home {
+    padding-top: 0;
+}
+
+.hero {
+    min-height: calc(100vh - var(--nav-h, 70px));
+}
+
+
+/* ---------------------------------------------------------
+   HOME - HERO LEGÍVEL NOS DOIS TEMAS
+   O hero sempre tem um overlay escuro sobre a foto; por isso o
+   texto precisa ser claro tanto no tema claro quanto no escuro
+   (no escuro o título usava --primary-fg, que é marrom escuro).
+   --------------------------------------------------------- */
+
+.hero-overlay {
+    background: linear-gradient(90deg, rgba(33, 20, 14, .86) 0%, rgba(33, 20, 14, .66) 50%, rgba(33, 20, 14, .42) 100%);
+}
+
+.hero-title,
+html[data-theme="dark"] .hero-title {
+    color: #FDF6ED;
+}
+
+.hero-desc,
+html[data-theme="dark"] .hero-desc {
+    color: rgba(253, 246, 237, .92);
+}
+
+.hero-badge,
+html[data-theme="dark"] .hero-badge {
+    color: #F4BE9E;
+    background: rgba(33, 20, 14, .45);
+    border-color: rgba(244, 190, 158, .45);
+}
+
+.stat-card,
+html[data-theme="dark"] .stat-card {
+    background: rgba(33, 20, 14, .52);
+    border-color: rgba(253, 246, 237, .22);
+}
+
+.stat-n,
+html[data-theme="dark"] .stat-n {
+    color: #F2A57C;
+}
+
+.stat-label,
+html[data-theme="dark"] .stat-label {
+    color: rgba(253, 246, 237, .94);
+}
+
+
+/* ---------------------------------------------------------
+   HOME - HERO EM UMA COLUNA EM TELAS PEQUENAS
+   (a regra antiga de 768px estava sem "@media" e nunca valia:
+   no celular os cards de estatística saíam cortados à direita)
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+
+    .hero-content {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: none;
+        gap: 2rem;
+        padding-top: 3.5rem;
+        padding-bottom: 3.5rem;
+    }
+
+    .hero-desc {
+        max-width: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .75rem;
+    }
+
+    .stat-card {
+        padding: 1rem .75rem;
+    }
+
+    .hero-title {
+        overflow-wrap: anywhere;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   RODAPÉ - NÃO ESTOURA COM ZOOM / A+
+   --------------------------------------------------------- */
+
+@media (max-width: 1000px) {
+
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .footer-contact li {
+        overflow-wrap: anywhere;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   AVALIAÇÕES - CONTRASTE
+   - "EXPERIÊNCIAS REAIS" ficava marrom sobre marrom no tema claro
+   - no tema escuro o fundo virava um degradê laranja-claro com
+     título branco por cima (quase ilegível)
+   --------------------------------------------------------- */
+
+html:not([data-theme="dark"]) .section-testimonials .reviews-heading .section-eyebrow,
+html[data-theme="dark"] .section-testimonials .reviews-heading .section-eyebrow {
+    color: #F4C9A8 !important;
+}
+
+/* "DEIXE SEU DEPOIMENTO" fica dentro do card do formulário (claro/escuro) */
+html:not([data-theme="dark"]) .section-testimonials .review-form .section-eyebrow {
+    color: #8C4A2F !important;
+}
+
+html[data-theme="dark"] .section-testimonials .review-form .section-eyebrow {
+    color: #F0B48F !important;
+}
+
+html[data-theme="dark"] .section-testimonials {
+    background: linear-gradient(135deg, #3B2116 0%, #1E120C 100%);
+}
+
+
+/* ---------------------------------------------------------
+   ADMIN - ESCOLHA DA ORIGEM DA IMAGEM (URL ou arquivo local)
+   --------------------------------------------------------- */
+
+.admin-field .image-source-toggle {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
+    margin-bottom: .85rem;
+}
+
+    .admin-field .image-source-toggle input[type="radio"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .admin-field .image-source-toggle label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        margin: 0;
+        padding: .7rem .75rem;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--bg);
+        color: var(--muted-fg);
+        font-size: .875rem;
+        font-weight: 700;
+        line-height: 1.25;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color .2s, background-color .2s, color .2s, box-shadow .2s;
+    }
+
+        .admin-field .image-source-toggle label:hover {
+            border-color: var(--accent);
+            color: var(--fg);
+        }
+
+    .admin-field .image-source-toggle input[type="radio"]:checked + label {
+        border-color: var(--accent);
+        background: rgba(212, 112, 74, .14);
+        color: var(--fg);
+        box-shadow: 0 0 0 3px rgba(212, 112, 74, .15);
+    }
+
+    .admin-field .image-source-toggle input[type="radio"]:focus-visible + label {
+        outline: 3px solid rgba(212, 112, 74, .45);
+        outline-offset: 2px;
+    }
+
+.admin-field .image-source-panel[hidden] {
+    display: none;
+}
+
+.admin-field .image-source-preview {
+    display: none;
+    margin-top: .75rem;
+    width: 100%;
+    max-width: 220px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--muted);
+}
+
+    .admin-field .image-source-preview.show {
+        display: block;
+    }
+
+    .admin-field .image-source-preview img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+/* Botão nativo "Escolher arquivo" com o visual do site */
+.admin-field input[type="file"] {
+    cursor: pointer;
+}
+
+    .admin-field input[type="file"]::file-selector-button {
+        margin-right: .85rem;
+        padding: .45rem .95rem;
+        border: 0;
+        border-radius: calc(var(--radius) - .25rem);
+        background: var(--primary);
+        color: var(--primary-fg);
+        font-family: inherit;
+        font-size: .85rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color .2s;
+    }
+
+    .admin-field input[type="file"]::file-selector-button:hover {
+        background: var(--accent);
+    }
+
+@media (max-width: 420px) {
+
+    .admin-field .image-source-toggle {
+        grid-template-columns: 1fr;
+    }
+}

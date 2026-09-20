@@ -662,6 +662,188 @@
                 }
             }
 
+
+
+            /* =========================================================
+                       NAVBAR - NUNCA QUEBRA LINHA + MODO COMPACTO
+                       O modo compacto (.nav-compact) e ligado pelo JS
+                       quando os itens nao cabem na barra (A+, telas
+                       estreitas, muitos links). Assim o menu vira
+                       hamburguer em vez de quebrar/estourar.
+                       ========================================================= */
+
+            #nav .nav-inner {
+                width: 100%;
+                max-width: 1440px;
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+                gap: 1rem;
+                box-sizing: border-box;
+            }
+
+            /* durante a medicao nao pode haver transicao em andamento
+               (o font-size do <html> muda e os paddings em rem animam) */
+            #nav.nav-measuring,
+            #nav.nav-measuring * {
+                transition: none !important;
+            }
+
+            #nav:not(.nav-compact) .nav-inner > * {
+                flex-shrink: 0;
+            }
+
+            #nav .nav-links {
+                gap: .1rem;
+            }
+
+            #nav .nav-link,
+            #nav .btn-login,
+            #nav .theme-toggle,
+            #nav .nav-logo-text {
+                white-space: nowrap;
+            }
+
+            #nav .nav-link {
+                padding: .5rem .75rem;
+            }
+
+            /* Acima de 768px as abas nunca somem (mesmo com zoom / A+): o site.css
+               e o bloco de tablet acima escondiam as abas ate 992px. */
+            @@media (min-width: 769px) {
+
+                #nav .nav-links {
+                    display: flex !important;
+                }
+
+                #nav .hamburger,
+                #nav .mobile-menu {
+                    display: none !important;
+                }
+            }
+
+            /* Estado 1 (nav-tight): abas mais justas, antes de desistir delas */
+            #nav.nav-tight .nav-inner {
+                gap: .5rem;
+            }
+
+            #nav.nav-tight .nav-links {
+                gap: 0;
+            }
+
+            #nav.nav-tight .nav-link {
+                padding: .45rem .5rem;
+                font-size: .8rem;
+            }
+
+            #nav.nav-tight .btn-login {
+                padding: .45rem .7rem;
+            }
+
+            #nav.nav-tight .theme-toggle {
+                min-width: 40px;
+                padding: 0 .6rem;
+            }
+
+            #nav.nav-tight #theme-text {
+                display: none;
+            }
+
+            /* Estado 2 (nav-wrap): as abas continuam visiveis, numa segunda linha.
+               So em telas <= 992px o menu vira hamburguer (nav-compact). */
+            #nav.nav-wrap {
+                height: auto;
+            }
+
+                #nav.nav-wrap .nav-inner {
+                    height: auto;
+                    flex-wrap: wrap;
+                    row-gap: 0;
+                }
+
+                #nav.nav-wrap .nav-logo,
+                #nav.nav-wrap .nav-actions {
+                    min-height: 64px;
+                }
+
+                #nav.nav-wrap .nav-links {
+                    order: 3;
+                    flex: 0 0 100%;
+                    justify-content: center;
+                    justify-content: safe center;
+                    overflow-x: auto;
+                    padding: 0 0 .5rem;
+                }
+
+            #nav.nav-compact .nav-links {
+                display: none !important;
+            }
+
+            #nav.nav-compact .hamburger {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #nav.nav-compact .nav-logo {
+                flex-shrink: 1;
+                min-width: 0;
+            }
+
+            #nav.nav-compact .nav-logo-text {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            #nav.nav-compact .nav-actions {
+                flex-shrink: 0;
+            }
+
+            /* Em telas >= 993px o site.css esconde o menu mobile com !important.
+               No modo compacto (A+) ele precisa poder abrir tambem no desktop. */
+            #nav.nav-compact .mobile-menu.open {
+                display: flex !important;
+                flex-direction: column;
+            }
+
+            /* Menu mobile: largura total, rolagem propria e sem estourar a tela */
+            #nav .mobile-menu {
+                width: 100%;
+                max-width: none;
+                box-sizing: border-box;
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+
+                #nav .mobile-menu.open {
+                    max-height: calc(100vh - 64px);
+                    overflow-y: auto;
+                }
+
+            #nav .mobile-link {
+                white-space: normal;
+            }
+
+            /* O botao "Admin" nao tem icone: em telas muito pequenas ele
+               fica so no menu (hamburguer), senao virava um quadrado vazio. */
+            @@media (max-width: 500px) {
+
+                #nav .nav-admin-btn {
+                    display: none !important;
+                }
+
+                /* px (e nao rem) para o A+ nao roubar espaco do logo */
+                #nav .nav-inner {
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    gap: 6px;
+                }
+
+                #nav .mobile-menu {
+                    padding-left: 12px;
+                    padding-right: 12px;
+                }
+            }
+
     </style>
 
 </head>
@@ -961,10 +1143,9 @@
                     @if (User.IsInRole("Admin"))
                     {
 
-                        <a class="btn-login"
+                        <a class="btn-login nav-admin-btn"
                            asp-controller="Admin"
-                           asp-action="Index"
-                           style="margin-left:.5rem">
+                           asp-action="Index">
 
                             Admin
 
@@ -1197,6 +1378,20 @@
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 <a class="mobile-link"
+                   asp-controller="Pedidos"
+                   asp-action="Index">
+
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+
+                    Meus Pedidos
+
+                </a>
+
+                <a class="mobile-link"
                    asp-controller="Cartoes"
                    asp-action="Index">
 
@@ -1208,32 +1403,48 @@
                     Meus Cartões
 
                 </a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="mobile-link"
+                       asp-controller="Admin"
+                       asp-action="Index">
+
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+
+                        Painel Admin
+
+                    </a>
+                }
             }
+            else
+            {
+                <a class="mobile-link"
+                   asp-controller="Account"
+                   asp-action="Login">
 
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
 
-            <a class="mobile-link"
-               asp-controller="Account"
-               asp-action="Login">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
 
-                <svg viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="2">
+                        <polyline points="10 17 15 12 10 7" />
 
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <line x1="15"
+                              y1="12"
+                              x2="3"
+                              y2="12" />
 
-                    <polyline points="10 17 15 12 10 7" />
+                    </svg>
 
-                    <line x1="15"
-                          y1="12"
-                          x2="3"
-                          y2="12" />
+                    Entrar
 
-                </svg>
-
-                Entrar
-
-            </a>
+                </a>
+            }
 
         </div>
 
@@ -1245,7 +1456,7 @@
          CONTEÚDO PRINCIPAL
          ========================================================= -->
 
-    <main style="padding-top:70px;">
+    <main style="padding-top:var(--nav-h, 70px);">
 
         @RenderBody()
 
@@ -1716,6 +1927,128 @@
 
                 }
             );
+
+    </script>
+
+
+
+    <!-- =========================================================
+         NAVBAR - MODO COMPACTO AUTOMATICO
+         Mede se os itens cabem na barra. Se nao couberem (fonte A+,
+         tela estreita, muitos links) ativa o hamburguer.
+         ========================================================= -->
+
+    <script>
+
+        (function () {
+
+            var scheduled = false;
+            var lastOffset = null;
+
+            function fits(inner) {
+                return inner.scrollWidth <= inner.clientWidth + 1;
+            }
+
+            // O <main> reserva o espaco da navbar fixa; se a navbar crescer
+            // (abas em duas linhas) o conteudo desce junto.
+            function syncOffset(nav) {
+
+                var offset = nav.offsetHeight + 6;
+
+                if (offset !== lastOffset) {
+                    lastOffset = offset;
+                    document.documentElement.style.setProperty("--nav-h", offset + "px");
+                }
+            }
+
+            function updateNavMode() {
+
+                var nav = document.getElementById("nav");
+                var inner = nav ? nav.querySelector(".nav-inner") : null;
+
+                if (!nav || !inner) {
+                    return;
+                }
+
+                // mede sempre a partir do modo completo e sem transicoes
+                nav.classList.add("nav-measuring");
+                nav.classList.remove("nav-compact", "nav-tight", "nav-wrap");
+
+                if (!fits(inner)) {
+
+                    if (window.innerWidth > 768) {
+
+                        // 1) abas mais justas; 2) se ainda nao couber, 2 linhas
+                        nav.classList.add("nav-tight");
+
+                        if (!fits(inner)) {
+                            nav.classList.remove("nav-tight");
+                            nav.classList.add("nav-wrap");
+                        }
+
+                    } else {
+
+                        // celular (<= 768px): hamburguer
+                        nav.classList.add("nav-compact");
+                    }
+                }
+
+                nav.classList.remove("nav-measuring");
+
+                syncOffset(nav);
+
+                // Se o hamburguer nao esta visivel, o menu mobile deve ficar fechado
+                var hamburger = document.getElementById("hamburger");
+                var menu = document.getElementById("mobile-menu");
+
+                if (menu && hamburger &&
+                    window.getComputedStyle(hamburger).display === "none") {
+                    menu.classList.remove("open");
+                }
+            }
+
+            function scheduleUpdate() {
+
+                if (scheduled) {
+                    return;
+                }
+
+                scheduled = true;
+
+                window.requestAnimationFrame(function () {
+                    scheduled = false;
+                    updateNavMode();
+                });
+
+                // segunda checagem depois que fontes/estilos assentarem
+                window.setTimeout(updateNavMode, 350);
+            }
+
+            window.updateNavMode = updateNavMode;
+
+            updateNavMode();
+
+            document.addEventListener("DOMContentLoaded", updateNavMode);
+            window.addEventListener("load", updateNavMode);
+            window.addEventListener("resize", scheduleUpdate);
+            window.addEventListener("orientationchange", scheduleUpdate);
+
+            // Fontes web carregadas mudam a largura dos textos
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(updateNavMode);
+            }
+
+            // Botoes A- / A / A+ (mudam o font-size do <html>) e troca de tema
+            // (o rotulo "Claro"/"Escuro" muda a largura do botao)
+            if (window.MutationObserver) {
+
+                new MutationObserver(scheduleUpdate).observe(
+                    document.documentElement,
+                    { attributes: true, attributeFilter: ["style", "data-theme"] }
+                );
+            }
+
+        })();
 
     </script>
 

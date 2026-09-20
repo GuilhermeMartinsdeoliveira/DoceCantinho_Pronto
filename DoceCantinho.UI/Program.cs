@@ -18,7 +18,7 @@ using DoceCantinho.Infrastructure.Repositories;
 using DoceCantinho.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +49,18 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 // =============================================
 // GOOGLE - LOGIN SOCIAL
 // =============================================
+builder.Services
+    .AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId =
+            builder.Configuration["Authentication:Google:ClientId"]
+            ?? string.Empty;
 
+        options.ClientSecret =
+            builder.Configuration["Authentication:Google:ClientSecret"]
+            ?? string.Empty;
+    });
 
 // =============================================
 // COOKIES DE AUTENTICAÇÃO
@@ -152,4 +163,3 @@ DoceCantinho.Infrastructure.Identity.SeedData.SeedAsync(app.Services).GetAwaiter
 
 // Inicia o servidor web e começa a ouvir as requisições HTTP.
 app.Run();
-

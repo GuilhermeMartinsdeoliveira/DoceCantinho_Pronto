@@ -25,7 +25,7 @@
         // RESUMO
         // ============================================================
 
-        private Panel pnlResumo;
+        private FlowLayoutPanel pnlResumo;
 
         private Label lblResumoBolos;
         private Label lblResumoBrigadeiros;
@@ -77,7 +77,7 @@
         {
             pnlPrincipal = new Panel();
             pnlCards = new FlowLayoutPanel();
-            pnlResumo = new Panel();
+            pnlResumo = new FlowLayoutPanel();
             lblResumoBolos = new Label();
             lblResumoBrigadeiros = new Label();
             lblResumoBrownies = new Label();
@@ -132,44 +132,67 @@
             pnlResumo.Controls.Add(lblResumoBrownies);
             pnlResumo.Controls.Add(lblResumoCupcakes);
             pnlResumo.Controls.Add(lblResumoGourmet);
+            pnlResumo.FlowDirection = FlowDirection.LeftToRight;
             pnlResumo.Location = new Point(24, 95);
             pnlResumo.Name = "pnlResumo";
+            pnlResumo.Padding = new Padding(18, 14, 18, 0);
             pnlResumo.Size = new Size(852, 48);
             pnlResumo.TabIndex = 1;
+            pnlResumo.WrapContents = false;
             // 
             // lblResumoBolos
             // 
-            lblResumoBolos.Location = new Point(0, 0);
+            lblResumoBolos.AutoSize = true;
+            lblResumoBolos.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+            lblResumoBolos.ForeColor = Color.FromArgb(105, 80, 70);
+            lblResumoBolos.Location = new Point(18, 14);
+            lblResumoBolos.Margin = new Padding(0, 0, 32, 0);
             lblResumoBolos.Name = "lblResumoBolos";
-            lblResumoBolos.Size = new Size(100, 23);
+            lblResumoBolos.Size = new Size(0, 15);
             lblResumoBolos.TabIndex = 0;
             // 
             // lblResumoBrigadeiros
             // 
-            lblResumoBrigadeiros.Location = new Point(0, 0);
+            lblResumoBrigadeiros.AutoSize = true;
+            lblResumoBrigadeiros.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+            lblResumoBrigadeiros.ForeColor = Color.FromArgb(105, 80, 70);
+            lblResumoBrigadeiros.Location = new Point(18, 14);
+            lblResumoBrigadeiros.Margin = new Padding(0, 0, 32, 0);
             lblResumoBrigadeiros.Name = "lblResumoBrigadeiros";
-            lblResumoBrigadeiros.Size = new Size(100, 23);
+            lblResumoBrigadeiros.Size = new Size(0, 15);
             lblResumoBrigadeiros.TabIndex = 1;
             // 
             // lblResumoBrownies
             // 
-            lblResumoBrownies.Location = new Point(0, 0);
+            lblResumoBrownies.AutoSize = true;
+            lblResumoBrownies.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+            lblResumoBrownies.ForeColor = Color.FromArgb(105, 80, 70);
+            lblResumoBrownies.Location = new Point(18, 14);
+            lblResumoBrownies.Margin = new Padding(0, 0, 32, 0);
             lblResumoBrownies.Name = "lblResumoBrownies";
-            lblResumoBrownies.Size = new Size(100, 23);
+            lblResumoBrownies.Size = new Size(0, 15);
             lblResumoBrownies.TabIndex = 2;
             // 
             // lblResumoCupcakes
             // 
-            lblResumoCupcakes.Location = new Point(0, 0);
+            lblResumoCupcakes.AutoSize = true;
+            lblResumoCupcakes.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+            lblResumoCupcakes.ForeColor = Color.FromArgb(105, 80, 70);
+            lblResumoCupcakes.Location = new Point(18, 14);
+            lblResumoCupcakes.Margin = new Padding(0, 0, 32, 0);
             lblResumoCupcakes.Name = "lblResumoCupcakes";
-            lblResumoCupcakes.Size = new Size(100, 23);
+            lblResumoCupcakes.Size = new Size(0, 15);
             lblResumoCupcakes.TabIndex = 3;
             // 
             // lblResumoGourmet
             // 
-            lblResumoGourmet.Location = new Point(0, 0);
+            lblResumoGourmet.AutoSize = true;
+            lblResumoGourmet.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+            lblResumoGourmet.ForeColor = Color.FromArgb(105, 80, 70);
+            lblResumoGourmet.Location = new Point(18, 14);
+            lblResumoGourmet.Margin = new Padding(0, 0, 32, 0);
             lblResumoGourmet.Name = "lblResumoGourmet";
-            lblResumoGourmet.Size = new Size(100, 23);
+            lblResumoGourmet.Size = new Size(0, 15);
             lblResumoGourmet.TabIndex = 4;
             // 
             // pnlCabecalho

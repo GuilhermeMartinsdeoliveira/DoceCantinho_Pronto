@@ -183,12 +183,15 @@ namespace DoceCantinho.Desktop1.UserControls
             foreach (Label label in labels)
             {
                 label.Text = "";
+                label.Visible = false;
             }
 
             if (_categorias.Count == 0)
             {
                 lblResumoBolos.Text =
                     "•  Nenhuma categoria";
+
+                lblResumoBolos.Visible = true;
 
                 return;
             }
@@ -212,6 +215,8 @@ namespace DoceCantinho.Desktop1.UserControls
                 labels[i].Text =
                     $"•  {categoria.Name}: " +
                     $"{categoria.DoceCount}";
+
+                labels[i].Visible = true;
             }
         }
 

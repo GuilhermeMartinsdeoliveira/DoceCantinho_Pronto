@@ -18,7 +18,6 @@ namespace DoceCantinho.Desktop.Forms
         // BOTÃO X
         // ============================================================
 
-        private Guna2Button? _btnFechar;
         private bool _senhaVisivel = false;
 
 
@@ -36,152 +35,6 @@ namespace DoceCantinho.Desktop.Forms
 
             FormBorderStyle =
                 FormBorderStyle.None;
-
-            // --------------------------------------------------------
-            // CRIAR BOTÃO X
-            // --------------------------------------------------------
-
-            CriarBotaoFechar();
-        }
-
-        // ============================================================
-        // CRIAR BOTÃO X
-        // ============================================================
-
-        private void CriarBotaoFechar()
-        {
-            if (_btnFechar != null)
-                return;
-
-            _btnFechar = new Guna2Button
-            {
-                Name = "btnFecharLogin",
-
-                // Usamos um X mais simples para evitar
-                // que o caractere seja cortado.
-                Text = "✕",
-
-                Size = new Size(36, 36),
-
-                Anchor =
-                    AnchorStyles.Top |
-                    AnchorStyles.Right,
-
-                BorderRadius = 8,
-
-                FillColor =
-                    Color.Transparent,
-
-                ForeColor =
-                    Color.FromArgb(
-                        100,
-                        90,
-                        90),
-
-                Font =
-                    new Font(
-                        "Segoe UI",
-                        13F,
-                        FontStyle.Regular),
-
-                Cursor =
-                    Cursors.Hand,
-
-                Padding =
-                    new Padding(0),
-
-                TabStop = false
-            };
-
-            // --------------------------------------------------------
-            // POSIÇÃO INICIAL
-            // --------------------------------------------------------
-
-            _btnFechar.Location =
-                new Point(
-                    pnlDireito.ClientSize.Width -
-                    _btnFechar.Width -
-                    8,
-                    5);
-
-            // --------------------------------------------------------
-            // HOVER
-            // --------------------------------------------------------
-
-            _btnFechar.HoverState.FillColor =
-                Color.FromArgb(
-                    225,
-                    205,
-                    198);
-
-            _btnFechar.HoverState.ForeColor =
-                Color.FromArgb(
-                    150,
-                    60,
-                    55);
-
-            // --------------------------------------------------------
-            // PRESSIONADO
-            // --------------------------------------------------------
-
-            _btnFechar.PressedColor =
-                Color.FromArgb(
-                    210,
-                    185,
-                    178);
-
-            // --------------------------------------------------------
-            // EVENTO
-            // --------------------------------------------------------
-
-            _btnFechar.Click +=
-                BtnFechar_Click;
-
-            // --------------------------------------------------------
-            // ADICIONAR AO PAINEL DIREITO
-            // --------------------------------------------------------
-
-            pnlDireito.Controls.Add(
-                _btnFechar);
-
-            _btnFechar.BringToFront();
-
-            // --------------------------------------------------------
-            // REDIMENSIONAMENTO
-            // --------------------------------------------------------
-
-            pnlDireito.Resize +=
-                PnlDireito_Resize;
-        }
-
-        // ============================================================
-        // POSICIONAR BOTÃO X
-        // ============================================================
-
-        private void PnlDireito_Resize(
-            object? sender,
-            EventArgs e)
-        {
-            if (_btnFechar == null)
-                return;
-
-            _btnFechar.Location =
-                new Point(
-                    pnlDireito.ClientSize.Width -
-                    _btnFechar.Width -
-                    8,
-                    5);
-        }
-
-        // ============================================================
-        // CLIQUE NO X
-        // ============================================================
-
-        private void BtnFechar_Click(
-            object? sender,
-            EventArgs e)
-        {
-            Application.Exit();
         }
 
         // ============================================================
@@ -561,16 +414,6 @@ namespace DoceCantinho.Desktop.Forms
                 !carregando;
 
             // --------------------------------------------------------
-            // X CONTINUA FUNCIONANDO
-            // --------------------------------------------------------
-
-            if (_btnFechar != null)
-            {
-                _btnFechar.Enabled =
-                    true;
-            }
-
-            // --------------------------------------------------------
             // INDICADOR
             // --------------------------------------------------------
 
@@ -594,34 +437,6 @@ namespace DoceCantinho.Desktop.Forms
                 btnEntrar.Text =
                     "Entrar";
             }
-        }
-
-        // ============================================================
-        // FECHAMENTO
-        // ============================================================
-
-        protected override void OnFormClosed(
-            FormClosedEventArgs e)
-        {
-            // --------------------------------------------------------
-            // REMOVER EVENTO DO X
-            // --------------------------------------------------------
-
-            if (_btnFechar != null)
-            {
-                _btnFechar.Click -=
-                    BtnFechar_Click;
-
-                _btnFechar.Dispose();
-
-                _btnFechar = null;
-            }
-
-            // --------------------------------------------------------
-            // BASE
-            // --------------------------------------------------------
-
-            base.OnFormClosed(e);
         }
 
         private void btnMostrarSenha_Click(
@@ -653,6 +468,11 @@ namespace DoceCantinho.Desktop.Forms
                 txtSenha.Text.Length;
 
             txtSenha.SelectionLength = 0;
+        }
+
+        private void BtnFechar_Click_1(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

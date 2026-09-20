@@ -29,6 +29,14 @@ namespace DoceCantinho.Desktop.Forms
 
         private bool _preenchendoCampos;
 
+        // Identifica a ultima solicitacao de preview: respostas antigas
+        // (URL lenta) nao podem sobrescrever uma imagem mais nova.
+        private int _versaoPreview;
+
+        // Espera o usuario parar de digitar antes de baixar o preview da URL
+        private readonly System.Windows.Forms.Timer _timerUrl =
+            new System.Windows.Forms.Timer { Interval = 600 };
+
         private readonly List<CategoriaResponseDto> _categorias;
 
         private readonly DoceResponseDto? _doceExistente;
@@ -96,6 +104,115 @@ namespace DoceCantinho.Desktop.Forms
             // URL
             txtUrl.TextChanged -= TxtUrl_TextChanged;
             txtUrl.TextChanged += TxtUrl_TextChanged;
+
+            _timerUrl.Tick -= TimerUrl_Tick;
+            _timerUrl.Tick += TimerUrl_Tick;
+
+            // ESCOLHA: LINK (URL) OU ARQUIVO LOCAL
+            rdoImagemUrl.CheckedChanged -= RdoModoImagem_CheckedChanged;
+            rdoImagemUrl.CheckedChanged += RdoModoImagem_CheckedChanged;
+
+            rdoImagemLocal.CheckedChanged -= RdoModoImagem_CheckedChanged;
+            rdoImagemLocal.CheckedChanged += RdoModoImagem_CheckedChanged;
+
+            // TEXTO NO PREVIEW VAZIO
+            pictureImagem.Paint -= PictureImagem_Paint;
+            pictureImagem.Paint += PictureImagem_Paint;
+        }
+
+        // ============================================================
+        // MODO DA IMAGEM (LINK OU ARQUIVO LOCAL)
+        // ============================================================
+
+        private void RdoModoImagem_CheckedChanged(
+            object? sender,
+            EventArgs e)
+        {
+            if (_preenchendoCampos)
+                return;
+
+            // O RadioButton que perde a marcacao tambem dispara o evento
+            if (sender is RadioButton rb && !rb.Checked)
+                return;
+
+            AplicarVisibilidadeModoImagem();
+            AtualizarPreviewDoModo();
+        }
+
+        // Mostra so os controles do modo escolhido
+        private void AplicarVisibilidadeModoImagem()
+        {
+            bool local = rdoImagemLocal.Checked;
+
+            txtUrl.Visible = !local;
+            btnAdicionarImagemUrl.Visible = !local;
+
+            btnSelecionarImagem.Visible = local;
+            btnRemoverImagem.Visible = local;
+        }
+
+        // Atualiza preview e legenda de acordo com o modo ativo
+        private void AtualizarPreviewDoModo()
+        {
+            if (rdoImagemLocal.Checked)
+            {
+                if (!string.IsNullOrWhiteSpace(_imagemBase64))
+                {
+                    lblArquivoImagem.Text =
+                        string.IsNullOrWhiteSpace(ImagemArquivoPath)
+                            ? "Imagem armazenada no produto"
+                            : Path.GetFileName(ImagemArquivoPath);
+
+                    CarregarPreviewBase64(_imagemBase64);
+                }
+                else
+                {
+                    lblArquivoImagem.Text =
+                        "Nenhum arquivo selecionado";
+
+                    LimparPreview();
+                }
+
+                return;
+            }
+
+            string url = txtUrl.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                lblArquivoImagem.Text =
+                    "Nenhuma imagem informada";
+
+                LimparPreview();
+            }
+            else
+            {
+                lblArquivoImagem.Text =
+                    "Imagem por URL";
+
+                _ = CarregarPreviewUrlAsync(url);
+            }
+        }
+
+        // Escreve um aviso no quadro de preview enquanto nao ha imagem
+        private void PictureImagem_Paint(
+            object? sender,
+            PaintEventArgs e)
+        {
+            if (pictureImagem.Image != null)
+                return;
+
+            using Font fonte =
+                new Font("Segoe UI", 9.5F);
+
+            TextRenderer.DrawText(
+                e.Graphics,
+                "Pré-visualização da imagem",
+                fonte,
+                pictureImagem.ClientRectangle,
+                Color.FromArgb(154, 137, 128),
+                TextFormatFlags.HorizontalCenter |
+                TextFormatFlags.VerticalCenter);
         }
 
         // ============================================================
@@ -208,8 +325,11 @@ namespace DoceCantinho.Desktop.Forms
 
                     txtUrl.Clear();
 
+                    rdoImagemUrl.Checked = true;
+                    AplicarVisibilidadeModoImagem();
+
                     lblArquivoImagem.Text =
-                        "Nenhum arquivo selecionado";
+                        "Nenhuma imagem informada";
 
                     LimparPreview();
 
@@ -304,6 +424,9 @@ namespace DoceCantinho.Desktop.Forms
 
                     txtUrl.Clear();
 
+                    rdoImagemLocal.Checked = true;
+                    AplicarVisibilidadeModoImagem();
+
                     lblArquivoImagem.Text =
                         "Imagem armazenada no produto";
 
@@ -315,9 +438,12 @@ namespace DoceCantinho.Desktop.Forms
 
                     txtUrl.Text = imagem;
 
+                    rdoImagemUrl.Checked = true;
+                    AplicarVisibilidadeModoImagem();
+
                     lblArquivoImagem.Text =
                         string.IsNullOrWhiteSpace(imagem)
-                            ? "Nenhum arquivo selecionado"
+                            ? "Nenhuma imagem informada"
                             : "Imagem por URL";
 
                     if (!string.IsNullOrWhiteSpace(imagem))
@@ -351,16 +477,35 @@ namespace DoceCantinho.Desktop.Forms
             string url =
                 txtUrl.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(url))
-                return;
+            _timerUrl.Stop();
 
-            _imagemBase64 = null;
-            ImagemArquivoPath = null;
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                lblArquivoImagem.Text =
+                    "Nenhuma imagem informada";
+
+                LimparPreview();
+
+                return;
+            }
 
             lblArquivoImagem.Text =
                 "Imagem por URL";
 
-            _ = CarregarPreviewUrlAsync(url);
+            _timerUrl.Start();
+        }
+
+        private void TimerUrl_Tick(
+            object? sender,
+            EventArgs e)
+        {
+            _timerUrl.Stop();
+
+            string url =
+                txtUrl.Text.Trim();
+
+            if (!string.IsNullOrWhiteSpace(url))
+                _ = CarregarPreviewUrlAsync(url);
         }
 
         private void btnAdicionarImagemUrl_Click(
@@ -397,9 +542,6 @@ namespace DoceCantinho.Desktop.Forms
                 txtUrl.Focus();
                 return;
             }
-
-            _imagemBase64 = null;
-            ImagemArquivoPath = null;
 
             lblArquivoImagem.Text =
                 "Imagem adicionada por URL";
@@ -533,18 +675,6 @@ namespace DoceCantinho.Desktop.Forms
                 // O caminho NÃO será enviado para o banco.
                 ImagemArquivoPath = caminho;
 
-                // Limpa a URL
-                _preenchendoCampos = true;
-
-                try
-                {
-                    txtUrl.Clear();
-                }
-                finally
-                {
-                    _preenchendoCampos = false;
-                }
-
                 // Mostra o nome do arquivo
                 lblArquivoImagem.Text =
                     Path.GetFileName(caminho);
@@ -647,10 +777,12 @@ namespace DoceCantinho.Desktop.Forms
                 using Image original =
                     Image.FromStream(stream);
 
-                Image? antiga = picturePreview.Image;
+                _versaoPreview++;
 
-                picturePreview.Image = new Bitmap(original);
-                picturePreview.SizeMode = PictureBoxSizeMode.Zoom;
+                Image? antiga = pictureImagem.Image;
+
+                pictureImagem.Image = new Bitmap(original);
+                pictureImagem.SizeMode = PictureBoxSizeMode.Zoom;
 
                 antiga?.Dispose();
             }
@@ -673,6 +805,23 @@ namespace DoceCantinho.Desktop.Forms
             if (string.IsNullOrWhiteSpace(url))
                 return;
 
+            int versao = ++_versaoPreview;
+
+            if (!Uri.TryCreate(
+                    url,
+                    UriKind.Absolute,
+                    out Uri? uriPreview) ||
+                (uriPreview.Scheme != Uri.UriSchemeHttp &&
+                 uriPreview.Scheme != Uri.UriSchemeHttps))
+            {
+                // URL ainda incompleta (usuario digitando)
+                Image? atual = pictureImagem.Image;
+                pictureImagem.Image = null;
+                atual?.Dispose();
+
+                return;
+            }
+
             try
             {
                 using HttpClient client =
@@ -693,7 +842,8 @@ namespace DoceCantinho.Desktop.Forms
                 Image novaImagem =
                     new Bitmap(original);
 
-                if (IsDisposed || Disposing)
+                if (IsDisposed || Disposing ||
+                    versao != _versaoPreview)
                 {
                     novaImagem.Dispose();
                     return;
@@ -703,7 +853,8 @@ namespace DoceCantinho.Desktop.Forms
                 {
                     BeginInvoke(new Action(() =>
                     {
-                        if (IsDisposed || Disposing)
+                        if (IsDisposed || Disposing ||
+                            versao != _versaoPreview)
                         {
                             novaImagem.Dispose();
                             return;
@@ -737,7 +888,15 @@ namespace DoceCantinho.Desktop.Forms
             }
             catch
             {
-                // O preview não impede o cadastro.
+                // O preview não impede o cadastro, mas uma URL que falhou
+                // não deve continuar mostrando a imagem anterior.
+                if (!IsDisposed && !Disposing &&
+                    versao == _versaoPreview)
+                {
+                    Image? antigaComErro = pictureImagem.Image;
+                    pictureImagem.Image = null;
+                    antigaComErro?.Dispose();
+                }
             }
         }
 
@@ -749,6 +908,8 @@ namespace DoceCantinho.Desktop.Forms
         {
             if (pictureImagem == null)
                 return;
+
+            _versaoPreview++;
 
             Image? imagem =
                 pictureImagem.Image;
@@ -822,10 +983,10 @@ namespace DoceCantinho.Desktop.Forms
             // IMAGEM
             // ========================================================
 
+            // O modo escolhido (Link ou Arquivo local) decide o que e enviado
             string imagem =
-                !string.IsNullOrWhiteSpace(
-                    _imagemBase64)
-                    ? _imagemBase64
+                rdoImagemLocal.Checked
+                    ? (_imagemBase64 ?? string.Empty)
                     : txtUrl.Text.Trim();
 
             // ========================================================
@@ -1004,12 +1165,20 @@ namespace DoceCantinho.Desktop.Forms
         protected override void OnFormClosed(
             FormClosedEventArgs e)
         {
+            _timerUrl.Stop();
+            _timerUrl.Dispose();
+
             LimparPreview();
 
             base.OnFormClosed(e);
         }
 
         private void btnFechar_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void BtnFechar_Click_1(object sender, EventArgs e)
         {
             Close();
         }

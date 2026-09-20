@@ -39,15 +39,30 @@
                 <span asp-validation-for="CategoryId" class="admin-field-error"></span>
             </div>
 
-            <div class="admin-field">
-                <label>Imagem (URL)</label>
-                <input asp-for="CoverImageUrl" type="text" placeholder="https://..." />
-            </div>
+            <div class="admin-field" id="imageSourceField">
+                <label id="imageSourceLabel">Imagem do doce</label>
 
-            <div class="admin-field">
-                <label>Imagem (arquivo)</label>
-                <input type="file" name="imageFile" accept="image/*" />
-                <span class="field-hint">Enviar um arquivo substitui a URL informada acima.</span>
+                <div class="image-source-toggle" role="radiogroup" aria-labelledby="imageSourceLabel">
+                    <input type="radio" name="imageSource" id="imageSourceUrl" value="url" checked />
+                    <label for="imageSourceUrl"><i class="bi bi-link-45deg"></i> Usar URL</label>
+
+                    <input type="radio" name="imageSource" id="imageSourceFile" value="file" />
+                    <label for="imageSourceFile"><i class="bi bi-upload"></i> Enviar do computador</label>
+                </div>
+
+                <div class="image-source-panel" id="imageUrlPanel">
+                    <input asp-for="CoverImageUrl" type="text" placeholder="https://..." />
+                    <span class="field-hint">Cole o endereço de uma imagem que já esteja na internet.</span>
+                </div>
+
+                <div class="image-source-panel" id="imageFilePanel" hidden>
+                    <input type="file" name="imageFile" id="imageFileInput" accept="image/*" disabled />
+                    <span class="field-hint">JPG, PNG, GIF ou WEBP. A imagem será salva no servidor da loja.</span>
+                </div>
+
+                <div class="image-source-preview" id="imagePreview">
+                    <img id="imagePreviewImg" alt="Pré-visualização da imagem" />
+                </div>
             </div>
 
             <div class="admin-checkbox-field">
@@ -73,4 +88,71 @@
     </div>
 </div>
 
-<script src="~/js/site.js"></script>
+<script>
+    (function () {
+        var radioUrl = document.getElementById("imageSourceUrl");
+        var radioFile = document.getElementById("imageSourceFile");
+        var urlPanel = document.getElementById("imageUrlPanel");
+        var filePanel = document.getElementById("imageFilePanel");
+        var urlInput = urlPanel.querySelector("input");
+        var fileInput = document.getElementById("imageFileInput");
+        var preview = document.getElementById("imagePreview");
+        var previewImg = document.getElementById("imagePreviewImg");
+        var objectUrl = null;
+
+        function hidePreview() {
+            preview.classList.remove("show");
+            previewImg.removeAttribute("src");
+        }
+
+        function showPreview(src) {
+            previewImg.onerror = hidePreview;
+            previewImg.onload = function () { preview.classList.add("show"); };
+            previewImg.src = src;
+        }
+
+        function refreshPreview() {
+            if (objectUrl) {
+                URL.revokeObjectURL(objectUrl);
+                objectUrl = null;
+            }
+
+            if (radioFile.checked) {
+                if (fileInput.files && fileInput.files.length > 0) {
+                    objectUrl = URL.createObjectURL(fileInput.files[0]);
+                    showPreview(objectUrl);
+                } else {
+                    hidePreview();
+                }
+                return;
+            }
+
+            var url = (urlInput.value || "").trim();
+            if (/^https?:\/\//i.test(url) || url.indexOf("/") === 0) {
+                showPreview(url);
+            } else {
+                hidePreview();
+            }
+        }
+
+        // Só o campo escolhido é enviado: o outro fica desabilitado,
+        // então nunca vai URL e arquivo ao mesmo tempo.
+        function applySource() {
+            var useFile = radioFile.checked;
+
+            urlPanel.hidden = useFile;
+            filePanel.hidden = !useFile;
+            urlInput.disabled = useFile;
+            fileInput.disabled = !useFile;
+
+            refreshPreview();
+        }
+
+        radioUrl.addEventListener("change", applySource);
+        radioFile.addEventListener("change", applySource);
+        urlInput.addEventListener("input", refreshPreview);
+        fileInput.addEventListener("change", refreshPreview);
+
+        applySource();
+    })();
+</script>
